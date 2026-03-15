@@ -42,8 +42,8 @@ app.get('/services', (req, res) => {
   res.json(Object.entries(SERVICES).map(([id, s]) => ({ id, name: s.name, price: s.price / 100 })));
 });
 
-app.post('/create-payment-intent', async (req, res) => {
-  const { serviceId, paymentMethod, phone, customerEmail, customerName, date, time, nif } = req.body;
+app.post('/create-checkout-session', async (req, res) => {
+  const { serviceId, customerEmail, customerName, date, time, nif } = req.body;
 
   const service = SERVICES[serviceId];
   if (!service) return res.status(400).json({ error: 'Servico invalido.' });
@@ -51,67 +51,50 @@ app.post('/create-payment-intent', async (req, res) => {
   const clientUrl = process.env.CLIENT_URL || 'https://consultas-online.pt';
 
   try {
-    if (paymentMethod === 'mbway') {
-      // Para MBWay: criar Payment Intent e devolver client_secret ao frontend
-      // O frontend usa stripe.confirmMbWayPayment() com o telefone diretamente
-      const pi = await stripe.paymentIntents.create({
-        amount: service.price,
-        currency: 'eur',
-        payment_method_types: ['mb_way'],
-        metadata: { serviceId, serviceName: service.name, date, time, customerEmail, customerName, nif: nif || '' },
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card', 'mb_way', 'multibanco'],
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: service.name,
+            description: 'Consulta online em ' + date + ' às ' + time,
+          },
+          unit_amount: service.price,
+        },
+        quantity: 1,
+      }],
+      customer_email: customerEmail,
+      metadata: {
+        serviceId,
+        serviceName: service.name,
+        date,
+        time,
+        customerEmail,
+        customerName,
+        nif: nif || '',
+      },
+      success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: clientUrl + '/?cancelado=1',
+      locale: 'pt',
+      payment_intent_data: {
         description: service.name + ' - ' + date + ' as ' + time,
         receipt_email: customerEmail,
-      });
+      },
+      custom_text: {
+        submit: { message: 'O seu pagamento é processado de forma segura pelo Stripe.' },
+      },
+    });
 
-      return res.json({
-        clientSecret: pi.client_secret,
-        paymentIntentId: pi.id,
-        status: pi.status,
-        mbwayPending: true,
-      });
-    }
-
-    if (paymentMethod === 'mb_reference') {
-      const pi = await stripe.paymentIntents.create({
-        amount: service.price,
-        currency: 'eur',
-        payment_method_types: ['multibanco'],
-        payment_method_data: { type: 'multibanco' },
-        confirm: true,
-        return_url: clientUrl + '/obrigado',
-        metadata: { serviceId, serviceName: service.name, date, time, customerEmail, customerName, nif: nif || '' },
-        description: service.name + ' - ' + date + ' as ' + time,
-        receipt_email: customerEmail,
-      });
-
-      const mb = pi.next_action && pi.next_action.multibanco_display_details;
-      return res.json({
-        paymentIntentId: pi.id,
-        status: pi.status,
-        multibanco: mb ? { entity: mb.entity, reference: mb.reference, amount: (service.price / 100).toFixed(2).replace('.', ',') + ' EUR' } : null,
-      });
-    }
-
-    if (paymentMethod === 'card') {
-      const pi = await stripe.paymentIntents.create({
-        amount: service.price,
-        currency: 'eur',
-        payment_method_types: ['card'],
-        metadata: { serviceId, serviceName: service.name, date, time, customerEmail, customerName, nif: nif || '' },
-        description: service.name + ' - ' + date + ' as ' + time,
-        receipt_email: customerEmail,
-      });
-
-      return res.json({ clientSecret: pi.client_secret, paymentIntentId: pi.id, status: pi.status });
-    }
-
-    return res.status(400).json({ error: 'Metodo de pagamento invalido.' });
+    return res.json({ url: session.url, sessionId: session.id });
 
   } catch (err) {
-    console.error('Stripe error:', err.message);
+    console.error('Stripe Checkout error:', err.message);
     return res.status(500).json({ error: err.message });
   }
 });
+
 
 app.get('/payment-status/:id', async (req, res) => {
   try {
@@ -129,6 +112,20 @@ app.post('/webhook', async (req, res) => {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     return res.status(400).send('Webhook Error: ' + err.message);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const pi = event.data.object;
+    // Get metadata from session
+    const { serviceName, date, time, customerEmail, customerName, nif } = session.metadata || {};
+    const amountEur = session.amount_total ? (session.amount_total / 100).toFixed(2).replace('.', ',') + ' EUR' : '—';
+    console.log('Checkout completo:', session.id, serviceName);
+    try {
+      const invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
+      await sendConfirmationEmail({ to: customerEmail, name: customerName, serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
+    } catch(e) { console.error('Erro email/fatura:', e.message); }
+    return res.json({ received: true });
   }
 
   if (event.type === 'payment_intent.succeeded') {
