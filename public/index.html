@@ -1431,8 +1431,8 @@ function selectTime(el){document.querySelectorAll('.t-slot').forEach(t=>t.classL
 
 // ── STRIPE SETUP ──
 // Substituir pela sua chave pública: https://dashboard.stripe.com/apikeys
-const STRIPE_PK = 'pk_test_51TBG6LHv8owZF2PvCgmPO2ELJiAyb8HzHkS5ARdAHJlVNj07dbUryUhx7BAr9QQN7rz6JdyFxpWZ0PyW1jglNLbn00UiRTuNJb'; // <- colocar aqui a sua pk_live_...
-const API_URL   = 'https://consultasonline-production.up.railway.app';   // <- URL do seu servidor Node.js
+const STRIPE_PK = 'pk_live_XXXXXXXXXXXXXXXXXXXXXXXX'; // <- colocar aqui a sua pk_live_...
+const API_URL   = 'https://api.consultasonline.com';   // <- URL do seu servidor Node.js
 
 let stripe, cardElement, currentPayMethod = 'mbway', mbwayPollingTimer;
 
@@ -1591,7 +1591,17 @@ async function confirmBooking() {
 
     // 2. Processar conforme método
     if (currentPayMethod === 'mbway') {
-      // MBWay: Payment Intent já criado e notificação enviada ao telemóvel
+      // MBWay: confirmar via stripe.confirmMbWayPayment() com o telefone
+      setConfirmBtn(true, 'A enviar para o MB WAY…');
+      const formattedPhone = phone.replace(/[\s\-]/g,'').startsWith('+') ? phone.replace(/[\s\-]/g,'') : '+351' + phone.replace(/[\s\-]/g,'');
+      const { error, paymentIntent: mbPi } = await stripe.confirmMbWayPayment(data.clientSecret, {
+        payment_method: { billing_details: { phone: formattedPhone } },
+      });
+      if (error) {
+        showMbwayStatus('error', '❌ ' + error.message);
+        setConfirmBtn(false);
+        return;
+      }
       showMbwayStatus('pending', '📱 Notificação enviada. Confirme no app MB WAY…');
       pollMbwayStatus(data.paymentIntentId);
 
