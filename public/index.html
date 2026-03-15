@@ -2120,8 +2120,8 @@ function getBlockedSlots(dateKey) {
 function getDateKey() {
   if (!selectedDay) return null;
   var y = currentDate.getFullYear();
-  var m = String(currentDate.getMonth() + 1).padStart('2', '0');
-  var d = String(selectedDay).padStart('2', '0');
+  var m = String(currentDate.getMonth() + 1).padStart(2, '0');
+  var d = String(selectedDay).padStart(2, '0');
   return y + '-' + m + '-' + d;
 }
 
@@ -2131,7 +2131,7 @@ function renderTimeSlots() {
   var key = getDateKey();
   var blocked = getBlockedSlots(key);
   var now = new Date();
-  var todayKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart('2','0') + '-' + String(now.getDate()).padStart('2','0');
+  var todayKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
   var isToday = (key === todayKey);
   var html = '';
   ALL_SLOTS.forEach(function(slot) {
@@ -2304,7 +2304,7 @@ window.confirmBooking = function() {
   if (currentPayMethod === 'mbway' && !phone) { if (phoneEl) phoneEl.focus(); alert('Por favor insira o telemóvel para o MB WAY.'); return; }
 
   var y = currentDate.getFullYear(), m = currentDate.getMonth();
-  var dateStr = String(selectedDay).padStart('2','0') + '/' + String(m+1).padStart('2','0') + '/' + y;
+  var dateStr = String(selectedDay).padStart(2,'0') + '/' + String(m+1).padStart(2,'0') + '/' + y;
   var timeStr = selSlot.textContent.trim();
   var invChecked = document.getElementById('invCheck');
   var nifEl = document.querySelector('#invExtra input[placeholder="123 456 789"]');
@@ -2459,7 +2459,7 @@ function renderAdminCalendar() {
   var html = '';
   for (var i = 0; i < first; i++) html += '<div class="admin-day empty"></div>';
   for (var d = 1; d <= days; d++) {
-    var key = y + '-' + String(m+1).padStart('2','0') + '-' + String(d).padStart('2','0');
+    var key = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
     var isPast = new Date(y,m,d) < new Date(today.getFullYear(),today.getMonth(),today.getDate());
     var isToday = d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
     var isSel = adminSelectedKey === key;
@@ -2479,7 +2479,7 @@ window.adminChangeMonth = function(dir) {
 window.adminSelectDay = function(d) {
   adminSelectedDay = d;
   var y = adminDate.getFullYear(), m = adminDate.getMonth();
-  adminSelectedKey = y + '-' + String(m+1).padStart('2','0') + '-' + String(d).padStart('2','0');
+  adminSelectedKey = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
   renderAdminCalendar();
   var wrap = document.getElementById('adminSlotsWrap');
   var empty = document.getElementById('adminSlotsEmpty');
@@ -2490,7 +2490,7 @@ window.adminSelectDay = function(d) {
   var dateObj = new Date(y, m, d);
   var dayNames = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
   var label = document.getElementById('adminDateLabel');
-  if (label) label.textContent = dayNames[dateObj.getDay()] + ', ' + String(d).padStart('2','0') + '/' + String(m+1).padStart('2','0') + '/' + y;
+  if (label) label.textContent = dayNames[dateObj.getDay()] + ', ' + String(d).padStart(2,'0') + '/' + String(m+1).padStart(2,'0') + '/' + y;
   renderAdminSlots();
 };
 
@@ -2503,7 +2503,7 @@ function renderAdminSlots() {
   ADMIN_ALL_SLOTS.forEach(function(slot) {
     var isBlocked = dayBlocked.indexOf(slot) !== -1;
     var cls = 'admin-slot' + (isBlocked ? ' blocked' : '');
-    html += '<div class="' + cls + '" onclick="adminToggleSlot(this,'' + slot + '')">' + slot + '</div>';
+    html += '<div class="' + cls + '" onclick="adminToggleSlot(this,\'' + slot + '\')">' + slot + '</div>';
   });
   grid.innerHTML = html;
 }
@@ -2557,7 +2557,7 @@ function renderAdminSummary() {
     var label = parts[2] + '/' + parts[1] + '/' + parts[0];
     html += '<div class="summary-day"><div class="summary-day-title">📅 ' + label + ' — ' + slots.length + ' slot(s)</div><div class="summary-chips">';
     slots.forEach(function(slot){
-      html += '<div class="summary-chip">' + slot + ' <span class="summary-chip-x" onclick="adminUnblockSlot('' + key + '','' + slot + '')">✕</span></div>';
+      html += '<div class="summary-chip">' + slot + ' <span class="summary-chip-x" onclick="adminUnblockSlot(\'' + key + '\',\'' + slot + '\')">✕</span></div>';
     });
     html += '</div></div>';
   });
