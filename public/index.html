@@ -1961,691 +1961,720 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
   <button class="chat-toggle" onclick="toggleChat()">💬</button>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ── PAGE NAV ──
-function showPage(p){
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
-  var page=document.getElementById('page-'+p);
-  if(page) page.classList.add('active');
-  var tab=document.getElementById('tab-'+p);
-  if(tab) tab.classList.add('active');
+<script>
+(function() {
+'use strict';
+
+// ══════════════════════════════════════
+// STRIPE CONFIG — substitua pelas suas chaves
+// ══════════════════════════════════════
+var STRIPE_PK = 'pk_test_XXXXXXXXXXXXXXXXXXXXXXXX';
+var API_URL   = 'https://consultasonline-production.up.railway.app';
+
+// ══════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════
+window.showPage = function(p) {
+  document.querySelectorAll('.page').forEach(function(x){ x.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(x){ x.classList.remove('active'); });
+  var page = document.getElementById('page-' + p);
+  if (page) page.classList.add('active');
+  var tab = document.getElementById('tab-' + p);
+  if (tab) { tab.classList.add('active'); }
   else {
-    // fallback: mark home or blog as active
-    if(p==='blog'){ var t=document.getElementById('tab-blog'); if(t) t.classList.add('active'); }
-    else { var t2=document.getElementById('tab-home'); if(t2) t2.classList.add('active'); }
+    var fallback = document.getElementById(p === 'blog' ? 'tab-blog' : 'tab-home');
+    if (fallback) fallback.classList.add('active');
   }
   closeAllArticles();
-  window.scrollTo({top:0,behavior:'smooth'});
-  // Re-run animations for the new page
-  setTimeout(checkVisible, 100);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(checkVisible, 200);
+};
+
+// ══════════════════════════════════════
+// ARTICLE NAVIGATION
+// ══════════════════════════════════════
+window.openArticle = function(id) {
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  var blog = document.getElementById('page-blog');
+  if (blog) blog.style.display = 'none';
+  var art = document.getElementById('article-' + id);
+  if (art) art.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+window.closeArticle = function() {
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  var blog = document.getElementById('page-blog');
+  if (blog) blog.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+function closeAllArticles() {
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  var blog = document.getElementById('page-blog');
+  if (blog) blog.style.display = '';
 }
 
-// ── ARTICLE NAV ──
-function openArticle(id){
-  document.querySelectorAll('.article-view').forEach(a=>a.classList.remove('active'));
-  document.getElementById('page-blog').style.display='none';
-  document.getElementById('article-'+id).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function closeArticle(){
-  document.querySelectorAll('.article-view').forEach(a=>a.classList.remove('active'));
-  document.getElementById('page-blog').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function closeAllArticles(){
-  document.querySelectorAll('.article-view').forEach(a=>a.classList.remove('active'));
-  document.getElementById('page-blog').style.display='';
-}
-
-// ── BLOG FILTER ──
-function filterBlog(cat,el){
-  document.querySelectorAll('.f-chip').forEach(c=>c.classList.remove('active'));
+// ══════════════════════════════════════
+// BLOG FILTER
+// ══════════════════════════════════════
+window.filterBlog = function(cat, el) {
+  document.querySelectorAll('.f-chip').forEach(function(c){ c.classList.remove('active'); });
   el.classList.add('active');
-  document.querySelectorAll('.bcard').forEach(c=>{
-    c.style.display=(cat==='todos'||c.dataset.cat===cat)?'':'none';
+  document.querySelectorAll('.bcard').forEach(function(c){
+    c.style.display = (cat === 'todos' || c.dataset.cat === cat) ? '' : 'none';
   });
+};
+
+// ══════════════════════════════════════
+// SERVICE MODAL
+// ══════════════════════════════════════
+var currentService = { name: '', price: 40, type: '', id: '' };
+var currentPayMethod = 'mbway';
+
+window.openServiceSelector = function() {
+  var modal = document.getElementById('serviceModal');
+  if (!modal) { console.error('Modal not found'); return; }
+  modal.classList.add('open');
+  var s1 = document.getElementById('step1');
+  var s2 = document.getElementById('step2');
+  if (s1) s1.style.display = 'block';
+  if (s2) s2.classList.remove('show');
+  document.querySelectorAll('.svc-card').forEach(function(c){ c.classList.remove('selected'); });
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeModal = function() {
+  var modal = document.getElementById('serviceModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+var modal = document.getElementById('serviceModal');
+if (modal) {
+  modal.addEventListener('click', function(e){ if (e.target === this) window.closeModal(); });
 }
 
-// ── SERVICE MODAL ──
-let currentService={name:'',price:40,type:''};
+var svcIcons = {
+  'Atestado de Amamentação':'🤱','Atestado para Falta Escolar':'🎓',
+  'Atestado para Carta de Condução':'🚗','Emissão de Baixa Médica':'🏥',
+  'Renovação de Medicamentos':'💊','Consulta de Infeção Urinária':'💧',
+  'Consulta de Cessação Tabágica':'🚭','Consulta de Amigdalite':'🤒',
+  'Consulta de DST / IST':'🔬'
+};
 
-function openServiceSelector(){
-  document.getElementById('serviceModal').classList.add('open');
-  document.getElementById('step1').style.display='block';
-  document.getElementById('step2').classList.remove('show');
-  document.querySelectorAll('.svc-card').forEach(c=>c.classList.remove('selected'));
-  document.body.style.overflow='hidden';
-}
-function closeModal(){
-  document.getElementById('serviceModal').classList.remove('open');
-  document.body.style.overflow='';
-}
-var _sm=document.getElementById('serviceModal');
-if(_sm) _sm.addEventListener('click',function(e){if(e.target===this)closeModal();});
-
-const svcIcons={'Atestado de Amamentação':'🤱','Atestado para Falta Escolar':'🎓','Atestado para Carta de Condução':'🚗','Emissão de Baixa Médica':'🏥','Renovação de Medicamentos':'💊','Consulta de Infeção Urinária':'💧','Consulta de Cessação Tabágica':'🚭','Consulta de Amigdalite':'🤒','Consulta de DST / IST':'🔬'};
-
-function selectService(el,name,price,type,id){
-  document.querySelectorAll('.svc-card').forEach(c=>c.classList.remove('selected'));
+window.selectService = function(el, name, price, type, id) {
+  document.querySelectorAll('.svc-card').forEach(function(c){ c.classList.remove('selected'); });
   el.classList.add('selected');
-  currentService={name,price,type,id};
-  setTimeout(()=>{
-    document.getElementById('step1').style.display='none';
-    document.getElementById('step2').classList.add('show');
-    const icon=svcIcons[name]||'🩺';
-    document.getElementById('svcBannerIcon').textContent=icon;
-    document.getElementById('svcBannerName').textContent=name;
-    document.getElementById('svcBannerType').textContent=type==='Atestado'?'Atestado Digital · Enviado por email':'Consulta Online · Videochamada';
-    document.getElementById('svcBannerPrice').textContent=price+'€';
-    document.getElementById('footerPrice').innerHTML=price+',00€ <span id="footerDesc">'+name+'</span>';
-    document.getElementById('mbAmount').textContent=price+',00€';
-    // Reset payment panel
-    currentPayMethod='mbway';
-    document.getElementById('panelMbway').style.display='block';
-    document.getElementById('panelMb').style.display='none';
-    document.getElementById('panelCard').style.display='none';
-    document.querySelectorAll('.pay-tab').forEach((b,i)=>b.classList.toggle('active',i===0));
-    document.getElementById('mbwayStatus').classList.remove('show');
-    document.getElementById('mbRefGrid').style.display='none';
+  currentService = { name: name, price: price, type: type, id: id };
+  setTimeout(function() {
+    var s1 = document.getElementById('step1');
+    var s2 = document.getElementById('step2');
+    if (s1) s1.style.display = 'none';
+    if (s2) s2.classList.add('show');
+    var icon = svcIcons[name] || '🩺';
+    function set(id, val, prop) { var el = document.getElementById(id); if (el) { if (prop === 'html') el.innerHTML = val; else el.textContent = val; } }
+    set('svcBannerIcon', icon);
+    set('svcBannerName', name);
+    set('svcBannerType', type === 'Atestado' ? 'Atestado Digital · Enviado por email' : 'Consulta Online · Videochamada');
+    set('svcBannerPrice', price + '€');
+    set('footerPrice', price + ',00€ <span>' + name + '</span>', 'html');
+    set('mbAmount', price + ',00€');
+    currentPayMethod = 'mbway';
+    selectPay(document.querySelector('.pay-tab'), 'mbway');
+    var ms = document.getElementById('mbwayStatus');
+    var mg = document.getElementById('mbRefGrid');
+    if (ms) ms.classList.remove('show');
+    if (mg) mg.style.display = 'none';
     renderCalendar();
-  },180);
-}
+  }, 180);
+};
 
-function goBackToServices(){
-  document.getElementById('step2').classList.remove('show');
-  document.getElementById('step1').style.display='block';
-  selectedDay=null;
-}
+window.goBackToServices = function() {
+  var s1 = document.getElementById('step1');
+  var s2 = document.getElementById('step2');
+  if (s2) s2.classList.remove('show');
+  if (s1) s1.style.display = 'block';
+  selectedDay = null;
+};
 
-// ── CALENDAR ──
-let currentDate=new Date(),selectedDay=null;
-const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+// ══════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════
+var currentDate = new Date();
+var selectedDay = null;
+var months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-function renderCalendar(){
-  const y=currentDate.getFullYear(),m=currentDate.getMonth();
-  document.getElementById('calTitle').textContent=months[m]+' '+y;
-  const first=new Date(y,m,1).getDay();
-  const days=new Date(y,m+1,0).getDate();
-  const today=new Date();
-  let html='';
-  for(let i=0;i<first;i++) html+='<div class="cal-d empty"></div>';
-  for(let d=1;d<=days;d++){
-    const isPast=new Date(y,m,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
-    const isTdy=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
-    const isSel=selectedDay===d&&m===currentDate.getMonth()&&y===currentDate.getFullYear();
-    let cls='cal-d';
-    if(isPast)cls+=' past';
-    else if(isSel)cls+=' sel';
-    else if(isTdy)cls+=' today';
-    const clk=isPast?'':'onclick="selDay('+d+')"';
-    html+='<div class="'+cls+'" '+clk+'>'+d+'</div>';
-  }
-  document.getElementById('calGrid').innerHTML=html;
-}
-function changeMonth(d){currentDate.setMonth(currentDate.getMonth()+d);renderCalendar();}
-function selDay(d){
-  selectedDay=d;
-  try{ renderCalendar(); } catch(e){ console.warn(e); }
-  renderTimeSlots();
-  document.getElementById('timeSection').style.display='block';
-}
-function selectTime(el){
-  if(el.classList.contains('taken')||el.classList.contains('blocked')) return;
-  document.querySelectorAll('.t-slot').forEach(t=>t.classList.remove('sel'));
-  el.classList.add('sel');
-}
-
-// All possible slots 09:00 - 21:00 every 30 min
-const ALL_SLOTS = [
+var ALL_SLOTS = [
   '09:00','09:30','10:00','10:30','11:00','11:30',
   '12:00','12:30','13:00','13:30','14:00','14:30',
   '15:00','15:30','16:00','16:30','17:00','17:30',
   '18:00','18:30','19:00','19:30','20:00','20:30','21:00'
 ];
 
-function getDateKey(){
-  if(!selectedDay) return null;
-  const y=currentDate.getFullYear();
-  const m=String(currentDate.getMonth()+1).padStart(2,'0');
-  const d=String(selectedDay).padStart(2,'0');
-  return y+'-'+m+'-'+d;
-}
-
-function renderTimeSlots(){
-  const grid=document.getElementById('timeGrid');
-  if(!grid) return;
-  const key=getDateKey();
-  const blocked=getBlockedSlots(key);
-  const now=new Date();
-  const isToday=(key===now.toISOString().split('T')[0]);
-
-  let html='';
-  ALL_SLOTS.forEach(function(slot){
-    const [hh,mm]=slot.split(':').map(Number);
-    let cls='t-slot';
-    let click='onclick="selectTime(this)"';
-    let label=slot;
-
-    // Past time today
-    if(isToday){
-      const slotDate=new Date();
-      slotDate.setHours(hh,mm,0,0);
-      if(slotDate<=now){ cls+=' taken'; click=''; label=slot; }
-    }
-
-    // Blocked by admin
-    if(blocked.includes(slot)){ cls=' t-slot blocked taken'; click=''; label=slot+' 🔒'; }
-
-    html+='<div class="'+cls+'" '+click+'>'+label+'</div>';
-  });
-  grid.innerHTML=html;
-}
-
-// Get blocked slots from localStorage (admin panel sets these)
-function getBlockedSlots(dateKey){
+function getBlockedSlots(dateKey) {
   try {
-    const data=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
-    return data[dateKey]||[];
-  } catch(e){ return []; }
+    var data = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+    return data[dateKey] || [];
+  } catch(e) { return []; }
 }
 
-// ── STRIPE SETUP ──
-// Substituir pela sua chave pública: https://dashboard.stripe.com/apikeys
-const STRIPE_PK = 'pk_live_XXXXXXXXXXXXXXXXXXXXXXXX'; // <- colocar aqui a sua pk_live_...
-const API_URL   = 'https://api.consultasonline.com';   // <- URL do seu servidor Node.js
+function getDateKey() {
+  if (!selectedDay) return null;
+  var y = currentDate.getFullYear();
+  var m = String(currentDate.getMonth() + 1).padStart('2', '0');
+  var d = String(selectedDay).padStart('2', '0');
+  return y + '-' + m + '-' + d;
+}
 
-let stripe, cardElement, currentPayMethod = 'mbway', mbwayPollingTimer;
+function renderTimeSlots() {
+  var grid = document.getElementById('timeGrid');
+  if (!grid) return;
+  var key = getDateKey();
+  var blocked = getBlockedSlots(key);
+  var now = new Date();
+  var todayKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart('2','0') + '-' + String(now.getDate()).padStart('2','0');
+  var isToday = (key === todayKey);
+  var html = '';
+  ALL_SLOTS.forEach(function(slot) {
+    var parts = slot.split(':');
+    var hh = parseInt(parts[0]);
+    var mm = parseInt(parts[1]);
+    var cls = 't-slot';
+    var click = 'onclick="selectTime(this)"';
+    if (isToday) {
+      var slotDate = new Date();
+      slotDate.setHours(hh, mm, 0, 0);
+      if (slotDate <= now) { cls += ' taken'; click = ''; }
+    }
+    if (blocked.indexOf(slot) !== -1) { cls = 't-slot blocked taken'; click = ''; }
+    html += '<div class="' + cls + '" ' + click + '>' + slot + '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+window.renderCalendar = function() {
+  var grid = document.getElementById('calGrid');
+  if (!grid) return;
+  var y = currentDate.getFullYear();
+  var m = currentDate.getMonth();
+  var titleEl = document.getElementById('calTitle');
+  if (titleEl) titleEl.textContent = months[m] + ' ' + y;
+  var first = new Date(y, m, 1).getDay();
+  var days = new Date(y, m + 1, 0).getDate();
+  var today = new Date();
+  var html = '';
+  for (var i = 0; i < first; i++) html += '<div class="cal-d empty"></div>';
+  for (var d = 1; d <= days; d++) {
+    var isPast = new Date(y, m, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var isTdy = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
+    var isSel = selectedDay === d && m === currentDate.getMonth() && y === currentDate.getFullYear();
+    var cls = 'cal-d' + (isPast ? ' past' : isSel ? ' sel' : isTdy ? ' today' : '');
+    var clk = isPast ? '' : 'onclick="selDay(' + d + ')"';
+    html += '<div class="' + cls + '" ' + clk + '>' + d + '</div>';
+  }
+  grid.innerHTML = html;
+};
+
+window.changeMonth = function(dir) {
+  currentDate.setMonth(currentDate.getMonth() + dir);
+  renderCalendar();
+};
+
+window.selDay = function(d) {
+  selectedDay = d;
+  renderCalendar();
+  renderTimeSlots();
+  var ts = document.getElementById('timeSection');
+  if (ts) ts.style.display = 'block';
+};
+
+window.selectTime = function(el) {
+  if (el.classList.contains('taken') || el.classList.contains('blocked')) return;
+  document.querySelectorAll('.t-slot').forEach(function(t){ t.classList.remove('sel'); });
+  el.classList.add('sel');
+};
+
+// ══════════════════════════════════════
+// PAYMENT
+// ══════════════════════════════════════
+var stripe = null;
+var cardElement = null;
+var mbwayPollingTimer = null;
 
 function initStripe() {
-  if (!stripe) {
+  if (!stripe && window.Stripe) {
     stripe = Stripe(STRIPE_PK);
-    const elements = stripe.elements({
-      fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' }],
-    });
+    var elements = stripe.elements();
     cardElement = elements.create('card', {
       style: {
-        base: {
-          fontFamily: "'Inter', sans-serif",
-          fontSize: '14px',
-          color: '#0b1d35',
-          '::placeholder': { color: '#8a9bb0' },
-        },
-        invalid: { color: '#e53e3e' },
+        base: { fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#0b1d35', '::placeholder': { color: '#8a9bb0' } },
+        invalid: { color: '#e53e3e' }
       },
-      hidePostalCode: true,
+      hidePostalCode: true
     });
     cardElement.mount('#stripeCardElement');
-    cardElement.on('change', (e) => {
-      const errEl = document.getElementById('stripeCardError');
-      if (e.error) {
-        errEl.textContent = e.error.message;
-        errEl.style.display = 'block';
-      } else {
-        errEl.style.display = 'none';
+    cardElement.on('change', function(e) {
+      var errEl = document.getElementById('stripeCardError');
+      if (errEl) {
+        if (e.error) { errEl.textContent = e.error.message; errEl.style.display = 'block'; }
+        else { errEl.style.display = 'none'; }
       }
-      // Highlight card element border on focus/error
-      const el = document.getElementById('stripeCardElement');
-      el.style.borderColor = e.error ? 'var(--red)' : e.complete ? 'var(--teal)' : 'var(--border)';
+      var ce = document.getElementById('stripeCardElement');
+      if (ce) ce.style.borderColor = e.error ? 'var(--red)' : e.complete ? 'var(--teal)' : 'var(--border)';
     });
   }
 }
 
-function selectPay(el, t) {
-  document.querySelectorAll('.pay-tab').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
+window.selectPay = function(el, t) {
+  document.querySelectorAll('.pay-tab').forEach(function(b){ b.classList.remove('active'); });
+  if (el) el.classList.add('active');
   currentPayMethod = t;
-  document.getElementById('panelMbway').style.display = t === 'mbway' ? 'block' : 'none';
-  document.getElementById('panelMb').style.display    = t === 'mb'    ? 'block' : 'none';
-  document.getElementById('panelCard').style.display  = t === 'card'  ? 'block' : 'none';
+  var pMbway = document.getElementById('panelMbway');
+  var pMb = document.getElementById('panelMb');
+  var pCard = document.getElementById('panelCard');
+  if (pMbway) pMbway.style.display = t === 'mbway' ? 'block' : 'none';
+  if (pMb) pMb.style.display = t === 'mb' ? 'block' : 'none';
+  if (pCard) pCard.style.display = t === 'card' ? 'block' : 'none';
   if (t === 'card') initStripe();
-}
+};
 
 function setConfirmBtn(loading, text) {
-  const btn = document.querySelector('.confirm-btn');
+  var btn = document.querySelector('.confirm-btn');
+  if (!btn) return;
   btn.disabled = loading;
-  btn.textContent = loading ? text || 'A processar…' : 'Confirmar e Pagar →';
+  btn.textContent = loading ? (text || 'A processar…') : 'Confirmar e Pagar →';
   btn.style.opacity = loading ? '.7' : '1';
 }
 
 function showMbwayStatus(state, msg) {
-  const s   = document.getElementById('mbwayStatus');
-  const sp  = document.getElementById('mbwaySpin');
-  const txt = document.getElementById('mbwayMsg');
+  var s = document.getElementById('mbwayStatus');
+  var sp = document.getElementById('mbwaySpin');
+  var txt = document.getElementById('mbwayMsg');
+  if (!s) return;
   s.classList.add('show');
-  txt.textContent = msg;
+  if (txt) txt.textContent = msg;
   if (state === 'pending') {
-    sp.style.display = 'block';
+    if (sp) sp.style.display = 'block';
     s.style.background = 'rgba(214,158,46,.07)'; s.style.borderColor = 'rgba(214,158,46,.25)';
-    txt.style.color = 'var(--amber)';
+    if (txt) txt.style.color = 'var(--amber)';
   } else if (state === 'success') {
-    sp.style.display = 'none';
+    if (sp) sp.style.display = 'none';
     s.style.background = 'rgba(56,161,105,.07)'; s.style.borderColor = 'rgba(56,161,105,.25)';
-    txt.style.color = 'var(--green)';
+    if (txt) txt.style.color = 'var(--green)';
   } else {
-    sp.style.display = 'none';
+    if (sp) sp.style.display = 'none';
     s.style.background = 'rgba(229,62,62,.07)'; s.style.borderColor = 'rgba(229,62,62,.25)';
-    txt.style.color = 'var(--red)';
+    if (txt) txt.style.color = 'var(--red)';
   }
 }
 
-// Polling para verificar status do MBWay (Stripe atualiza via webhook no backend)
-function pollMbwayStatus(paymentIntentId, attempt = 0) {
-  if (attempt > 24) { // 2 minutos (24 × 5s)
-    showMbwayStatus('error', '⏱ Tempo expirado. Tente novamente.');
-    setConfirmBtn(false);
-    return;
-  }
-  mbwayPollingTimer = setTimeout(async () => {
-    try {
-      const res = await fetch(`${API_URL}/payment-status/${paymentIntentId}`);
-      const { status } = await res.json();
-      if (status === 'succeeded') {
-        showMbwayStatus('success', '✅ Pagamento confirmado! Email enviado.');
-        setConfirmBtn(false);
-        setTimeout(() => { closeModal(); showToast(); }, 1500);
-      } else if (status === 'requires_action' || status === 'processing') {
-        pollMbwayStatus(paymentIntentId, attempt + 1);
-      } else {
-        showMbwayStatus('error', '❌ Pagamento não confirmado. Tente novamente.');
-        setConfirmBtn(false);
-      }
-    } catch {
-      pollMbwayStatus(paymentIntentId, attempt + 1);
-    }
+function pollMbwayStatus(paymentIntentId, attempt) {
+  attempt = attempt || 0;
+  if (attempt > 24) { showMbwayStatus('error', '⏱ Tempo expirado. Tente novamente.'); setConfirmBtn(false); return; }
+  mbwayPollingTimer = setTimeout(function() {
+    fetch(API_URL + '/payment-status/' + paymentIntentId)
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        if (data.status === 'succeeded') {
+          showMbwayStatus('success', '✅ Pagamento confirmado! Email enviado.');
+          setConfirmBtn(false);
+          setTimeout(function(){ closeModal(); showToast(); }, 1500);
+        } else if (data.status === 'requires_action' || data.status === 'processing') {
+          pollMbwayStatus(paymentIntentId, attempt + 1);
+        } else {
+          showMbwayStatus('error', '❌ Pagamento não confirmado. Tente novamente.');
+          setConfirmBtn(false);
+        }
+      })
+      .catch(function(){ pollMbwayStatus(paymentIntentId, attempt + 1); });
   }, 5000);
 }
 
-async function confirmBooking() {
-  // Validações básicas
-  const name  = document.querySelector('#step2 input[type="text"]')?.value?.trim();
-  const email = document.querySelector('#step2 input[type="email"]')?.value?.trim();
-  const phone = document.getElementById('mbwayPhone')?.value?.trim();
-  const selSlot = document.querySelector('.t-slot.sel');
+window.confirmBooking = function() {
+  var nameEl = document.querySelector('#step2 input[type="text"]');
+  var emailEl = document.querySelector('#step2 input[type="email"]');
+  var phoneEl = document.getElementById('mbwayPhone');
+  var selSlot = document.querySelector('.t-slot.sel');
+  var name = nameEl ? nameEl.value.trim() : '';
+  var email = emailEl ? emailEl.value.trim() : '';
+  var phone = phoneEl ? phoneEl.value.trim() : '';
 
-  if (!name || !email) {
-    alert('Por favor preencha o nome e email.'); return;
-  }
-  if (!selectedDay) {
-    alert('Por favor selecione um dia no calendário.'); return;
-  }
-  if (!selSlot) {
-    alert('Por favor selecione um horário disponível.'); return;
-  }
-  if (currentPayMethod === 'mbway' && !phone) {
-    document.getElementById('mbwayPhone').focus();
-    alert('Por favor insira o número de telemóvel para o MB WAY.'); return;
-  }
+  if (!name || !email) { alert('Por favor preencha o nome e email.'); return; }
+  if (!selectedDay) { alert('Por favor selecione um dia no calendário.'); return; }
+  if (!selSlot) { alert('Por favor selecione um horário disponível.'); return; }
+  if (currentPayMethod === 'mbway' && !phone) { if (phoneEl) phoneEl.focus(); alert('Por favor insira o telemóvel para o MB WAY.'); return; }
 
-  const y = currentDate.getFullYear(), m = currentDate.getMonth();
-  const dateStr = `${String(selectedDay).padStart(2,'0')}/${String(m+1).padStart(2,'0')}/${y}`;
-  const timeStr = selSlot.textContent;
-
-  // Dados de faturação opcionais
-  const invChecked = document.getElementById('invCheck').checked;
-  const nif = invChecked ? document.querySelector('#invExtra input[placeholder="123 456 789"]')?.value : '';
+  var y = currentDate.getFullYear(), m = currentDate.getMonth();
+  var dateStr = String(selectedDay).padStart('2','0') + '/' + String(m+1).padStart('2','0') + '/' + y;
+  var timeStr = selSlot.textContent.trim();
+  var invChecked = document.getElementById('invCheck');
+  var nifEl = document.querySelector('#invExtra input[placeholder="123 456 789"]');
+  var nif = (invChecked && invChecked.checked && nifEl) ? nifEl.value : '';
 
   setConfirmBtn(true, 'A iniciar pagamento…');
 
-  try {
-    // 1. Criar Payment Intent no servidor
-    const res = await fetch(`${API_URL}/create-payment-intent`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        serviceId:      currentService.id,
-        paymentMethod:  currentPayMethod === 'mb' ? 'mb_reference' : currentPayMethod,
-        phone:          currentPayMethod === 'mbway' ? phone : undefined,
-        customerEmail:  email,
-        customerName:   name,
-        date:           dateStr,
-        time:           timeStr,
-        nif:            nif || undefined,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || data.error) {
-      throw new Error(data.error || 'Erro ao iniciar pagamento.');
-    }
-
-    // 2. Processar conforme método
+  fetch(API_URL + '/create-payment-intent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      serviceId: currentService.id,
+      paymentMethod: currentPayMethod === 'mb' ? 'mb_reference' : currentPayMethod,
+      phone: currentPayMethod === 'mbway' ? phone : undefined,
+      customerEmail: email,
+      customerName: name,
+      date: dateStr,
+      time: timeStr,
+      nif: nif || undefined
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (data.error) throw new Error(data.error);
     if (currentPayMethod === 'mbway') {
-      // MBWay: confirmar via stripe.confirmMbWayPayment() com o telefone
-      setConfirmBtn(true, 'A enviar para o MB WAY…');
-      const formattedPhone = phone.replace(/[\s\-]/g,'').startsWith('+') ? phone.replace(/[\s\-]/g,'') : '+351' + phone.replace(/[\s\-]/g,'');
-      const { error, paymentIntent: mbPi } = await stripe.confirmMbWayPayment(data.clientSecret, {
-        payment_method: { billing_details: { phone: formattedPhone } },
+      var formattedPhone = phone.replace(/[\s\-]/g,'');
+      if (!formattedPhone.startsWith('+')) formattedPhone = '+351' + formattedPhone;
+      stripe = stripe || (window.Stripe ? Stripe(STRIPE_PK) : null);
+      if (!stripe) { showMbwayStatus('pending','📱 A aguardar confirmação MB WAY…'); pollMbwayStatus(data.paymentIntentId); return; }
+      return stripe.confirmMbWayPayment(data.clientSecret, {
+        payment_method: { billing_details: { phone: formattedPhone } }
+      }).then(function(result) {
+        if (result.error) { showMbwayStatus('error', '❌ ' + result.error.message); setConfirmBtn(false); }
+        else { showMbwayStatus('pending','📱 Notificação enviada. Confirme no app MB WAY…'); pollMbwayStatus(data.paymentIntentId); }
       });
-      if (error) {
-        showMbwayStatus('error', '❌ ' + error.message);
-        setConfirmBtn(false);
-        return;
-      }
-      showMbwayStatus('pending', '📱 Notificação enviada. Confirme no app MB WAY…');
-      pollMbwayStatus(data.paymentIntentId);
-
     } else if (currentPayMethod === 'mb') {
-      // Multibanco: mostrar referência gerada pelo Stripe
       if (data.multibanco) {
-        const mb = data.multibanco;
-        document.getElementById('mbEntity').textContent = mb.entity;
-        document.getElementById('mbRef').textContent    = mb.reference;
-        document.getElementById('mbAmount').textContent = mb.amount;
-        document.getElementById('mbRefGrid').style.display = 'grid';
-        document.getElementById('mbRefBox').querySelector('p').style.display = 'none';
+        var mb = data.multibanco;
+        var eEl = document.getElementById('mbEntity');
+        var rEl = document.getElementById('mbRef');
+        var aEl = document.getElementById('mbAmount');
+        var gEl = document.getElementById('mbRefGrid');
+        var pEl = document.querySelector('#mbRefBox p');
+        if (eEl) eEl.textContent = mb.entity;
+        if (rEl) rEl.textContent = mb.reference;
+        if (aEl) aEl.textContent = mb.amount;
+        if (gEl) gEl.style.display = 'grid';
+        if (pEl) pEl.style.display = 'none';
       }
       setConfirmBtn(false);
-      // Para MB, o pagamento é assíncrono — confirmação por email via webhook
-
     } else if (currentPayMethod === 'card') {
-      // Cartão: confirmar com Stripe.js
-      setConfirmBtn(true, 'A processar cartão…');
-      const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
-        payment_method: { card: cardElement },
+      setConfirmBtn(true,'A processar cartão…');
+      return stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: { card: cardElement }
+      }).then(function(result) {
+        if (result.error) {
+          var errEl = document.getElementById('stripeCardError');
+          if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
+          setConfirmBtn(false);
+        } else if (result.paymentIntent.status === 'succeeded') {
+          setConfirmBtn(false); closeModal(); showToast();
+        }
       });
-      if (error) {
-        const errEl = document.getElementById('stripeCardError');
-        errEl.textContent = error.message;
-        errEl.style.display = 'block';
-        setConfirmBtn(false);
-        return;
-      }
-      if (paymentIntent.status === 'succeeded') {
-        setConfirmBtn(false);
-        closeModal();
-        showToast();
-      }
     }
-
-  } catch (err) {
-    console.error('Payment error:', err);
-    alert('Erro: ' + err.message);
-    setConfirmBtn(false);
-  }
-}
+  })
+  .catch(function(err){ alert('Erro: ' + err.message); setConfirmBtn(false); });
+};
 
 function showToast() {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
+  if (!t) return;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 6000);
+  setTimeout(function(){ t.classList.remove('show'); }, 6000);
 }
 
-function toggleInvoice() {
-  const cb = document.getElementById('invCheck'); cb.checked = !cb.checked;
-  document.getElementById('invExtra').classList.toggle('show', cb.checked);
-}
+window.toggleInvoice = function() {
+  var cb = document.getElementById('invCheck');
+  if (!cb) return;
+  cb.checked = !cb.checked;
+  var extra = document.getElementById('invExtra');
+  if (extra) extra.classList.toggle('show', cb.checked);
+};
 
-// ── CHAT ──
-function toggleChat(){document.getElementById('chatBox').classList.toggle('open');}
-function chatEnter(e){if(e.key==='Enter')sendChat();}
-const replies=[
-  'Claro! Pode marcar diretamente clicando em "Marcar Consulta" no menu superior.',
-  'Os atestados custam 35€ e as consultas 40€. Pagamento por MBWay, Referência MB ou cartão.',
-  'Após o pagamento, a fatura é enviada automaticamente para o seu email em menos de 30 segundos.',
-  'Temos disponibilidade hoje e amanhã. Clique em "Marcar Consulta" para ver os horários.',
-  'Os documentos são emitidos digitalmente e enviados por email com validade legal em Portugal.',
-  'Para qualquer dúvida adicional, pode contactar-nos pelo email apoio@consultasonline.com'
-];
-let ri=0;
-function sendChat(){
-  const inp=document.getElementById('chatInp');
-  const msg=inp.value.trim();if(!msg)return;
-  const box=document.getElementById('chatMsgs');
-  box.innerHTML+='<div class="cmsg cmsg-user">'+msg+'</div>';
-  inp.value='';box.scrollTop=box.scrollHeight;
-  setTimeout(()=>{
-    box.innerHTML+='<div class="cmsg cmsg-bot">'+replies[ri%replies.length]+'</div>';
-    ri++;box.scrollTop=box.scrollHeight;
-  },750);
-}
-
-
-// ════════════════════════════════════════
+// ══════════════════════════════════════
 // ADMIN PANEL
-// ════════════════════════════════════════
+// ══════════════════════════════════════
+var ADMIN_PASSWORD = 'consultas2024admin';
+var adminDate = new Date();
+var adminSelectedDay = null;
+var adminSelectedKey = null;
+var adminMonths = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-// Password de administração — mude para uma password sua
-const ADMIN_PASSWORD = 'consultas2024admin';
-
-function showAdminLogin(){
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
-  var page=document.getElementById('page-admin');
-  if(page) page.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-  // Check if already logged in
-  if(sessionStorage.getItem('adminLoggedIn')==='true'){
-    document.getElementById('adminLogin').style.display='none';
-    document.getElementById('adminDashboard').style.display='block';
-    renderAdminCalendar();
-    renderAdminSummary();
-  }
-}
-
-function checkAdminLogin(){
-  const pwd=document.getElementById('adminPwd').value;
-  if(pwd===ADMIN_PASSWORD){
-    sessionStorage.setItem('adminLoggedIn','true');
-    document.getElementById('adminLogin').style.display='none';
-    document.getElementById('adminDashboard').style.display='block';
-    renderAdminCalendar();
-    renderAdminSummary();
-  } else {
-    document.getElementById('adminLoginErr').classList.add('show');
-    document.getElementById('adminPwd').value='';
-    document.getElementById('adminPwd').focus();
-  }
-}
-
-function adminLogout(){
-  sessionStorage.removeItem('adminLoggedIn');
-  document.getElementById('adminLogin').style.display='block';
-  document.getElementById('adminDashboard').style.display='none';
-  document.getElementById('adminPwd').value='';
-  showPage('home');
-}
-
-// Admin Calendar
-let adminDate=new Date(), adminSelectedDay=null, adminSelectedKey=null;
-const adminMonths=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-
-function renderAdminCalendar(){
-  const y=adminDate.getFullYear(), m=adminDate.getMonth();
-  document.getElementById('adminCalTitle').textContent=adminMonths[m]+' '+y;
-  const first=new Date(y,m,1).getDay();
-  const days=new Date(y,m+1,0).getDate();
-  const today=new Date();
-  const blocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
-  let html='';
-  for(let i=0;i<first;i++) html+='<div class="admin-day empty"></div>';
-  for(let d=1;d<=days;d++){
-    const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const isPast=new Date(y,m,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
-    const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
-    const isSr();
-}
-
-function adminSelectDay(d){
-  adminSelectedDay=d;
-  const y=adminDate.getFullYear(), m=adminDate.getMonth();
-  adminSelectedKey=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-  renderAdminCalendar();
-
-  // Show slots manager
-  document.getElementById('adminSlotsWrap').style.display='block';
-  document.getElementById('adminSlotsEmpty').style.display='none';
-  document.getElementById('adminSavedMsg').classList.remove('show');
-
-  // Format date label
-  const dateObj=new Date(y,m,d);
-  const dayNames=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  document.getElementById('adminDateLabel').textContent=dayNames[dateObj.getDay()]+', '+String(d).padStart(2,'0')+'/'+String(m+1).padStart(2,'0')+'/'+y;
-
-  renderAdminSlots();
-}
-
-const ADMIN_ALL_SLOTS=[
+var ADMIN_ALL_SLOTS = [
   '09:00','09:30','10:00','10:30','11:00','11:30',
   '12:00','12:30','13:00','13:30','14:00','14:30',
   '15:00','15:30','16:00','16:30','17:00','17:30',
   '18:00','18:30','19:00','19:30','20:00','20:30','21:00'
 ];
 
-function renderAdminSlots(){
-  const blocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
-  const dayBlocked=blocked[adminSelectedKey]||[];
-  let html='';
-  ADMIN_ALL_SLOTS.forEach(function(slot){
-    const isBlocked=dayBlocked.includes(slot);
-    const cls='admin-slot'+(isBlocked?' blocked':'');
-    html+='<div class="'+cls+'" onclick="adminToggleSlot(this,''+slot+'')">'+slot+'</div>';
+window.showAdminLogin = function() {
+  document.querySelectorAll('.page').forEach(function(x){ x.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(x){ x.classList.remove('active'); });
+  var page = document.getElementById('page-admin');
+  if (page) page.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+    var login = document.getElementById('adminLogin');
+    var dash = document.getElementById('adminDashboard');
+    if (login) login.style.display = 'none';
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); }
+  }
+};
+
+window.checkAdminLogin = function() {
+  var pwd = document.getElementById('adminPwd');
+  if (!pwd) return;
+  if (pwd.value === ADMIN_PASSWORD) {
+    sessionStorage.setItem('adminLoggedIn', 'true');
+    var login = document.getElementById('adminLogin');
+    var dash = document.getElementById('adminDashboard');
+    if (login) login.style.display = 'none';
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); }
+  } else {
+    var err = document.getElementById('adminLoginErr');
+    if (err) err.classList.add('show');
+    pwd.value = '';
+    pwd.focus();
+  }
+};
+
+window.adminLogout = function() {
+  sessionStorage.removeItem('adminLoggedIn');
+  var login = document.getElementById('adminLogin');
+  var dash = document.getElementById('adminDashboard');
+  if (login) login.style.display = 'block';
+  if (dash) dash.style.display = 'none';
+  var pwd = document.getElementById('adminPwd');
+  if (pwd) pwd.value = '';
+  window.showPage('home');
+};
+
+function renderAdminCalendar() {
+  var grid = document.getElementById('adminCalGrid');
+  if (!grid) return;
+  var y = adminDate.getFullYear(), m = adminDate.getMonth();
+  var title = document.getElementById('adminCalTitle');
+  if (title) title.textContent = adminMonths[m] + ' ' + y;
+  var first = new Date(y, m, 1).getDay();
+  var days = new Date(y, m + 1, 0).getDate();
+  var today = new Date();
+  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  var html = '';
+  for (var i = 0; i < first; i++) html += '<div class="admin-day empty"></div>';
+  for (var d = 1; d <= days; d++) {
+    var key = y + '-' + String(m+1).padStart('2','0') + '-' + String(d).padStart('2','0');
+    var isPast = new Date(y,m,d) < new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    var isToday = d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    var isSel = adminSelectedKey === key;
+    var hasBlocked = blocked[key] && blocked[key].length > 0;
+    var cls = 'admin-day' + (isPast?' past':isSel?' selected':isToday?' today':'') + (hasBlocked?' has-blocked':'');
+    var clk = isPast ? '' : 'onclick="adminSelectDay(' + d + ')"';
+    html += '<div class="' + cls + '" ' + clk + '>' + d + '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+window.adminChangeMonth = function(dir) {
+  adminDate.setMonth(adminDate.getMonth() + dir);
+  renderAdminCalendar();
+};
+
+window.adminSelectDay = function(d) {
+  adminSelectedDay = d;
+  var y = adminDate.getFullYear(), m = adminDate.getMonth();
+  adminSelectedKey = y + '-' + String(m+1).padStart('2','0') + '-' + String(d).padStart('2','0');
+  renderAdminCalendar();
+  var wrap = document.getElementById('adminSlotsWrap');
+  var empty = document.getElementById('adminSlotsEmpty');
+  var saved = document.getElementById('adminSavedMsg');
+  if (wrap) wrap.style.display = 'block';
+  if (empty) empty.style.display = 'none';
+  if (saved) saved.classList.remove('show');
+  var dateObj = new Date(y, m, d);
+  var dayNames = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  var label = document.getElementById('adminDateLabel');
+  if (label) label.textContent = dayNames[dateObj.getDay()] + ', ' + String(d).padStart('2','0') + '/' + String(m+1).padStart('2','0') + '/' + y;
+  renderAdminSlots();
+};
+
+function renderAdminSlots() {
+  var grid = document.getElementById('adminSlotsGrid');
+  if (!grid) return;
+  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  var dayBlocked = blocked[adminSelectedKey] || [];
+  var html = '';
+  ADMIN_ALL_SLOTS.forEach(function(slot) {
+    var isBlocked = dayBlocked.indexOf(slot) !== -1;
+    var cls = 'admin-slot' + (isBlocked ? ' blocked' : '');
+    html += '<div class="' + cls + '" onclick="adminToggleSlot(this,'' + slot + '')">' + slot + '</div>';
   });
-  document.getElementById('adminSlotsGrid').innerHTML=html;
+  grid.innerHTML = html;
 }
 
-function adminToggleSlot(el, slot){
+window.adminToggleSlot = function(el) {
   el.classList.toggle('blocked');
-  document.getElementById('adminSavedMsg').classList.remove('show');
-}
+  var saved = document.getElementById('adminSavedMsg');
+  if (saved) saved.classList.remove('show');
+};
 
-function adminToggleAll(block){
+window.adminToggleAll = function(block) {
   document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
-    if(block) el.classList.add('blocked');
+    if (block) el.classList.add('blocked');
     else el.classList.remove('blocked');
   });
-}
+};
 
-function adminClearDay(){
+window.adminClearDay = function() {
   document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
     el.classList.remove('blocked');
   });
-}
+};
 
-function adminSaveSlots(){
-  if(!adminSelectedKey) return;
-  const blockedSlots=[];
+window.adminSaveSlots = function() {
+  if (!adminSelectedKey) return;
+  var blockedSlots = [];
   document.querySelectorAll('#adminSlotsGrid .admin-slot.blocked').forEach(function(el){
-    // extract time from text (remove lock emoji)
-    const txt=el.textContent.replace('🔒','').trim();
-    blockedSlots.push(txt);
+    blockedSlots.push(el.textContent.trim());
   });
-
-  const allBlocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
-  if(blockedSlots.length>0){
-    allBlocked[adminSelectedKey]=blockedSlots;
-  } else {
-    delete allBlocked[adminSelectedKey];
-  }
-  localStorage.setItem('blocked_slots',JSON.stringify(allBlocked));
-
-  document.getElementById('adminSavedMsg').classList.add('show');
+  var allBlocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  if (blockedSlots.length > 0) allBlocked[adminSelectedKey] = blockedSlots;
+  else delete allBlocked[adminSelectedKey];
+  localStorage.setItem('blocked_slots', JSON.stringify(allBlocked));
+  var saved = document.getElementById('adminSavedMsg');
+  if (saved) saved.classList.add('show');
   renderAdminCalendar();
   renderAdminSummary();
-  setTimeout(function(){ document.getElementById('adminSavedMsg').classList.remove('show'); },3000);
-}
+  setTimeout(function(){ if (saved) saved.classList.remove('show'); }, 3000);
+};
 
-function renderAdminSummary(){
-  const blocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
-  const keys=Object.keys(blocked).filter(function(k){ return blocked[k]&&blocked[k].length>0; }).sort();
-  const container=document.getElementById('adminSummary');
-  if(!container) return;
-  if(keys.length===0){
-    container.innerHTML='<div class="summary-empty">Nenhum slot bloqueado ainda.</div>';
-    return;
-  }
-  let html='';
-  keys.forEach(function(key){
-    const slots=blocked[key];
-    const parts=key.split('-');
-    const label=parts[2]+'/'+parts[1]+'/'+parts[0];
-    html+='<div class="summary-day"><div class="summary-day-title">📅 '+label+' — '+slots.length+' slot(s) bloqueado(s)</div><div class="summary-chips">';
+function renderAdminSummary() {
+  var container = document.getElementById('adminSummary');
+  if (!container) return;
+  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  var keys = Object.keys(blocked).filter(function(k){ return blocked[k] && blocked[k].length > 0; }).sort();
+  if (keys.length === 0) { container.innerHTML = '<div class="summary-empty">Nenhum slot bloqueado ainda.</div>'; return; }
+  var html = '';
+  keys.forEach(function(key) {
+    var slots = blocked[key];
+    var parts = key.split('-');
+    var label = parts[2] + '/' + parts[1] + '/' + parts[0];
+    html += '<div class="summary-day"><div class="summary-day-title">📅 ' + label + ' — ' + slots.length + ' slot(s)</div><div class="summary-chips">';
     slots.forEach(function(slot){
-      html+='<div class="summary-chip">'+slot+' <span class="summary-chip-x" onclick="adminUnblockSlot(''+key+'',''+slot+'')">✕</span></div>';
+      html += '<div class="summary-chip">' + slot + ' <span class="summary-chip-x" onclick="adminUnblockSlot('' + key + '','' + slot + '')">✕</span></div>';
     });
-    html+='</div></div>';
+    html += '</div></div>';
   });
-  container.innerHTML=html;
+  container.innerHTML = html;
 }
 
-function adminUnblockSlot(dateKey, slot){
-  const allBlocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
-  if(allBlocked[dateKey]){
-    allBlocked[dateKey]=allBlocked[dateKey].filter(function(s){ return s!==slot; });
-    if(allBlocked[dateKey].length===0) delete allBlocked[dateKey];
-    localStorage.setItem('blocked_slots',JSON.stringify(allBlocked));
+window.adminUnblockSlot = function(dateKey, slot) {
+  var allBlocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  if (allBlocked[dateKey]) {
+    allBlocked[dateKey] = allBlocked[dateKey].filter(function(s){ return s !== slot; });
+    if (allBlocked[dateKey].length === 0) delete allBlocked[dateKey];
+    localStorage.setItem('blocked_slots', JSON.stringify(allBlocked));
     renderAdminSummary();
     renderAdminCalendar();
-    if(adminSelectedKey===dateKey) renderAdminSlots();
+    if (adminSelectedKey === dateKey) renderAdminSlots();
   }
-}
+};
 
-// ── FAQ TOGGLE ──
-function toggleFaq(el){
-  const isOpen=el.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
-  if(!isOpen) el.classList.add('open');
-}
+// ══════════════════════════════════════
+// FAQ
+// ══════════════════════════════════════
+window.toggleFaq = function(el) {
+  var isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(f){ f.classList.remove('open'); });
+  if (!isOpen) el.classList.add('open');
+};
 
-// ── CONTACT FORM ──
-async function submitContact(){
-  const name    = document.getElementById('cName').value.trim();
-  const email   = document.getElementById('cEmail').value.trim();
-  const subject = document.getElementById('cSubject').value;
-  const message = document.getElementById('cMessage').value.trim();
-
-  if(!name||!email||!message){
-    alert('Por favor preencha o nome, email e mensagem.');
-    return;
-  }
-
-  const btn = document.querySelector('.csubmit');
-  btn.textContent='A enviar…';
-  btn.disabled=true;
-
+// ══════════════════════════════════════
+// CONTACT FORM
+// ══════════════════════════════════════
+window.submitContact = async function() {
+  var name    = document.getElementById('cName') ? document.getElementById('cName').value.trim() : '';
+  var email   = document.getElementById('cEmail') ? document.getElementById('cEmail').value.trim() : '';
+  var subject = document.getElementById('cSubject') ? document.getElementById('cSubject').value : '';
+  var message = document.getElementById('cMessage') ? document.getElementById('cMessage').value.trim() : '';
+  if (!name || !email || !message) { alert('Por favor preencha o nome, email e mensagem.'); return; }
+  var btn = document.querySelector('.csubmit');
+  if (btn) { btn.textContent = 'A enviar…'; btn.disabled = true; }
   try {
-    const res = await fetch(API_URL+'/contact',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name,email,subject,message}),
+    var res = await fetch(API_URL + '/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, subject: subject, message: message })
     });
-    const data = await res.json();
-    if(!res.ok||data.error) throw new Error(data.error||'Erro ao enviar.');
-    document.getElementById('contactSuccess').classList.add('show');
-    document.getElementById('cName').value='';
-    document.getElementById('cEmail').value='';
-    document.getElementById('cMessage').value='';
-    document.getElementById('cSubject').value='';
-    btn.textContent='Mensagem Enviada ✓';
-  } catch(err){
-    alert('Erro: '+err.message);
-    btn.textContent='Enviar Mensagem →';
-    btn.disabled=false;
+    var data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Erro ao enviar.');
+    var suc = document.getElementById('contactSuccess');
+    if (suc) suc.classList.add('show');
+    if (document.getElementById('cName')) document.getElementById('cName').value = '';
+    if (document.getElementById('cEmail')) document.getElementById('cEmail').value = '';
+    if (document.getElementById('cMessage')) document.getElementById('cMessage').value = '';
+    if (document.getElementById('cSubject')) document.getElementById('cSubject').value = '';
+    if (btn) btn.textContent = 'Mensagem Enviada ✓';
+  } catch(err) {
+    alert('Erro: ' + err.message);
+    if (btn) { btn.textContent = 'Enviar Mensagem →'; btn.disabled = false; }
   }
-}
+};
 
-// ── SCROLL ANIMATIONS ──
-function checkVisible(){
-  document.querySelectorAll('.fade-up').forEach(function(el){
-    // Only check elements in active pages
-    var page=el.closest('.page');
-    if(page && !page.classList.contains('active')) return;
-    var rect=el.getBoundingClientRect();
-    if(rect.top < window.innerHeight+50) el.classList.add('visible');
+// ══════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════
+window.toggleChat = function() {
+  var box = document.getElementById('chatBox');
+  if (box) box.classList.toggle('open');
+};
+window.chatEnter = function(e) { if (e.key === 'Enter') window.sendChat(); };
+var chatReplies = [
+  'Claro! Pode marcar diretamente clicando em "Marcar Consulta" no menu superior.',
+  'Os atestados custam 35€ e as consultas 40€. Pagamento por MBWay, Referência MB ou cartão.',
+  'Após o pagamento, a fatura é enviada automaticamente para o seu email em menos de 30 segundos.',
+  'Temos disponibilidade hoje. Clique em "Marcar Consulta" para ver os horários disponíveis.',
+  'Os documentos são emitidos digitalmente e enviados por email com validade legal em Portugal.',
+  'Para dúvidas adicionais, contacte-nos em geral@consultas-online.pt'
+];
+var chatIdx = 0;
+window.sendChat = function() {
+  var inp = document.getElementById('chatInp');
+  var box = document.getElementById('chatMsgs');
+  if (!inp || !box) return;
+  var msg = inp.value.trim();
+  if (!msg) return;
+  box.innerHTML += '<div class="cmsg cmsg-user">' + msg + '</div>';
+  inp.value = '';
+  box.scrollTop = box.scrollHeight;
+  setTimeout(function(){
+    box.innerHTML += '<div class="cmsg cmsg-bot">' + chatReplies[chatIdx % chatReplies.length] + '</div>';
+    chatIdx++;
+    box.scrollTop = box.scrollHeight;
+  }, 750);
+};
+
+// ══════════════════════════════════════
+// SCROLL ANIMATIONS
+// ══════════════════════════════════════
+function checkVisible() {
+  document.querySelectorAll('.fade-up').forEach(function(el) {
+    var page = el.closest('.page');
+    if (page && !page.classList.contains('active')) return;
+    var rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 60) el.classList.add('visible');
   });
 }
-// Also show all on first load after short delay
-function showAllVisible(){
-  document.querySelectorAll('.page.active .fade-up').forEach(function(el){
-    el.classList.add('visible');
-  });
-}
-checkVisible();
-window.addEventListener('scroll',checkVisible,{passive:true});
-setTimeout(checkVisible,100);
-setTimeout(checkVisible,400);
-setTimeout(showAllVisible,600);
+window.addEventListener('scroll', checkVisible, { passive: true });
+setTimeout(checkVisible, 100);
+setTimeout(checkVisible, 400);
+setTimeout(function() {
+  document.querySelectorAll('.page.active .fade-up').forEach(function(el){ el.classList.add('visible'); });
+}, 700);
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
+
+})(); // end IIFE
 </script>
+
 </body>
 </html>
