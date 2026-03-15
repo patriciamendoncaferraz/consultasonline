@@ -2167,4 +2167,68 @@ function sendChat(){
   const msg=inp.value.trim();if(!msg)return;
   const box=document.getElementById('chatMsgs');
   box.innerHTML+='<div class="cmsg cmsg-user">'+msg+'</div>';
-  inp.value='';b
+  inp.value='';box.scrollTop=box.scrollHeight;
+  setTimeout(()=>{
+    box.innerHTML+='<div class="cmsg cmsg-bot">'+replies[ri%replies.length]+'</div>';
+    ri++;box.scrollTop=box.scrollHeight;
+  },750);
+}
+
+// ── FAQ TOGGLE ──
+function toggleFaq(el){
+  const isOpen=el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
+}
+
+// ── CONTACT FORM ──
+async function submitContact(){
+  const name    = document.getElementById('cName').value.trim();
+  const email   = document.getElementById('cEmail').value.trim();
+  const subject = document.getElementById('cSubject').value;
+  const message = document.getElementById('cMessage').value.trim();
+
+  if(!name||!email||!message){
+    alert('Por favor preencha o nome, email e mensagem.');
+    return;
+  }
+
+  const btn = document.querySelector('.csubmit');
+  btn.textContent='A enviar…';
+  btn.disabled=true;
+
+  try {
+    const res = await fetch(API_URL+'/contact',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,email,subject,message}),
+    });
+    const data = await res.json();
+    if(!res.ok||data.error) throw new Error(data.error||'Erro ao enviar.');
+    document.getElementById('contactSuccess').classList.add('show');
+    document.getElementById('cName').value='';
+    document.getElementById('cEmail').value='';
+    document.getElementById('cMessage').value='';
+    document.getElementById('cSubject').value='';
+    btn.textContent='Mensagem Enviada ✓';
+  } catch(err){
+    alert('Erro: '+err.message);
+    btn.textContent='Enviar Mensagem →';
+    btn.disabled=false;
+  }
+}
+
+// ── SCROLL ANIMATIONS ──
+function checkVisible(){
+  document.querySelectorAll('.fade-up').forEach(function(el){
+    const rect=el.getBoundingClientRect();
+    if(rect.top < window.innerHeight-40) el.classList.add('visible');
+  });
+}
+checkVisible();
+window.addEventListener('scroll',checkVisible,{passive:true});
+setTimeout(checkVisible,300);
+setTimeout(checkVisible,800);
+</script>
+</body>
+</html>
