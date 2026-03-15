@@ -101,7 +101,7 @@ app.post('/create-payment-intent', async (req, res) => {
       confirmParams = {
         payment_method: {
           type: 'mb_way',
-          mb_way: { phone },
+          mb_way: { phone.startsWith('+') ? phone : '+351' + phone.replace(/\s/g,''), },
         },
         confirm: true,
         return_url: `${process.env.CLIENT_URL}/success`,
