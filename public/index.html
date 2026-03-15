@@ -2046,6 +2046,7 @@ window.closeModal = function() {
   var modal = document.getElementById('serviceModal');
   if (modal) modal.classList.remove('open');
   document.body.style.overflow = '';
+  if (mbwayPollingTimer) { clearTimeout(mbwayPollingTimer); mbwayPollingTimer = null; }
 };
 
 var modal = document.getElementById('serviceModal');
@@ -2269,23 +2270,32 @@ function showMbwayStatus(state, msg) {
 
 function pollMbwayStatus(paymentIntentId, attempt) {
   attempt = attempt || 0;
+  // Stop polling if modal is closed or max attempts reached
+  var modal = document.getElementById('serviceModal');
+  if (!modal || !modal.classList.contains('open')) { setConfirmBtn(false); return; }
   if (attempt > 24) { showMbwayStatus('error', '⏱ Tempo expirado. Tente novamente.'); setConfirmBtn(false); return; }
+  if (mbwayPollingTimer) clearTimeout(mbwayPollingTimer);
   mbwayPollingTimer = setTimeout(function() {
     fetch(API_URL + '/payment-status/' + paymentIntentId)
       .then(function(r){ return r.json(); })
       .then(function(data) {
         if (data.status === 'succeeded') {
+          mbwayPollingTimer = null;
           showMbwayStatus('success', '✅ Pagamento confirmado! Email enviado.');
           setConfirmBtn(false);
           setTimeout(function(){ closeModal(); showToast(); }, 1500);
-        } else if (data.status === 'requires_action' || data.status === 'processing') {
+        } else if (data.status === 'requires_action' || data.status === 'processing' || data.status === 'requires_payment_method') {
           pollMbwayStatus(paymentIntentId, attempt + 1);
         } else {
+          mbwayPollingTimer = null;
           showMbwayStatus('error', '❌ Pagamento não confirmado. Tente novamente.');
           setConfirmBtn(false);
         }
       })
-      .catch(function(){ pollMbwayStatus(paymentIntentId, attempt + 1); });
+      .catch(function(){
+        if (attempt < 5) pollMbwayStatus(paymentIntentId, attempt + 1);
+        else { showMbwayStatus('error', '❌ Erro de ligação.'); setConfirmBtn(false); }
+      });
   }, 5000);
 }
 
