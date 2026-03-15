@@ -1413,7 +1413,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
     </div>
 
     <hr class="inner-divider"/>
-    <p style="text-align:center;font-size:15px;color:var(--slate)">Não encontrou a resposta? Envie-nos um email para <a href="mailto:geral@consultas-online.pt" style="color:var(--teal);font-weight:600">geral@consultas-online.pt</a> ou <a href="#" onclick="showPage('contacto')" style="color:var(--teal);font-weight:600">use o formulário →</a></p>
+    <p style="text-align:center;font-size:15px;color:var(--slate)">Não encontrou a resposta? Envie-nos um email para <a href="/cdn-cgi/l/email-protection#e98e8c9b8885a98a86879a9c859d889ac486878580878cc7999d" style="color:var(--teal);font-weight:600"><span class="__cf_email__" data-cfemail="f6919384979ab695999885839a829785db99989a9f9893d88682">[email&#160;protected]</span></a> ou <a href="#" onclick="showPage('contacto')" style="color:var(--teal);font-weight:600">use o formulário →</a></p>
   </div>
 </div>
 </div>
@@ -1454,7 +1454,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
           <h3>Informações de Contacto</h3>
           <div class="contact-item">
             <div class="contact-item-icon">📧</div>
-            <div class="contact-item-text"><strong>Email</strong><a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a></div>
+            <div class="contact-item-text"><strong>Email</strong><a href="/cdn-cgi/l/email-protection#89eeecfbe8e5c9eae6e7fafce5fde8faa4e6e7e5e0e7eca7f9fd"><span class="__cf_email__" data-cfemail="f2959780939eb2919d9c81879e869381df9d9c9e9b9c97dc8286">[email&#160;protected]</span></a></div>
           </div>
           <div class="contact-item">
             <div class="contact-item-icon">🕐</div>
@@ -1471,7 +1471,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         </div>
         <div class="contact-info-box" style="margin-top:16px;background:linear-gradient(135deg,var(--navy),var(--navy3));border-color:transparent">
           <h3 style="color:var(--white)">Precisa de ajuda urgente?</h3>
-          <p style="font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:16px">Para questões urgentes relacionadas com uma consulta marcada para hoje, inclua o número de confirmação no email para geral@consultas-online.pt.</p>
+          <p style="font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:16px">Para questões urgentes relacionadas com uma consulta marcada para hoje, inclua o número de confirmação no email para <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8deae8ffece1cdeee2e3fef8e1f9ecfea0e2e3e1e4e3e8a3fdf9">[email&#160;protected]</a>.</p>
           <button class="csubmit" onclick="showPage('ajuda')">Ver Perguntas Frequentes</button>
         </div>
       </div>
@@ -1961,15 +1961,24 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
   <button class="chat-toggle" onclick="toggleChat()">💬</button>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── PAGE NAV ──
 function showPage(p){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  document.getElementById('tab-'+p).classList.add('active');
+  var page=document.getElementById('page-'+p);
+  if(page) page.classList.add('active');
+  var tab=document.getElementById('tab-'+p);
+  if(tab) tab.classList.add('active');
+  else {
+    // fallback: mark home or blog as active
+    if(p==='blog'){ var t=document.getElementById('tab-blog'); if(t) t.classList.add('active'); }
+    else { var t2=document.getElementById('tab-home'); if(t2) t2.classList.add('active'); }
+  }
   closeAllArticles();
   window.scrollTo({top:0,behavior:'smooth'});
+  // Re-run animations for the new page
+  setTimeout(checkVisible, 100);
 }
 
 // ── ARTICLE NAV ──
@@ -2012,7 +2021,8 @@ function closeModal(){
   document.getElementById('serviceModal').classList.remove('open');
   document.body.style.overflow='';
 }
-document.getElementById('serviceModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+var _sm=document.getElementById('serviceModal');
+if(_sm) _sm.addEventListener('click',function(e){if(e.target===this)closeModal();});
 
 const svcIcons={'Atestado de Amamentação':'🤱','Atestado para Falta Escolar':'🎓','Atestado para Carta de Condução':'🚗','Emissão de Baixa Médica':'🏥','Renovação de Medicamentos':'💊','Consulta de Infeção Urinária':'💧','Consulta de Cessação Tabágica':'🚭','Consulta de Amigdalite':'🤒','Consulta de DST / IST':'🔬'};
 
@@ -2076,7 +2086,7 @@ function renderCalendar(){
 function changeMonth(d){currentDate.setMonth(currentDate.getMonth()+d);renderCalendar();}
 function selDay(d){
   selectedDay=d;
-  renderCalendar();
+  try{ renderCalendar(); } catch(e){ console.warn(e); }
   renderTimeSlots();
   document.getElementById('timeSection').style.display='block';
 }
@@ -2400,7 +2410,11 @@ function sendChat(){
 const ADMIN_PASSWORD = 'consultas2024admin';
 
 function showAdminLogin(){
-  showPage('admin');
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  var page=document.getElementById('page-admin');
+  if(page) page.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
   // Check if already logged in
   if(sessionStorage.getItem('adminLoggedIn')==='true'){
     document.getElementById('adminLogin').style.display='none';
@@ -2450,22 +2464,7 @@ function renderAdminCalendar(){
     const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const isPast=new Date(y,m,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
     const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
-    const isSel=adminSelectedKey===key;
-    const hasBlocked=blocked[key]&&blocked[key].length>0;
-    let cls='admin-day';
-    if(isPast) cls+=' past';
-    else if(isSel) cls+=' selected';
-    else if(isToday) cls+=' today';
-    if(hasBlocked) cls+=' has-blocked';
-    const clk=isPast?'':'onclick="adminSelectDay('+d+')"';
-    html+='<div class="'+cls+'" '+clk+'>'+d+'</div>';
-  }
-  document.getElementById('adminCalGrid').innerHTML=html;
-}
-
-function adminChangeMonth(dir){
-  adminDate.setMonth(adminDate.getMonth()+dir);
-  renderAdminCalendar();
+    const isSr();
 }
 
 function adminSelectDay(d){
@@ -2629,14 +2628,24 @@ async function submitContact(){
 // ── SCROLL ANIMATIONS ──
 function checkVisible(){
   document.querySelectorAll('.fade-up').forEach(function(el){
-    const rect=el.getBoundingClientRect();
-    if(rect.top < window.innerHeight-40) el.classList.add('visible');
+    // Only check elements in active pages
+    var page=el.closest('.page');
+    if(page && !page.classList.contains('active')) return;
+    var rect=el.getBoundingClientRect();
+    if(rect.top < window.innerHeight+50) el.classList.add('visible');
+  });
+}
+// Also show all on first load after short delay
+function showAllVisible(){
+  document.querySelectorAll('.page.active .fade-up').forEach(function(el){
+    el.classList.add('visible');
   });
 }
 checkVisible();
 window.addEventListener('scroll',checkVisible,{passive:true});
-setTimeout(checkVisible,300);
-setTimeout(checkVisible,800);
+setTimeout(checkVisible,100);
+setTimeout(checkVisible,400);
+setTimeout(showAllVisible,600);
 </script>
 </body>
 </html>
