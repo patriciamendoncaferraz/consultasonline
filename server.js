@@ -192,17 +192,80 @@ async function sendConfirmationEmail({ to, name, serviceName, date, time, amount
     + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Valor pago: <strong>' + amountEur + '</strong></p>'
     + invoiceLine
     + '</div>'
-    + '<p style="font-size:12px;color:#8a9bb0">Duvidas? apoio@consultas-online.pt</p>'
+    + '<p style="font-size:12px;color:#8a9bb0">Duvidas? geral@consultas-online.pt</p>'
     + '</div></div></body></html>';
 
   await sgMail.send({
     to,
-    from: { email: process.env.FROM_EMAIL || 'apoio@consultas-online.pt', name: 'ConsultasOnline' },
+    from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
     subject: 'Consulta confirmada - ' + serviceName + ' | ' + date + ' as ' + time,
     html,
     text: 'Ola ' + name + ',\n\nConsulta confirmada!\nServico: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nValor: ' + amountEur,
   });
 }
+
+// ─────────────────────────────────────────────
+// ROTA: Formulário de Contacto
+// POST /contact
+// ─────────────────────────────────────────────
+app.post('/contact', async (req, res) => {
+  const { name, email, subject, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: 'Por favor preencha todos os campos obrigatorios.' });
+  }
+
+  try {
+    // Email para a equipa ConsultasOnline
+    await sgMail.send({
+      to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline — Formulario' },
+      replyTo: { email, name },
+      subject: '[Contacto] ' + (subject || 'Nova mensagem') + ' — ' + name,
+      html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
+        + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
+        + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>'
+        + '&nbsp;&nbsp;<span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);font-size:11px;padding:3px 10px;border-radius:12px">Nova Mensagem</span></div>'
+        + '<div style="padding:22px 24px">'
+        + '<table style="width:100%;border-collapse:collapse;font-size:14px">'
+        + '<tr><td style="padding:8px 0;color:#8a9bb0;font-weight:600;width:100px">Nome</td><td style="padding:8px 0;color:#0b1d35">' + name + '</td></tr>'
+        + '<tr><td style="padding:8px 0;color:#8a9bb0;font-weight:600">Email</td><td style="padding:8px 0"><a href="mailto:' + email + '" style="color:#0d7377">' + email + '</a></td></tr>'
+        + '<tr><td style="padding:8px 0;color:#8a9bb0;font-weight:600">Assunto</td><td style="padding:8px 0;color:#0b1d35">' + (subject || '—') + '</td></tr>'
+        + '</table>'
+        + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-top:16px">'
+        + '<p style="margin:0 0 6px;font-size:12px;font-weight:700;color:#8a9bb0;letter-spacing:.5px;text-transform:uppercase">Mensagem</p>'
+        + '<p style="margin:0;font-size:14px;color:#334155;line-height:1.7">' + message.replace(/\n/g, '<br/>') + '</p>'
+        + '</div>'
+        + '<p style="margin-top:16px;font-size:12px;color:#8a9bb0">Respondido diretamente para: ' + email + '</p>'
+        + '</div></div></body></html>',
+      text: 'Nova mensagem de contacto\n\nNome: ' + name + '\nEmail: ' + email + '\nAssunto: ' + (subject || '—') + '\n\nMensagem:\n' + message,
+    });
+
+    // Email de confirmação para o utilizador
+    await sgMail.send({
+      to: email,
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+      subject: 'Recebemos a sua mensagem — ConsultasOnline',
+      html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
+        + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
+        + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
+        + '<div style="padding:22px 24px">'
+        + '<h2 style="color:#0b1d35;margin:0 0 12px;font-family:Georgia,serif">Mensagem recebida! ✅</h2>'
+        + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + name + '</strong>,<br/><br/>Recebemos a sua mensagem e responderemos em ate 24 horas uteis para <strong>' + email + '</strong>.</p>'
+        + '<div style="background:#f4f7fb;border-radius:10px;padding:14px;margin:16px 0;font-size:13px;color:#64748b"><strong>Assunto:</strong> ' + (subject || '—') + '</div>'
+        + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Se tiver urgencia, envie email diretamente para <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
+        + '</div></div></body></html>',
+      text: 'Ola ' + name + ',\n\nRecebemos a sua mensagem. Responderemos em ate 24 horas uteis.\n\nConsultasOnline\ngeral@consultas-online.pt',
+    });
+
+    console.log('Formulario de contacto recebido de:', email);
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error('Erro ao enviar email de contacto:', err.message);
+    res.status(500).json({ error: 'Erro ao enviar mensagem. Tente novamente ou contacte-nos diretamente.' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log('ConsultasOnline - Server Running - porta ' + PORT);
