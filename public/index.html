@@ -1432,7 +1432,7 @@ function selectTime(el){document.querySelectorAll('.t-slot').forEach(t=>t.classL
 // ── STRIPE SETUP ──
 // Substituir pela sua chave pública: https://dashboard.stripe.com/apikeys
 const STRIPE_PK = 'pk_live_51TBG6LHv8owZF2PvNfVlhwWftJqp7rGK9DzABqW6gFUWTvNNmdElAi4XYJR88rCjaoUOpspQj5acQmqCcEXTt4X200KqG19YcZ'; // <- colocar aqui a sua pk_live_...
-const API_URL   = 'https://consultas-online.pt';   // <- URL do seu servidor Node.js
+const API_URL   = 'https://consultasonline.up.railway.app';   // <- URL do seu servidor Node.js
 
 let stripe, cardElement, currentPayMethod = 'mbway', mbwayPollingTimer;
 
@@ -1671,4 +1671,18 @@ function sendChat(){
 }
 
 // ── SCROLL ANIMATIONS ──
-const obs=new Intersectio
+function checkVisible(){
+  document.querySelectorAll('.fade-up').forEach(function(el){
+    const rect=el.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 40){
+      el.classList.add('visible');
+    }
+  });
+}
+checkVisible();
+window.addEventListener('scroll', checkVisible, {passive:true});
+setTimeout(checkVisible, 300);
+setTimeout(checkVisible, 800);
+</script>
+</body>
+</html>
