@@ -2606,14 +2606,21 @@ function renderPatientList(utentes) {
   utentes.forEach(function(u) {
     var initials = (u.nomeCompleto || '?').split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
     var lastConsulta = u.consultas && u.consultas.length ? u.consultas[u.consultas.length-1].servico : 'Sem consultas';
-    html += '<div class="patient-item" onclick="loadPatientDetail('' + u._id + '')" data-id="' + u._id + '">'
+    var id = u._id;
+    html += '<div class="patient-item" data-id="' + id + '">'
       + '<div class="patient-avatar">' + initials + '</div>'
-      + '<div class="patient-info"><h4>' + (u.nomeCompleto || '—') + '</h4>'
-      + '<p>' + (u.email || '—') + '</p>'
+      + '<div class="patient-info"><h4>' + (u.nomeCompleto || String.fromCharCode(8212)) + '</h4>'
+      + '<p>' + (u.email || String.fromCharCode(8212)) + '</p>'
       + '<p style="font-size:10.5px;color:rgba(255,255,255,.3)">' + lastConsulta + '</p></div>'
       + '</div>';
   });
   list.innerHTML = html;
+  // Add click listeners after setting innerHTML
+  list.querySelectorAll('.patient-item').forEach(function(el) {
+    el.addEventListener('click', function() {
+      loadPatientDetail(this.dataset.id);
+    });
+  });
 }
 
 function loadPatientDetail(id) {
@@ -2651,6 +2658,7 @@ function renderPatientDetail(u) {
     consultasHtml = '<p style="font-size:13px;color:var(--muted)">Nenhuma consulta registada.</p>';
   }
 
+  // Will add event listener after render
   detail.innerHTML = '<div class="patient-detail">'
     + '<div class="patient-detail-header">'
     + '<div class="patient-detail-avatar">' + initials + '</div>'
@@ -2676,7 +2684,7 @@ function renderPatientDetail(u) {
     + '<div class="detail-grid">'
     + '<div class="detail-field full"><textarea id="pNotas" placeholder="Anotações clínicas, alergias, medicação habitual, observações…">' + (u.notas||'') + '</textarea></div>'
     + '</div>'
-    + '<button class="detail-save-btn" onclick="savePatientDetail('' + u._id + '')">💾 Guardar Alterações</button>'
+    + '<button class="detail-save-btn" id="detailSaveBtn" data-id="' + u._id + '">💾 Guardar Alterações</button>'
     + '<span class="detail-saved" id="patientSaved">✅ Guardado!</span>'
     + '</div>'
 
@@ -2687,6 +2695,15 @@ function renderPatientDetail(u) {
     + '</div>'
 
     + '</div></div>';
+  // Add save button listener
+  setTimeout(function() {
+    var saveBtn = document.getElementById('detailSaveBtn');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function() {
+        window.savePatientDetail(this.dataset.id);
+      });
+    }
+  }, 50);
 }
 
 window.savePatientDetail = function(id) {
