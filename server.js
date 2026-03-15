@@ -52,10 +52,8 @@ app.post('/create-payment-intent', async (req, res) => {
 
   try {
     if (paymentMethod === 'mbway') {
-      const formattedPhone = formatPhone(phone);
-      if (!formattedPhone) return res.status(400).json({ error: 'Telemovel obrigatorio para MBWay.' });
-
-      // Criar PaymentIntent
+      // Para MBWay: criar Payment Intent e devolver client_secret ao frontend
+      // O frontend usa stripe.confirmMbWayPayment() com o telefone diretamente
       const pi = await stripe.paymentIntents.create({
         amount: service.price,
         currency: 'eur',
@@ -65,19 +63,12 @@ app.post('/create-payment-intent', async (req, res) => {
         receipt_email: customerEmail,
       });
 
-      // Criar PaymentMethod MBWay com o telefone
-      const pm = await stripe.paymentMethods.create({
-        type: 'mb_way',
-        mb_way: { phone: formattedPhone },
+      return res.json({
+        clientSecret: pi.client_secret,
+        paymentIntentId: pi.id,
+        status: pi.status,
+        mbwayPending: true,
       });
-
-      // Confirmar o pagamento
-      const confirmed = await stripe.paymentIntents.confirm(pi.id, {
-        payment_method: pm.id,
-        return_url: clientUrl + '/obrigado',
-      });
-
-      return res.json({ paymentIntentId: confirmed.id, status: confirmed.status, mbwayPending: true });
     }
 
     if (paymentMethod === 'mb_reference') {
