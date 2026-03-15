@@ -219,6 +219,7 @@ app.post('/create-checkout-session', async (req, res) => {
       success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: clientUrl + '/?cancelado=1',
       locale: 'pt',
+      billing_address_collection: 'auto',
       payment_intent_data: {
         description: service.name + ' - ' + date + ' as ' + time,
         receipt_email: customerEmail,
@@ -263,8 +264,13 @@ app.post('/webhook', async (req, res) => {
     const serviceName  = meta.serviceName  || '';
     const date         = meta.date         || '';
     const time         = meta.time         || '';
-    const customerEmail = meta.customerEmail || session.customer_email || '';
-    const customerName = meta.customerName || '';
+    const customerEmail = meta.customerEmail 
+      || (session.customer_details && session.customer_details.email) 
+      || session.customer_email 
+      || '';
+    const customerName = meta.customerName 
+      || (session.customer_details && session.customer_details.name) 
+      || '';
     const nif          = meta.nif          || '';
     const telefone     = meta.telefone     || '';
     const numeroUtente = meta.numeroUtente || '';
@@ -304,11 +310,20 @@ app.post('/webhook', async (req, res) => {
         valor: session.amount_total / 100,
       });
 
-      // 3. Emitir fatura
-      const invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
+      // 3. Emitir fatura (só se tiver nome)
+      let invoiceData = null;
+      if (customerName && customerEmail) {
+        invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
+      } else {
+        console.warn('Fatura ignorada: nome ou email em falta', { customerName, customerEmail });
+      }
 
-      // 4. Enviar email
-      await sendConfirmationEmail({ to: customerEmail, name: customerName, serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
+      // 4. Enviar email (só se tiver email)
+      if (customerEmail) {
+        await sendConfirmationEmail({ to: customerEmail, name: customerName || 'Utente', serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
+      } else {
+        console.warn('Email ignorado: endereço em falta');
+      }
     } catch(e) { console.error('Erro email/fatura:', e.message); }
     return res.json({ received: true });
   }
