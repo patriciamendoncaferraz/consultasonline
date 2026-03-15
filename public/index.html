@@ -6,7 +6,6 @@
 <title>ConsultasOnline — Saúde Online em Portugal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://js.stripe.com/v3/"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -1872,44 +1871,13 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
           <div class="field"><label>Telemóvel</label><input type="tel" placeholder="+351 9XX XXX XXX"/></div>
           <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea placeholder="Descreva brevemente o motivo..."></textarea></div>
 
-          <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:12px;margin-top:4px;font-family:'Inter',sans-serif">Pagamento</h3>
-          <div class="pay-tabs">
-            <div class="pay-tab active" onclick="selectPay(this,'mbway')">📱 MBWay</div>
-            <div class="pay-tab" onclick="selectPay(this,'mb')">🏧 Ref. MB</div>
-            <div class="pay-tab" onclick="selectPay(this,'card')">💳 Cartão</div>
-          </div>
-
-          <!-- MBWay panel -->
-          <div id="panelMbway">
-            <div class="field" style="margin-bottom:8px"><label>Telemóvel MBWay</label>
-              <div class="mbway-row">
-                <input type="tel" id="mbwayPhone" placeholder="9XX XXX XXX" style="margin:0"/>
-              </div>
-            </div>
-            <div class="mbway-status" id="mbwayStatus">
-              <div class="spin" id="mbwaySpin"></div>
-              <span id="mbwayMsg">Irá receber uma notificação no app MB WAY para confirmar.</span>
-            </div>
-          </div>
-
-          <!-- Multibanco Reference panel -->
-          <div id="panelMb" style="display:none">
-            <div class="mb-ref-box" id="mbRefBox">
-              <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Após clicar em "Confirmar e Pagar" a referência será gerada automaticamente pelo Stripe.</p>
-              <div class="mb-ref-grid" id="mbRefGrid" style="display:none">
-                <div><div class="ref-label">ENTIDADE</div><div class="ref-val" id="mbEntity">—</div></div>
-                <div><div class="ref-label">REFERÊNCIA</div><div class="ref-val" id="mbRef">—</div></div>
-                <div><div class="ref-label">MONTANTE</div><div class="ref-val" id="mbAmount" style="color:var(--teal)">—</div></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card panel — Stripe Elements -->
-          <div id="panelCard" style="display:none">
-            <div class="field">
-              <label>Dados do Cartão</label>
-              <div id="stripeCardElement" style="border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;background:var(--surface);transition:.2s"></div>
-              <div id="stripeCardError" style="color:var(--red);font-size:12px;margin-top:6px;display:none"></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px">
+            <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px">💳 Pagamento seguro via Stripe</p>
+            <p style="font-size:12.5px;color:var(--slate);line-height:1.6;margin-bottom:12px">Após confirmar, será redirecionado para a página segura de pagamento do Stripe onde pode pagar com <strong>MBWay</strong>, <strong>Referência MB</strong> ou <strong>Cartão</strong>.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--slate)">📱 MBWay</div>
+              <div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--slate)">🏧 Multibanco</div>
+              <div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--slate)">💳 Cartão</div>
             </div>
           </div>
 
@@ -1968,7 +1936,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 // ══════════════════════════════════════
 // STRIPE CONFIG — substitua pelas suas chaves
 // ══════════════════════════════════════
-var STRIPE_PK = 'pk_test_51TBG6LHv8owZF2PvCgmPO2ELJiAyb8HzHkS5ARdAHJlVNj07dbUryUhx7BAr9QQN7rz6JdyFxpWZ0PyW1jglNLbn00UiRTuNJb';
+var STRIPE_PK = 'pk_test_XXXXXXXXXXXXXXXXXXXXXXXX';
 var API_URL   = 'https://consultasonline-production.up.railway.app';
 
 // ══════════════════════════════════════
@@ -2195,54 +2163,19 @@ window.selectTime = function(el) {
 };
 
 // ══════════════════════════════════════
-// PAYMENT
+// PAYMENT — via Stripe Checkout
 // ══════════════════════════════════════
-var stripe = null;
-var cardElement = null;
 var mbwayPollingTimer = null;
 
-function initStripe() {
-  if (!stripe && window.Stripe) {
-    stripe = Stripe(STRIPE_PK);
-    var elements = stripe.elements();
-    cardElement = elements.create('card', {
-      style: {
-        base: { fontFamily: "'Inter', sans-serif", fontSize: '14px', color: '#0b1d35', '::placeholder': { color: '#8a9bb0' } },
-        invalid: { color: '#e53e3e' }
-      },
-      hidePostalCode: true
-    });
-    cardElement.mount('#stripeCardElement');
-    cardElement.on('change', function(e) {
-      var errEl = document.getElementById('stripeCardError');
-      if (errEl) {
-        if (e.error) { errEl.textContent = e.error.message; errEl.style.display = 'block'; }
-        else { errEl.style.display = 'none'; }
-      }
-      var ce = document.getElementById('stripeCardElement');
-      if (ce) ce.style.borderColor = e.error ? 'var(--red)' : e.complete ? 'var(--teal)' : 'var(--border)';
-    });
-  }
-}
-
 window.selectPay = function(el, t) {
-  document.querySelectorAll('.pay-tab').forEach(function(b){ b.classList.remove('active'); });
-  if (el) el.classList.add('active');
-  currentPayMethod = t;
-  var pMbway = document.getElementById('panelMbway');
-  var pMb = document.getElementById('panelMb');
-  var pCard = document.getElementById('panelCard');
-  if (pMbway) pMbway.style.display = t === 'mbway' ? 'block' : 'none';
-  if (pMb) pMb.style.display = t === 'mb' ? 'block' : 'none';
-  if (pCard) pCard.style.display = t === 'card' ? 'block' : 'none';
-  if (t === 'card') initStripe();
+  // kept for compatibility — not used with Checkout
 };
 
 function setConfirmBtn(loading, text) {
   var btn = document.querySelector('.confirm-btn');
   if (!btn) return;
   btn.disabled = loading;
-  btn.textContent = loading ? (text || 'A processar…') : 'Confirmar e Pagar →';
+  btn.textContent = loading ? (text || 'A redirecionar…') : 'Confirmar e Pagar →';
   btn.style.opacity = loading ? '.7' : '1';
 }
 
@@ -2302,16 +2235,13 @@ function pollMbwayStatus(paymentIntentId, attempt) {
 window.confirmBooking = function() {
   var nameEl = document.querySelector('#step2 input[type="text"]');
   var emailEl = document.querySelector('#step2 input[type="email"]');
-  var phoneEl = document.getElementById('mbwayPhone');
   var selSlot = document.querySelector('.t-slot.sel');
   var name = nameEl ? nameEl.value.trim() : '';
   var email = emailEl ? emailEl.value.trim() : '';
-  var phone = phoneEl ? phoneEl.value.trim() : '';
 
   if (!name || !email) { alert('Por favor preencha o nome e email.'); return; }
   if (!selectedDay) { alert('Por favor selecione um dia no calendário.'); return; }
   if (!selSlot) { alert('Por favor selecione um horário disponível.'); return; }
-  if (currentPayMethod === 'mbway' && !phone) { if (phoneEl) phoneEl.focus(); alert('Por favor insira o telemóvel para o MB WAY.'); return; }
 
   var y = currentDate.getFullYear(), m = currentDate.getMonth();
   var dateStr = String(selectedDay).padStart(2,'0') + '/' + String(m+1).padStart(2,'0') + '/' + y;
@@ -2320,67 +2250,29 @@ window.confirmBooking = function() {
   var nifEl = document.querySelector('#invExtra input[placeholder="123 456 789"]');
   var nif = (invChecked && invChecked.checked && nifEl) ? nifEl.value : '';
 
-  setConfirmBtn(true, 'A iniciar pagamento…');
+  setConfirmBtn(true, 'A redirecionar para pagamento…');
 
-  fetch(API_URL + '/create-payment-intent', {
+  fetch(API_URL + '/create-checkout-session', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      serviceId: currentService.id,
-      paymentMethod: currentPayMethod === 'mb' ? 'mb_reference' : currentPayMethod,
-      phone: currentPayMethod === 'mbway' ? phone : undefined,
+      serviceId:     currentService.id,
       customerEmail: email,
-      customerName: name,
-      date: dateStr,
-      time: timeStr,
-      nif: nif || undefined
+      customerName:  name,
+      date:          dateStr,
+      time:          timeStr,
+      nif:           nif || undefined
     })
   })
   .then(function(r){ return r.json(); })
   .then(function(data) {
     if (data.error) throw new Error(data.error);
-    if (currentPayMethod === 'mbway') {
-      var formattedPhone = phone.replace(/[\s\-]/g,'');
-      if (!formattedPhone.startsWith('+')) formattedPhone = '+351' + formattedPhone;
-      stripe = stripe || (window.Stripe ? Stripe(STRIPE_PK) : null);
-      if (!stripe) { showMbwayStatus('pending','📱 A aguardar confirmação MB WAY…'); pollMbwayStatus(data.paymentIntentId); return; }
-      return stripe.confirmMbWayPayment(data.clientSecret, {
-        payment_method: { billing_details: { phone: formattedPhone } }
-      }).then(function(result) {
-        if (result.error) { showMbwayStatus('error', '❌ ' + result.error.message); setConfirmBtn(false); }
-        else { showMbwayStatus('pending','📱 Notificação enviada. Confirme no app MB WAY…'); pollMbwayStatus(data.paymentIntentId); }
-      });
-    } else if (currentPayMethod === 'mb') {
-      if (data.multibanco) {
-        var mb = data.multibanco;
-        var eEl = document.getElementById('mbEntity');
-        var rEl = document.getElementById('mbRef');
-        var aEl = document.getElementById('mbAmount');
-        var gEl = document.getElementById('mbRefGrid');
-        var pEl = document.querySelector('#mbRefBox p');
-        if (eEl) eEl.textContent = mb.entity;
-        if (rEl) rEl.textContent = mb.reference;
-        if (aEl) aEl.textContent = mb.amount;
-        if (gEl) gEl.style.display = 'grid';
-        if (pEl) pEl.style.display = 'none';
-      }
-      setConfirmBtn(false);
-    } else if (currentPayMethod === 'card') {
-      setConfirmBtn(true,'A processar cartão…');
-      return stripe.confirmCardPayment(data.clientSecret, {
-        payment_method: { card: cardElement }
-      }).then(function(result) {
-        if (result.error) {
-          var errEl = document.getElementById('stripeCardError');
-          if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
-          setConfirmBtn(false);
-        } else if (result.paymentIntent.status === 'succeeded') {
-          setConfirmBtn(false); closeModal(); showToast();
-        }
-      });
-    }
+    window.location.href = data.url;
   })
-  .catch(function(err){ alert('Erro: ' + err.message); setConfirmBtn(false); });
+  .catch(function(err){
+    alert('Erro: ' + err.message);
+    setConfirmBtn(false);
+  });
 };
 
 function showToast() {
