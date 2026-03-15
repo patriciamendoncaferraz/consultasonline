@@ -229,6 +229,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .t-slot:hover{border-color:var(--teal);color:var(--teal)}
 .t-slot.sel{background:var(--teal);border-color:var(--teal);color:var(--white)}
 .t-slot.taken{background:var(--surface);color:var(--border);cursor:not-allowed;text-decoration:line-through}
+.t-slot.blocked{background:rgba(229,62,62,.06);color:rgba(229,62,62,.4);cursor:not-allowed;border-color:rgba(229,62,62,.15)}
 
 /* Form fields */
 .field{margin-bottom:14px}
@@ -462,6 +463,78 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .legal-toc li:hover{color:var(--teal2)}
 .legal-updated{font-size:12px;color:var(--muted);margin-bottom:24px}
 @media(max-width:768px){.contact-grid,.info-cards{grid-template-columns:1fr}}
+
+/* ══════════════════════════════
+   ADMIN PANEL
+══════════════════════════════ */
+.admin-page{padding-top:66px;min-height:100vh;background:var(--surface)}
+.admin-hero{background:var(--navy);padding:40px 0 32px}
+.admin-hero-inner{max-width:1000px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
+.admin-hero h1{font-size:32px;font-weight:700;color:var(--white)}
+.admin-hero p{font-size:14px;color:rgba(255,255,255,.5);margin-top:4px}
+.admin-badge{background:rgba(214,158,46,.15);border:1px solid rgba(214,158,46,.3);color:var(--amber);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.4px}
+.admin-body{max-width:1000px;margin:0 auto;padding:32px 28px}
+.admin-grid{display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start}
+/* Admin calendar */
+.admin-cal-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
+.admin-cal-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:16px}
+.admin-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.admin-cal-nav h4{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--navy)}
+.admin-cal-btn{width:28px;height:28px;border:1px solid var(--border);background:var(--white);border-radius:6px;cursor:pointer;font-size:13px;transition:.2s}
+.admin-cal-btn:hover{background:var(--teal);color:var(--white);border-color:var(--teal)}
+.admin-cal-week{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:5px}
+.admin-cal-week span{font-size:10px;font-weight:600;color:var(--muted);padding:3px 0}
+.admin-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.admin-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:.2s;color:var(--navy);position:relative}
+.admin-day:hover:not(.empty):not(.past){background:rgba(13,115,119,.1);color:var(--teal)}
+.admin-day.selected{background:var(--teal);color:var(--white);font-weight:700}
+.admin-day.today{border:1.5px solid var(--teal);color:var(--teal)}
+.admin-day.empty,.admin-day.past{color:var(--border);cursor:default}
+.admin-day.has-blocked::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--red)}
+/* Slots manager */
+.admin-slots-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
+.admin-slots-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.admin-slots-header h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy)}
+.admin-date-label{font-size:13px;font-weight:600;color:var(--teal);background:rgba(13,115,119,.08);padding:6px 14px;border-radius:20px}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.admin-btn{border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.admin-btn-block{background:rgba(229,62,62,.1);color:var(--red)}
+.admin-btn-block:hover{background:rgba(229,62,62,.2)}
+.admin-btn-unblock{background:rgba(56,161,105,.1);color:var(--green)}
+.admin-btn-unblock:hover{background:rgba(56,161,105,.2)}
+.admin-btn-clear{background:var(--surface);color:var(--slate)}
+.admin-btn-clear:hover{background:var(--border)}
+.admin-slots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.admin-slot{border:1.5px solid var(--border);border-radius:8px;padding:9px 6px;text-align:center;cursor:pointer;transition:.2s;font-size:12px;font-weight:600;color:var(--slate);user-select:none}
+.admin-slot:hover{border-color:var(--teal);color:var(--teal);background:rgba(13,115,119,.04)}
+.admin-slot.sel-block{background:rgba(229,62,62,.08);border-color:rgba(229,62,62,.4);color:var(--red)}
+.admin-slot.blocked{background:rgba(229,62,62,.12);border-color:var(--red);color:var(--red)}
+.admin-slot.blocked::after{content:' 🔒';font-size:10px}
+.admin-legend{display:flex;gap:16px;margin-top:14px;font-size:12px;color:var(--muted)}
+.admin-legend-item{display:flex;align-items:center;gap:6px}
+.admin-legend-dot{width:10px;height:10px;border-radius:3px}
+.admin-save-btn{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:9px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:16px}
+.admin-save-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(13,115,119,.3)}
+.admin-saved-msg{display:none;text-align:center;font-size:13px;color:var(--green);font-weight:600;margin-top:10px}
+.admin-saved-msg.show{display:block}
+/* Blocked summary */
+.admin-summary-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-top:24px}
+.admin-summary-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:16px}
+.summary-empty{font-size:14px;color:var(--muted);text-align:center;padding:20px 0}
+.summary-day{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.summary-day:last-child{border:none;margin:0;padding:0}
+.summary-day-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.summary-chips{display:flex;flex-wrap:wrap;gap:6px}
+.summary-chip{background:rgba(229,62,62,.08);border:1px solid rgba(229,62,62,.2);color:var(--red);font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;display:flex;align-items:center;gap:5px}
+.summary-chip-x{cursor:pointer;font-size:14px;line-height:1;color:rgba(229,62,62,.6)}
+.summary-chip-x:hover{color:var(--red)}
+/* Login */
+.admin-login{max-width:380px;margin:80px auto;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:36px;box-shadow:var(--sh)}
+.admin-login h2{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);margin-bottom:6px}
+.admin-login p{font-size:14px;color:var(--muted);margin-bottom:24px}
+.admin-login-err{display:none;background:rgba(229,62,62,.07);border:1px solid rgba(229,62,62,.2);color:var(--red);font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:14px}
+.admin-login-err.show{display:block}
+@media(max-width:768px){.admin-grid{grid-template-columns:1fr}.admin-slots-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -476,6 +549,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
     <div class="nav-links">
       <button class="nav-tab active" id="tab-home" onclick="showPage('home')">🏠 <span>Home</span></button>
       <button class="nav-tab" id="tab-blog" onclick="showPage('blog')">📰 <span>Artigos de Saúde</span></button>
+      <button class="nav-tab" id="tab-admin" onclick="showAdminLogin()" style="opacity:.6;font-size:12px">🔐 Admin</button>
       <div class="nav-sep"></div>
       <button class="nav-cta" onclick="openServiceSelector()">Marcar Consulta</button>
     </div>
@@ -1571,6 +1645,97 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 </div>
 </div>
 
+
+<!-- ════════════════════════════════════════
+     ADMIN PANEL
+════════════════════════════════════════ -->
+<div class="page" id="page-admin">
+<div class="admin-page">
+
+  <!-- LOGIN -->
+  <div id="adminLogin" style="padding-top:66px;min-height:100vh;background:var(--surface)">
+    <div class="admin-login">
+      <h2>Área de Administração</h2>
+      <p>Introduza a password para aceder ao painel de gestão.</p>
+      <div class="admin-login-err" id="adminLoginErr">Password incorreta. Tente novamente.</div>
+      <div class="cfield"><label>Password</label><input type="password" id="adminPwd" placeholder="••••••••" onkeypress="if(event.key==='Enter')checkAdminLogin()"/></div>
+      <button class="admin-save-btn" onclick="checkAdminLogin()">Entrar →</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (hidden until login) -->
+  <div id="adminDashboard" style="display:none">
+    <div class="admin-hero">
+      <div class="admin-hero-inner">
+        <div>
+          <h1>Painel de Administração</h1>
+          <p>Gestão de disponibilidade e slots bloqueados</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="admin-badge">🔐 Admin</div>
+          <button onclick="adminLogout()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:none;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <div class="admin-grid">
+
+        <!-- Calendário Admin -->
+        <div>
+          <div class="admin-cal-card">
+            <h3>Selecionar Dia</h3>
+            <div class="admin-cal-nav">
+              <button class="admin-cal-btn" onclick="adminChangeMonth(-1)">&#8249;</button>
+              <h4 id="adminCalTitle">Março 2024</h4>
+              <button class="admin-cal-btn" onclick="adminChangeMonth(1)">&#8250;</button>
+            </div>
+            <div class="admin-cal-week"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
+            <div class="admin-cal-grid" id="adminCalGrid"></div>
+          </div>
+        </div>
+
+        <!-- Gestor de Slots -->
+        <div>
+          <div class="admin-slots-card">
+            <div class="admin-slots-header">
+              <h3>Gerir Horários</h3>
+              <div class="admin-date-label" id="adminDateLabel">Selecione um dia</div>
+            </div>
+            <div id="adminSlotsWrap" style="display:none">
+              <div class="admin-actions">
+                <button class="admin-btn admin-btn-block" onclick="adminToggleAll(true)">🔒 Bloquear todos</button>
+                <button class="admin-btn admin-btn-unblock" onclick="adminToggleAll(false)">🔓 Desbloquear todos</button>
+                <button class="admin-btn admin-btn-clear" onclick="adminClearDay()">✕ Limpar dia</button>
+              </div>
+              <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Clique num horário para bloquear ou desbloquear. Os slots bloqueados não aparecem disponíveis para os utentes.</p>
+              <div class="admin-slots-grid" id="adminSlotsGrid"></div>
+              <div class="admin-legend">
+                <div class="admin-legend-item"><div class="admin-legend-dot" style="background:var(--border)"></div>Disponível</div>
+                <div class="admin-legend-item"><div class="admin-legend-dot" style="background:var(--red)"></div>Bloqueado</div>
+              </div>
+              <button class="admin-save-btn" onclick="adminSaveSlots()">💾 Guardar Alterações</button>
+              <div class="admin-saved-msg" id="adminSavedMsg">✅ Alterações guardadas com sucesso!</div>
+            </div>
+            <div id="adminSlotsEmpty" style="text-align:center;padding:32px;color:var(--muted);font-size:14px">
+              ← Selecione um dia no calendário para gerir os horários
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Resumo de slots bloqueados -->
+      <div class="admin-summary-card">
+        <h3>Slots Bloqueados — Resumo</h3>
+        <div id="adminSummary"><div class="summary-empty">Nenhum slot bloqueado ainda.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
 <!-- ════════════════════════════════════════
      SERVICE SELECTOR MODAL
 ════════════════════════════════════════ -->
@@ -1694,19 +1859,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
           </div>
           <div class="time-section" id="timeSection" style="display:none">
             <h4>Horários disponíveis</h4>
-            <div class="time-grid">
-              <div class="t-slot" onclick="selectTime(this)">09:00</div>
-              <div class="t-slot taken">09:30</div>
-              <div class="t-slot" onclick="selectTime(this)">10:00</div>
-              <div class="t-slot" onclick="selectTime(this)">10:30</div>
-              <div class="t-slot taken">11:00</div>
-              <div class="t-slot" onclick="selectTime(this)">14:00</div>
-              <div class="t-slot" onclick="selectTime(this)">14:30</div>
-              <div class="t-slot" onclick="selectTime(this)">15:00</div>
-              <div class="t-slot taken">15:30</div>
-              <div class="t-slot" onclick="selectTime(this)">16:00</div>
-              <div class="t-slot" onclick="selectTime(this)">16:30</div>
-              <div class="t-slot" onclick="selectTime(this)">17:00</div>
+            <div class="time-grid" id="timeGrid">
+              <!-- Gerado dinamicamente pelo JS -->
             </div>
           </div>
         </div>
@@ -1920,8 +2074,71 @@ function renderCalendar(){
   document.getElementById('calGrid').innerHTML=html;
 }
 function changeMonth(d){currentDate.setMonth(currentDate.getMonth()+d);renderCalendar();}
-function selDay(d){selectedDay=d;renderCalendar();document.getElementById('timeSection').style.display='block';}
-function selectTime(el){document.querySelectorAll('.t-slot').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');}
+function selDay(d){
+  selectedDay=d;
+  renderCalendar();
+  renderTimeSlots();
+  document.getElementById('timeSection').style.display='block';
+}
+function selectTime(el){
+  if(el.classList.contains('taken')||el.classList.contains('blocked')) return;
+  document.querySelectorAll('.t-slot').forEach(t=>t.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// All possible slots 09:00 - 21:00 every 30 min
+const ALL_SLOTS = [
+  '09:00','09:30','10:00','10:30','11:00','11:30',
+  '12:00','12:30','13:00','13:30','14:00','14:30',
+  '15:00','15:30','16:00','16:30','17:00','17:30',
+  '18:00','18:30','19:00','19:30','20:00','20:30','21:00'
+];
+
+function getDateKey(){
+  if(!selectedDay) return null;
+  const y=currentDate.getFullYear();
+  const m=String(currentDate.getMonth()+1).padStart(2,'0');
+  const d=String(selectedDay).padStart(2,'0');
+  return y+'-'+m+'-'+d;
+}
+
+function renderTimeSlots(){
+  const grid=document.getElementById('timeGrid');
+  if(!grid) return;
+  const key=getDateKey();
+  const blocked=getBlockedSlots(key);
+  const now=new Date();
+  const isToday=(key===now.toISOString().split('T')[0]);
+
+  let html='';
+  ALL_SLOTS.forEach(function(slot){
+    const [hh,mm]=slot.split(':').map(Number);
+    let cls='t-slot';
+    let click='onclick="selectTime(this)"';
+    let label=slot;
+
+    // Past time today
+    if(isToday){
+      const slotDate=new Date();
+      slotDate.setHours(hh,mm,0,0);
+      if(slotDate<=now){ cls+=' taken'; click=''; label=slot; }
+    }
+
+    // Blocked by admin
+    if(blocked.includes(slot)){ cls=' t-slot blocked taken'; click=''; label=slot+' 🔒'; }
+
+    html+='<div class="'+cls+'" '+click+'>'+label+'</div>';
+  });
+  grid.innerHTML=html;
+}
+
+// Get blocked slots from localStorage (admin panel sets these)
+function getBlockedSlots(dateKey){
+  try {
+    const data=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
+    return data[dateKey]||[];
+  } catch(e){ return []; }
+}
 
 // ── STRIPE SETUP ──
 // Substituir pela sua chave pública: https://dashboard.stripe.com/apikeys
@@ -2172,6 +2389,197 @@ function sendChat(){
     box.innerHTML+='<div class="cmsg cmsg-bot">'+replies[ri%replies.length]+'</div>';
     ri++;box.scrollTop=box.scrollHeight;
   },750);
+}
+
+
+// ════════════════════════════════════════
+// ADMIN PANEL
+// ════════════════════════════════════════
+
+// Password de administração — mude para uma password sua
+const ADMIN_PASSWORD = 'consultas2024admin';
+
+function showAdminLogin(){
+  showPage('admin');
+  // Check if already logged in
+  if(sessionStorage.getItem('adminLoggedIn')==='true'){
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminDashboard').style.display='block';
+    renderAdminCalendar();
+    renderAdminSummary();
+  }
+}
+
+function checkAdminLogin(){
+  const pwd=document.getElementById('adminPwd').value;
+  if(pwd===ADMIN_PASSWORD){
+    sessionStorage.setItem('adminLoggedIn','true');
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminDashboard').style.display='block';
+    renderAdminCalendar();
+    renderAdminSummary();
+  } else {
+    document.getElementById('adminLoginErr').classList.add('show');
+    document.getElementById('adminPwd').value='';
+    document.getElementById('adminPwd').focus();
+  }
+}
+
+function adminLogout(){
+  sessionStorage.removeItem('adminLoggedIn');
+  document.getElementById('adminLogin').style.display='block';
+  document.getElementById('adminDashboard').style.display='none';
+  document.getElementById('adminPwd').value='';
+  showPage('home');
+}
+
+// Admin Calendar
+let adminDate=new Date(), adminSelectedDay=null, adminSelectedKey=null;
+const adminMonths=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function renderAdminCalendar(){
+  const y=adminDate.getFullYear(), m=adminDate.getMonth();
+  document.getElementById('adminCalTitle').textContent=adminMonths[m]+' '+y;
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  const blocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
+  let html='';
+  for(let i=0;i<first;i++) html+='<div class="admin-day empty"></div>';
+  for(let d=1;d<=days;d++){
+    const key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isPast=new Date(y,m,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    const isSel=adminSelectedKey===key;
+    const hasBlocked=blocked[key]&&blocked[key].length>0;
+    let cls='admin-day';
+    if(isPast) cls+=' past';
+    else if(isSel) cls+=' selected';
+    else if(isToday) cls+=' today';
+    if(hasBlocked) cls+=' has-blocked';
+    const clk=isPast?'':'onclick="adminSelectDay('+d+')"';
+    html+='<div class="'+cls+'" '+clk+'>'+d+'</div>';
+  }
+  document.getElementById('adminCalGrid').innerHTML=html;
+}
+
+function adminChangeMonth(dir){
+  adminDate.setMonth(adminDate.getMonth()+dir);
+  renderAdminCalendar();
+}
+
+function adminSelectDay(d){
+  adminSelectedDay=d;
+  const y=adminDate.getFullYear(), m=adminDate.getMonth();
+  adminSelectedKey=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  renderAdminCalendar();
+
+  // Show slots manager
+  document.getElementById('adminSlotsWrap').style.display='block';
+  document.getElementById('adminSlotsEmpty').style.display='none';
+  document.getElementById('adminSavedMsg').classList.remove('show');
+
+  // Format date label
+  const dateObj=new Date(y,m,d);
+  const dayNames=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  document.getElementById('adminDateLabel').textContent=dayNames[dateObj.getDay()]+', '+String(d).padStart(2,'0')+'/'+String(m+1).padStart(2,'0')+'/'+y;
+
+  renderAdminSlots();
+}
+
+const ADMIN_ALL_SLOTS=[
+  '09:00','09:30','10:00','10:30','11:00','11:30',
+  '12:00','12:30','13:00','13:30','14:00','14:30',
+  '15:00','15:30','16:00','16:30','17:00','17:30',
+  '18:00','18:30','19:00','19:30','20:00','20:30','21:00'
+];
+
+function renderAdminSlots(){
+  const blocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
+  const dayBlocked=blocked[adminSelectedKey]||[];
+  let html='';
+  ADMIN_ALL_SLOTS.forEach(function(slot){
+    const isBlocked=dayBlocked.includes(slot);
+    const cls='admin-slot'+(isBlocked?' blocked':'');
+    html+='<div class="'+cls+'" onclick="adminToggleSlot(this,''+slot+'')">'+slot+'</div>';
+  });
+  document.getElementById('adminSlotsGrid').innerHTML=html;
+}
+
+function adminToggleSlot(el, slot){
+  el.classList.toggle('blocked');
+  document.getElementById('adminSavedMsg').classList.remove('show');
+}
+
+function adminToggleAll(block){
+  document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
+    if(block) el.classList.add('blocked');
+    else el.classList.remove('blocked');
+  });
+}
+
+function adminClearDay(){
+  document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
+    el.classList.remove('blocked');
+  });
+}
+
+function adminSaveSlots(){
+  if(!adminSelectedKey) return;
+  const blockedSlots=[];
+  document.querySelectorAll('#adminSlotsGrid .admin-slot.blocked').forEach(function(el){
+    // extract time from text (remove lock emoji)
+    const txt=el.textContent.replace('🔒','').trim();
+    blockedSlots.push(txt);
+  });
+
+  const allBlocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
+  if(blockedSlots.length>0){
+    allBlocked[adminSelectedKey]=blockedSlots;
+  } else {
+    delete allBlocked[adminSelectedKey];
+  }
+  localStorage.setItem('blocked_slots',JSON.stringify(allBlocked));
+
+  document.getElementById('adminSavedMsg').classList.add('show');
+  renderAdminCalendar();
+  renderAdminSummary();
+  setTimeout(function(){ document.getElementById('adminSavedMsg').classList.remove('show'); },3000);
+}
+
+function renderAdminSummary(){
+  const blocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
+  const keys=Object.keys(blocked).filter(function(k){ return blocked[k]&&blocked[k].length>0; }).sort();
+  const container=document.getElementById('adminSummary');
+  if(!container) return;
+  if(keys.length===0){
+    container.innerHTML='<div class="summary-empty">Nenhum slot bloqueado ainda.</div>';
+    return;
+  }
+  let html='';
+  keys.forEach(function(key){
+    const slots=blocked[key];
+    const parts=key.split('-');
+    const label=parts[2]+'/'+parts[1]+'/'+parts[0];
+    html+='<div class="summary-day"><div class="summary-day-title">📅 '+label+' — '+slots.length+' slot(s) bloqueado(s)</div><div class="summary-chips">';
+    slots.forEach(function(slot){
+      html+='<div class="summary-chip">'+slot+' <span class="summary-chip-x" onclick="adminUnblockSlot(''+key+'',''+slot+'')">✕</span></div>';
+    });
+    html+='</div></div>';
+  });
+  container.innerHTML=html;
+}
+
+function adminUnblockSlot(dateKey, slot){
+  const allBlocked=JSON.parse(localStorage.getItem('blocked_slots')||'{}');
+  if(allBlocked[dateKey]){
+    allBlocked[dateKey]=allBlocked[dateKey].filter(function(s){ return s!==slot; });
+    if(allBlocked[dateKey].length===0) delete allBlocked[dateKey];
+    localStorage.setItem('blocked_slots',JSON.stringify(allBlocked));
+    renderAdminSummary();
+    renderAdminCalendar();
+    if(adminSelectedKey===dateKey) renderAdminSlots();
+  }
 }
 
 // ── FAQ TOGGLE ──
