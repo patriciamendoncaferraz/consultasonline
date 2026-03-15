@@ -1945,10 +1945,11 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         <!-- Form col -->
         <div>
           <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;font-family:'Inter',sans-serif">Os seus dados</h3>
-          <div class="field"><label>Nome Completo</label><input type="text" placeholder="João Manuel Costa"/></div>
-          <div class="field"><label>Email</label><input type="email" placeholder="joao@email.pt"/></div>
-          <div class="field"><label>Telemóvel</label><input type="tel" placeholder="+351 9XX XXX XXX"/></div>
-          <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea placeholder="Descreva brevemente o motivo..."></textarea></div>
+          <div class="field"><label>Nome Completo *</label><input type="text" id="bookName" placeholder="João Manuel Costa"/></div>
+          <div class="field"><label>Email *</label><input type="email" id="bookEmail" placeholder="joao@email.pt"/></div>
+          <div class="field"><label>Telemóvel</label><input type="tel" id="bookPhone" placeholder="+351 9XX XXX XXX"/></div>
+          <div class="field"><label>Número de Utente SNS</label><input type="text" id="bookNumUtente" placeholder="000 000 000" maxlength="12"/></div>
+          <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea id="bookObs" placeholder="Descreva brevemente o motivo da consulta..."></textarea></div>
 
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px">
             <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px">💳 Pagamento seguro via Stripe</p>
