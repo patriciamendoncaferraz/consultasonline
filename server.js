@@ -55,6 +55,19 @@ utenteSchema.index({ numeroUtente: 1 });
 
 const Utente = mongoose.models.Utente || mongoose.model('Utente', utenteSchema);
 
+// Schema para slots ocupados
+const bookedSlotSchema = new mongoose.Schema({
+  dateKey: { type: String, required: true }, // YYYY-MM-DD
+  time:    { type: String, required: true }, // HH:MM
+  serviceId:   String,
+  serviceName: String,
+  customerEmail: String,
+  stripeSession: String,
+  createdAt: { type: Date, default: Date.now },
+});
+bookedSlotSchema.index({ dateKey: 1, time: 1 }, { unique: true });
+const BookedSlot = mongoose.models.BookedSlot || mongoose.model('BookedSlot', bookedSlotSchema);
+
 // Guardar/atualizar utente e adicionar consulta
 async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor }) {
   if (!MONGO_URI || !email) return null;
@@ -152,6 +165,17 @@ p{font-size:15px;color:#64748b;line-height:1.7;margin-bottom:8px}
 </html>`);
 });
 
+// Get booked slots for a specific date
+app.get('/booked-slots/:dateKey', async (req, res) => {
+  if (!MONGO_URI) return res.json([]);
+  try {
+    const slots = await BookedSlot.find({ dateKey: req.params.dateKey }, 'time -_id');
+    res.json(slots.map(s => s.time));
+  } catch (err) {
+    res.json([]);
+  }
+});
+
 app.get('/services', (req, res) => {
   res.json(Object.entries(SERVICES).map(([id, s]) => ({ id, name: s.name, price: s.price / 100 })));
 });
@@ -240,7 +264,24 @@ app.post('/webhook', async (req, res) => {
     const { telefone, numeroUtente, observacoes } = session.metadata || {};
     console.log('Checkout completo:', session.id, serviceName);
     try {
-      // 1. Guardar registo clínico do utente
+      // 1. Guardar slot como ocupado
+      if (MONGO_URI && date && time) {
+        try {
+          // Convert date DD/MM/YYYY to YYYY-MM-DD
+          const parts = (date || '').split('/');
+          const dateKey = parts.length === 3 ? parts[2] + '-' + parts[1] + '-' + parts[0] : date;
+          await BookedSlot.findOneAndUpdate(
+            { dateKey, time },
+            { dateKey, time, serviceId, serviceName, customerEmail, stripeSession: session.id },
+            { upsert: true, new: true }
+          );
+          console.log('Slot ocupado:', dateKey, time);
+        } catch(slotErr) {
+          console.warn('Erro ao guardar slot:', slotErr.message);
+        }
+      }
+
+      // 2. Guardar registo clínico do utente
       await upsertUtente({
         nomeCompleto: customerName,
         email: customerEmail,
@@ -255,10 +296,10 @@ app.post('/webhook', async (req, res) => {
         valor: session.amount_total / 100,
       });
 
-      // 2. Emitir fatura
+      // 3. Emitir fatura
       const invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
 
-      // 3. Enviar email
+      // 4. Enviar email
       await sendConfirmationEmail({ to: customerEmail, name: customerName, serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
     } catch(e) { console.error('Erro email/fatura:', e.message); }
     return res.json({ received: true });
