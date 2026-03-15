@@ -99,7 +99,7 @@ app.post('/create-payment-intent', async (req, res) => {
       if (!phone) return res.status(400).json({ error: 'Telemóvel obrigatório para MBWay.' });
       paymentMethodTypes = ['mb_way'];
       confirmParams = {
-        payment_method: {
+        payment_method_data: {
           type: 'mb_way',
           mb_way: { phone },
         },
