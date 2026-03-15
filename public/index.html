@@ -2178,7 +2178,27 @@ function renderTimeSlots() {
   var grid = document.getElementById('timeGrid');
   if (!grid) return;
   var key = getDateKey();
-  var blocked = getBlockedSlots(key);
+  if (!key) return;
+
+  // Show loading
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:12px;font-size:12px;color:var(--muted)">A verificar disponibilidade…</div>';
+
+  // Fetch booked slots from server
+  fetch(API_URL + '/booked-slots/' + key)
+    .then(function(r){ return r.json(); })
+    .then(function(serverBooked) {
+      var adminBlocked = getBlockedSlots(key);
+      var allUnavailable = serverBooked.concat(adminBlocked);
+      _renderSlotGrid(grid, key, allUnavailable);
+    })
+    .catch(function() {
+      // Fallback to admin-only blocked slots if server unreachable
+      var adminBlocked = getBlockedSlots(key);
+      _renderSlotGrid(grid, key, adminBlocked);
+    });
+}
+
+function _renderSlotGrid(grid, key, unavailableSlots) {
   var now = new Date();
   var todayKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
   var isToday = (key === todayKey);
@@ -2188,14 +2208,14 @@ function renderTimeSlots() {
     var hh = parseInt(parts[0]);
     var mm = parseInt(parts[1]);
     var cls = 't-slot';
-    var click = 'onclick="selectTime(this)"';
+    var unavailable = unavailableSlots.indexOf(slot) !== -1;
     if (isToday) {
       var slotDate = new Date();
       slotDate.setHours(hh, mm, 0, 0);
-      if (slotDate <= now) { cls += ' taken'; click = ''; }
+      if (slotDate <= now) { cls += ' taken'; unavailable = true; }
     }
-    if (blocked.indexOf(slot) !== -1) { cls = 't-slot blocked taken'; click = ''; }
-    html += '<div class="' + cls + '" ' + click + '>' + slot + '</div>';
+    if (unavailable) { cls = 't-slot taken'; }
+    html += '<div class="' + cls + '"' + (unavailable ? '' : ' onclick="selectTime(this)"') + '>' + slot + '</div>';
   });
   grid.innerHTML = html;
 }
@@ -2566,7 +2586,7 @@ window.adminUnblockSlot = function(dateKey, slot) {
 // ══════════════════════════════════════
 // REGISTOS CLÍNICOS — Admin
 // ══════════════════════════════════════
-var ADMIN_SECRET = 'consultas2024admin'; // deve ser igual ao ADMIN_SECRET no Railway
+var ADMIN_SECRET = ADMIN_PASSWORD; // usa a mesma password do login
 
 function adminHeaders() {
   return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET };
