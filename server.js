@@ -5,11 +5,82 @@ const stripe   = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const sgMail   = require('@sendgrid/mail');
 const axios    = require('axios');
 const path     = require('path');
+const mongoose = require('mongoose');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app  = express();
 const PORT = process.env.PORT || 8080;
+
+// ─────────────────────────────────────────────
+// MONGODB — Registos Clínicos
+// ─────────────────────────────────────────────
+const MONGO_URI = process.env.MONGO_URI;
+if (MONGO_URI) {
+  mongoose.connect(MONGO_URI)
+    .then(() => console.log('MongoDB conectado'))
+    .catch(err => console.error('MongoDB erro:', err.message));
+} else {
+  console.warn('MONGO_URI não definido — registos clínicos desativados');
+}
+
+// Schema do Utente
+const consultaSchema = new mongoose.Schema({
+  data:         { type: Date, default: Date.now },
+  dataConsulta: String,
+  hora:         String,
+  servico:      String,
+  observacoes:  String,
+  stripeSession:String,
+  valor:        Number,
+}, { _id: true });
+
+const utenteSchema = new mongoose.Schema({
+  nomeCompleto:   { type: String, required: true },
+  email:          { type: String, required: true },
+  telefone:       String,
+  numeroUtente:   String,
+  dataNascimento: String,
+  nif:            String,
+  morada:         String,
+  notas:          String, // notas clínicas do admin
+  consultas:      [consultaSchema],
+  criado:         { type: Date, default: Date.now },
+  atualizado:     { type: Date, default: Date.now },
+}, { collection: 'utentes' });
+
+// Índice único por email
+utenteSchema.index({ email: 1 }, { unique: true });
+utenteSchema.index({ numeroUtente: 1 });
+
+const Utente = mongoose.models.Utente || mongoose.model('Utente', utenteSchema);
+
+// Guardar/atualizar utente e adicionar consulta
+async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor }) {
+  if (!MONGO_URI || !email) return null;
+  try {
+    const novaConsulta = { data: new Date(), dataConsulta, hora, servico, observacoes, stripeSession, valor };
+    const utente = await Utente.findOneAndUpdate(
+      { email },
+      {
+        $set: {
+          nomeCompleto, telefone,
+          ...(numeroUtente && { numeroUtente }),
+          ...(nif && { nif }),
+          ...(morada && { morada }),
+          atualizado: new Date(),
+        },
+        $push: { consultas: novaConsulta },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    console.log('Utente guardado:', email);
+    return utente;
+  } catch (err) {
+    console.error('Erro ao guardar utente:', err.message);
+    return null;
+  }
+}
 
 app.use('/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
@@ -86,7 +157,7 @@ app.get('/services', (req, res) => {
 });
 
 app.post('/create-checkout-session', async (req, res) => {
-  const { serviceId, customerEmail, customerName, date, time, nif } = req.body;
+  const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes } = req.body;
 
   const service = SERVICES[serviceId];
   if (!service) return res.status(400).json({ error: 'Servico invalido.' });
@@ -116,7 +187,10 @@ app.post('/create-checkout-session', async (req, res) => {
         time,
         customerEmail,
         customerName,
-        nif: nif || '',
+        nif:          nif          || '',
+        telefone:     telefone     || '',
+        numeroUtente: numeroUtente || '',
+        observacoes:  observacoes  || '',
       },
       success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: clientUrl + '/?cancelado=1',
@@ -163,9 +237,28 @@ app.post('/webhook', async (req, res) => {
     // Get metadata from session
     const { serviceName, date, time, customerEmail, customerName, nif } = session.metadata || {};
     const amountEur = session.amount_total ? (session.amount_total / 100).toFixed(2).replace('.', ',') + ' EUR' : '—';
+    const { telefone, numeroUtente, observacoes } = session.metadata || {};
     console.log('Checkout completo:', session.id, serviceName);
     try {
+      // 1. Guardar registo clínico do utente
+      await upsertUtente({
+        nomeCompleto: customerName,
+        email: customerEmail,
+        telefone,
+        numeroUtente,
+        nif,
+        observacoes,
+        dataConsulta: date,
+        hora: time,
+        servico: serviceName,
+        stripeSession: session.id,
+        valor: session.amount_total / 100,
+      });
+
+      // 2. Emitir fatura
       const invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
+
+      // 3. Enviar email
       await sendConfirmationEmail({ to: customerEmail, name: customerName, serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
     } catch(e) { console.error('Erro email/fatura:', e.message); }
     return res.json({ received: true });
@@ -304,6 +397,76 @@ app.post('/contact', async (req, res) => {
   } catch (err) {
     console.error('Erro ao enviar email de contacto:', err.message);
     res.status(500).json({ error: 'Erro ao enviar mensagem. Tente novamente ou contacte-nos diretamente.' });
+  }
+});
+
+// ─────────────────────────────────────────────
+// ROTAS DE REGISTOS CLÍNICOS (protegidas)
+// ─────────────────────────────────────────────
+
+// Middleware de autenticação admin
+function adminAuth(req, res, next) {
+  const key = req.headers['x-admin-key'] || req.query.adminKey;
+  if (!key || key !== process.env.ADMIN_SECRET) {
+    return res.status(401).json({ error: 'Não autorizado.' });
+  }
+  next();
+}
+
+// Listar todos os utentes
+app.get('/admin/utentes', adminAuth, async (req, res) => {
+  if (!MONGO_URI) return res.json([]);
+  try {
+    const utentes = await Utente.find({}, '-__v').sort({ atualizado: -1 });
+    res.json(utentes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Obter utente específico
+app.get('/admin/utentes/:id', adminAuth, async (req, res) => {
+  if (!MONGO_URI) return res.json(null);
+  try {
+    const utente = await Utente.findById(req.params.id);
+    if (!utente) return res.status(404).json({ error: 'Não encontrado.' });
+    res.json(utente);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Atualizar notas clínicas do utente
+app.put('/admin/utentes/:id', adminAuth, async (req, res) => {
+  if (!MONGO_URI) return res.json({ ok: false });
+  try {
+    const { notas, dataNascimento, morada, telefone, numeroUtente } = req.body;
+    const utente = await Utente.findByIdAndUpdate(
+      req.params.id,
+      { $set: { notas, dataNascimento, morada, telefone, numeroUtente, atualizado: new Date() } },
+      { new: true }
+    );
+    res.json(utente);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Pesquisar utentes
+app.get('/admin/utentes-search', adminAuth, async (req, res) => {
+  if (!MONGO_URI) return res.json([]);
+  try {
+    const q = req.query.q || '';
+    const utentes = await Utente.find({
+      $or: [
+        { nomeCompleto: { $regex: q, $options: 'i' } },
+        { email: { $regex: q, $options: 'i' } },
+        { numeroUtente: { $regex: q, $options: 'i' } },
+      ]
+    }, '-__v').limit(20);
+    res.json(utentes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
