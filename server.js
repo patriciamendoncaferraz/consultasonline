@@ -257,12 +257,20 @@ app.post('/webhook', async (req, res) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const pi = event.data.object;
-    // Get metadata from session
-    const { serviceName, date, time, customerEmail, customerName, nif } = session.metadata || {};
-    const amountEur = session.amount_total ? (session.amount_total / 100).toFixed(2).replace('.', ',') + ' EUR' : '—';
-    const { telefone, numeroUtente, observacoes } = session.metadata || {};
-    console.log('Checkout completo:', session.id, serviceName);
+    // Read ALL metadata fields safely
+    const meta = session.metadata || {};
+    const serviceId    = meta.serviceId    || '';
+    const serviceName  = meta.serviceName  || '';
+    const date         = meta.date         || '';
+    const time         = meta.time         || '';
+    const customerEmail = meta.customerEmail || session.customer_email || '';
+    const customerName = meta.customerName || '';
+    const nif          = meta.nif          || '';
+    const telefone     = meta.telefone     || '';
+    const numeroUtente = meta.numeroUtente || '';
+    const observacoes  = meta.observacoes  || '';
+    const amountEur    = session.amount_total ? (session.amount_total / 100).toFixed(2).replace('.', ',') + ' EUR' : '—';
+    console.log('Checkout completo:', session.id, serviceName, customerEmail, date, time);
     try {
       // 1. Guardar slot como ocupado
       if (MONGO_URI && date && time) {
