@@ -1,1 +1,1674 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ConsultasOnline — Saúde Online em Portugal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1d35;--navy2:#122848;--navy3:#1a3a5c;
+  --teal:#0d7377;--teal2:#0f8c82;--teal3:#17c4a8;
+  --slate:#4a5568;--muted:#8a9bb0;
+  --border:#dde6f0;--surface:#f4f7fb;--white:#ffffff;
+  --red:#e53e3e;--green:#38a169;--amber:#d69e2e;
+  --r:10px;--r2:18px;
+  --sh:0 2px 20px rgba(11,29,53,.08);--sh2:0 8px 48px rgba(11,29,53,.16);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--navy);background:var(--white);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#f0f4f8}::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px}
 
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,29,53,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;height:66px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--teal),var(--teal3));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--white)}
+.logo-text span{color:var(--teal3)}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-tab{background:transparent;border:none;color:rgba(255,255,255,.65);font-size:14px;font-weight:500;cursor:pointer;padding:8px 15px;border-radius:8px;transition:.2s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px}
+.nav-tab:hover{color:var(--white);background:rgba(255,255,255,.07)}
+.nav-tab.active{color:var(--teal3);background:rgba(23,196,168,.1)}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,.1);margin:0 4px}
+.nav-cta{background:var(--teal);color:var(--white)!important;padding:9px 20px;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:.2s;margin-left:6px}
+.nav-cta:hover{background:var(--teal2);transform:translateY(-1px)}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* ══════════════════════════════
+   HOME
+══════════════════════════════ */
+.hero{min-height:100vh;background:var(--navy);display:flex;align-items:center;position:relative;overflow:hidden;padding-top:66px}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 65% 50%,rgba(13,115,119,.15) 0%,transparent 65%),radial-gradient(ellipse 35% 35% at 15% 75%,rgba(23,196,168,.07) 0%,transparent 60%)}
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:32px 32px}
+.hero-inner{max-width:1100px;margin:0 auto;padding:48px 28px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;width:100%;position:relative;z-index:1}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(23,196,168,.12);border:1px solid rgba(23,196,168,.22);padding:6px 14px;border-radius:40px;margin-bottom:22px}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--teal3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-pill span{font-size:11.5px;font-weight:600;color:var(--teal3);letter-spacing:.5px;text-transform:uppercase}
+.hero-title{font-size:clamp(38px,4.5vw,58px);font-weight:700;color:var(--white);line-height:1.1;margin-bottom:18px;letter-spacing:-.4px}
+.hero-title em{color:var(--teal3);font-style:normal}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.58);line-height:1.75;margin-bottom:32px;font-weight:300;max-width:460px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-main{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:14px 30px;border-radius:9px;font-size:15px;font-weight:600;cursor:pointer;transition:.25s;font-family:'Inter',sans-serif}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(13,115,119,.38)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.2);padding:14px 28px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;transition:.25s;font-family:'Inter',sans-serif}
+.btn-ghost:hover{border-color:var(--teal3);color:var(--teal3)}
+
+/* Hero service preview card */
+.hero-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);padding:24px;backdrop-filter:blur(8px)}
+.hero-card-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.4px;text-transform:uppercase;margin-bottom:16px}
+.service-mini-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.service-mini{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s}
+.service-mini:hover{background:rgba(23,196,168,.1);border-color:rgba(23,196,168,.2)}
+.service-mini-left{display:flex;align-items:center;gap:10px}
+.service-mini-icon{font-size:18px}
+.service-mini-name{font-size:13px;font-weight:500;color:rgba(255,255,255,.82)}
+.service-mini-price{font-size:13px;font-weight:700;color:var(--teal3)}
+.hero-card-cta{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:13px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.hero-card-cta:hover{opacity:.92}
+.float-badge{position:absolute;background:var(--white);border-radius:30px;padding:9px 16px;box-shadow:var(--sh2);display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:var(--navy);white-space:nowrap;z-index:2}
+.fb1{top:-18px;right:-10px;animation:fb 4s ease-in-out infinite}
+.fb2{bottom:-16px;left:-10px;animation:fb 4s ease-in-out infinite 2s}
+@keyframes fb{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.fb-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.fb-green{background:rgba(56,161,105,.12)}
+.fb-amber{background:rgba(214,158,46,.12)}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:0 28px}
+section.home-section{padding:88px 0}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.sec-title{font-size:clamp(28px,3.5vw,42px);font-weight:700;color:var(--navy);line-height:1.18;letter-spacing:-.3px}
+.sec-sub{font-size:16px;color:var(--slate);line-height:1.72;margin-top:14px;max-width:540px;font-weight:300}
+
+/* HOW IT WORKS */
+.how-bg{background:var(--surface)}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:56px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:28px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,var(--teal),var(--teal3),var(--teal));opacity:.2}
+.step{text-align:center;padding:0 12px}
+.step-circle{width:56px;height:56px;border-radius:50%;background:var(--white);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--teal);position:relative;z-index:1;transition:.3s}
+.step:hover .step-circle{background:var(--teal);color:var(--white);border-color:var(--teal);box-shadow:0 4px 18px rgba(13,115,119,.28)}
+.step h3{font-size:18px;font-weight:600;color:var(--navy);margin-bottom:8px;font-family:'Cormorant Garamond',serif}
+.step p{font-size:13px;color:var(--slate);line-height:1.68}
+
+/* FEATURES */
+.feats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.feat{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:28px;transition:.3s;position:relative;overflow:hidden}
+.feat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal3));transform:scaleX(0);transform-origin:left;transition:.3s}
+.feat:hover{box-shadow:var(--sh2);transform:translateY(-3px)}
+.feat:hover::after{transform:scaleX(1)}
+.feat-ico{width:46px;height:46px;background:linear-gradient(135deg,rgba(13,115,119,.09),rgba(23,196,168,.09));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.feat h3{font-size:19px;font-weight:600;color:var(--navy);margin-bottom:8px;font-family:'Cormorant Garamond',serif}
+.feat p{font-size:13.5px;color:var(--slate);line-height:1.72;font-weight:300}
+.feat-tag{display:inline-block;margin-top:14px;font-size:10.5px;font-weight:700;color:var(--teal);background:rgba(13,115,119,.07);padding:4px 11px;border-radius:20px;letter-spacing:.5px}
+
+/* INVOICE STRIP */
+.invoice-strip{background:var(--navy);padding:80px 0}
+.invoice-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.inv-text .sec-title{color:var(--white)}
+.inv-text .sec-sub{color:rgba(255,255,255,.55)}
+.inv-checks{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:28px}
+.inv-checks li{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.72)}
+.inv-check-ico{width:20px;height:20px;border-radius:50%;background:rgba(23,196,168,.15);border:1px solid rgba(23,196,168,.28);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--teal3);flex-shrink:0}
+.inv-card{background:var(--white);border-radius:var(--r2);padding:28px;box-shadow:var(--sh2)}
+.inv-head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:2px solid var(--navy);margin-bottom:20px}
+.inv-brand-lg{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--navy)}
+.inv-brand-lg span{color:var(--teal)}
+.inv-meta-sm{text-align:right;font-size:11.5px;color:var(--muted);line-height:1.8}
+.inv-meta-sm strong{color:var(--navy)}
+.inv-row{display:flex;justify-content:space-between;font-size:13px;color:var(--slate);padding:9px 0;border-bottom:1px solid var(--border)}
+.inv-row:last-of-type{border:none}
+.inv-total-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;background:var(--navy);color:var(--white);border-radius:9px;padding:12px 16px}
+.inv-total-row span:first-child{font-size:13px;opacity:.7}
+.inv-total-row span:last-child{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700}
+.email-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(13,115,119,.08);border:1px solid rgba(13,115,119,.18);border-radius:24px;padding:7px 14px;font-size:12.5px;color:var(--teal);font-weight:500;margin-top:20px}
+
+/* PRICING */
+.price-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.price-card{border:1.5px solid var(--border);border-radius:var(--r2);padding:28px;position:relative;transition:.3s}
+.price-card:hover{box-shadow:var(--sh2);transform:translateY(-3px)}
+.price-card.featured{border-color:var(--teal);box-shadow:0 0 0 4px rgba(13,115,119,.07)}
+.price-card-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--teal);color:var(--white);font-size:10.5px;font-weight:700;padding:4px 14px;border-radius:18px;letter-spacing:.4px;white-space:nowrap}
+.price-name{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px}
+.price-val{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:var(--navy);line-height:1}
+.price-val sup{font-size:20px;vertical-align:top;margin-top:7px}
+.price-val sub{font-size:14px;color:var(--muted);font-family:'Inter',sans-serif;font-weight:400}
+.price-desc{font-size:13.5px;color:var(--slate);margin:11px 0 22px;line-height:1.6}
+.price-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.price-list li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--navy);line-height:1.5}
+.price-list li::before{content:'✓';width:18px;height:18px;background:rgba(13,115,119,.09);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--teal);font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.price-cta{width:100%;padding:12px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.cta-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+.cta-outline:hover{border-color:var(--teal);color:var(--teal)}
+.cta-solid{background:var(--teal);border:none;color:var(--white)}
+.cta-solid:hover{background:var(--teal2)}
+
+/* FOOTER */
+footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:44px}
+.footer-brand p{font-size:13.5px;line-height:1.78;margin-top:12px;max-width:250px}
+.footer-col h5{font-size:12.5px;font-weight:600;color:var(--white);margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col ul li a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;transition:.2s;cursor:pointer}
+.footer-col ul li a:hover{color:var(--teal3)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:flex;justify-content:space-between;align-items:center;font-size:12px;flex-wrap:wrap;gap:10px}
+.footer-bottom a{color:rgba(255,255,255,.38);text-decoration:none;transition:.2s}
+.footer-bottom a:hover{color:var(--teal3)}
+.cert-badges{display:flex;gap:8px;margin-top:14px}
+.cert-badge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 11px;font-size:10.5px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.3px}
+
+/* ══════════════════════════════
+   SERVICE SELECTOR MODAL (STEP 1)
+══════════════════════════════ */
+.overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(11,29,53,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.modal-box{background:var(--white);border-radius:var(--r2);max-width:820px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:var(--sh2);animation:popIn .28s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(.93) translateY(18px)}to{opacity:1;transform:none}}
+.modal-hdr{padding:24px 28px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.modal-hdr h2{font-size:26px;color:var(--navy)}
+.modal-hdr p{font-size:13.5px;color:var(--muted);margin-top:3px}
+.close-btn{width:34px;height:34px;border:none;background:var(--surface);border-radius:7px;cursor:pointer;font-size:17px;color:var(--slate);transition:.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.close-btn:hover{background:var(--border)}
+
+/* Service selector grid */
+.service-selector{padding:24px 28px}
+.service-selector h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:16px;font-family:'Inter',sans-serif}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px}
+.svc-card{border:1.5px solid var(--border);border-radius:var(--r2);padding:16px;cursor:pointer;transition:.25s;position:relative;background:var(--white)}
+.svc-card:hover{border-color:var(--teal);box-shadow:0 4px 20px rgba(13,115,119,.12);transform:translateY(-2px)}
+.svc-card.selected{border-color:var(--teal);background:rgba(13,115,119,.04);box-shadow:0 4px 20px rgba(13,115,119,.14)}
+.svc-card.selected::after{content:'✓';position:absolute;top:10px;right:12px;width:20px;height:20px;background:var(--teal);color:var(--white);border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.svc-icon{font-size:26px;margin-bottom:10px;display:block}
+.svc-name{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:5px;line-height:1.3}
+.svc-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.svc-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--teal)}
+.svc-price sub{font-size:12px;font-weight:400;font-family:'Inter',sans-serif;color:var(--muted)}
+.svc-type{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.badge-atestado{background:rgba(214,158,46,.1);color:var(--amber);border:1px solid rgba(214,158,46,.25);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.3px;display:inline-block;margin-bottom:8px}
+.badge-consulta{background:rgba(13,115,119,.09);color:var(--teal);border:1px solid rgba(13,115,119,.2);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.3px;display:inline-block;margin-bottom:8px}
+
+/* STEP 2: Booking form */
+.booking-form{display:none;padding:0 28px 28px}
+.booking-form.show{display:block}
+.step-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--teal);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:20px;padding:0;transition:.2s}
+.step-back:hover{color:var(--teal2)}
+.selected-service-banner{background:linear-gradient(135deg,rgba(13,115,119,.06),rgba(23,196,168,.06));border:1px solid rgba(13,115,119,.15);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.ssb-left{display:flex;align-items:center;gap:12px}
+.ssb-icon{font-size:22px}
+.ssb-name{font-size:15px;font-weight:600;color:var(--navy)}
+.ssb-type{font-size:12px;color:var(--muted)}
+.ssb-price{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--teal)}
+.booking-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+
+/* Calendar */
+.cal-wrap{background:var(--surface);border-radius:var(--r);padding:18px}
+.cal-nav-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav-row h4{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--navy)}
+.cal-nav-btn{width:30px;height:30px;border:1px solid var(--border);background:var(--white);border-radius:6px;cursor:pointer;font-size:14px;transition:.2s}
+.cal-nav-btn:hover{background:var(--teal);color:var(--white);border-color:var(--teal)}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:6px}
+.cal-week span{font-size:10.5px;font-weight:600;color:var(--muted);padding:3px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:12.5px;font-weight:500;cursor:pointer;transition:.2s;color:var(--navy)}
+.cal-d:hover:not(.empty):not(.past){background:rgba(13,115,119,.09);color:var(--teal)}
+.cal-d.sel{background:var(--teal);color:var(--white);font-weight:600}
+.cal-d.today{border:1.5px solid var(--teal);color:var(--teal)}
+.cal-d.empty,.cal-d.past{color:var(--border);cursor:default}
+.time-section{margin-top:18px}
+.time-section h4{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:10px}
+.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.t-slot{border:1.5px solid var(--border);background:var(--white);border-radius:7px;padding:8px;text-align:center;cursor:pointer;transition:.2s;font-size:12px;font-weight:600;color:var(--slate)}
+.t-slot:hover{border-color:var(--teal);color:var(--teal)}
+.t-slot.sel{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.t-slot.taken{background:var(--surface);color:var(--border);cursor:not-allowed;text-decoration:line-through}
+
+/* Form fields */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11.5px;font-weight:600;color:var(--navy);margin-bottom:5px;letter-spacing:.1px}
+.field input,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--surface);transition:.2s;outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--teal);background:var(--white);box-shadow:0 0 0 3px rgba(13,115,119,.09)}
+.field textarea{height:72px;resize:none}
+.pay-tabs{display:flex;gap:8px;margin-bottom:14px}
+.pay-tab{flex:1;border:1.5px solid var(--border);background:var(--white);border-radius:9px;padding:10px;text-align:center;cursor:pointer;transition:.2s;font-size:12.5px;font-weight:600;color:var(--slate);font-family:'Inter',sans-serif}
+.pay-tab:hover,.pay-tab.active{border-color:var(--teal);color:var(--teal);background:rgba(13,115,119,.04)}
+.mbway-row{display:flex;gap:7px}
+.mbway-row input{flex:1}
+.mbway-btn{background:var(--teal);color:var(--white);border:none;border-radius:8px;padding:10px 16px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:.2s}
+.mbway-btn:hover{background:var(--teal2)}
+.mbway-status{display:none;align-items:center;gap:9px;background:rgba(214,158,46,.07);border:1px solid rgba(214,158,46,.25);border-radius:8px;padding:10px 14px;margin-top:8px}
+.mbway-status.show{display:flex}
+.spin{width:16px;height:16px;border:2px solid rgba(214,158,46,.25);border-top-color:var(--amber);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mbway-status span{font-size:12.5px;font-weight:500}
+.mb-ref-box{background:var(--surface);border-radius:9px;padding:14px;border:1px solid var(--border)}
+.mb-ref-box .ref-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.4px;margin-bottom:3px}
+.mb-ref-box .ref-val{font-weight:700;color:var(--navy);font-size:15px}
+.mb-ref-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.inv-toggle{display:flex;align-items:center;gap:9px;background:var(--surface);border-radius:9px;padding:12px;cursor:pointer;margin-top:8px;border:1.5px solid var(--border);transition:.2s}
+.inv-toggle:hover{border-color:var(--teal)}
+.inv-toggle input{accent-color:var(--teal);width:15px;height:15px;cursor:pointer}
+.inv-toggle label{font-size:13px;color:var(--navy);cursor:pointer;font-weight:500}
+.inv-extra{display:none;margin-top:10px;padding:14px;background:var(--surface);border-radius:9px;border:1px solid var(--border)}
+.inv-extra.show{display:block}
+.modal-footer-row{padding:18px 28px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:14px}
+.footer-price{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--navy)}
+.footer-price span{font-size:13px;font-weight:400;color:var(--muted);font-family:'Inter',sans-serif;margin-left:3px}
+.confirm-btn{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:13px 32px;border-radius:9px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.25s}
+.confirm-btn:hover{transform:translateY(-2px);box-shadow:0 7px 24px rgba(13,115,119,.32)}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--navy);color:var(--white);border-radius:var(--r);padding:18px 22px;box-shadow:var(--sh2);min-width:300px;transform:translateY(90px);opacity:0;transition:.38s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-top{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.toast-ic{width:26px;height:26px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.toast strong{font-size:14px}
+.toast p{font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.5}
+
+/* CHAT */
+.chat-widget{position:fixed;bottom:26px;right:26px;z-index:240}
+.chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;cursor:pointer;font-size:22px;box-shadow:0 4px 18px rgba(13,115,119,.38);transition:.3s;display:flex;align-items:center;justify-content:center}
+.chat-toggle:hover{transform:scale(1.07)}
+.chat-box{position:absolute;bottom:64px;right:0;width:305px;background:var(--white);border-radius:var(--r2);box-shadow:var(--sh2);display:none;flex-direction:column;border:1px solid var(--border);overflow:hidden}
+.chat-box.open{display:flex;animation:popIn .22s ease}
+.chat-hd{background:var(--navy);padding:14px 16px;display:flex;align-items:center;gap:10px}
+.chat-hd-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal3));display:flex;align-items:center;justify-content:center;font-size:14px}
+.chat-hd h4{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;color:var(--white)}
+.chat-hd p{font-size:10.5px;color:var(--teal3)}
+.chat-x{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.45);cursor:pointer;font-size:15px}
+.chat-msgs{height:200px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;background:var(--surface)}
+.cmsg{max-width:82%;padding:9px 13px;border-radius:10px;font-size:12.5px;line-height:1.5}
+.cmsg-bot{background:var(--white);border:1px solid var(--border);color:var(--navy);align-self:flex-start;border-radius:3px 10px 10px 10px}
+.cmsg-user{background:var(--teal);color:var(--white);align-self:flex-end;border-radius:10px 3px 10px 10px}
+.chat-inp-row{display:flex;gap:7px;padding:10px 12px;border-top:1px solid var(--border)}
+.chat-inp{flex:1;border:1.5px solid var(--border);border-radius:7px;padding:8px 11px;font-size:12.5px;font-family:'Inter',sans-serif;color:var(--navy);outline:none}
+.chat-inp:focus{border-color:var(--teal)}
+.chat-send-btn{background:var(--teal);border:none;border-radius:7px;width:34px;height:34px;cursor:pointer;color:var(--white);font-size:14px;transition:.2s;display:flex;align-items:center;justify-content:center}
+.chat-send-btn:hover{background:var(--teal2)}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.fade-up.visible{opacity:1;transform:none}
+
+/* ══════════════════════════════
+   BLOG PAGE
+══════════════════════════════ */
+.blog-page{padding-top:66px;min-height:100vh;background:var(--white)}
+.blog-hero{background:var(--navy);padding:60px 0 44px;position:relative;overflow:hidden}
+.blog-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 70% at 25% 50%,rgba(13,115,119,.18) 0%,transparent 70%)}
+.blog-hero-inner{max-width:1100px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.blog-hero h1{font-size:clamp(34px,4.5vw,52px);font-weight:700;color:var(--white);line-height:1.12;margin-bottom:14px}
+.blog-hero h1 em{color:var(--teal3);font-style:normal}
+.blog-hero p{font-size:16px;color:rgba(255,255,255,.55);max-width:520px;line-height:1.72;font-weight:300}
+.blog-filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:66px;z-index:100}
+.blog-filter-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.f-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-right:4px;text-transform:uppercase}
+.f-chip{border:1.5px solid var(--border);border-radius:18px;padding:6px 14px;font-size:12.5px;font-weight:500;color:var(--slate);cursor:pointer;background:var(--white);transition:.2s;font-family:'Inter',sans-serif}
+.f-chip:hover,.f-chip.active{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.blog-layout{max-width:1100px;margin:0 auto;padding:44px 28px;display:grid;grid-template-columns:1fr 320px;gap:44px;align-items:start}
+.blog-list{display:flex;flex-direction:column;gap:20px}
+.bcard{display:grid;grid-template-columns:190px 1fr;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;background:var(--white);transition:.3s;cursor:pointer}
+.bcard:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.bcard-img{display:flex;align-items:center;justify-content:center;font-size:46px;min-height:148px}
+.bcard-body{padding:20px}
+.bcard-meta{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+.bcat{font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--teal);background:rgba(13,115,119,.07);padding:3px 9px;border-radius:10px}
+.bdate{font-size:11.5px;color:var(--muted)}
+.bread{font-size:11.5px;color:var(--muted)}
+.bcard-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--navy);margin-bottom:7px;line-height:1.3}
+.bcard-excerpt{font-size:13.5px;color:var(--slate);line-height:1.68;font-weight:300}
+.bcard-link{font-size:12.5px;font-weight:600;color:var(--teal);margin-top:12px;display:inline-block}
+.bcard-link:hover{color:var(--teal2)}
+
+/* Sidebar */
+.blog-sidebar{display:flex;flex-direction:column;gap:20px;position:sticky;top:120px}
+.sb-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.sb-head{background:var(--navy);padding:16px 18px}
+.sb-head h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--white);margin-bottom:3px}
+.sb-head p{font-size:12px;color:rgba(255,255,255,.5)}
+.sb-body{padding:16px 18px}
+.sb-btn{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:8px;padding:11px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.sb-btn:hover{opacity:.9}
+.pop-list{list-style:none}
+.pop-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:.2s}
+.pop-item:last-child{border:none}
+.pop-item:hover .pop-title{color:var(--teal)}
+.pop-n{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--border);min-width:28px}
+.pop-title{font-size:12.5px;font-weight:500;color:var(--navy);line-height:1.4;transition:.2s}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:7px}
+.tag{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:5px 12px;font-size:12px;font-weight:500;color:var(--slate);cursor:pointer;transition:.2s}
+.tag:hover{background:var(--teal);border-color:var(--teal);color:var(--white)}
+
+/* ══════════════════════════════
+   ARTICLE VIEW
+══════════════════════════════ */
+.article-view{display:none;padding-top:66px}
+.article-view.active{display:block}
+.art-hero{background:var(--navy);padding:50px 0 40px;position:relative;overflow:hidden}
+.art-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 70% at 80% 50%,rgba(13,115,119,.13) 0%,transparent 65%)}
+.art-hero-inner{max-width:760px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.art-back{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.45);font-size:12.5px;cursor:pointer;margin-bottom:22px;transition:.2s;background:none;border:none;font-family:'Inter',sans-serif}
+.art-back:hover{color:var(--teal3)}
+.art-cat{display:inline-flex;align-items:center;background:rgba(13,115,119,.18);border:1px solid rgba(23,196,168,.18);padding:4px 13px;border-radius:18px;font-size:11px;font-weight:700;color:var(--teal3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px}
+.art-title{font-size:clamp(26px,3.5vw,42px);font-weight:700;color:var(--white);line-height:1.18;margin-bottom:14px}
+.art-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.art-meta-item{font-size:12.5px;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:5px}
+.art-meta-item span{color:rgba(255,255,255,.7)}
+.art-body-wrap{max-width:760px;margin:0 auto;padding:44px 28px 72px}
+.art-body{font-size:15.5px;line-height:1.88;color:#334155}
+.art-body h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--navy);margin:36px 0 14px;line-height:1.2}
+.art-body h3{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--navy);margin:24px 0 10px}
+.art-body p{margin-bottom:16px}
+.art-body ul,.art-body ol{margin:14px 0 18px 22px}
+.art-body li{margin-bottom:7px;line-height:1.68}
+.art-body strong{color:var(--navy);font-weight:600}
+.ibox{border-left:3px solid var(--teal);border-radius:0 var(--r) var(--r) 0;padding:16px 20px;margin:22px 0;background:rgba(13,115,119,.05)}
+.ibox.warn{border-color:var(--amber);background:rgba(214,158,46,.05)}
+.ibox.danger{border-color:var(--red);background:rgba(229,62,62,.05)}
+.ibox-title{font-weight:700;font-size:13.5px;color:var(--navy);margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.ibox p{margin:0;font-size:13.5px;color:var(--slate);line-height:1.6}
+.refs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-top:44px}
+.refs h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:14px}
+.ref-list{list-style:none;display:flex;flex-direction:column;gap:9px;counter-reset:rc}
+.ref-list li{font-size:12.5px;color:var(--slate);line-height:1.6;padding-left:28px;position:relative}
+.ref-list li::before{counter-increment:rc;content:counter(rc)'.';position:absolute;left:0;color:var(--teal);font-weight:700;font-size:11.5px}
+.ref-list li em{font-style:italic}
+.art-cta{background:linear-gradient(135deg,var(--navy),var(--navy3));border-radius:var(--r2);padding:28px;text-align:center;margin:36px 0}
+.art-cta h3{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--white);margin-bottom:7px}
+.art-cta p{font-size:13.5px;color:rgba(255,255,255,.55);margin-bottom:18px}
+.art-cta-btn{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:13px 28px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.25s}
+.art-cta-btn:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(13,115,119,.32)}
+
+@media(max-width:860px){
+  .hero-inner,.invoice-inner,.blog-layout{grid-template-columns:1fr}
+  .feats-grid,.price-cards{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .booking-cols{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .hero-card-wrap,.fb1,.fb2{display:none}
+  .blog-sidebar{display:none}
+  .bcard{grid-template-columns:1fr}
+  .bcard-img{min-height:100px}
+}
+@media(max-width:540px){
+  .services-grid{grid-template-columns:1fr}
+  .nav-tab span{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo" onclick="showPage('home')">
+      <div class="logo-icon">🩺</div>
+      <span class="logo-text">Consultas<span>Online</span></span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-tab active" id="tab-home" onclick="showPage('home')">🏠 <span>Home</span></button>
+      <button class="nav-tab" id="tab-blog" onclick="showPage('blog')">📰 <span>Artigos de Saúde</span></button>
+      <div class="nav-sep"></div>
+      <button class="nav-cta" onclick="openServiceSelector()">Marcar Consulta</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     HOME PAGE
+════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-pill"><div class="pulse-dot"></div><span>Disponível agora</span></div>
+      <h1 class="hero-title">Consultas médicas<br/>online, <em>simples</em><br/>e sem esperas</h1>
+      <p class="hero-sub">Marque a sua consulta em segundos. Pague por MBWay e receba a fatura no email. Tudo sem sair de casa.</p>
+      <div class="hero-btns">
+        <button class="btn-main" onclick="openServiceSelector()">Marcar Consulta</button>
+        <button class="btn-ghost" onclick="showPage('blog')">Artigos de Saúde →</button>
+      </div>
+    </div>
+    <div style="position:relative" class="hero-card-wrap">
+      <div class="fb1 float-badge"><div class="fb-dot fb-green">✓</div>Consulta confirmada</div>
+      <div class="hero-card">
+        <div class="hero-card-title">Serviços disponíveis</div>
+        <div class="service-mini-grid">
+          <div class="service-mini" onclick="openServiceSelector()">
+            <div class="service-mini-left"><div class="service-mini-icon">📋</div><div class="service-mini-name">Atestado de Amamentação</div></div>
+            <div class="service-mini-price">35€</div>
+          </div>
+          <div class="service-mini" onclick="openServiceSelector()">
+            <div class="service-mini-left"><div class="service-mini-icon">🏥</div><div class="service-mini-name">Emissão de Baixa Médica</div></div>
+            <div class="service-mini-price">40€</div>
+          </div>
+          <div class="service-mini" onclick="openServiceSelector()">
+            <div class="service-mini-left"><div class="service-mini-icon">💊</div><div class="service-mini-name">Renovação de Medicamentos</div></div>
+            <div class="service-mini-price">40€</div>
+          </div>
+        </div>
+        <button class="hero-card-cta" onclick="openServiceSelector()">Ver todos os serviços →</button>
+      </div>
+      <div class="fb2 float-badge"><div class="fb-dot fb-amber">🧾</div>Fatura enviada por email</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="home-section how-bg">
+  <div class="container">
+    <div class="fade-up" style="text-align:center">
+      <div class="sec-label">Como funciona</div>
+      <h2 class="sec-title">4 passos simples</h2>
+      <p class="sec-sub" style="margin:12px auto 0">Da marcação à consulta, tudo online e sem complicações.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step fade-up">
+        <div class="step-circle">01</div>
+        <h3>Escolhe o Serviço</h3>
+        <p>Seleciona o tipo de consulta ou atestado que precisa, com preço claro desde o início.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-circle">02</div>
+        <h3>Agenda o Horário</h3>
+        <p>Escolhe o dia e hora disponível no calendário. Confirmação imediata por email.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-circle">03</div>
+        <h3>Paga por MBWay</h3>
+        <p>Pagamento rápido e seguro pelo telemóvel. Fatura emitida automaticamente.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-circle">04</div>
+        <h3>Consulta Online</h3>
+        <p>Videoconsulta no browser, sem instalações. Documentos enviados por email.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="home-section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="sec-label">Plataforma</div>
+      <h2 class="sec-title">Tudo numa só plataforma</h2>
+      <p class="sec-sub">Seguro, simples e certificado. Porque a saúde não deve ser complicada.</p>
+    </div>
+    <div class="feats-grid">
+      <div class="feat fade-up">
+        <div class="feat-ico">📅</div>
+        <h3>Agendamento Imediato</h3>
+        <p>Calendário com disponibilidade em tempo real. Sem chamadas, sem filas de espera. Confirmação instantânea.</p>
+        <span class="feat-tag">CALENDÁRIO ONLINE</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">📱</div>
+        <h3>Pagamento por MBWay</h3>
+        <p>Insira o número de telemóvel, confirme no app MB WAY. Também aceita Referência MB e cartão bancário.</p>
+        <span class="feat-tag">PAGAMENTO SEGURO</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">🧾</div>
+        <h3>Fatura Automática</h3>
+        <p>Após o pagamento, a fatura é gerada e enviada para o seu email em menos de 30 segundos. Com NIF e certificação AT.</p>
+        <span class="feat-tag">CERTIFICADA AT</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">🎥</div>
+        <h3>Videoconsulta HD</h3>
+        <p>Consulta por videochamada diretamente no browser. Sem instalar software. Encriptada de ponta a ponta.</p>
+        <span class="feat-tag">ENCRIPTAÇÃO E2E</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">🔒</div>
+        <h3>Dados Protegidos</h3>
+        <p>Toda a informação clínica está protegida em conformidade com o RGPD. Acesso exclusivo do utente.</p>
+        <span class="feat-tag">RGPD CONFORME</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">📄</div>
+        <h3>Documentos Digitais</h3>
+        <p>Receitas, atestados e declarações emitidos eletronicamente e enviados por email. Com validade legal em Portugal.</p>
+        <span class="feat-tag">VALIDADE LEGAL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVOICE STRIP -->
+<section class="invoice-strip">
+  <div class="container">
+    <div class="invoice-inner">
+      <div class="inv-text fade-up">
+        <div class="sec-label" style="color:var(--teal3)">Faturação</div>
+        <h2 class="sec-title">Fatura automática, certificada e no seu email</h2>
+        <p class="sec-sub">Emitida após o pagamento com certificação da Autoridade Tributária. Enviada em segundos.</p>
+        <ul class="inv-checks">
+          <li><div class="inv-check-ico">✓</div>Certificada pela Autoridade Tributária (AT)</li>
+          <li><div class="inv-check-ico">✓</div>IVA isento — artigo 9.º do CIVA (prestações de saúde)</li>
+          <li><div class="inv-check-ico">✓</div>PDF compatível com o portal e-fatura</li>
+          <li><div class="inv-check-ico">✓</div>Facilita reembolso por seguro de saúde</li>
+          <li><div class="inv-check-ico">✓</div>Enviada para o email em menos de 30 segundos</li>
+        </ul>
+        <div class="email-tag">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f4929580818695b4979b9a8781988095879b9a989d9a91da979b99">[email&#160;protected]</a> &nbsp;·&nbsp; Envio automático</div>
+      </div>
+      <div class="fade-up">
+        <div class="inv-card">
+          <div class="inv-head">
+            <div>
+              <div class="inv-brand-lg">Consultas<span>Online</span></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">NIF: 510 000 000</div>
+            </div>
+            <div class="inv-meta-sm"><strong>FT 2024/2841</strong><br/>15/03/2024<br/><span style="color:var(--green);font-weight:700">● PAGO</span></div>
+          </div>
+          <div class="inv-row"><span>Consulta — Infeção Urinária</span><span>—</span></div>
+          <div class="inv-row"><span style="font-size:11px;color:var(--muted)">15/03/2024 · 10:30 · Videoconsulta</span><span>40,00 €</span></div>
+          <div class="inv-total-row"><span>Total (IVA isento — art. 9.º CIVA)</span><span>40,00 €</span></div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">Certificada AT · Código QR disponível no PDF</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="home-section">
+  <div class="container">
+    <div class="fade-up" style="text-align:center">
+      <div class="sec-label">Preços</div>
+      <h2 class="sec-title">Transparência total,<br/>sem surpresas</h2>
+      <p class="sec-sub" style="margin:12px auto 0">Dois preços simples conforme o tipo de serviço.</p>
+    </div>
+    <div class="price-cards">
+      <div class="price-card fade-up">
+        <div class="price-name">Atestados</div>
+        <div class="price-val"><sup>€</sup>35<sub>/atestado</sub></div>
+        <p class="price-desc">Para situações que requerem comprovativo médico escrito.</p>
+        <ul class="price-list">
+          <li>Atestado de amamentação</li>
+          <li>Atestado para falta escolar</li>
+          <li>Atestado para carta de condução</li>
+          <li>Documento emitido digitalmente</li>
+          <li>Fatura automática por email</li>
+        </ul>
+        <button class="price-cta cta-outline" onclick="openServiceSelector()">Solicitar Atestado</button>
+      </div>
+      <div class="price-card featured fade-up">
+        <div class="price-card-badge">MAIS SOLICITADO</div>
+        <div class="price-name">Consultas Online</div>
+        <div class="price-val"><sup>€</sup>40<sub>/consulta</sub></div>
+        <p class="price-desc">Videoconsulta com emissão de receita, baixa ou documento no próprio dia.</p>
+        <ul class="price-list">
+          <li>Emissão / renovação de baixa médica</li>
+          <li>Renovação de medicamentos</li>
+          <li>Consulta de infeção urinária</li>
+          <li>Cessação tabágica</li>
+          <li>Consulta de amigdalite</li>
+          <li>Doenças sexualmente transmissíveis</li>
+          <li>Videoconsulta + receita digital</li>
+          <li>Fatura automática por email</li>
+        </ul>
+        <button class="price-cta cta-solid" onclick="openServiceSelector()">Marcar Consulta</button>
+      </div>
+      <div class="price-card fade-up">
+        <div class="price-name">MBWay · Ref. MB · Cartão</div>
+        <div class="price-val" style="font-size:32px;margin-top:8px">Pagamento<br/>Fácil</div>
+        <p class="price-desc">Aceite todos os métodos de pagamento habituais em Portugal.</p>
+        <ul class="price-list">
+          <li>MB WAY — confirmação no telemóvel</li>
+          <li>Referência Multibanco</li>
+          <li>Cartão Visa / Mastercard</li>
+          <li>Pagamento 100% seguro</li>
+          <li>Fatura emitida automaticamente</li>
+          <li>IVA isento (saúde)</li>
+        </ul>
+        <button class="price-cta cta-outline" onclick="openServiceSelector()">Começar Agora</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo" onclick="showPage('home')"><div class="logo-icon">🩺</div><span class="logo-text">Consultas<span>Online</span></span></div>
+        <p>Consultas médicas online em Portugal. Agendamento imediato, pagamento por MBWay, faturação automática.</p>
+        <div class="cert-badges"><div class="cert-badge">RGPD</div><div class="cert-badge">AT CERT.</div><div class="cert-badge">E2E</div></div>
+      </div>
+      <div class="footer-col">
+        <h5>Serviços</h5>
+        <ul>
+          <li><a onclick="openServiceSelector()">Atestados</a></li>
+          <li><a onclick="openServiceSelector()">Emissão de Baixa</a></li>
+          <li><a onclick="openServiceSelector()">Renovação de Medicamentos</a></li>
+          <li><a onclick="openServiceSelector()">Consultas Online</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Informação</h5>
+        <ul>
+          <li><a onclick="showPage('blog')">Artigos de Saúde</a></li>
+          <li><a href="#">Como Funciona</a></li>
+          <li><a href="#">Preços</a></li>
+          <li><a href="#">Segurança</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Suporte</h5>
+        <ul>
+          <li><a href="#">Ajuda</a></li>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Termos de Serviço</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 ConsultasOnline, Lda. · Todos os direitos reservados</span>
+      <div style="display:flex;gap:16px"><a href="#">Privacidade</a><a href="#">Termos</a><a href="#">Cookies</a></div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /page-home -->
+
+
+<!-- ════════════════════════════════════════
+     BLOG PAGE
+════════════════════════════════════════ -->
+<div class="page" id="page-blog">
+<div class="blog-page">
+  <div class="blog-hero">
+    <div class="blog-hero-inner">
+      <div class="sec-label" style="color:var(--teal3)">Biblioteca Médica</div>
+      <h1>Artigos de <em>Saúde</em></h1>
+      <p>Informação médica rigorosa, sustentada em evidência científica, para decisões mais informadas sobre a sua saúde.</p>
+    </div>
+  </div>
+  <div class="blog-filter-bar">
+    <div class="blog-filter-inner">
+      <span class="f-label">Filtrar:</span>
+      <div class="f-chip active" onclick="filterBlog('todos',this)">Todos</div>
+      <div class="f-chip" onclick="filterBlog('infecoes',this)">Infeções</div>
+      <div class="f-chip" onclick="filterBlog('trabalho',this)">Trabalho &amp; Escola</div>
+      <div class="f-chip" onclick="filterBlog('obesidade',this)">Peso &amp; Obesidade</div>
+      <div class="f-chip" onclick="filterBlog('dst',this)">DST</div>
+      <div class="f-chip" onclick="filterBlog('medicacao',this)">Medicação &amp; Baixas</div>
+    </div>
+  </div>
+  <div class="blog-layout">
+    <div class="blog-list" id="blogList">
+
+      <div class="bcard" data-cat="infecoes" onclick="openArticle('itu')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#0d4a60,#0d7377)">💧</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Infeções</span><span class="bdate">12 Mar 2024</span><span class="bread">· 8 min</span></div>
+          <h2 class="bcard-title">Infeção Urinária: Causas, Sintomas e Tratamento</h2>
+          <p class="bcard-excerpt">A infeção do trato urinário é uma das patologias mais frequentes em Portugal. Saiba como identificar, tratar e prevenir com base em evidência científica.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="trabalho" onclick="openArticle('faltas-trabalho')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#1e3a5f,#1e4d7b)">💼</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Trabalho &amp; Legal</span><span class="bdate">8 Mar 2024</span><span class="bread">· 6 min</span></div>
+          <h2 class="bcard-title">Faltas ao Trabalho por Doença: Como Justificar</h2>
+          <p class="bcard-excerpt">Tudo sobre declarações médicas, baixas, o Código do Trabalho português e os seus direitos como trabalhador quando está doente.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="trabalho" onclick="openArticle('faltas-escola')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#2d4a22,#3d7a2c)">🎓</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Escola &amp; Família</span><span class="bdate">5 Mar 2024</span><span class="bread">· 5 min</span></div>
+          <h2 class="bcard-title">Faltas à Escola por Doença: Como Justificar</h2>
+          <p class="bcard-excerpt">O que diz a lei portuguesa, documentos necessários e prazos para apresentar ao diretor de turma. Como obter declaração médica online.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="infecoes" onclick="openArticle('garganta')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#5c1a1a,#8b2b2b)">🤒</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Infeções</span><span class="bdate">1 Mar 2024</span><span class="bread">· 7 min</span></div>
+          <h2 class="bcard-title">Dor de Garganta: Vírus, Bactérias e Quando Tomar Antibiótico</h2>
+          <p class="bcard-excerpt">Amigdalite, faringite — quando é viral e quando é bacteriana? Quando deve tomar antibiótico. Critérios de Centor e evidência atual.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="obesidade" onclick="openArticle('ozempic')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#3d1a6b,#6b2fb8)">⚕️</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Peso &amp; Obesidade</span><span class="bdate">25 Fev 2024</span><span class="bread">· 10 min</span></div>
+          <h2 class="bcard-title">Ozempic, Mounjaro e Wegovy: O Guia Completo sobre GLP-1</h2>
+          <p class="bcard-excerpt">Semaglutido, tirzepatido — os medicamentos que revolucionaram o tratamento da obesidade. Eficácia, segurança e quem pode tomar.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="dst" onclick="openArticle('dst')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#1a4a3f,#0d7377)">🔬</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Saúde Sexual</span><span class="bdate">20 Fev 2024</span><span class="bread">· 9 min</span></div>
+          <h2 class="bcard-title">Doenças Sexualmente Transmissíveis: Guia Completo</h2>
+          <p class="bcard-excerpt">VIH, gonorreia, sífilis, herpes, HPV — sintomas, rastreio, tratamento e prevenção segundo as guidelines europeias.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-baixa')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#4a3000,#8b6000)">📋</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Baixas</span><span class="bdate">15 Fev 2024</span><span class="bread">· 6 min</span></div>
+          <h2 class="bcard-title">Renovação de Baixa Médica: Tudo o que Precisa de Saber</h2>
+          <p class="bcard-excerpt">Como funciona o CIT em Portugal, prazos, regras da Segurança Social e como renovar a sua baixa sem sair de casa.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-medicamentos')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#1a3a1a,#2d7a2d)">💊</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Medicação</span><span class="bdate">10 Fev 2024</span><span class="bread">· 7 min</span></div>
+          <h2 class="bcard-title">Renovação de Medicamentos: Como Funciona em Portugal</h2>
+          <p class="bcard-excerpt">Receita Sem Papel, INFARMED, comparticipação do SNS — como renovar a sua medicação habitual online sem complicações.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+    </div><!-- /blog-list -->
+
+    <div class="blog-sidebar">
+      <div class="sb-card">
+        <div class="sb-head"><h3>Marcar Consulta</h3><p>Disponível hoje</p></div>
+        <div class="sb-body">
+          <p style="font-size:13px;color:var(--slate);margin-bottom:13px;line-height:1.6">Tem dúvidas sobre a sua saúde? Marque uma consulta online rapidamente.</p>
+          <button class="sb-btn" onclick="openServiceSelector()">📅 Marcar Agora</button>
+        </div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-head"><h3>Mais Lidos</h3><p>Esta semana</p></div>
+        <div class="sb-body" style="padding:0 18px">
+          <ul class="pop-list">
+            <li class="pop-item" onclick="openArticle('ozempic')"><div class="pop-n">01</div><div class="pop-title">Ozempic, Mounjaro e Wegovy: Guia GLP-1</div></li>
+            <li class="pop-item" onclick="openArticle('itu')"><div class="pop-n">02</div><div class="pop-title">Infeção Urinária: Tratamento</div></li>
+            <li class="pop-item" onclick="openArticle('renovacao-baixa')"><div class="pop-n">03</div><div class="pop-title">Renovação de Baixa Médica</div></li>
+            <li class="pop-item" onclick="openArticle('dst')"><div class="pop-n">04</div><div class="pop-title">DST: Guia Completo</div></li>
+            <li class="pop-item" onclick="openArticle('faltas-trabalho')"><div class="pop-n">05</div><div class="pop-title">Faltas ao Trabalho por Doença</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-head"><h3>Temas</h3><p>Navegue por categoria</p></div>
+        <div class="sb-body">
+          <div class="tag-cloud">
+            <div class="tag">Infeções</div><div class="tag">Baixas</div><div class="tag">Receitas</div><div class="tag">Obesidade</div><div class="tag">DST</div><div class="tag">Garganta</div><div class="tag">Pediatria</div><div class="tag">Trabalho</div><div class="tag">GLP-1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /page-blog -->
+
+
+<!-- ════════════════════════════════════════
+     ARTICLES
+════════════════════════════════════════ -->
+
+<!-- ITU -->
+<div class="article-view" id="article-itu">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💧 Infeções</div>
+    <h1 class="art-title">Infeção Urinária: Causas, Sintomas e Tratamento</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>12 Março 2024</span></div><div class="art-meta-item">⏱ <span>8 min leitura</span></div><div class="art-meta-item">🔬 <span>Referências científicas</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>O que é uma Infeção do Trato Urinário?</h2>
+    <p>A infeção do trato urinário (ITU) é uma das infeções bacterianas mais comuns em ambulatório. Pode envolver a uretra (uretrite), a bexiga (cistite) ou os rins (pielonefrite). A cistite aguda não complicada é a forma mais prevalente em mulheres adultas saudáveis.</p>
+    <div class="ibox"><div class="ibox-title">🔬 Agente mais frequente</div><p>A <em>Escherichia coli</em> é responsável por 80–85% das ITU não complicadas. (Foxman, <em>Nature Reviews Microbiology</em>, 2010)</p></div>
+    <h2>Sintomas</h2>
+    <ul><li><strong>Disúria</strong> — ardor ou dor ao urinar</li><li><strong>Polaquiúria</strong> — necessidade frequente de urinar em pequenas quantidades</li><li><strong>Urgência miccional</strong> — vontade súbita e intensa</li><li><strong>Hematúria</strong> — urina com sangue visível (~30% dos casos)</li><li><strong>Dor suprapúbica</strong> — desconforto na zona inferior do abdómen</li></ul>
+    <p>Na pielonefrite (infeção renal) surgem ainda <strong>febre alta, calafrios e lombalgia</strong>. Esta forma exige avaliação urgente.</p>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Quando ir às urgências</div><p>Febre superior a 38,5°C, dores lombares intensas, vómitos ou ausência de melhoria ao fim de 48h de antibiótico — estes sinais requerem avaliação presencial urgente.</p></div>
+    <h2>Diagnóstico</h2>
+    <p>A tira-teste de urina é o exame de primeira linha. A urocultura com antibiograma é recomendada em ITU recorrente, gestação ou suspeita de pielonefrite.</p>
+    <h2>Tratamento de Primeira Linha (DGS)</h2>
+    <ul><li><strong>Nitrofurantoína</strong> 100mg 2×/dia, 5 dias</li><li><strong>Fosfomicina trometamol</strong> 3g dose única</li><li><strong>Pivmecilinam</strong> 400mg 2×/dia, 3–7 dias</li></ul>
+    <h2>Prevenção de Recorrências</h2>
+    <ul><li>Ingestão de líquidos ≥1,5L/dia</li><li>Profilaxia pós-coital (antibiótico dose única)</li><li>Arando vermelho — evidência moderada (Cochrane Review, 2023)</li><li>Estrogénios locais em mulheres pós-menopáusicas</li></ul>
+    <div class="art-cta"><h3>Tem sintomas de infeção urinária?</h3><p>Consulta online com diagnóstico e receita em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta ITU — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Foxman B. <em>Urinary tract infection syndromes.</em> Infect Dis Clin North Am. 2014;28(1):1-13.</li>
+      <li>Gupta K, et al. <em>International clinical practice guidelines for uncomplicated cystitis.</em> Clin Infect Dis. 2011;52(5):e103-120.</li>
+      <li>EAU Guidelines on Urological Infections. European Association of Urology, 2023.</li>
+      <li>Jepson RG, et al. <em>Cranberries for preventing UTI.</em> Cochrane Database Syst Rev. 2023.</li>
+      <li>DGS. <em>Infeções do Trato Urinário — Norma de Orientação Clínica.</em> 2021.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- FALTAS TRABALHO -->
+<div class="article-view" id="article-faltas-trabalho">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💼 Trabalho &amp; Legal</div>
+    <h1 class="art-title">Faltas ao Trabalho por Doença: Como Justificar</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>8 Março 2024</span></div><div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Enquadramento Legal — Código do Trabalho</h2>
+    <p>As faltas ao trabalho por doença são reguladas pelo <strong>Código do Trabalho (Lei n.º 7/2009)</strong> e pela legislação da Segurança Social. Conhecer os seus direitos é fundamental para proteger o vínculo laboral.</p>
+    <h2>Documentos para Justificar</h2>
+    <ul><li><strong>Declaração médica</strong> — para faltas de curta duração (1 a 3 dias). Justifica a ausência perante o empregador mas não confere subsídio.</li><li><strong>Certificado de Incapacidade Temporária (CIT)</strong> — obrigatório a partir do 4.º dia consecutivo. Emitido eletronicamente pelo médico diretamente para a Segurança Social.</li></ul>
+    <div class="ibox"><div class="ibox-title">📋 Prazo legal</div><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade. O processo é totalmente digital.</p></div>
+    <h2>Subsídio de Doença</h2>
+    <p>O subsídio é pago pela Segurança Social a partir do <strong>4.º dia</strong>. Os primeiros 3 dias não são remunerados (período de espera), salvo diferente previsão em contrato coletivo.</p>
+    <ul><li>Até 30 dias: <strong>55%</strong> da remuneração de referência</li><li>31 a 90 dias: <strong>60%</strong></li><li>91 a 365 dias: <strong>70%</strong></li><li>Mais de 365 dias: <strong>75%</strong></li></ul>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Proteção laboral</div><p>Faltas justificadas por doença devidamente documentadas <strong>não podem constituir justa causa de despedimento</strong>, nos termos do artigo 351.º do Código do Trabalho.</p></div>
+    <div class="art-cta"><h3>Precisa de declaração médica urgente?</h3><p>Emissão no próprio dia, enviada por email.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Agora — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Lei n.º 7/2009. <em>Código do Trabalho Português.</em> Diário da República.</li>
+      <li>Decreto-Lei n.º 28/2004. <em>Regime jurídico de proteção social na doença.</em></li>
+      <li>Portaria n.º 115/2021. <em>Regras de emissão de CIT.</em> Ministério da Saúde.</li>
+      <li>Instituto da Segurança Social. <em>Guia Prático — Subsídio de Doença.</em> ISS, 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- FALTAS ESCOLA -->
+<div class="article-view" id="article-faltas-escola">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🎓 Escola &amp; Família</div>
+    <h1 class="art-title">Faltas à Escola por Doença: Como Justificar</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>5 Março 2024</span></div><div class="art-meta-item">⏱ <span>5 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>O que diz a Lei</h2>
+    <p>As faltas escolares por doença são reguladas pelo <strong>Estatuto do Aluno e Ética Escolar (Lei n.º 51/2012)</strong>. A doença é uma causa de falta justificada.</p>
+    <h2>Documentos Aceites</h2>
+    <ul><li><strong>Declaração médica</strong> — indica o período de incapacidade, sem revelar o diagnóstico (protegido por sigilo médico).</li><li><strong>Declaração dos encarregados de educação</strong> — válida até <strong>3 dias por período letivo</strong> no ensino básico. Acima desse limite, é obrigatória declaração médica.</li></ul>
+    <div class="ibox"><div class="ibox-title">📋 Prazo para justificar</div><p>A justificação deve ser entregue ao Diretor de Turma nos <strong>3 dias úteis</strong> seguintes ao regresso do aluno, salvo motivo de força maior.</p></div>
+    <h2>Limites de Faltas</h2>
+    <p>No ensino secundário, o limite é equivalente a <strong>10% da carga horária</strong> de cada disciplina. Acima desse limite, mesmo com justificação médica, o aluno pode ficar sem avaliação por faltas.</p>
+    <h2>Conteúdo da Declaração Médica</h2>
+    <ul><li>Nome e data de nascimento do aluno</li><li>Período de incapacidade (datas início/fim)</li><li>Referência ao sigilo do diagnóstico</li><li>Identificação e carimbo do médico emitente</li></ul>
+    <div class="art-cta"><h3>O seu filho está doente?</h3><p>Declaração médica emitida por videoconsulta, no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Atestado para Escola — 35€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Lei n.º 51/2012. <em>Estatuto do Aluno e Ética Escolar.</em></li>
+      <li>Despacho Normativo n.º 1-F/2016. <em>Avaliação dos alunos do ensino básico e secundário.</em></li>
+      <li>DGE. <em>Orientações sobre faltismo escolar.</em> Direção-Geral da Educação, 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- GARGANTA -->
+<div class="article-view" id="article-garganta">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🤒 Infeções</div>
+    <h1 class="art-title">Dor de Garganta: Quando Tomar Antibiótico</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>1 Março 2024</span></div><div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Vírica ou Bacteriana?</h2>
+    <p>Até <strong>80% das faringoamigdalites são de origem viral</strong> e não beneficiam de antibiótico. Apenas 15–30% têm etiologia bacteriana — principalmente o <em>Streptococcus pyogenes</em> (EBHGA).</p>
+    <h2>Critérios de Centor (McIsaac)</h2>
+    <p>Esta ferramenta clínica estima a probabilidade de infeção estreptocócica:</p>
+    <ul><li>Exsudado amigdalino (pus) — <strong>+1 ponto</strong></li><li>Adenopatias cervicais dolorosas — <strong>+1 ponto</strong></li><li>Ausência de tosse — <strong>+1 ponto</strong></li><li>Febre ≥38°C — <strong>+1 ponto</strong></li><li>Idade 3–14 anos — <strong>+1</strong>; idade 45+ — <strong>-1</strong></li></ul>
+    <p>Score ≥3: considerar antibiótico ou teste rápido. Score ≤1: origem viral — <strong>antibiótico não indicado</strong>.</p>
+    <div class="ibox danger"><div class="ibox-title">🚨 Alerta — Abcesso Periamigdalino</div><p>Trismo (dificuldade em abrir a boca), voz "engrolada" e desvio da úvula são sinais de abcesso periamigdalino — emergência cirúrgica urgente.</p></div>
+    <h2>Tratamento</h2>
+    <ul><li><strong>Amoxicilina</strong> 500mg 3×/dia, 10 dias — primeira linha (DGS)</li><li>Alerta à penicilina: azitromicina ou claritromicina</li><li>Ibuprofeno para alívio sintomático da dor e febre</li></ul>
+    <div class="art-cta"><h3>Com dor de garganta persistente?</h3><p>Avaliação online e receita adequada em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta Amigdalite — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Centor RM, et al. <em>The diagnosis of strep throat in adults.</em> Med Decis Making. 1981;1(3):239-246.</li>
+      <li>McIsaac WJ, et al. <em>A clinical score to reduce unnecessary antibiotic use.</em> CMAJ. 1998;158(1):75-83.</li>
+      <li>Hayward G, et al. <em>Corticosteroids for pain relief in sore throat.</em> BMJ. 2017;358:j3887.</li>
+      <li>DGS. <em>Norma 007/2012: Faringoamigdalite.</em> (atualizada 2022).</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- OZEMPIC -->
+<div class="article-view" id="article-ozempic">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">⚕️ Peso &amp; Obesidade</div>
+    <h1 class="art-title">Ozempic, Mounjaro e Wegovy: Guia Completo sobre GLP-1</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>25 Fev 2024</span></div><div class="art-meta-item">⏱ <span>10 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>A Revolução dos Agonistas GLP-1</h2>
+    <p>O semaglutido (Ozempic/Wegovy) e o tirzepatido (Mounjaro) representam a maior evolução no tratamento farmacológico da obesidade em décadas, com reduções ponderais sem precedentes em ensaios clínicos de fase 3.</p>
+    <h2>Ozempic vs Wegovy — Qual a diferença?</h2>
+    <ul><li><strong>Ozempic</strong> (semaglutido s.c. 0,5–2 mg) — aprovado para <strong>diabetes tipo 2</strong>; frequentemente utilizado off-label para perda de peso.</li><li><strong>Wegovy</strong> (semaglutido s.c. 2,4 mg) — aprovado especificamente para <strong>obesidade</strong> (IMC ≥30, ou ≥27 com comorbilidade).</li><li><strong>Rybelsus</strong> (semaglutido oral) — aprovado para diabetes tipo 2 em Portugal.</li></ul>
+    <div class="ibox"><div class="ibox-title">📊 Estudo STEP 1 (NEJM, 2021)</div><p>O semaglutido 2,4 mg causou redução média de <strong>14,9% do peso corporal</strong> em 68 semanas vs. 2,4% no placebo. (Wilding et al., N Engl J Med 2021)</p></div>
+    <h2>Mounjaro (Tirzepatido) — Dupla Ação GLP-1/GIP</h2>
+    <p>No estudo SURMOUNT-1, o tirzepatido 15 mg atingiu reduções de <strong>até 22,5% do peso corporal</strong> — os maiores resultados alguma vez obtidos com medicação para obesidade sem cirurgia. (Jastreboff et al., NEJM 2022)</p>
+    <h2>Como funcionam</h2>
+    <ul><li>Redução do apetite via centros hipotalâmicos</li><li>Aumento da saciedade pós-prandial</li><li>Esvaziamento gástrico mais lento</li><li>Melhoria da sensibilidade à insulina</li></ul>
+    <h2>Efeitos Secundários</h2>
+    <ul><li>Náuseas (40–50%), geralmente ligeiras e transitórias</li><li>Vómitos, diarreia, obstipação</li><li>Redução do apetite (efeito terapêutico)</li></ul>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Contraindicações</div><p>Gravidez, aleitamento, história de carcinoma medular da tiróide ou NEM tipo 2, pancreatite aguda prévia. <strong>Exige sempre prescrição médica.</strong></p></div>
+    <h2>Preservar Massa Muscular</h2>
+    <p>25–40% da perda de peso pode ser massa magra. A combinação com exercício de resistência e ingestão proteica adequada (≥1,2–1,6 g/kg/dia) é essencial.</p>
+    <div class="art-cta"><h3>Quer discutir opções de perda de peso?</h3><p>Consulta de avaliação e orientação terapêutica.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta Online — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Wilding JPH, et al. <em>Once-Weekly Semaglutide in Overweight or Obesity.</em> N Engl J Med. 2021;384:989-1002. (STEP 1)</li>
+      <li>Jastreboff AM, et al. <em>Tirzepatide for Obesity.</em> N Engl J Med. 2022;387:205-216. (SURMOUNT-1)</li>
+      <li>Drucker DJ. <em>The biology of incretin hormones.</em> Cell Metab. 2006;3(3):153-165.</li>
+      <li>EMA. <em>Wegovy — Summary of Product Characteristics.</em> 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- DST -->
+<div class="article-view" id="article-dst">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🔬 Saúde Sexual</div>
+    <h1 class="art-title">Doenças Sexualmente Transmissíveis: Guia Completo</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>20 Fev 2024</span></div><div class="art-meta-item">⏱ <span>9 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Contexto Europeu</h2>
+    <p>Segundo o ECDC, em 2022 registaram-se aumentos de 48% na gonorreia e 34% na sífilis na UE face ao ano anterior. O diagnóstico precoce é determinante para o tratamento eficaz e para travar a transmissão.</p>
+    <h2>As IST Mais Frequentes</h2>
+    <h3>VIH</h3>
+    <p>Com terapêutica antirretroviral atual, a esperança de vida é próxima da da população geral. A <strong>PrEP</strong> (tenofovir/emtricitabina) reduz o risco de transmissão em &gt;99% (Grant et al., NEJM 2010). Rastreio recomendado a todos os adultos sexualmente ativos.</p>
+    <h3>Gonorreia (<em>N. gonorrhoeae</em>)</h3>
+    <p>Tratamento: <strong>ceftriaxona 500mg IM dose única</strong>. Resistência crescente a fluoroquinolonas e azitromicina. Frequentemente assintomática na mulher — pode causar doença inflamatória pélvica e infertilidade.</p>
+    <h3>Sífilis (<em>Treponema pallidum</em>)</h3>
+    <p>Três fases: cancro indolor (primária) → rash palmoplantar (secundária) → lesões cardiovasculares/neurológicas (terciária). Tratamento: <strong>penicilina G benzatínica</strong> — altamente eficaz.</p>
+    <h3>Clamídia</h3>
+    <p>IST bacteriana mais prevalente. Frequentemente assintomática. Tratamento: <strong>azitromicina 1g dose única</strong> ou doxiciclina 7 dias.</p>
+    <h3>HPV e Cancro do Colo do Útero</h3>
+    <p>Os tipos 16 e 18 são responsáveis por 70% dos cancros do colo. A <strong>vacina HPV</strong> (Gardasil 9, incluída no PNV) é altamente protetora. O rastreio cervical regular é essencial.</p>
+    <div class="ibox"><div class="ibox-title">🛡️ Prevenção</div><p>O preservativo, usado consistente e corretamente, reduz significativamente o risco de transmissão. Para VIH, a PrEP acrescenta proteção adicional.</p></div>
+    <h2>Rastreio — Com que frequência?</h2>
+    <ul><li>Homens que têm sexo com homens: VIH, sífilis, gonorreia, clamídia cada 3–6 meses</li><li>Múltiplos parceiros: rastreio anual</li><li>Gravidez: VIH, sífilis, hepatite B/C obrigatório</li></ul>
+    <div class="art-cta"><h3>Quer fazer rastreio de forma discreta?</h3><p>Consulta confidencial. Pedido de análises enviado por email.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta DST — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>ECDC. <em>STI in Europe, 2022.</em> European Centre for Disease Prevention and Control, 2023.</li>
+      <li>Workowski KA, et al. <em>STI Treatment Guidelines, 2021.</em> MMWR. 2021;70(4):1-187.</li>
+      <li>Grant RM, et al. <em>Preexposure Chemoprophylaxis for HIV.</em> N Engl J Med. 2010;363:2587-2599.</li>
+      <li>IUSTI. <em>European Guidelines on Common STIs.</em> 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- RENOVAÇÃO BAIXA -->
+<div class="article-view" id="article-renovacao-baixa">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">📋 Baixas</div>
+    <h1 class="art-title">Renovação de Baixa Médica: Tudo o que Precisa de Saber</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>15 Fev 2024</span></div><div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>O Sistema CIT em Portugal</h2>
+    <p>A baixa médica é formalizada pelo <strong>Certificado de Incapacidade Temporária (CIT)</strong>, enviado eletronicamente pelo médico diretamente para a Segurança Social. O trabalhador não precisa de entregar nenhum papel.</p>
+    <h2>Quando Renovar</h2>
+    <ul><li>Quando a incapacidade se mantém após o período do CIT inicial</li><li>Quando o médico define um prazo de reavaliação</li><li>Não existe limite legal ao número de renovações com fundamento clínico</li></ul>
+    <div class="ibox"><div class="ibox-title">📱 Renovação por Videoconsulta</div><p>Os CIT podem ser emitidos após videoconsulta. É possível renovar a baixa médica sem sair de casa.</p></div>
+    <h2>Prazos Críticos</h2>
+    <ul><li>O CIT deve cobrir o período de incapacidade sem interrupção</li><li>Qualquer gap entre CITs pode resultar em perda do subsídio</li><li>Em hospitalização, o CIT é emitido pelo hospital</li></ul>
+    <h2>Baixa por Acidente de Trabalho</h2>
+    <p>Regime distinto — gerido pela seguradora do empregador. O subsídio é 100% do salário desde o 1.º dia e é pago pela seguradora.</p>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Verificações da Segurança Social</div><p>A SS pode verificar a incapacidade presencialmente. O trabalhador deve estar em condições compatíveis com o diagnóstico declarado.</p></div>
+    <div class="art-cta"><h3>Precisa de renovar a baixa?</h3><p>CIT emitido eletronicamente no próprio dia por videoconsulta.</p><button class="art-cta-btn" onclick="openServiceSelector()">Renovar Baixa — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Decreto-Lei n.º 28/2004. <em>Proteção na eventualidade de doença.</em></li>
+      <li>Portaria n.º 115/2021. <em>Certificado de Incapacidade Temporária.</em></li>
+      <li>ISS. <em>Guia Prático — Subsídio de Doença 2024.</em></li>
+      <li>Lei n.º 98/2009. <em>Acidentes de trabalho e doenças profissionais.</em></li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- RENOVAÇÃO MEDICAMENTOS -->
+<div class="article-view" id="article-renovacao-medicamentos">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💊 Medicação</div>
+    <h1 class="art-title">Renovação de Medicamentos: Como Funciona em Portugal</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>10 Fev 2024</span></div><div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Receita Sem Papel (RSP)</h2>
+    <p>Desde 2016, Portugal adotou integralmente a <strong>Receita Sem Papel</strong>, gerida pelo SPMS. A receita é enviada por SMS e/ou email ao utente, que a apresenta na farmácia sem necessitar de papel.</p>
+    <h2>Tipos de Receita</h2>
+    <ul><li><strong>Receita normal</strong> — válida 30 dias, até 4 embalagens por medicamento.</li><li><strong>Receita renovável</strong> — para uso crónico. Válida 6 meses, com 3 vias de dispensa mensal.</li><li><strong>Receita especial</strong> — para psicotrópicos e estupefacientes. Regras mais restritas.</li></ul>
+    <div class="ibox"><div class="ibox-title">💡 Receita crónica — dispensa trimestral</div><p>Para doentes crónicos estáveis, é possível emitir receitas renováveis com levantamento trimestral na farmácia.</p></div>
+    <h2>Comparticipação do SNS</h2>
+    <ul><li><strong>Escalão A</strong> (insulinas, antiepiléticos…): 90% comparticipado</li><li><strong>Escalão B</strong> (cardiovasculares, diabetes…): 69%</li><li><strong>Escalão C</strong>: 37%</li><li><strong>Escalão D</strong>: 15%</li></ul>
+    <h2>Como Renovar Online</h2>
+    <ol><li>Agende videoconsulta</li><li>O médico avalia e valida a continuidade da medicação</li><li>Receita enviada eletronicamente por SMS/email</li><li>Levantamento na farmácia com o código da receita</li></ol>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Medicamentos com regras especiais</div><p>Psicotrópicos, estupefacientes e medicamentos hospitalares exigem avaliação presencial e processos específicos.</p></div>
+    <div class="art-cta"><h3>Precisa de renovar medicação?</h3><p>Receita eletrónica emitida no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Renovar Medicação — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>INFARMED. <em>Estatísticas do Medicamento 2022.</em> 2023.</li>
+      <li>Portaria n.º 284/2016. <em>Prescrição e dispensa de medicamentos.</em></li>
+      <li>Despacho n.º 2935-B/2016. <em>Sistema de Receita Sem Papel.</em></li>
+      <li>EMA. <em>Guideline on bioequivalence.</em> 2010.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SERVICE SELECTOR MODAL
+════════════════════════════════════════ -->
+<div class="overlay" id="serviceModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <h2>Marcar Consulta</h2>
+        <p>Escolha o serviço que pretende</p>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- STEP 1: Service Selection -->
+    <div class="service-selector" id="step1">
+      <h3>Selecione o tipo de consulta ou atestado:</h3>
+      <div class="services-grid" id="servicesGrid">
+
+        <div class="svc-card" onclick="selectService(this,'Atestado de Amamentação',35,'Atestado','atestado-amamentacao')">
+          <span class="svc-icon">🤱</span>
+          <div class="badge-atestado">ATESTADO</div>
+          <div class="svc-name">Atestado de Amamentação</div>
+          <p class="svc-desc">Documento médico que certifica o período de amamentação, para fins laborais, de seguro ou de subsídio.</p>
+          <div class="svc-price">35€ <sub>/atestado</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Atestado para Falta Escolar',35,'Atestado','atestado-escola')">
+          <span class="svc-icon">🎓</span>
+          <div class="badge-atestado">ATESTADO</div>
+          <div class="svc-name">Atestado para Falta Escolar</div>
+          <p class="svc-desc">Declaração médica para justificar ausências escolares, com indicação do período de incapacidade e sigilo do diagnóstico.</p>
+          <div class="svc-price">35€ <sub>/atestado</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Atestado para Carta de Condução',35,'Atestado','atestado-conducao')">
+          <span class="svc-icon">🚗</span>
+          <div class="badge-atestado">ATESTADO</div>
+          <div class="svc-name">Atestado para Carta de Condução</div>
+          <p class="svc-desc">Declaração de aptidão médica exigida para obtenção ou renovação da licença de condução em Portugal.</p>
+          <div class="svc-price">35€ <sub>/atestado</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Emissão de Baixa Médica',40,'Consulta','baixa-medica')">
+          <span class="svc-icon">🏥</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Emissão de Baixa Médica</div>
+          <p class="svc-desc">Avaliação clínica e emissão do Certificado de Incapacidade Temporária (CIT) para a Segurança Social, por videoconsulta.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Renovação de Medicamentos',40,'Consulta','renovacao-medicamentos')">
+          <span class="svc-icon">💊</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Renovação de Medicamentos</div>
+          <p class="svc-desc">Avaliação e renovação de receita médica para medicação de uso crónico. Receita eletrónica enviada por email.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de Infeção Urinária',40,'Consulta','consulta-infecao-urinaria')">
+          <span class="svc-icon">💧</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Consulta de Infeção Urinária</div>
+          <p class="svc-desc">Avaliação dos sintomas, diagnóstico diferencial e prescrição do antibiótico adequado segundo as guidelines nacionais.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de Cessação Tabágica',40,'Consulta','consulta-cessacao-tabagica')">
+          <span class="svc-icon">🚭</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Consulta de Cessação Tabágica</div>
+          <p class="svc-desc">Avaliação do grau de dependência, aconselhamento e prescrição de apoio farmacológico (adesivos, vareniclina, bupropiona).</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de Amigdalite',40,'Consulta','consulta-amigdalite')">
+          <span class="svc-icon">🤒</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Consulta de Amigdalite</div>
+          <p class="svc-desc">Avaliação da dor de garganta com critérios clínicos validados para distinguir infeção viral de bacteriana e decidir antibiótico.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de DST / IST',40,'Consulta','consulta-dst')">
+          <span class="svc-icon">🔬</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Doenças Sexualmente Transmissíveis</div>
+          <p class="svc-desc">Consulta confidencial com avaliação de risco, pedido de análises de rastreio e orientação terapêutica. Total privacidade.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STEP 2: Booking -->
+    <div class="booking-form" id="step2">
+      <div style="padding:0 28px;padding-top:20px">
+        <button class="step-back" onclick="goBackToServices()">← Escolher outro serviço</button>
+        <div class="selected-service-banner" id="svcBanner">
+          <div class="ssb-left">
+            <div class="ssb-icon" id="svcBannerIcon">💊</div>
+            <div>
+              <div class="ssb-name" id="svcBannerName">Serviço</div>
+              <div class="ssb-type" id="svcBannerType">Consulta Online · 30 min</div>
+            </div>
+          </div>
+          <div class="ssb-price" id="svcBannerPrice">40€</div>
+        </div>
+      </div>
+      <div class="booking-cols" style="padding:0 28px 8px">
+        <!-- Calendar col -->
+        <div>
+          <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;font-family:'Inter',sans-serif">Escolha o dia e hora</h3>
+          <div class="cal-wrap">
+            <div class="cal-nav-row">
+              <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+              <h4 id="calTitle">Março 2024</h4>
+              <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+            </div>
+            <div class="cal-week"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+          <div class="time-section" id="timeSection" style="display:none">
+            <h4>Horários disponíveis</h4>
+            <div class="time-grid">
+              <div class="t-slot" onclick="selectTime(this)">09:00</div>
+              <div class="t-slot taken">09:30</div>
+              <div class="t-slot" onclick="selectTime(this)">10:00</div>
+              <div class="t-slot" onclick="selectTime(this)">10:30</div>
+              <div class="t-slot taken">11:00</div>
+              <div class="t-slot" onclick="selectTime(this)">14:00</div>
+              <div class="t-slot" onclick="selectTime(this)">14:30</div>
+              <div class="t-slot" onclick="selectTime(this)">15:00</div>
+              <div class="t-slot taken">15:30</div>
+              <div class="t-slot" onclick="selectTime(this)">16:00</div>
+              <div class="t-slot" onclick="selectTime(this)">16:30</div>
+              <div class="t-slot" onclick="selectTime(this)">17:00</div>
+            </div>
+          </div>
+        </div>
+        <!-- Form col -->
+        <div>
+          <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;font-family:'Inter',sans-serif">Os seus dados</h3>
+          <div class="field"><label>Nome Completo</label><input type="text" placeholder="João Manuel Costa"/></div>
+          <div class="field"><label>Email</label><input type="email" placeholder="joao@email.pt"/></div>
+          <div class="field"><label>Telemóvel</label><input type="tel" placeholder="+351 9XX XXX XXX"/></div>
+          <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea placeholder="Descreva brevemente o motivo..."></textarea></div>
+
+          <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:12px;margin-top:4px;font-family:'Inter',sans-serif">Pagamento</h3>
+          <div class="pay-tabs">
+            <div class="pay-tab active" onclick="selectPay(this,'mbway')">📱 MBWay</div>
+            <div class="pay-tab" onclick="selectPay(this,'mb')">🏧 Ref. MB</div>
+            <div class="pay-tab" onclick="selectPay(this,'card')">💳 Cartão</div>
+          </div>
+
+          <!-- MBWay panel -->
+          <div id="panelMbway">
+            <div class="field" style="margin-bottom:8px"><label>Telemóvel MBWay</label>
+              <div class="mbway-row">
+                <input type="tel" id="mbwayPhone" placeholder="9XX XXX XXX" style="margin:0"/>
+              </div>
+            </div>
+            <div class="mbway-status" id="mbwayStatus">
+              <div class="spin" id="mbwaySpin"></div>
+              <span id="mbwayMsg">Irá receber uma notificação no app MB WAY para confirmar.</span>
+            </div>
+          </div>
+
+          <!-- Multibanco Reference panel -->
+          <div id="panelMb" style="display:none">
+            <div class="mb-ref-box" id="mbRefBox">
+              <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Após clicar em "Confirmar e Pagar" a referência será gerada automaticamente pelo Stripe.</p>
+              <div class="mb-ref-grid" id="mbRefGrid" style="display:none">
+                <div><div class="ref-label">ENTIDADE</div><div class="ref-val" id="mbEntity">—</div></div>
+                <div><div class="ref-label">REFERÊNCIA</div><div class="ref-val" id="mbRef">—</div></div>
+                <div><div class="ref-label">MONTANTE</div><div class="ref-val" id="mbAmount" style="color:var(--teal)">—</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card panel — Stripe Elements -->
+          <div id="panelCard" style="display:none">
+            <div class="field">
+              <label>Dados do Cartão</label>
+              <div id="stripeCardElement" style="border:1.5px solid var(--border);border-radius:8px;padding:11px 13px;background:var(--surface);transition:.2s"></div>
+              <div id="stripeCardError" style="color:var(--red);font-size:12px;margin-top:6px;display:none"></div>
+            </div>
+          </div>
+
+          <div class="inv-toggle" onclick="toggleInvoice()">
+            <input type="checkbox" id="invCheck"/>
+            <label for="invCheck">🧾 Emitir fatura com dados de faturação</label>
+          </div>
+          <div class="inv-extra" id="invExtra">
+            <div class="field"><label>Nome / Empresa</label><input placeholder="João Costa ou Empresa, Lda."/></div>
+            <div class="field"><label>NIF</label><input placeholder="123 456 789"/></div>
+            <div class="field"><label>Morada (opcional)</label><input placeholder="Rua, nº, Código Postal"/></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer-row">
+        <div>
+          <div class="footer-price" id="footerPrice">40,00€ <span id="footerDesc">Consulta Online · 30 min</span></div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:3px">Fatura enviada automaticamente após pagamento</div>
+        </div>
+        <button class="confirm-btn" onclick="confirmBooking()">Confirmar e Pagar →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-top"><div class="toast-ic">✓</div><strong>Consulta Confirmada!</strong></div>
+  <p>Agendamento realizado com sucesso.<br/>Fatura enviada para o seu email. 🎉</p>
+</div>
+
+<!-- CHAT -->
+<div class="chat-widget">
+  <div class="chat-box" id="chatBox">
+    <div class="chat-hd">
+      <div class="chat-hd-av">🩺</div>
+      <div><h4>Apoio ConsultasOnline</h4><p>● Online · Responde rapidamente</p></div>
+      <button class="chat-x" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="cmsg cmsg-bot">Olá! 👋 Como posso ajudá-lo? Posso esclarecer dúvidas sobre os nossos serviços ou ajudá-lo a marcar uma consulta.</div>
+    </div>
+    <div class="chat-inp-row">
+      <input class="chat-inp" id="chatInp" placeholder="Escreva uma mensagem..." onkeypress="chatEnter(event)"/>
+      <button class="chat-send-btn" onclick="sendChat()">&#10148;</button>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()">💬</button>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── PAGE NAV ──
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('tab-'+p).classList.add('active');
+  closeAllArticles();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── ARTICLE NAV ──
+function openArticle(id){
+  document.querySelectorAll('.article-view').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-blog').style.display='none';
+  document.getElementById('article-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function closeArticle(){
+  document.querySelectorAll('.article-view').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-blog').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function closeAllArticles(){
+  document.querySelectorAll('.article-view').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-blog').style.display='';
+}
+
+// ── BLOG FILTER ──
+function filterBlog(cat,el){
+  document.querySelectorAll('.f-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.bcard').forEach(c=>{
+    c.style.display=(cat==='todos'||c.dataset.cat===cat)?'':'none';
+  });
+}
+
+// ── SERVICE MODAL ──
+let currentService={name:'',price:40,type:''};
+
+function openServiceSelector(){
+  document.getElementById('serviceModal').classList.add('open');
+  document.getElementById('step1').style.display='block';
+  document.getElementById('step2').classList.remove('show');
+  document.querySelectorAll('.svc-card').forEach(c=>c.classList.remove('selected'));
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('serviceModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('serviceModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+const svcIcons={'Atestado de Amamentação':'🤱','Atestado para Falta Escolar':'🎓','Atestado para Carta de Condução':'🚗','Emissão de Baixa Médica':'🏥','Renovação de Medicamentos':'💊','Consulta de Infeção Urinária':'💧','Consulta de Cessação Tabágica':'🚭','Consulta de Amigdalite':'🤒','Consulta de DST / IST':'🔬'};
+
+function selectService(el,name,price,type,id){
+  document.querySelectorAll('.svc-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentService={name,price,type,id};
+  setTimeout(()=>{
+    document.getElementById('step1').style.display='none';
+    document.getElementById('step2').classList.add('show');
+    const icon=svcIcons[name]||'🩺';
+    document.getElementById('svcBannerIcon').textContent=icon;
+    document.getElementById('svcBannerName').textContent=name;
+    document.getElementById('svcBannerType').textContent=type==='Atestado'?'Atestado Digital · Enviado por email':'Consulta Online · Videochamada';
+    document.getElementById('svcBannerPrice').textContent=price+'€';
+    document.getElementById('footerPrice').innerHTML=price+',00€ <span id="footerDesc">'+name+'</span>';
+    document.getElementById('mbAmount').textContent=price+',00€';
+    // Reset payment panel
+    currentPayMethod='mbway';
+    document.getElementById('panelMbway').style.display='block';
+    document.getElementById('panelMb').style.display='none';
+    document.getElementById('panelCard').style.display='none';
+    document.querySelectorAll('.pay-tab').forEach((b,i)=>b.classList.toggle('active',i===0));
+    document.getElementById('mbwayStatus').classList.remove('show');
+    document.getElementById('mbRefGrid').style.display='none';
+    renderCalendar();
+  },180);
+}
+
+function goBackToServices(){
+  document.getElementById('step2').classList.remove('show');
+  document.getElementById('step1').style.display='block';
+  selectedDay=null;
+}
+
+// ── CALENDAR ──
+let currentDate=new Date(),selectedDay=null;
+const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function renderCalendar(){
+  const y=currentDate.getFullYear(),m=currentDate.getMonth();
+  document.getElementById('calTitle').textContent=months[m]+' '+y;
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  let html='';
+  for(let i=0;i<first;i++) html+='<div class="cal-d empty"></div>';
+  for(let d=1;d<=days;d++){
+    const isPast=new Date(y,m,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isTdy=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    const isSel=selectedDay===d&&m===currentDate.getMonth()&&y===currentDate.getFullYear();
+    let cls='cal-d';
+    if(isPast)cls+=' past';
+    else if(isSel)cls+=' sel';
+    else if(isTdy)cls+=' today';
+    const clk=isPast?'':'onclick="selDay('+d+')"';
+    html+='<div class="'+cls+'" '+clk+'>'+d+'</div>';
+  }
+  document.getElementById('calGrid').innerHTML=html;
+}
+function changeMonth(d){currentDate.setMonth(currentDate.getMonth()+d);renderCalendar();}
+function selDay(d){selectedDay=d;renderCalendar();document.getElementById('timeSection').style.display='block';}
+function selectTime(el){document.querySelectorAll('.t-slot').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');}
+
+// ── STRIPE SETUP ──
+// Substituir pela sua chave pública: https://dashboard.stripe.com/apikeys
+const STRIPE_PK = 'pk_live_XXXXXXXXXXXXXXXXXXXXXXXX'; // <- colocar aqui a sua pk_live_...
+const API_URL   = 'https://api.consultasonline.com';   // <- URL do seu servidor Node.js
+
+let stripe, cardElement, currentPayMethod = 'mbway', mbwayPollingTimer;
+
+function initStripe() {
+  if (!stripe) {
+    stripe = Stripe(STRIPE_PK);
+    const elements = stripe.elements({
+      fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' }],
+    });
+    cardElement = elements.create('card', {
+      style: {
+        base: {
+          fontFamily: "'Inter', sans-serif",
+          fontSize: '14px',
+          color: '#0b1d35',
+          '::placeholder': { color: '#8a9bb0' },
+        },
+        invalid: { color: '#e53e3e' },
+      },
+      hidePostalCode: true,
+    });
+    cardElement.mount('#stripeCardElement');
+    cardElement.on('change', (e) => {
+      const errEl = document.getElementById('stripeCardError');
+      if (e.error) {
+        errEl.textContent = e.error.message;
+        errEl.style.display = 'block';
+      } else {
+        errEl.style.display = 'none';
+      }
+      // Highlight card element border on focus/error
+      const el = document.getElementById('stripeCardElement');
+      el.style.borderColor = e.error ? 'var(--red)' : e.complete ? 'var(--teal)' : 'var(--border)';
+    });
+  }
+}
+
+function selectPay(el, t) {
+  document.querySelectorAll('.pay-tab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentPayMethod = t;
+  document.getElementById('panelMbway').style.display = t === 'mbway' ? 'block' : 'none';
+  document.getElementById('panelMb').style.display    = t === 'mb'    ? 'block' : 'none';
+  document.getElementById('panelCard').style.display  = t === 'card'  ? 'block' : 'none';
+  if (t === 'card') initStripe();
+}
+
+function setConfirmBtn(loading, text) {
+  const btn = document.querySelector('.confirm-btn');
+  btn.disabled = loading;
+  btn.textContent = loading ? text || 'A processar…' : 'Confirmar e Pagar →';
+  btn.style.opacity = loading ? '.7' : '1';
+}
+
+function showMbwayStatus(state, msg) {
+  const s   = document.getElementById('mbwayStatus');
+  const sp  = document.getElementById('mbwaySpin');
+  const txt = document.getElementById('mbwayMsg');
+  s.classList.add('show');
+  txt.textContent = msg;
+  if (state === 'pending') {
+    sp.style.display = 'block';
+    s.style.background = 'rgba(214,158,46,.07)'; s.style.borderColor = 'rgba(214,158,46,.25)';
+    txt.style.color = 'var(--amber)';
+  } else if (state === 'success') {
+    sp.style.display = 'none';
+    s.style.background = 'rgba(56,161,105,.07)'; s.style.borderColor = 'rgba(56,161,105,.25)';
+    txt.style.color = 'var(--green)';
+  } else {
+    sp.style.display = 'none';
+    s.style.background = 'rgba(229,62,62,.07)'; s.style.borderColor = 'rgba(229,62,62,.25)';
+    txt.style.color = 'var(--red)';
+  }
+}
+
+// Polling para verificar status do MBWay (Stripe atualiza via webhook no backend)
+function pollMbwayStatus(paymentIntentId, attempt = 0) {
+  if (attempt > 24) { // 2 minutos (24 × 5s)
+    showMbwayStatus('error', '⏱ Tempo expirado. Tente novamente.');
+    setConfirmBtn(false);
+    return;
+  }
+  mbwayPollingTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`${API_URL}/payment-status/${paymentIntentId}`);
+      const { status } = await res.json();
+      if (status === 'succeeded') {
+        showMbwayStatus('success', '✅ Pagamento confirmado! Email enviado.');
+        setConfirmBtn(false);
+        setTimeout(() => { closeModal(); showToast(); }, 1500);
+      } else if (status === 'requires_action' || status === 'processing') {
+        pollMbwayStatus(paymentIntentId, attempt + 1);
+      } else {
+        showMbwayStatus('error', '❌ Pagamento não confirmado. Tente novamente.');
+        setConfirmBtn(false);
+      }
+    } catch {
+      pollMbwayStatus(paymentIntentId, attempt + 1);
+    }
+  }, 5000);
+}
+
+async function confirmBooking() {
+  // Validações básicas
+  const name  = document.querySelector('#step2 input[type="text"]')?.value?.trim();
+  const email = document.querySelector('#step2 input[type="email"]')?.value?.trim();
+  const phone = document.getElementById('mbwayPhone')?.value?.trim();
+  const selSlot = document.querySelector('.t-slot.sel');
+
+  if (!name || !email) {
+    alert('Por favor preencha o nome e email.'); return;
+  }
+  if (!selectedDay) {
+    alert('Por favor selecione um dia no calendário.'); return;
+  }
+  if (!selSlot) {
+    alert('Por favor selecione um horário disponível.'); return;
+  }
+  if (currentPayMethod === 'mbway' && !phone) {
+    document.getElementById('mbwayPhone').focus();
+    alert('Por favor insira o número de telemóvel para o MB WAY.'); return;
+  }
+
+  const y = currentDate.getFullYear(), m = currentDate.getMonth();
+  const dateStr = `${String(selectedDay).padStart(2,'0')}/${String(m+1).padStart(2,'0')}/${y}`;
+  const timeStr = selSlot.textContent;
+
+  // Dados de faturação opcionais
+  const invChecked = document.getElementById('invCheck').checked;
+  const nif = invChecked ? document.querySelector('#invExtra input[placeholder="123 456 789"]')?.value : '';
+
+  setConfirmBtn(true, 'A iniciar pagamento…');
+
+  try {
+    // 1. Criar Payment Intent no servidor
+    const res = await fetch(`${API_URL}/create-payment-intent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        serviceId:      currentService.id,
+        paymentMethod:  currentPayMethod === 'mb' ? 'mb_reference' : currentPayMethod,
+        phone:          currentPayMethod === 'mbway' ? phone : undefined,
+        customerEmail:  email,
+        customerName:   name,
+        date:           dateStr,
+        time:           timeStr,
+        nif:            nif || undefined,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      throw new Error(data.error || 'Erro ao iniciar pagamento.');
+    }
+
+    // 2. Processar conforme método
+    if (currentPayMethod === 'mbway') {
+      // MBWay: Payment Intent já criado e notificação enviada ao telemóvel
+      showMbwayStatus('pending', '📱 Notificação enviada. Confirme no app MB WAY…');
+      pollMbwayStatus(data.paymentIntentId);
+
+    } else if (currentPayMethod === 'mb') {
+      // Multibanco: mostrar referência gerada pelo Stripe
+      if (data.multibanco) {
+        const mb = data.multibanco;
+        document.getElementById('mbEntity').textContent = mb.entity;
+        document.getElementById('mbRef').textContent    = mb.reference;
+        document.getElementById('mbAmount').textContent = mb.amount;
+        document.getElementById('mbRefGrid').style.display = 'grid';
+        document.getElementById('mbRefBox').querySelector('p').style.display = 'none';
+      }
+      setConfirmBtn(false);
+      // Para MB, o pagamento é assíncrono — confirmação por email via webhook
+
+    } else if (currentPayMethod === 'card') {
+      // Cartão: confirmar com Stripe.js
+      setConfirmBtn(true, 'A processar cartão…');
+      const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: { card: cardElement },
+      });
+      if (error) {
+        const errEl = document.getElementById('stripeCardError');
+        errEl.textContent = error.message;
+        errEl.style.display = 'block';
+        setConfirmBtn(false);
+        return;
+      }
+      if (paymentIntent.status === 'succeeded') {
+        setConfirmBtn(false);
+        closeModal();
+        showToast();
+      }
+    }
+
+  } catch (err) {
+    console.error('Payment error:', err);
+    alert('Erro: ' + err.message);
+    setConfirmBtn(false);
+  }
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 6000);
+}
+
+function toggleInvoice() {
+  const cb = document.getElementById('invCheck'); cb.checked = !cb.checked;
+  document.getElementById('invExtra').classList.toggle('show', cb.checked);
+}
+
+// ── CHAT ──
+function toggleChat(){document.getElementById('chatBox').classList.toggle('open');}
+function chatEnter(e){if(e.key==='Enter')sendChat();}
+const replies=[
+  'Claro! Pode marcar diretamente clicando em "Marcar Consulta" no menu superior.',
+  'Os atestados custam 35€ e as consultas 40€. Pagamento por MBWay, Referência MB ou cartão.',
+  'Após o pagamento, a fatura é enviada automaticamente para o seu email em menos de 30 segundos.',
+  'Temos disponibilidade hoje e amanhã. Clique em "Marcar Consulta" para ver os horários.',
+  'Os documentos são emitidos digitalmente e enviados por email com validade legal em Portugal.',
+  'Para qualquer dúvida adicional, pode contactar-nos pelo email apoio@consultasonline.com'
+];
+let ri=0;
+function sendChat(){
+  const inp=document.getElementById('chatInp');
+  const msg=inp.value.trim();if(!msg)return;
+  const box=document.getElementById('chatMsgs');
+  box.innerHTML+='<div class="cmsg cmsg-user">'+msg+'</div>';
+  inp.value='';box.scrollTop=box.scrollHeight;
+  setTimeout(()=>{
+    box.innerHTML+='<div class="cmsg cmsg-bot">'+replies[ri%replies.length]+'</div>';
+    ri++;box.scrollTop=box.scrollHeight;
+  },750);
+}
+
+// ── SCROLL ANIMATIONS ──
+const obs=new Intersectio
