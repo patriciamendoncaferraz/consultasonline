@@ -534,6 +534,60 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .admin-login-err{display:none;background:rgba(229,62,62,.07);border:1px solid rgba(229,62,62,.2);color:var(--red);font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:14px}
 .admin-login-err.show{display:block}
 @media(max-width:768px){.admin-grid{grid-template-columns:1fr}.admin-slots-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ══════════════════════════════
+   REGISTOS CLÍNICOS
+══════════════════════════════ */
+.patients-section{margin-top:28px}
+.patients-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.patients-header h3{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--white)}
+.search-box{display:flex;gap:8px;flex:1;max-width:360px}
+.search-box input{flex:1;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);border-radius:8px;padding:9px 14px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--white);outline:none}
+.search-box input::placeholder{color:rgba(255,255,255,.35)}
+.search-box input:focus{border-color:var(--teal3);background:rgba(255,255,255,.12)}
+.search-btn{background:var(--teal);color:var(--white);border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:.2s}
+.search-btn:hover{background:var(--teal2)}
+.patients-grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+.patients-list{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);overflow:hidden;max-height:600px;overflow-y:auto}
+.patient-item{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:12px}
+.patient-item:hover{background:rgba(255,255,255,.06)}
+.patient-item.active{background:rgba(13,115,119,.2);border-left:3px solid var(--teal3)}
+.patient-item:last-child{border-bottom:none}
+.patient-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal3));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--white);flex-shrink:0}
+.patient-info h4{font-size:13.5px;font-weight:600;color:var(--white);margin-bottom:2px}
+.patient-info p{font-size:11.5px;color:rgba(255,255,255,.45)}
+.patient-empty{text-align:center;padding:32px;color:rgba(255,255,255,.35);font-size:13.5px}
+/* Patient detail card */
+.patient-detail{background:var(--white);border-radius:var(--r2);overflow:hidden}
+.patient-detail-header{background:linear-gradient(135deg,var(--navy2),var(--navy3));padding:20px 24px;display:flex;align-items:center;gap:16px}
+.patient-detail-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal3));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--white);flex-shrink:0}
+.patient-detail-header h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--white);margin-bottom:3px}
+.patient-detail-header p{font-size:12px;color:rgba(255,255,255,.5)}
+.patient-detail-body{padding:20px 24px}
+.detail-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.detail-section:last-child{border:none;margin:0;padding:0}
+.detail-section-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-family:'Inter',sans-serif}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-field label{display:block;font-size:10.5px;font-weight:600;color:var(--muted);margin-bottom:4px;letter-spacing:.2px}
+.detail-field input,.detail-field textarea{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--surface);outline:none;transition:.2s}
+.detail-field input:focus,.detail-field textarea:focus{border-color:var(--teal);background:var(--white)}
+.detail-field textarea{height:80px;resize:none;grid-column:1/-1}
+.detail-field.full{grid-column:1/-1}
+.detail-save-btn{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:8px;padding:10px 22px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:4px}
+.detail-save-btn:hover{opacity:.9}
+.detail-saved{display:none;font-size:12px;color:var(--green);font-weight:600;margin-left:10px}
+.detail-saved.show{display:inline}
+/* Consultation history */
+.consult-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px 16px;margin-bottom:10px}
+.consult-item:last-child{margin:0}
+.consult-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.consult-item-service{font-size:13px;font-weight:600;color:var(--navy)}
+.consult-item-date{font-size:11.5px;color:var(--muted)}
+.consult-item-obs{font-size:12.5px;color:var(--slate);line-height:1.55;margin-top:4px}
+.consult-item-valor{font-size:12px;font-weight:600;color:var(--teal);margin-top:4px}
+.no-detail{text-align:center;padding:48px 24px;color:var(--muted);background:var(--white);border-radius:var(--r2)}
+.no-detail p{font-size:14px;margin-top:8px}
+@media(max-width:860px){.patients-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1729,6 +1783,31 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         <h3>Slots Bloqueados — Resumo</h3>
         <div id="adminSummary"><div class="summary-empty">Nenhum slot bloqueado ainda.</div></div>
       </div>
+
+      <!-- Registos Clínicos -->
+      <div class="patients-section">
+        <div class="patients-header">
+          <h3>Registos Clínicos dos Utentes</h3>
+          <div class="search-box">
+            <input type="text" id="patientSearch" placeholder="Pesquisar por nome, email ou nº utente…" onkeypress="if(event.key==='Enter')searchPatients()"/>
+            <button class="search-btn" onclick="searchPatients()">🔍 Pesquisar</button>
+          </div>
+        </div>
+        <div class="patients-grid">
+          <!-- Lista de utentes -->
+          <div class="patients-list" id="patientsList">
+            <div class="patient-empty">A carregar utentes…</div>
+          </div>
+          <!-- Detalhe do utente -->
+          <div id="patientDetail">
+            <div class="no-detail">
+              <div style="font-size:40px">👤</div>
+              <p>Selecione um utente para ver a sua ficha clínica</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -2233,11 +2312,12 @@ function pollMbwayStatus(paymentIntentId, attempt) {
 }
 
 window.confirmBooking = function() {
-  var nameEl = document.querySelector('#step2 input[type="text"]');
-  var emailEl = document.querySelector('#step2 input[type="email"]');
-  var selSlot = document.querySelector('.t-slot.sel');
-  var name = nameEl ? nameEl.value.trim() : '';
-  var email = emailEl ? emailEl.value.trim() : '';
+  var name       = document.getElementById('bookName')     ? document.getElementById('bookName').value.trim()     : '';
+  var email      = document.getElementById('bookEmail')    ? document.getElementById('bookEmail').value.trim()    : '';
+  var phone      = document.getElementById('bookPhone')    ? document.getElementById('bookPhone').value.trim()    : '';
+  var numUtente  = document.getElementById('bookNumUtente')? document.getElementById('bookNumUtente').value.trim(): '';
+  var obs        = document.getElementById('bookObs')      ? document.getElementById('bookObs').value.trim()      : '';
+  var selSlot    = document.querySelector('.t-slot.sel');
 
   if (!name || !email) { alert('Por favor preencha o nome e email.'); return; }
   if (!selectedDay) { alert('Por favor selecione um dia no calendário.'); return; }
@@ -2261,7 +2341,10 @@ window.confirmBooking = function() {
       customerName:  name,
       date:          dateStr,
       time:          timeStr,
-      nif:           nif || undefined
+      nif:           nif          || undefined,
+      telefone:      phone        || undefined,
+      numeroUtente:  numUtente    || undefined,
+      observacoes:   obs          || undefined,
     })
   })
   .then(function(r){ return r.json(); })
@@ -2316,7 +2399,7 @@ window.showAdminLogin = function() {
     var login = document.getElementById('adminLogin');
     var dash = document.getElementById('adminDashboard');
     if (login) login.style.display = 'none';
-    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); }
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); loadPatients(); }
   }
 };
 
@@ -2328,7 +2411,7 @@ window.checkAdminLogin = function() {
     var login = document.getElementById('adminLogin');
     var dash = document.getElementById('adminDashboard');
     if (login) login.style.display = 'none';
-    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); }
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); loadPatients(); }
   } else {
     var err = document.getElementById('adminLoginErr');
     if (err) err.classList.add('show');
@@ -2476,6 +2559,155 @@ window.adminUnblockSlot = function(dateKey, slot) {
     renderAdminCalendar();
     if (adminSelectedKey === dateKey) renderAdminSlots();
   }
+};
+
+
+// ══════════════════════════════════════
+// REGISTOS CLÍNICOS — Admin
+// ══════════════════════════════════════
+var ADMIN_SECRET = 'consultas2024admin'; // deve ser igual ao ADMIN_SECRET no Railway
+
+function adminHeaders() {
+  return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET };
+}
+
+function loadPatients() {
+  var list = document.getElementById('patientsList');
+  if (!list) return;
+  list.innerHTML = '<div class="patient-empty">A carregar…</div>';
+  fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (!data.length) { list.innerHTML = '<div class="patient-empty">Nenhum utente registado ainda.</div>'; return; }
+      renderPatientList(data);
+    })
+    .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar. Verifique a ligação.</div>'; });
+}
+
+function searchPatients() {
+  var q = document.getElementById('patientSearch');
+  if (!q) return;
+  var term = q.value.trim();
+  if (!term) { loadPatients(); return; }
+  var list = document.getElementById('patientsList');
+  list.innerHTML = '<div class="patient-empty">A pesquisar…</div>';
+  fetch(API_URL + '/admin/utentes-search?q=' + encodeURIComponent(term), { headers: adminHeaders() })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if (!data.length) { list.innerHTML = '<div class="patient-empty">Nenhum resultado para "' + term + '".</div>'; return; }
+      renderPatientList(data);
+    })
+    .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro na pesquisa.</div>'; });
+}
+
+function renderPatientList(utentes) {
+  var list = document.getElementById('patientsList');
+  var html = '';
+  utentes.forEach(function(u) {
+    var initials = (u.nomeCompleto || '?').split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
+    var lastConsulta = u.consultas && u.consultas.length ? u.consultas[u.consultas.length-1].servico : 'Sem consultas';
+    html += '<div class="patient-item" onclick="loadPatientDetail('' + u._id + '')" data-id="' + u._id + '">'
+      + '<div class="patient-avatar">' + initials + '</div>'
+      + '<div class="patient-info"><h4>' + (u.nomeCompleto || '—') + '</h4>'
+      + '<p>' + (u.email || '—') + '</p>'
+      + '<p style="font-size:10.5px;color:rgba(255,255,255,.3)">' + lastConsulta + '</p></div>'
+      + '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function loadPatientDetail(id) {
+  // Mark active
+  document.querySelectorAll('.patient-item').forEach(function(el){
+    el.classList.toggle('active', el.dataset.id === id);
+  });
+  var detail = document.getElementById('patientDetail');
+  detail.innerHTML = '<div class="no-detail"><div style="font-size:32px">⏳</div><p>A carregar ficha…</p></div>';
+
+  fetch(API_URL + '/admin/utentes/' + id, { headers: adminHeaders() })
+    .then(function(r){ return r.json(); })
+    .then(function(u) { renderPatientDetail(u); })
+    .catch(function(){ detail.innerHTML = '<div class="no-detail"><p>Erro ao carregar ficha.</p></div>'; });
+}
+
+function renderPatientDetail(u) {
+  var detail = document.getElementById('patientDetail');
+  var initials = (u.nomeCompleto || '?').split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
+  var numConsultas = u.consultas ? u.consultas.length : 0;
+
+  var consultasHtml = '';
+  if (numConsultas > 0) {
+    var sorted = u.consultas.slice().reverse();
+    sorted.forEach(function(c) {
+      var dt = c.dataConsulta ? c.dataConsulta + ' às ' + (c.hora || '') : (c.data ? new Date(c.data).toLocaleDateString('pt-PT') : '—');
+      consultasHtml += '<div class="consult-item">'
+        + '<div class="consult-item-header"><span class="consult-item-service">🩺 ' + (c.servico || '—') + '</span>'
+        + '<span class="consult-item-date">' + dt + '</span></div>'
+        + (c.observacoes ? '<div class="consult-item-obs">📝 ' + c.observacoes + '</div>' : '')
+        + (c.valor ? '<div class="consult-item-valor">💶 ' + c.valor.toFixed(2).replace('.',',') + ' €</div>' : '')
+        + '</div>';
+    });
+  } else {
+    consultasHtml = '<p style="font-size:13px;color:var(--muted)">Nenhuma consulta registada.</p>';
+  }
+
+  detail.innerHTML = '<div class="patient-detail">'
+    + '<div class="patient-detail-header">'
+    + '<div class="patient-detail-avatar">' + initials + '</div>'
+    + '<div><h3>' + (u.nomeCompleto || '—') + '</h3>'
+    + '<p>' + (u.email || '—') + ' · ' + numConsultas + ' consulta(s)</p></div>'
+    + '</div>'
+    + '<div class="patient-detail-body">'
+
+    // Dados pessoais
+    + '<div class="detail-section">'
+    + '<div class="detail-section-title">Dados Pessoais</div>'
+    + '<div class="detail-grid">'
+    + '<div class="detail-field"><label>Telemóvel</label><input id="pTelefone" value="' + (u.telefone||'') + '" placeholder="+351 9XX XXX XXX"/></div>'
+    + '<div class="detail-field"><label>Nº Utente SNS</label><input id="pNumUtente" value="' + (u.numeroUtente||'') + '" placeholder="000 000 000"/></div>'
+    + '<div class="detail-field"><label>Data de Nascimento</label><input id="pDtNasc" value="' + (u.dataNascimento||'') + '" placeholder="DD/MM/AAAA"/></div>'
+    + '<div class="detail-field"><label>NIF</label><input id="pNif" value="' + (u.nif||'') + '" placeholder="123 456 789"/></div>'
+    + '<div class="detail-field full"><label>Morada</label><input id="pMorada" value="' + (u.morada||'') + '" placeholder="Rua, nº, Código Postal"/></div>'
+    + '</div></div>'
+
+    // Notas clínicas
+    + '<div class="detail-section">'
+    + '<div class="detail-section-title">Notas Clínicas (visíveis só para o admin)</div>'
+    + '<div class="detail-grid">'
+    + '<div class="detail-field full"><textarea id="pNotas" placeholder="Anotações clínicas, alergias, medicação habitual, observações…">' + (u.notas||'') + '</textarea></div>'
+    + '</div>'
+    + '<button class="detail-save-btn" onclick="savePatientDetail('' + u._id + '')">💾 Guardar Alterações</button>'
+    + '<span class="detail-saved" id="patientSaved">✅ Guardado!</span>'
+    + '</div>'
+
+    // Histórico de consultas
+    + '<div class="detail-section">'
+    + '<div class="detail-section-title">Histórico de Consultas (' + numConsultas + ')</div>'
+    + consultasHtml
+    + '</div>'
+
+    + '</div></div>';
+}
+
+window.savePatientDetail = function(id) {
+  var body = {
+    telefone:       document.getElementById('pTelefone')  ? document.getElementById('pTelefone').value  : '',
+    numeroUtente:   document.getElementById('pNumUtente') ? document.getElementById('pNumUtente').value : '',
+    dataNascimento: document.getElementById('pDtNasc')    ? document.getElementById('pDtNasc').value    : '',
+    morada:         document.getElementById('pMorada')    ? document.getElementById('pMorada').value    : '',
+    notas:          document.getElementById('pNotas')     ? document.getElementById('pNotas').value     : '',
+  };
+  fetch(API_URL + '/admin/utentes/' + id, {
+    method: 'PUT',
+    headers: adminHeaders(),
+    body: JSON.stringify(body),
+  })
+  .then(function(r){ return r.json(); })
+  .then(function() {
+    var saved = document.getElementById('patientSaved');
+    if (saved) { saved.classList.add('show'); setTimeout(function(){ saved.classList.remove('show'); }, 3000); }
+  })
+  .catch(function(){ alert('Erro ao guardar. Tente novamente.'); });
 };
 
 // ══════════════════════════════════════
