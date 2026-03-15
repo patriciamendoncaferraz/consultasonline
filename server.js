@@ -276,7 +276,15 @@ app.post('/webhook', async (req, res) => {
     const numeroUtente = meta.numeroUtente || '';
     const observacoes  = meta.observacoes  || '';
     const amountEur    = session.amount_total ? (session.amount_total / 100).toFixed(2).replace('.', ',') + ' EUR' : '—';
-    console.log('Checkout completo:', session.id, serviceName, customerEmail, date, time);
+    console.log('Checkout completo:', session.id);
+    console.log('  -> Email:', customerEmail);
+    console.log('  -> Nome:', customerName);
+    console.log('  -> Servico:', serviceName);
+    console.log('  -> Data/Hora:', date, time);
+    if (!customerEmail) {
+      console.error('ERRO: customerEmail em falta no webhook!');
+      return res.json({ received: true });
+    }
     try {
       // 1. Guardar slot como ocupado
       if (MONGO_URI && date && time) {
@@ -336,7 +344,7 @@ app.post('/webhook', async (req, res) => {
 
     try {
       const invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: pi.amount / 100, date: new Date().toISOString().split('T')[0] });
-      await sendConfirmationEmail({ to: customerEmail, name: customerName, serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
+      await sendConfirmationEmail({ to: customerEmail, name: customerName || customerEmail.split('@')[0], serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
     } catch (e) {
       console.error('Erro email/fatura:', e.message);
     }
