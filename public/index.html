@@ -1787,10 +1787,17 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
       <!-- Registos Clínicos -->
       <div class="patients-section">
         <div class="patients-header">
-          <h3>Registos Clínicos dos Utentes</h3>
-          <div class="search-box">
-            <input type="text" id="patientSearch" placeholder="Pesquisar por nome, email ou nº utente…" onkeypress="if(event.key==='Enter')searchPatients()" oninput="searchPatients()"/>
-            <button class="search-btn" onclick="searchPatients()">🔍 Pesquisar</button>
+          <div>
+            <h3>Registos Clínicos dos Utentes</h3>
+            <p id="patientsSubtitle" style="font-size:12.5px;color:rgba(255,255,255,.45);margin-top:4px">A carregar consultas de hoje…</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="search-btn" id="btnToday" onclick="filterToday()" style="background:var(--teal);font-size:12px;padding:7px 14px">📅 Hoje</button>
+            <button class="search-btn" id="btnAll" onclick="loadPatients()" style="background:rgba(255,255,255,.1);font-size:12px;padding:7px 14px">👥 Todos</button>
+            <div class="search-box">
+              <input type="text" id="patientSearch" placeholder="Pesquisar…" onkeypress="if(event.key==='Enter')searchPatients()" oninput="searchPatients()"/>
+              <button class="search-btn" onclick="searchPatients()">🔍</button>
+            </div>
           </div>
         </div>
         <div class="patients-grid">
@@ -2420,7 +2427,7 @@ window.showAdminLogin = function() {
     var login = document.getElementById('adminLogin');
     var dash = document.getElementById('adminDashboard');
     if (login) login.style.display = 'none';
-    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); loadPatients(); }
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); filterToday(); }
   }
 };
 
@@ -2432,7 +2439,7 @@ window.checkAdminLogin = function() {
     var login = document.getElementById('adminLogin');
     var dash = document.getElementById('adminDashboard');
     if (login) login.style.display = 'none';
-    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); loadPatients(); }
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); filterToday(); }
   } else {
     var err = document.getElementById('adminLoginErr');
     if (err) err.classList.add('show');
@@ -2592,18 +2599,88 @@ function adminHeaders() {
   return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET };
 }
 
+function getTodayKey() {
+  var now = new Date();
+  return now.getDate().toString().padStart(2,'0') + '/' + (now.getMonth()+1).toString().padStart(2,'0') + '/' + now.getFullYear();
+}
+
+function filterToday() {
+  // Mark today button as active
+  var btnT = document.getElementById('btnToday');
+  var btnA = document.getElementById('btnAll');
+  if (btnT) { btnT.style.background = 'var(--teal)'; btnT.style.fontWeight = '700'; }
+  if (btnA) { btnA.style.background = 'rgba(255,255,255,.1)'; btnA.style.fontWeight = '400'; }
+
+  var todayKey = getTodayKey();
+  var subtitle = document.getElementById('patientsSubtitle');
+
+  if (!allPatientsCache.length) {
+    // Load all first, then filter
+    loadAllPatients(function(data) {
+      var todayPatients = data.filter(function(u) {
+        return u.consultas && u.consultas.some(function(c) {
+          return c.dataConsulta === todayKey;
+        });
+      });
+      if (subtitle) subtitle.textContent = todayPatients.length + ' consulta(s) hoje — ' + todayKey.split('/').slice(0,2).join('/');
+      if (!todayPatients.length) {
+        document.getElementById('patientsList').innerHTML = '<div class="patient-empty">Nenhuma consulta agendada para hoje.</div>';
+        return;
+      }
+      renderPatientList(todayPatients);
+    });
+    return;
+  }
+
+  var todayPatients = allPatientsCache.filter(function(u) {
+    return u.consultas && u.consultas.some(function(c) {
+      return c.dataConsulta === todayKey;
+    });
+  });
+  if (subtitle) subtitle.textContent = todayPatients.length + ' consulta(s) hoje — ' + todayKey.split('/').slice(0,2).join('/');
+  if (!todayPatients.length) {
+    document.getElementById('patientsList').innerHTML = '<div class="patient-empty">Nenhuma consulta agendada para hoje.</div>';
+    return;
+  }
+  renderPatientList(todayPatients);
+}
+
+function loadAllPatients(callback) {
+  var list = document.getElementById('patientsList');
+  if (!list) return;
+  fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      allPatientsCache = data || [];
+      if (callback) callback(allPatientsCache);
+    })
+    .catch(function(){
+      if (list) list.innerHTML = '<div class="patient-empty">Erro ao carregar. Verifique a ligação.</div>';
+    });
+}
+
 function loadPatients() {
   var list = document.getElementById('patientsList');
   if (!list) return;
   list.innerHTML = '<div class="patient-empty">A carregar…</div>';
-  fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
-    .then(function(r){ return r.json(); })
-    .then(function(data) {
-      if (!data || !data.length) { list.innerHTML = '<div class="patient-empty">Nenhum utente registado ainda.</div>'; return; }
-      allPatientsCache = data; // cache for local search
-      renderPatientList(data);
-    })
-    .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar. Verifique a ligação.</div>'; });
+
+  // Mark all button as active
+  var btnT = document.getElementById('btnToday');
+  var btnA = document.getElementById('btnAll');
+  if (btnT) { btnT.style.background = 'rgba(255,255,255,.1)'; btnT.style.fontWeight = '400'; }
+  if (btnA) { btnA.style.background = 'var(--teal)'; btnA.style.fontWeight = '700'; }
+
+  var subtitle = document.getElementById('patientsSubtitle');
+
+  loadAllPatients(function(data) {
+    if (!data || !data.length) {
+      list.innerHTML = '<div class="patient-empty">Nenhum utente registado ainda.</div>';
+      if (subtitle) subtitle.textContent = '0 utentes';
+      return;
+    }
+    if (subtitle) subtitle.textContent = data.length + ' utente(s) no total';
+    renderPatientList(data);
+  });
 }
 
 // Cache of all patients loaded
