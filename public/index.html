@@ -1789,7 +1789,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         <div class="patients-header">
           <h3>Registos Clínicos dos Utentes</h3>
           <div class="search-box">
-            <input type="text" id="patientSearch" placeholder="Pesquisar por nome, email ou nº utente…" onkeypress="if(event.key==='Enter')searchPatients()"/>
+            <input type="text" id="patientSearch" placeholder="Pesquisar por nome, email ou nº utente…" onkeypress="if(event.key==='Enter')searchPatients()" oninput="searchPatients()"/>
             <button class="search-btn" onclick="searchPatients()">🔍 Pesquisar</button>
           </div>
         </div>
@@ -2599,26 +2599,51 @@ function loadPatients() {
   fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
     .then(function(r){ return r.json(); })
     .then(function(data) {
-      if (!data.length) { list.innerHTML = '<div class="patient-empty">Nenhum utente registado ainda.</div>'; return; }
+      if (!data || !data.length) { list.innerHTML = '<div class="patient-empty">Nenhum utente registado ainda.</div>'; return; }
+      allPatientsCache = data; // cache for local search
       renderPatientList(data);
     })
     .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar. Verifique a ligação.</div>'; });
 }
 
+// Cache of all patients loaded
+var allPatientsCache = [];
+
 function searchPatients() {
   var q = document.getElementById('patientSearch');
   if (!q) return;
-  var term = q.value.trim();
-  if (!term) { loadPatients(); return; }
+  var term = q.value.trim().toLowerCase();
+
+  if (!term) { renderPatientList(allPatientsCache); return; }
+
+  // 1. Search locally first (instant)
+  var local = allPatientsCache.filter(function(u) {
+    return (u.nomeCompleto || '').toLowerCase().indexOf(term) !== -1
+        || (u.email || '').toLowerCase().indexOf(term) !== -1
+        || (u.numeroUtente || '').toLowerCase().indexOf(term) !== -1
+        || (u.telefone || '').toLowerCase().indexOf(term) !== -1;
+  });
+
+  if (local.length > 0) {
+    renderPatientList(local);
+    return;
+  }
+
+  // 2. Fallback to server search
   var list = document.getElementById('patientsList');
   list.innerHTML = '<div class="patient-empty">A pesquisar…</div>';
   fetch(API_URL + '/admin/utentes-search?q=' + encodeURIComponent(term), { headers: adminHeaders() })
     .then(function(r){ return r.json(); })
     .then(function(data) {
-      if (!data.length) { list.innerHTML = '<div class="patient-empty">Nenhum resultado para "' + term + '".</div>'; return; }
+      if (!data || !data.length) {
+        list.innerHTML = '<div class="patient-empty">Nenhum resultado para "' + term + '".</div>';
+        return;
+      }
       renderPatientList(data);
     })
-    .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro na pesquisa.</div>'; });
+    .catch(function() {
+      list.innerHTML = '<div class="patient-empty">Nenhum resultado para "' + term + '".</div>';
+    });
 }
 
 function renderPatientList(utentes) {
