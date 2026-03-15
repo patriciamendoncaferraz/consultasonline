@@ -38,6 +38,49 @@ function formatPhone(phone) {
   return '+351' + clean;
 }
 
+// Página de sucesso após pagamento
+app.get('/obrigado', (req, res) => {
+  const sessionId = req.query.session_id || '';
+  res.send(`<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Consulta Confirmada — ConsultasOnline</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f4f7fb;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:20px;padding:48px 40px;max-width:520px;width:100%;text-align:center;box-shadow:0 8px 48px rgba(11,29,53,.12)}
+.icon{width:72px;height:72px;background:linear-gradient(135deg,#38a169,#48bb78);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:32px}
+h1{font-family:'Cormorant Garamond',serif;font-size:36px;color:#0b1d35;margin-bottom:10px}
+p{font-size:15px;color:#64748b;line-height:1.7;margin-bottom:8px}
+.highlight{background:#f4f7fb;border-radius:10px;padding:16px 20px;margin:20px 0;text-align:left}
+.highlight p{font-size:14px;color:#0b1d35;margin-bottom:4px}
+.highlight p:last-child{margin:0}
+.btn{display:inline-block;margin-top:24px;background:linear-gradient(135deg,#0d7377,#0f8c82);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif}
+.btn:hover{opacity:.9}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:#0b1d35;margin-bottom:32px}
+.logo span{color:#17c4a8}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Consultas<span>Online</span></div>
+  <div class="icon">✓</div>
+  <h1>Pagamento Confirmado!</h1>
+  <p>A sua consulta foi agendada com sucesso.</p>
+  <p>Vai receber um email de confirmação com todos os detalhes e a fatura em breve.</p>
+  <div class="highlight">
+    <p>📧 <strong>Verifique o seu email</strong></p>
+    <p style="font-size:13px;color:#64748b">A confirmação e fatura são enviadas automaticamente. Verifique também a pasta de spam.</p>
+  </div>
+  <a href="/" class="btn">Voltar ao Website →</a>
+</div>
+</body>
+</html>`);
+});
+
 app.get('/services', (req, res) => {
   res.json(Object.entries(SERVICES).map(([id, s]) => ({ id, name: s.name, price: s.price / 100 })));
 });
