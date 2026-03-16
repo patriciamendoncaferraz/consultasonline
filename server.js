@@ -678,38 +678,139 @@ app.get('/admin/utentes-search', adminAuth, async (req, res) => {
 
 
 // ─────────────────────────────────────────────
-// ATESTADOS — Gerar PDF e Enviar por Email
+// ATESTADOS — Gerar PDF com PDFKit e Enviar
 // ─────────────────────────────────────────────
-const { execFile } = require('child_process');
+const PDFDocument = require('pdfkit');
 const fs = require('fs');
-const os = require('os');
 const pathMod = require('path');
+
+// Load signature once at startup
+let sigBuffer = null;
+try {
+  const sigPath = pathMod.join(__dirname, 'assinatura_b64.txt');
+  if (fs.existsSync(sigPath)) {
+    const b64 = fs.readFileSync(sigPath, 'utf8').trim();
+    sigBuffer = Buffer.from(b64, 'base64');
+    console.log('Assinatura carregada:', sigBuffer.length, 'bytes');
+  } else {
+    console.warn('assinatura_b64.txt nao encontrado');
+  }
+} catch(e) { console.error('Erro ao carregar assinatura:', e.message); }
+
+function meses(n) {
+  const m = ['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const i = parseInt(n) - 1;
+  return (i >= 0 && i < 12) ? m[i] : n;
+}
+
+function dataPT(d) {
+  try {
+    const p = d.split('/');
+    return parseInt(p[0]) + ' de ' + meses(p[1]) + ' de ' + p[2];
+  } catch(e) { return d; }
+}
+
+function gerarPDF(tipo, dados) {
+  return new Promise((resolve, reject) => {
+    try {
+      const doc = new PDFDocument({ size: 'A4', margin: 70 });
+      const chunks = [];
+      doc.on('data', c => chunks.push(c));
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+
+      const w = doc.page.width;
+      const margin = 70;
+      const textW = w - margin * 2;
+
+      // Top border
+      doc.moveTo(margin, 60).lineTo(w - margin, 60).lineWidth(3).strokeColor('#0b1d35').stroke();
+
+      // Title
+      doc.fontSize(18).font('Helvetica-Bold').fillColor('#0b1d35')
+         .text('ATESTADO MEDICO', margin, 75, { align: 'center', width: textW });
+
+      // Teal line under title
+      doc.moveTo(margin + 80, 102).lineTo(w - margin - 80, 102).lineWidth(1).strokeColor('#0d7377').stroke();
+
+      // Body
+      doc.fontSize(11).font('Helvetica').fillColor('#000000');
+      let y = 118;
+
+      const writeJ = (text, opts = {}) => {
+        doc.font(opts.bold ? 'Helvetica-Bold' : 'Helvetica')
+           .fontSize(11).fillColor('#000000')
+           .text(text, margin, y, { width: textW, align: 'justify', lineGap: 2 });
+        y = doc.y + (opts.after || 4);
+      };
+
+      const writeName = (name) => {
+        doc.font('Helvetica-Bold').fontSize(11).fillColor('#0b1d35')
+           .text(name || '', margin, y, { width: textW });
+        y = doc.y + 2;
+        doc.moveTo(margin, y).lineTo(w - margin, y).lineWidth(0.5).strokeColor('#94a3b8').stroke();
+        y += 8;
+      };
+
+      writeJ('Eu, Dra. Patricia Mendonca Ferraz, medica inscrita na Ordem dos Medicos com a cedula profissional n. 57713, atesto que:', { after: 10 });
+
+      if (tipo === 'amamentacao') {
+        writeJ('A utente', { after: 4 });
+        writeName(dados.nome_utente);
+        writeJ('nascida em ' + (dados.data_nasc_utente||'') + ', portadora do Cartao de Cidadao n. ' + (dados.cc_utente||'') + ', encontra-se atualmente em periodo de amamentacao do(a) seu(sua) filho(a)', { after: 4 });
+        writeName(dados.nome_filho);
+        writeJ('nascido(a) em ' + (dados.data_nasc_filho||'') + '.', { after: 16 });
+        writeJ('Este atestado e passado a pedido da interessada para os devidos efeitos legais.', { after: 4 });
+      } else {
+        writeJ('O(a) utente', { after: 4 });
+        writeName(dados.nome_utente);
+        writeJ('nascido(a) em ' + (dados.data_nasc_utente||'') + ', portador(a) do Cartao de Cidadao n. ' + (dados.cc_utente||'') + ', necessita de afastamento das atividades escolares no periodo compreendido entre ' + (dados.data_inicio||'') + ' e ' + (dados.data_fim||'') + ' por motivos de doenca.', { after: 16 });
+        writeJ('Este atestado e passado a pedido do(a) interessado(a) para os devidos efeitos legais.', { after: 4 });
+      }
+
+      // Date
+      y += 16;
+      const dataFmt = dados.data_consulta ? dataPT(dados.data_consulta) : '';
+      doc.font('Helvetica').fontSize(11).fillColor('#000000').text('Viseu, ' + dataFmt, margin, y);
+      y = doc.y + 28;
+
+      // Signature line
+      doc.moveTo(margin, y).lineTo(margin + 255, y).lineWidth(0.8).strokeColor('#0b1d35').stroke();
+
+      // Signature image above line
+      if (sigBuffer) {
+        try {
+          const sigH = 45;
+          const sigW = sigH * (2033/530);
+          doc.image(sigBuffer, margin, y - sigH, { width: sigW, height: sigH });
+        } catch(imgErr) { console.warn('Sig image error:', imgErr.message); }
+      }
+
+      y += 12;
+      doc.font('Helvetica').fontSize(9).fillColor('#64748b')
+         .text('Dra. Patricia Mendonca Ferraz  |  Cedula n. 57713', margin, y);
+
+      // Footer
+      const pageH = doc.page.height;
+      doc.moveTo(margin, pageH - 52).lineTo(w - margin, pageH - 52).lineWidth(1.5).strokeColor('#0b1d35').stroke();
+      doc.fontSize(8).fillColor('#94a3b8')
+         .text('ConsultasOnline  |  www.consultas-online.pt  |  geral@consultas-online.pt', margin, pageH - 38, { align: 'center', width: textW });
+
+      doc.end();
+    } catch(err) { reject(err); }
+  });
+}
 
 app.post('/admin/gerar-atestado', adminAuth, async (req, res) => {
   const { tipo, dados, enviarEmail } = req.body;
   if (!tipo || !dados) return res.status(400).json({ error: 'Tipo e dados obrigatorios.' });
 
-  const sigPath  = pathMod.join(__dirname, 'assinatura_b64.txt');
-  const genScript = pathMod.join(__dirname, 'gen_atestado.py');
-  const tmpPdf   = pathMod.join(os.tmpdir(), 'atestado_' + Date.now() + '.pdf');
-
-  if (!fs.existsSync(sigPath))   return res.status(500).json({ error: 'Assinatura nao encontrada. Adicione assinatura_b64.txt ao servidor.' });
-  if (!fs.existsSync(genScript)) return res.status(500).json({ error: 'Script gerador nao encontrado. Adicione gen_atestado.py ao servidor.' });
-
   try {
-    await new Promise((resolve, reject) => {
-      execFile('python3', [genScript, tipo, JSON.stringify(dados), tmpPdf, sigPath], { timeout: 30000 }, (err, stdout, stderr) => {
-        if (err) reject(new Error(stderr || err.message));
-        else resolve(stdout);
-      });
-    });
-
-    const pdfBytes = fs.readFileSync(tmpPdf);
-    const pdfB64 = pdfBytes.toString('base64');
-    try { fs.unlinkSync(tmpPdf); } catch(e) {}
+    const pdfBuffer = await gerarPDF(tipo, dados);
+    const pdfB64 = pdfBuffer.toString('base64');
 
     if (enviarEmail && dados.email) {
-      const nomeDoc = tipo === 'amamentacao' ? 'Atestado de Amamentacao' : 'Atestado de Falta Escolar';
+      const nomeDoc = tipo === 'amamentacao' ? 'Atestado de Amamentacao' : 'Atestado de Doenca';
       await sgMail.send({
         to: dados.email,
         from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
@@ -719,15 +820,15 @@ app.post('/admin/gerar-atestado', adminAuth, async (req, res) => {
           + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
           + '<div style="padding:22px 24px">'
           + '<h2 style="color:#0b1d35;margin:0 0 12px">Documento em anexo</h2>'
-          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + (dados.nome_utente || '') + '</strong>,</p>'
+          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + (dados.nome_utente||'') + '</strong>,</p>'
           + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Segue em anexo o seu ' + nomeDoc.toLowerCase() + ' emitido pela Dra. Patricia Mendonca Ferraz.</p>'
           + '<p style="color:#4a5568;font-size:14px;line-height:1.7">O documento tem validade legal e pode ser utilizado para os devidos efeitos.</p>'
           + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Duvidas? <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
           + '</div></div></body></html>',
-        text: 'Ola ' + (dados.nome_utente || '') + ',\n\nSegue em anexo o seu ' + nomeDoc + '.\n\nConsultasOnline',
+        text: 'Ola ' + (dados.nome_utente||'') + ',\n\nSegue em anexo o seu ' + nomeDoc + '.\n\nConsultasOnline',
         attachments: [{
           content: pdfB64,
-          filename: nomeDoc.replace(/ /g, '_') + '.pdf',
+          filename: nomeDoc.replace(/ /g,'_') + '.pdf',
           type: 'application/pdf',
           disposition: 'attachment',
         }],
@@ -736,12 +837,12 @@ app.post('/admin/gerar-atestado', adminAuth, async (req, res) => {
     }
 
     res.json({ pdf: pdfB64, sent: !!(enviarEmail && dados.email) });
-
-  } catch (err) {
+  } catch(err) {
     console.error('Erro ao gerar atestado:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // Guardar nota clínica de uma consulta específica
 app.put('/admin/utentes/:id/consulta/:idx', adminAuth, async (req, res) => {
