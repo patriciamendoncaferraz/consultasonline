@@ -438,22 +438,45 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
 
     // 3. Finalizar fatura
     console.log('InvoiceXpress a finalizar fatura:', invoice.id);
-    await axios.put(
-      'https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '/change-state.json?api_key=' + apiKey,
-      { invoice: { state: 'finalized' } }
-    );
+    try {
+      const finalizeRes = await axios.put(
+        'https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '/change-state.json?api_key=' + apiKey,
+        { invoice: { state: 'finalized' } }
+      );
+      console.log('InvoiceXpress fatura finalizada:', finalizeRes.data && finalizeRes.data.invoice && finalizeRes.data.invoice.status);
+    } catch (finalErr) {
+      console.error('InvoiceXpress erro ao finalizar:', finalErr.response && JSON.stringify(finalErr.response.data) || finalErr.message);
+    }
 
-    // 4. Obter PDF (aguardar um momento para o PDF ser gerado)
+    // 4. Obter PDF (aguardar para o PDF ser gerado)
     console.log('InvoiceXpress a aguardar PDF...');
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const pdfRes = await axios.get(
-      'https://' + account + '.app.invoicexpress.com/api/pdf/' + invoice.id + '.json?api_key=' + apiKey
-    );
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    const pdfUrl = pdfRes.data && pdfRes.data.output && pdfRes.data.output.pdfUrl;
-    console.log('InvoiceXpress PDF:', pdfUrl ? pdfUrl : 'pendente - ' + JSON.stringify(pdfRes.data));
+    let pdfUrl = null;
+    try {
+      const pdfRes = await axios.get(
+        'https://' + account + '.app.invoicexpress.com/api/pdf/' + invoice.id + '.json?api_key=' + apiKey
+      );
+      pdfUrl = pdfRes.data && pdfRes.data.output && pdfRes.data.output.pdfUrl;
+      console.log('InvoiceXpress PDF:', pdfUrl ? 'gerado com sucesso' : 'pendente');
+    } catch (pdfErr) {
+      console.error('InvoiceXpress erro PDF:', pdfErr.message);
+    }
 
-    return { invoiceNumber: invoice.sequence_number, url: pdfUrl };
+    // Buscar numero de fatura actualizado (após finalização)
+    let invoiceNumber = invoice.sequence_number;
+    try {
+      const updatedRes = await axios.get(
+        'https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '.json?api_key=' + apiKey
+      );
+      const updated = updatedRes.data && updatedRes.data.invoice;
+      if (updated) {
+        invoiceNumber = updated.sequence_number || updated.id;
+        console.log('InvoiceXpress numero fatura:', invoiceNumber, 'estado:', updated.status);
+      }
+    } catch(e) { console.warn('InvoiceXpress nao conseguiu obter numero final'); }
+
+    return { invoiceNumber, url: pdfUrl };
 
   } catch (err) {
     const errDetail = err.response ? JSON.stringify(err.response.data) : err.message;
@@ -464,7 +487,9 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
 }
 
 async function sendConfirmationEmail({ to, name, serviceName, date, time, amountEur, invoiceUrl, invoiceNum }) {
-  const invoiceLine = invoiceNum ? '<p>Fatura: ' + invoiceNum + (invoiceUrl ? ' - <a href="' + invoiceUrl + '">Descarregar PDF</a>' : '') + '</p>' : '';
+  const invoiceLine = invoiceUrl
+    ? '<p style="margin:8px 0;font-size:14px">🧾 <strong>Fatura:</strong>' + (invoiceNum && invoiceNum !== 'rascunho' ? ' ' + invoiceNum + ' —' : '') + ' <a href="' + invoiceUrl + '" style="color:#0d7377;font-weight:600">Descarregar PDF</a></p>'
+    : '';
 
   const html = '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
     + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden">'
