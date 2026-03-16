@@ -674,6 +674,75 @@ app.get('/admin/utentes-search', adminAuth, async (req, res) => {
   }
 });
 
+
+
+
+// ─────────────────────────────────────────────
+// ATESTADOS — Gerar PDF e Enviar por Email
+// ─────────────────────────────────────────────
+const { execFile } = require('child_process');
+const fs = require('fs');
+const os = require('os');
+const pathMod = require('path');
+
+app.post('/admin/gerar-atestado', adminAuth, async (req, res) => {
+  const { tipo, dados, enviarEmail } = req.body;
+  if (!tipo || !dados) return res.status(400).json({ error: 'Tipo e dados obrigatorios.' });
+
+  const sigPath  = pathMod.join(__dirname, 'assinatura_b64.txt');
+  const genScript = pathMod.join(__dirname, 'gen_atestado.py');
+  const tmpPdf   = pathMod.join(os.tmpdir(), 'atestado_' + Date.now() + '.pdf');
+
+  if (!fs.existsSync(sigPath))   return res.status(500).json({ error: 'Assinatura nao encontrada. Adicione assinatura_b64.txt ao servidor.' });
+  if (!fs.existsSync(genScript)) return res.status(500).json({ error: 'Script gerador nao encontrado. Adicione gen_atestado.py ao servidor.' });
+
+  try {
+    await new Promise((resolve, reject) => {
+      execFile('python3', [genScript, tipo, JSON.stringify(dados), tmpPdf, sigPath], { timeout: 30000 }, (err, stdout, stderr) => {
+        if (err) reject(new Error(stderr || err.message));
+        else resolve(stdout);
+      });
+    });
+
+    const pdfBytes = fs.readFileSync(tmpPdf);
+    const pdfB64 = pdfBytes.toString('base64');
+    try { fs.unlinkSync(tmpPdf); } catch(e) {}
+
+    if (enviarEmail && dados.email) {
+      const nomeDoc = tipo === 'amamentacao' ? 'Atestado de Amamentacao' : 'Atestado de Falta Escolar';
+      await sgMail.send({
+        to: dados.email,
+        from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+        subject: nomeDoc + ' — ConsultasOnline',
+        html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
+          + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
+          + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
+          + '<div style="padding:22px 24px">'
+          + '<h2 style="color:#0b1d35;margin:0 0 12px">Documento em anexo</h2>'
+          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + (dados.nome_utente || '') + '</strong>,</p>'
+          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Segue em anexo o seu ' + nomeDoc.toLowerCase() + ' emitido pela Dra. Patricia Mendonca Ferraz.</p>'
+          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">O documento tem validade legal e pode ser utilizado para os devidos efeitos.</p>'
+          + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Duvidas? <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
+          + '</div></div></body></html>',
+        text: 'Ola ' + (dados.nome_utente || '') + ',\n\nSegue em anexo o seu ' + nomeDoc + '.\n\nConsultasOnline',
+        attachments: [{
+          content: pdfB64,
+          filename: nomeDoc.replace(/ /g, '_') + '.pdf',
+          type: 'application/pdf',
+          disposition: 'attachment',
+        }],
+      });
+      console.log('Atestado enviado para:', dados.email);
+    }
+
+    res.json({ pdf: pdfB64, sent: !!(enviarEmail && dados.email) });
+
+  } catch (err) {
+    console.error('Erro ao gerar atestado:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Guardar nota clínica de uma consulta específica
 app.put('/admin/utentes/:id/consulta/:idx', adminAuth, async (req, res) => {
   if (!MONGO_URI) return res.json({ ok: false });
