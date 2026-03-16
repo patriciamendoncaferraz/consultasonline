@@ -1,867 +1,3130 @@
-require('dotenv').config();
-const express  = require('express');
-const cors     = require('cors');
-const stripe   = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const sgMail   = require('@sendgrid/mail');
-const axios    = require('axios');
-const path     = require('path');
-const mongoose = require('mongoose');
-// Google Meet — link fixo de videoconsulta
-const MEET_LINK = process.env.MEET_LINK || 'https://meet.google.com/ukw-vjni-vyn';
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-const app  = express();
-const PORT = process.env.PORT || 8080;
-
-// ─────────────────────────────────────────────
-// MONGODB — Registos Clínicos
-// ─────────────────────────────────────────────
-const MONGO_URI = process.env.MONGO_URI;
-if (MONGO_URI) {
-  mongoose.connect(MONGO_URI)
-    .then(() => console.log('MongoDB conectado'))
-    .catch(err => console.error('MongoDB erro:', err.message));
-} else {
-  console.warn('MONGO_URI não definido — registos clínicos desativados');
-}
-
-// Schema do Utente
-const consultaSchema = new mongoose.Schema({
-  data:         { type: Date, default: Date.now },
-  dataConsulta: String,
-  hora:         String,
-  servico:      String,
-  observacoes:  String,
-  stripeSession:String,
-  valor:        Number,
-  notaClinica:  String,
-}, { _id: true });
-
-const utenteSchema = new mongoose.Schema({
-  nomeCompleto:   { type: String, required: true },
-  email:          { type: String, required: true },
-  telefone:       String,
-  numeroUtente:   String,
-  dataNascimento: String,
-  nif:            String,
-  morada:         String,
-  notas:          String, // notas clínicas do admin
-  consultas:      [consultaSchema],
-  criado:         { type: Date, default: Date.now },
-  atualizado:     { type: Date, default: Date.now },
-}, { collection: 'utentes' });
-
-// Índice único por email
-utenteSchema.index({ email: 1 }, { unique: true });
-utenteSchema.index({ numeroUtente: 1 });
-
-const Utente = mongoose.models.Utente || mongoose.model('Utente', utenteSchema);
-
-// Schema para slots ocupados
-const bookedSlotSchema = new mongoose.Schema({
-  dateKey: { type: String, required: true }, // YYYY-MM-DD
-  time:    { type: String, required: true }, // HH:MM
-  serviceId:   String,
-  serviceName: String,
-  customerEmail: String,
-  stripeSession: String,
-  createdAt: { type: Date, default: Date.now },
-});
-bookedSlotSchema.index({ dateKey: 1, time: 1 }, { unique: true });
-const BookedSlot = mongoose.models.BookedSlot || mongoose.model('BookedSlot', bookedSlotSchema);
-
-// Guardar/atualizar utente e adicionar consulta
-async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor }) {
-  if (!MONGO_URI || !email) return null;
-  try {
-    const novaConsulta = { data: new Date(), dataConsulta, hora, servico, observacoes, stripeSession, valor };
-    const utente = await Utente.findOneAndUpdate(
-      { email },
-      {
-        $set: {
-          nomeCompleto, telefone,
-          ...(numeroUtente && { numeroUtente }),
-          ...(nif && { nif }),
-          ...(morada && { morada }),
-          atualizado: new Date(),
-        },
-        $push: { consultas: novaConsulta },
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-    console.log('Utente guardado:', email);
-    return utente;
-  } catch (err) {
-    console.error('Erro ao guardar utente:', err.message);
-    return null;
-  }
-}
-
-app.use('/webhook', express.raw({ type: 'application/json' }));
-app.use(express.json());
-app.use(cors({ origin: '*' }));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(__dirname));
-
-const SERVICES = {
-  'atestado-amamentacao':       { name: 'Atestado de Amamentação',          price: 3500 },
-  'atestado-escola':            { name: 'Atestado para Falta Escolar',       price: 3500 },
-  'atestado-conducao':          { name: 'Atestado para Carta de Condução',   price: 3500 },
-  'baixa-medica':               { name: 'Emissão de Baixa Médica',           price: 4000 },
-  'renovacao-medicamentos':     { name: 'Renovação de Medicamentos',         price: 4000 },
-  'consulta-infecao-urinaria':  { name: 'Consulta de Infeção Urinária',      price: 4000 },
-  'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 4000 },
-  'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 4000 },
-  'consulta-dst':               { name: 'Consulta DST / IST',                price: 4000 },
-};
-
-function formatPhone(phone) {
-  if (!phone) return null;
-  const clean = phone.replace(/[\s\-]/g, '');
-  if (clean.startsWith('+')) return clean;
-  if (clean.startsWith('00351')) return '+' + clean.slice(2);
-  if (clean.startsWith('351')) return '+' + clean;
-  return '+351' + clean;
-}
-
-// Página de sucesso após pagamento
-app.get('/obrigado', (req, res) => {
-  const sessionId = req.query.session_id || '';
-  res.send(`<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Consulta Confirmada — ConsultasOnline</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ConsultasOnline — Saúde Online em Portugal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#f4f7fb;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:#fff;border-radius:20px;padding:48px 40px;max-width:520px;width:100%;text-align:center;box-shadow:0 8px 48px rgba(11,29,53,.12)}
-.icon{width:72px;height:72px;background:linear-gradient(135deg,#38a169,#48bb78);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:32px}
-h1{font-family:'Cormorant Garamond',serif;font-size:36px;color:#0b1d35;margin-bottom:10px}
-p{font-size:15px;color:#64748b;line-height:1.7;margin-bottom:8px}
-.highlight{background:#f4f7fb;border-radius:10px;padding:16px 20px;margin:20px 0;text-align:left}
-.highlight p{font-size:14px;color:#0b1d35;margin-bottom:4px}
-.highlight p:last-child{margin:0}
-.btn{display:inline-block;margin-top:24px;background:linear-gradient(135deg,#0d7377,#0f8c82);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif}
-.btn:hover{opacity:.9}
-.logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:#0b1d35;margin-bottom:32px}
-.logo span{color:#17c4a8}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1d35;--navy2:#122848;--navy3:#1a3a5c;
+  --teal:#0d7377;--teal2:#0f8c82;--teal3:#17c4a8;
+  --slate:#4a5568;--muted:#8a9bb0;
+  --border:#dde6f0;--surface:#f4f7fb;--white:#ffffff;
+  --red:#e53e3e;--green:#38a169;--amber:#d69e2e;
+  --r:10px;--r2:18px;
+  --sh:0 2px 20px rgba(11,29,53,.08);--sh2:0 8px 48px rgba(11,29,53,.16);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--navy);background:var(--white);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#f0f4f8}::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,29,53,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;height:66px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--teal),var(--teal3));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--white)}
+.logo-text span{color:var(--teal3)}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-tab{background:transparent;border:none;color:rgba(255,255,255,.65);font-size:14px;font-weight:500;cursor:pointer;padding:8px 15px;border-radius:8px;transition:.2s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px}
+.nav-tab:hover{color:var(--white);background:rgba(255,255,255,.07)}
+.nav-tab.active{color:var(--teal3);background:rgba(23,196,168,.1)}
+.nav-sep{width:1px;height:18px;background:rgba(255,255,255,.1);margin:0 4px}
+.nav-cta{background:var(--teal);color:var(--white)!important;padding:9px 20px;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:.2s;margin-left:6px}
+.nav-cta:hover{background:var(--teal2);transform:translateY(-1px)}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* ══════════════════════════════
+   HOME
+══════════════════════════════ */
+.hero{min-height:100vh;background:var(--navy);display:flex;align-items:center;position:relative;overflow:hidden;padding-top:66px}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 65% 50%,rgba(13,115,119,.15) 0%,transparent 65%),radial-gradient(ellipse 35% 35% at 15% 75%,rgba(23,196,168,.07) 0%,transparent 60%)}
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:32px 32px}
+.hero-inner{max-width:1100px;margin:0 auto;padding:48px 28px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;width:100%;position:relative;z-index:1}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(23,196,168,.12);border:1px solid rgba(23,196,168,.22);padding:6px 14px;border-radius:40px;margin-bottom:22px}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--teal3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-pill span{font-size:11.5px;font-weight:600;color:var(--teal3);letter-spacing:.5px;text-transform:uppercase}
+.hero-title{font-size:clamp(38px,4.5vw,58px);font-weight:700;color:var(--white);line-height:1.1;margin-bottom:18px;letter-spacing:-.4px}
+.hero-title em{color:var(--teal3);font-style:normal}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.58);line-height:1.75;margin-bottom:32px;font-weight:300;max-width:460px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-main{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:14px 30px;border-radius:9px;font-size:15px;font-weight:600;cursor:pointer;transition:.25s;font-family:'Inter',sans-serif}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(13,115,119,.38)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.2);padding:14px 28px;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;transition:.25s;font-family:'Inter',sans-serif}
+.btn-ghost:hover{border-color:var(--teal3);color:var(--teal3)}
+
+/* Hero service preview card */
+.hero-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);padding:24px;backdrop-filter:blur(8px)}
+.hero-card-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.4px;text-transform:uppercase;margin-bottom:16px}
+.service-mini-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.service-mini{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s}
+.service-mini:hover{background:rgba(23,196,168,.1);border-color:rgba(23,196,168,.2)}
+.service-mini-left{display:flex;align-items:center;gap:10px}
+.service-mini-icon{font-size:18px}
+.service-mini-name{font-size:13px;font-weight:500;color:rgba(255,255,255,.82)}
+.service-mini-price{font-size:13px;font-weight:700;color:var(--teal3)}
+.hero-card-cta{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:13px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.hero-card-cta:hover{opacity:.92}
+.float-badge{position:absolute;background:var(--white);border-radius:30px;padding:9px 16px;box-shadow:var(--sh2);display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:var(--navy);white-space:nowrap;z-index:2}
+.fb1{top:-18px;right:-10px;animation:fb 4s ease-in-out infinite}
+.fb2{bottom:-16px;left:-10px;animation:fb 4s ease-in-out infinite 2s}
+@keyframes fb{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.fb-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.fb-green{background:rgba(56,161,105,.12)}
+.fb-amber{background:rgba(214,158,46,.12)}
+
+/* CONTAINER */
+.container{max-width:1100px;margin:0 auto;padding:0 28px}
+section.home-section{padding:88px 0}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.sec-title{font-size:clamp(28px,3.5vw,42px);font-weight:700;color:var(--navy);line-height:1.18;letter-spacing:-.3px}
+.sec-sub{font-size:16px;color:var(--slate);line-height:1.72;margin-top:14px;max-width:540px;font-weight:300}
+
+/* HOW IT WORKS */
+.how-bg{background:var(--surface)}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:56px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:28px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,var(--teal),var(--teal3),var(--teal));opacity:.2}
+.step{text-align:center;padding:0 12px}
+.step-circle{width:56px;height:56px;border-radius:50%;background:var(--white);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--teal);position:relative;z-index:1;transition:.3s}
+.step:hover .step-circle{background:var(--teal);color:var(--white);border-color:var(--teal);box-shadow:0 4px 18px rgba(13,115,119,.28)}
+.step h3{font-size:18px;font-weight:600;color:var(--navy);margin-bottom:8px;font-family:'Cormorant Garamond',serif}
+.step p{font-size:13px;color:var(--slate);line-height:1.68}
+
+/* FEATURES */
+.feats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.feat{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:28px;transition:.3s;position:relative;overflow:hidden}
+.feat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal3));transform:scaleX(0);transform-origin:left;transition:.3s}
+.feat:hover{box-shadow:var(--sh2);transform:translateY(-3px)}
+.feat:hover::after{transform:scaleX(1)}
+.feat-ico{width:46px;height:46px;background:linear-gradient(135deg,rgba(13,115,119,.09),rgba(23,196,168,.09));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.feat h3{font-size:19px;font-weight:600;color:var(--navy);margin-bottom:8px;font-family:'Cormorant Garamond',serif}
+.feat p{font-size:13.5px;color:var(--slate);line-height:1.72;font-weight:300}
+.feat-tag{display:inline-block;margin-top:14px;font-size:10.5px;font-weight:700;color:var(--teal);background:rgba(13,115,119,.07);padding:4px 11px;border-radius:20px;letter-spacing:.5px}
+
+/* INVOICE STRIP */
+.invoice-strip{background:var(--navy);padding:80px 0}
+.invoice-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.inv-text .sec-title{color:var(--white)}
+.inv-text .sec-sub{color:rgba(255,255,255,.55)}
+.inv-checks{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:28px}
+.inv-checks li{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.72)}
+.inv-check-ico{width:20px;height:20px;border-radius:50%;background:rgba(23,196,168,.15);border:1px solid rgba(23,196,168,.28);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--teal3);flex-shrink:0}
+.inv-card{background:var(--white);border-radius:var(--r2);padding:28px;box-shadow:var(--sh2)}
+.inv-head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:2px solid var(--navy);margin-bottom:20px}
+.inv-brand-lg{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--navy)}
+.inv-brand-lg span{color:var(--teal)}
+.inv-meta-sm{text-align:right;font-size:11.5px;color:var(--muted);line-height:1.8}
+.inv-meta-sm strong{color:var(--navy)}
+.inv-row{display:flex;justify-content:space-between;font-size:13px;color:var(--slate);padding:9px 0;border-bottom:1px solid var(--border)}
+.inv-row:last-of-type{border:none}
+.inv-total-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;background:var(--navy);color:var(--white);border-radius:9px;padding:12px 16px}
+.inv-total-row span:first-child{font-size:13px;opacity:.7}
+.inv-total-row span:last-child{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700}
+.email-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(13,115,119,.08);border:1px solid rgba(13,115,119,.18);border-radius:24px;padding:7px 14px;font-size:12.5px;color:var(--teal);font-weight:500;margin-top:20px}
+
+/* PRICING */
+.price-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+.price-card{border:1.5px solid var(--border);border-radius:var(--r2);padding:28px;position:relative;transition:.3s}
+.price-card:hover{box-shadow:var(--sh2);transform:translateY(-3px)}
+.price-card.featured{border-color:var(--teal);box-shadow:0 0 0 4px rgba(13,115,119,.07)}
+.price-card-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--teal);color:var(--white);font-size:10.5px;font-weight:700;padding:4px 14px;border-radius:18px;letter-spacing:.4px;white-space:nowrap}
+.price-name{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px}
+.price-val{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:var(--navy);line-height:1}
+.price-val sup{font-size:20px;vertical-align:top;margin-top:7px}
+.price-val sub{font-size:14px;color:var(--muted);font-family:'Inter',sans-serif;font-weight:400}
+.price-desc{font-size:13.5px;color:var(--slate);margin:11px 0 22px;line-height:1.6}
+.price-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.price-list li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--navy);line-height:1.5}
+.price-list li::before{content:'✓';width:18px;height:18px;background:rgba(13,115,119,.09);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--teal);font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.price-cta{width:100%;padding:12px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.cta-outline{background:transparent;border:1.5px solid var(--border);color:var(--navy)}
+.cta-outline:hover{border-color:var(--teal);color:var(--teal)}
+.cta-solid{background:var(--teal);border:none;color:var(--white)}
+.cta-solid:hover{background:var(--teal2)}
+
+/* FOOTER */
+footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:44px}
+.footer-brand p{font-size:13.5px;line-height:1.78;margin-top:12px;max-width:250px}
+.footer-col h5{font-size:12.5px;font-weight:600;color:var(--white);margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col ul li a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;transition:.2s;cursor:pointer}
+.footer-col ul li a:hover{color:var(--teal3)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:flex;justify-content:space-between;align-items:center;font-size:12px;flex-wrap:wrap;gap:10px}
+.footer-bottom a{color:rgba(255,255,255,.38);text-decoration:none;transition:.2s}
+.footer-bottom a:hover{color:var(--teal3)}
+.cert-badges{display:flex;gap:8px;margin-top:14px}
+.cert-badge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 11px;font-size:10.5px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.3px}
+
+/* ══════════════════════════════
+   SERVICE SELECTOR MODAL (STEP 1)
+══════════════════════════════ */
+.overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(11,29,53,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.modal-box{background:var(--white);border-radius:var(--r2);max-width:820px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:var(--sh2);animation:popIn .28s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(.93) translateY(18px)}to{opacity:1;transform:none}}
+.modal-hdr{padding:24px 28px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.modal-hdr h2{font-size:26px;color:var(--navy)}
+.modal-hdr p{font-size:13.5px;color:var(--muted);margin-top:3px}
+.close-btn{width:34px;height:34px;border:none;background:var(--surface);border-radius:7px;cursor:pointer;font-size:17px;color:var(--slate);transition:.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.close-btn:hover{background:var(--border)}
+
+/* Service selector grid */
+.service-selector{padding:24px 28px}
+.service-selector h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:16px;font-family:'Inter',sans-serif}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px}
+.svc-card{border:1.5px solid var(--border);border-radius:var(--r2);padding:16px;cursor:pointer;transition:.25s;position:relative;background:var(--white)}
+.svc-card:hover{border-color:var(--teal);box-shadow:0 4px 20px rgba(13,115,119,.12);transform:translateY(-2px)}
+.svc-card.selected{border-color:var(--teal);background:rgba(13,115,119,.04);box-shadow:0 4px 20px rgba(13,115,119,.14)}
+.svc-card.selected::after{content:'✓';position:absolute;top:10px;right:12px;width:20px;height:20px;background:var(--teal);color:var(--white);border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.svc-icon{font-size:26px;margin-bottom:10px;display:block}
+.svc-name{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:5px;line-height:1.3}
+.svc-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.svc-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--teal)}
+.svc-price sub{font-size:12px;font-weight:400;font-family:'Inter',sans-serif;color:var(--muted)}
+.svc-type{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.badge-atestado{background:rgba(214,158,46,.1);color:var(--amber);border:1px solid rgba(214,158,46,.25);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.3px;display:inline-block;margin-bottom:8px}
+.badge-consulta{background:rgba(13,115,119,.09);color:var(--teal);border:1px solid rgba(13,115,119,.2);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;letter-spacing:.3px;display:inline-block;margin-bottom:8px}
+
+/* STEP 2: Booking form */
+.booking-form{display:none;padding:0 28px 28px}
+.booking-form.show{display:block}
+.step-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--teal);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:20px;padding:0;transition:.2s}
+.step-back:hover{color:var(--teal2)}
+.selected-service-banner{background:linear-gradient(135deg,rgba(13,115,119,.06),rgba(23,196,168,.06));border:1px solid rgba(13,115,119,.15);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.ssb-left{display:flex;align-items:center;gap:12px}
+.ssb-icon{font-size:22px}
+.ssb-name{font-size:15px;font-weight:600;color:var(--navy)}
+.ssb-type{font-size:12px;color:var(--muted)}
+.ssb-price{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--teal)}
+.booking-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+
+/* Calendar */
+.cal-wrap{background:var(--surface);border-radius:var(--r);padding:18px}
+.cal-nav-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav-row h4{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--navy)}
+.cal-nav-btn{width:30px;height:30px;border:1px solid var(--border);background:var(--white);border-radius:6px;cursor:pointer;font-size:14px;transition:.2s}
+.cal-nav-btn:hover{background:var(--teal);color:var(--white);border-color:var(--teal)}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:6px}
+.cal-week span{font-size:10.5px;font-weight:600;color:var(--muted);padding:3px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:12.5px;font-weight:500;cursor:pointer;transition:.2s;color:var(--navy)}
+.cal-d:hover:not(.empty):not(.past){background:rgba(13,115,119,.09);color:var(--teal)}
+.cal-d.sel{background:var(--teal);color:var(--white);font-weight:600}
+.cal-d.today{border:1.5px solid var(--teal);color:var(--teal)}
+.cal-d.empty,.cal-d.past{color:var(--border);cursor:default}
+.time-section{margin-top:18px}
+.time-section h4{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:10px}
+.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.t-slot{border:1.5px solid var(--border);background:var(--white);border-radius:7px;padding:8px;text-align:center;cursor:pointer;transition:.2s;font-size:12px;font-weight:600;color:var(--slate)}
+.t-slot:hover{border-color:var(--teal);color:var(--teal)}
+.t-slot.sel{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.t-slot.taken{background:var(--surface);color:var(--border);cursor:not-allowed;text-decoration:line-through}
+.t-slot.blocked{background:rgba(229,62,62,.06);color:rgba(229,62,62,.4);cursor:not-allowed;border-color:rgba(229,62,62,.15)}
+
+/* Form fields */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11.5px;font-weight:600;color:var(--navy);margin-bottom:5px;letter-spacing:.1px}
+.field input,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--surface);transition:.2s;outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--teal);background:var(--white);box-shadow:0 0 0 3px rgba(13,115,119,.09)}
+.field textarea{height:72px;resize:none}
+.pay-tabs{display:flex;gap:8px;margin-bottom:14px}
+.pay-tab{flex:1;border:1.5px solid var(--border);background:var(--white);border-radius:9px;padding:10px;text-align:center;cursor:pointer;transition:.2s;font-size:12.5px;font-weight:600;color:var(--slate);font-family:'Inter',sans-serif}
+.pay-tab:hover,.pay-tab.active{border-color:var(--teal);color:var(--teal);background:rgba(13,115,119,.04)}
+.mbway-row{display:flex;gap:7px}
+.mbway-row input{flex:1}
+.mbway-btn{background:var(--teal);color:var(--white);border:none;border-radius:8px;padding:10px 16px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:.2s}
+.mbway-btn:hover{background:var(--teal2)}
+.mbway-status{display:none;align-items:center;gap:9px;background:rgba(214,158,46,.07);border:1px solid rgba(214,158,46,.25);border-radius:8px;padding:10px 14px;margin-top:8px}
+.mbway-status.show{display:flex}
+.spin{width:16px;height:16px;border:2px solid rgba(214,158,46,.25);border-top-color:var(--amber);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mbway-status span{font-size:12.5px;font-weight:500}
+.mb-ref-box{background:var(--surface);border-radius:9px;padding:14px;border:1px solid var(--border)}
+.mb-ref-box .ref-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.4px;margin-bottom:3px}
+.mb-ref-box .ref-val{font-weight:700;color:var(--navy);font-size:15px}
+.mb-ref-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.inv-toggle{display:flex;align-items:center;gap:9px;background:var(--surface);border-radius:9px;padding:12px;cursor:pointer;margin-top:8px;border:1.5px solid var(--border);transition:.2s}
+.inv-toggle:hover{border-color:var(--teal)}
+.inv-toggle input{accent-color:var(--teal);width:15px;height:15px;cursor:pointer}
+.inv-toggle label{font-size:13px;color:var(--navy);cursor:pointer;font-weight:500}
+.inv-extra{display:none;margin-top:10px;padding:14px;background:var(--surface);border-radius:9px;border:1px solid var(--border)}
+.inv-extra.show{display:block}
+.modal-footer-row{padding:18px 28px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:14px}
+.footer-price{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--navy)}
+.footer-price span{font-size:13px;font-weight:400;color:var(--muted);font-family:'Inter',sans-serif;margin-left:3px}
+.confirm-btn{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:13px 32px;border-radius:9px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.25s}
+.confirm-btn:hover{transform:translateY(-2px);box-shadow:0 7px 24px rgba(13,115,119,.32)}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--navy);color:var(--white);border-radius:var(--r);padding:18px 22px;box-shadow:var(--sh2);min-width:300px;transform:translateY(90px);opacity:0;transition:.38s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-top{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.toast-ic{width:26px;height:26px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.toast strong{font-size:14px}
+.toast p{font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.5}
+
+/* CHAT */
+.chat-widget{position:fixed;bottom:26px;right:26px;z-index:240}
+.chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;cursor:pointer;font-size:22px;box-shadow:0 4px 18px rgba(13,115,119,.38);transition:.3s;display:flex;align-items:center;justify-content:center}
+.chat-toggle:hover{transform:scale(1.07)}
+.chat-box{position:absolute;bottom:64px;right:0;width:305px;background:var(--white);border-radius:var(--r2);box-shadow:var(--sh2);display:none;flex-direction:column;border:1px solid var(--border);overflow:hidden}
+.chat-box.open{display:flex;animation:popIn .22s ease}
+.chat-hd{background:var(--navy);padding:14px 16px;display:flex;align-items:center;gap:10px}
+.chat-hd-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal3));display:flex;align-items:center;justify-content:center;font-size:14px}
+.chat-hd h4{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;color:var(--white)}
+.chat-hd p{font-size:10.5px;color:var(--teal3)}
+.chat-x{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.45);cursor:pointer;font-size:15px}
+.chat-msgs{height:200px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;background:var(--surface)}
+.cmsg{max-width:82%;padding:9px 13px;border-radius:10px;font-size:12.5px;line-height:1.5}
+.cmsg-bot{background:var(--white);border:1px solid var(--border);color:var(--navy);align-self:flex-start;border-radius:3px 10px 10px 10px}
+.cmsg-user{background:var(--teal);color:var(--white);align-self:flex-end;border-radius:10px 3px 10px 10px}
+.chat-inp-row{display:flex;gap:7px;padding:10px 12px;border-top:1px solid var(--border)}
+.chat-inp{flex:1;border:1.5px solid var(--border);border-radius:7px;padding:8px 11px;font-size:12.5px;font-family:'Inter',sans-serif;color:var(--navy);outline:none}
+.chat-inp:focus{border-color:var(--teal)}
+.chat-send-btn{background:var(--teal);border:none;border-radius:7px;width:34px;height:34px;cursor:pointer;color:var(--white);font-size:14px;transition:.2s;display:flex;align-items:center;justify-content:center}
+.chat-send-btn:hover{background:var(--teal2)}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.fade-up.visible{opacity:1;transform:none}
+
+/* ══════════════════════════════
+   BLOG PAGE
+══════════════════════════════ */
+.blog-page{padding-top:66px;min-height:100vh;background:var(--white)}
+.blog-hero{background:var(--navy);padding:60px 0 44px;position:relative;overflow:hidden}
+.blog-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 70% at 25% 50%,rgba(13,115,119,.18) 0%,transparent 70%)}
+.blog-hero-inner{max-width:1100px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.blog-hero h1{font-size:clamp(34px,4.5vw,52px);font-weight:700;color:var(--white);line-height:1.12;margin-bottom:14px}
+.blog-hero h1 em{color:var(--teal3);font-style:normal}
+.blog-hero p{font-size:16px;color:rgba(255,255,255,.55);max-width:520px;line-height:1.72;font-weight:300}
+.blog-filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:66px;z-index:100}
+.blog-filter-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.f-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-right:4px;text-transform:uppercase}
+.f-chip{border:1.5px solid var(--border);border-radius:18px;padding:6px 14px;font-size:12.5px;font-weight:500;color:var(--slate);cursor:pointer;background:var(--white);transition:.2s;font-family:'Inter',sans-serif}
+.f-chip:hover,.f-chip.active{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.blog-layout{max-width:1100px;margin:0 auto;padding:44px 28px;display:grid;grid-template-columns:1fr 320px;gap:44px;align-items:start}
+.blog-list{display:flex;flex-direction:column;gap:20px}
+.bcard{display:grid;grid-template-columns:190px 1fr;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;background:var(--white);transition:.3s;cursor:pointer}
+.bcard:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.bcard-img{display:flex;align-items:center;justify-content:center;font-size:46px;min-height:148px}
+.bcard-body{padding:20px}
+.bcard-meta{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+.bcat{font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--teal);background:rgba(13,115,119,.07);padding:3px 9px;border-radius:10px}
+.bdate{font-size:11.5px;color:var(--muted)}
+.bread{font-size:11.5px;color:var(--muted)}
+.bcard-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--navy);margin-bottom:7px;line-height:1.3}
+.bcard-excerpt{font-size:13.5px;color:var(--slate);line-height:1.68;font-weight:300}
+.bcard-link{font-size:12.5px;font-weight:600;color:var(--teal);margin-top:12px;display:inline-block}
+.bcard-link:hover{color:var(--teal2)}
+
+/* Sidebar */
+.blog-sidebar{display:flex;flex-direction:column;gap:20px;position:sticky;top:120px}
+.sb-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.sb-head{background:var(--navy);padding:16px 18px}
+.sb-head h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--white);margin-bottom:3px}
+.sb-head p{font-size:12px;color:rgba(255,255,255,.5)}
+.sb-body{padding:16px 18px}
+.sb-btn{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:8px;padding:11px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.sb-btn:hover{opacity:.9}
+.pop-list{list-style:none}
+.pop-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:.2s}
+.pop-item:last-child{border:none}
+.pop-item:hover .pop-title{color:var(--teal)}
+.pop-n{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--border);min-width:28px}
+.pop-title{font-size:12.5px;font-weight:500;color:var(--navy);line-height:1.4;transition:.2s}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:7px}
+.tag{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:5px 12px;font-size:12px;font-weight:500;color:var(--slate);cursor:pointer;transition:.2s}
+.tag:hover{background:var(--teal);border-color:var(--teal);color:var(--white)}
+
+/* ══════════════════════════════
+   ARTICLE VIEW
+══════════════════════════════ */
+.article-view{display:none;padding-top:66px}
+.article-view.active{display:block}
+.art-hero{background:var(--navy);padding:50px 0 40px;position:relative;overflow:hidden}
+.art-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 70% at 80% 50%,rgba(13,115,119,.13) 0%,transparent 65%)}
+.art-hero-inner{max-width:760px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.art-back{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.45);font-size:12.5px;cursor:pointer;margin-bottom:22px;transition:.2s;background:none;border:none;font-family:'Inter',sans-serif}
+.art-back:hover{color:var(--teal3)}
+.art-cat{display:inline-flex;align-items:center;background:rgba(13,115,119,.18);border:1px solid rgba(23,196,168,.18);padding:4px 13px;border-radius:18px;font-size:11px;font-weight:700;color:var(--teal3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px}
+.art-title{font-size:clamp(26px,3.5vw,42px);font-weight:700;color:var(--white);line-height:1.18;margin-bottom:14px}
+.art-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.art-meta-item{font-size:12.5px;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:5px}
+.art-meta-item span{color:rgba(255,255,255,.7)}
+.art-body-wrap{max-width:760px;margin:0 auto;padding:44px 28px 72px}
+.art-body{font-size:15.5px;line-height:1.88;color:#334155}
+.art-body h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--navy);margin:36px 0 14px;line-height:1.2}
+.art-body h3{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--navy);margin:24px 0 10px}
+.art-body p{margin-bottom:16px}
+.art-body ul,.art-body ol{margin:14px 0 18px 22px}
+.art-body li{margin-bottom:7px;line-height:1.68}
+.art-body strong{color:var(--navy);font-weight:600}
+.ibox{border-left:3px solid var(--teal);border-radius:0 var(--r) var(--r) 0;padding:16px 20px;margin:22px 0;background:rgba(13,115,119,.05)}
+.ibox.warn{border-color:var(--amber);background:rgba(214,158,46,.05)}
+.ibox.danger{border-color:var(--red);background:rgba(229,62,62,.05)}
+.ibox-title{font-weight:700;font-size:13.5px;color:var(--navy);margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.ibox p{margin:0;font-size:13.5px;color:var(--slate);line-height:1.6}
+.refs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-top:44px}
+.refs h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:14px}
+.ref-list{list-style:none;display:flex;flex-direction:column;gap:9px;counter-reset:rc}
+.ref-list li{font-size:12.5px;color:var(--slate);line-height:1.6;padding-left:28px;position:relative}
+.ref-list li::before{counter-increment:rc;content:counter(rc)'.';position:absolute;left:0;color:var(--teal);font-weight:700;font-size:11.5px}
+.ref-list li em{font-style:italic}
+.art-cta{background:linear-gradient(135deg,var(--navy),var(--navy3));border-radius:var(--r2);padding:28px;text-align:center;margin:36px 0}
+.art-cta h3{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--white);margin-bottom:7px}
+.art-cta p{font-size:13.5px;color:rgba(255,255,255,.55);margin-bottom:18px}
+.art-cta-btn{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;padding:13px 28px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.25s}
+.art-cta-btn:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(13,115,119,.32)}
+
+@media(max-width:860px){
+  .hero-inner,.invoice-inner,.blog-layout{grid-template-columns:1fr}
+  .feats-grid,.price-cards{grid-template-columns:1fr}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .booking-cols{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .hero-card-wrap,.fb1,.fb2{display:none}
+  .blog-sidebar{display:none}
+  .bcard{grid-template-columns:1fr}
+  .bcard-img{min-height:100px}
+}
+@media(max-width:540px){
+  .services-grid{grid-template-columns:1fr}
+  .nav-tab span{display:none}
+}
+
+/* ══════════════════════════════
+   INNER PAGES
+══════════════════════════════ */
+.inner-page{padding-top:66px;min-height:100vh;background:var(--white)}
+.inner-hero{background:var(--navy);padding:56px 0 44px;position:relative;overflow:hidden}
+.inner-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 30% 50%,rgba(13,115,119,.18) 0%,transparent 70%)}
+.inner-hero-inner{max-width:860px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.inner-hero h1{font-size:clamp(32px,4vw,48px);font-weight:700;color:var(--white);line-height:1.12;margin-bottom:10px}
+.inner-hero p{font-size:16px;color:rgba(255,255,255,.55);max-width:520px;line-height:1.7;font-weight:300}
+.inner-body{max-width:860px;margin:0 auto;padding:52px 28px 80px}
+.inner-body h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--navy);margin:36px 0 14px;line-height:1.2}
+.inner-body h3{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--navy);margin:24px 0 10px}
+.inner-body p{font-size:15px;color:#334155;line-height:1.85;margin-bottom:16px}
+.inner-body ul{margin:14px 0 18px 22px}
+.inner-body li{font-size:15px;color:#334155;line-height:1.7;margin-bottom:8px}
+.inner-body strong{color:var(--navy);font-weight:600}
+.inner-divider{border:none;border-top:1px solid var(--border);margin:36px 0}
+/* Contact form */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:8px}
+.contact-info-box{background:var(--surface);border-radius:var(--r2);padding:28px;border:1px solid var(--border)}
+.contact-info-box h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:18px}
+.contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.contact-item-icon{width:38px;height:38px;background:linear-gradient(135deg,rgba(13,115,119,.1),rgba(23,196,168,.1));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.contact-item-text strong{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.contact-item-text span{font-size:13px;color:var(--slate)}
+.contact-item-text a{color:var(--teal);text-decoration:none;font-size:13px}
+.contact-form-box h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:18px}
+.cfield{margin-bottom:14px}
+.cfield label{display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:5px;letter-spacing:.1px}
+.cfield input,.cfield select,.cfield textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;font-size:14px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--surface);transition:.2s;outline:none}
+.cfield input:focus,.cfield textarea:focus,.cfield select:focus{border-color:var(--teal);background:var(--white);box-shadow:0 0 0 3px rgba(13,115,119,.09)}
+.cfield textarea{height:110px;resize:none}
+.csubmit{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:9px;padding:13px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.25s}
+.csubmit:hover{transform:translateY(-2px);box-shadow:0 7px 24px rgba(13,115,119,.32)}
+.contact-success{display:none;background:rgba(56,161,105,.07);border:1px solid rgba(56,161,105,.25);border-radius:10px;padding:16px 20px;margin-top:14px;font-size:14px;color:var(--green);font-weight:500}
+.contact-success.show{display:block}
+/* FAQ */
+.faq-item{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.faq-q{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:14.5px;font-weight:600;color:var(--navy);transition:.2s;background:var(--white)}
+.faq-q:hover{background:var(--surface)}
+.faq-q .faq-arrow{font-size:12px;transition:transform .25s;color:var(--teal)}
+.faq-a{display:none;padding:0 20px 16px;font-size:14px;color:var(--slate);line-height:1.72}
+.faq-item.open .faq-a{display:block}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+/* Info cards */
+.info-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:28px 0}
+.info-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px;text-align:center;transition:.3s}
+.info-card:hover{box-shadow:var(--sh2);transform:translateY(-3px)}
+.info-card-icon{font-size:32px;margin-bottom:12px}
+.info-card h4{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--navy);margin-bottom:8px}
+.info-card p{font-size:13px;color:var(--slate);line-height:1.65}
+/* Legal */
+.legal-toc{background:var(--surface);border-radius:var(--r);padding:20px 24px;margin-bottom:32px;border:1px solid var(--border)}
+.legal-toc h4{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px;font-family:'Inter',sans-serif}
+.legal-toc ol{margin-left:18px}
+.legal-toc li{font-size:13px;color:var(--teal);margin-bottom:6px;cursor:pointer}
+.legal-toc li:hover{color:var(--teal2)}
+.legal-updated{font-size:12px;color:var(--muted);margin-bottom:24px}
+@media(max-width:768px){.contact-grid,.info-cards{grid-template-columns:1fr}}
+
+/* ══════════════════════════════
+   ADMIN PANEL
+══════════════════════════════ */
+.admin-page{padding-top:66px;min-height:100vh;background:var(--surface)}
+.admin-hero{background:var(--navy);padding:40px 0 32px}
+.admin-hero-inner{max-width:1000px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between}
+.admin-hero h1{font-size:32px;font-weight:700;color:var(--white)}
+.admin-hero p{font-size:14px;color:rgba(255,255,255,.5);margin-top:4px}
+.admin-badge{background:rgba(214,158,46,.15);border:1px solid rgba(214,158,46,.3);color:var(--amber);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.4px}
+.admin-body{max-width:1000px;margin:0 auto;padding:32px 28px;background:var(--navy);min-height:60vh}
+.admin-grid{display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start}
+/* Admin calendar */
+.admin-cal-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
+.admin-cal-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:16px}
+.admin-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.admin-cal-nav h4{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--navy)}
+.admin-cal-btn{width:28px;height:28px;border:1px solid var(--border);background:var(--white);border-radius:6px;cursor:pointer;font-size:13px;transition:.2s}
+.admin-cal-btn:hover{background:var(--teal);color:var(--white);border-color:var(--teal)}
+.admin-cal-week{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:5px}
+.admin-cal-week span{font-size:10px;font-weight:600;color:var(--muted);padding:3px 0}
+.admin-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.admin-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:.2s;color:var(--navy);position:relative}
+.admin-day:hover:not(.empty):not(.past){background:rgba(13,115,119,.1);color:var(--teal)}
+.admin-day.selected{background:var(--teal);color:var(--white);font-weight:700}
+.admin-day.today{border:1.5px solid var(--teal);color:var(--teal)}
+.admin-day.empty,.admin-day.past{color:var(--border);cursor:default}
+.admin-day.has-blocked::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--red)}
+/* Slots manager */
+.admin-slots-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
+.admin-slots-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.admin-slots-header h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy)}
+.admin-date-label{font-size:13px;font-weight:600;color:var(--teal);background:rgba(13,115,119,.08);padding:6px 14px;border-radius:20px}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.admin-btn{border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.admin-btn-block{background:rgba(229,62,62,.1);color:var(--red)}
+.admin-btn-block:hover{background:rgba(229,62,62,.2)}
+.admin-btn-unblock{background:rgba(56,161,105,.1);color:var(--green)}
+.admin-btn-unblock:hover{background:rgba(56,161,105,.2)}
+.admin-btn-clear{background:var(--surface);color:var(--slate)}
+.admin-btn-clear:hover{background:var(--border)}
+.admin-slots-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.admin-slot{border:1.5px solid var(--border);border-radius:8px;padding:9px 6px;text-align:center;cursor:pointer;transition:.2s;font-size:12px;font-weight:600;color:var(--slate);user-select:none}
+.admin-slot:hover{border-color:var(--teal);color:var(--teal);background:rgba(13,115,119,.04)}
+.admin-slot.sel-block{background:rgba(229,62,62,.08);border-color:rgba(229,62,62,.4);color:var(--red)}
+.admin-slot.blocked{background:rgba(229,62,62,.12);border-color:var(--red);color:var(--red)}
+.admin-slot.blocked::after{content:' 🔒';font-size:10px}
+.admin-legend{display:flex;gap:16px;margin-top:14px;font-size:12px;color:var(--muted)}
+.admin-legend-item{display:flex;align-items:center;gap:6px}
+.admin-legend-dot{width:10px;height:10px;border-radius:3px}
+.admin-save-btn{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:9px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:16px}
+.admin-save-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(13,115,119,.3)}
+.admin-saved-msg{display:none;text-align:center;font-size:13px;color:var(--green);font-weight:600;margin-top:10px}
+.admin-saved-msg.show{display:block}
+/* Blocked summary */
+.admin-summary-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-top:24px}
+.admin-summary-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:16px}
+.summary-empty{font-size:14px;color:var(--muted);text-align:center;padding:20px 0}
+.summary-day{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.summary-day:last-child{border:none;margin:0;padding:0}
+.summary-day-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.summary-chips{display:flex;flex-wrap:wrap;gap:6px}
+.summary-chip{background:rgba(229,62,62,.08);border:1px solid rgba(229,62,62,.2);color:var(--red);font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;display:flex;align-items:center;gap:5px}
+.summary-chip-x{cursor:pointer;font-size:14px;line-height:1;color:rgba(229,62,62,.6)}
+.summary-chip-x:hover{color:var(--red)}
+/* Login */
+.admin-login{max-width:380px;margin:80px auto;background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:36px;box-shadow:var(--sh)}
+.admin-login h2{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--navy);margin-bottom:6px}
+.admin-login p{font-size:14px;color:var(--muted);margin-bottom:24px}
+.admin-login-err{display:none;background:rgba(229,62,62,.07);border:1px solid rgba(229,62,62,.2);color:var(--red);font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:14px}
+.admin-login-err.show{display:block}
+@media(max-width:768px){.admin-grid{grid-template-columns:1fr}.admin-slots-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ══════════════════════════════
+   REGISTOS CLÍNICOS
+══════════════════════════════ */
+.patients-section{margin-top:28px;background:var(--navy)}
+.patients-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;background:var(--navy)}
+.patients-header h3{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--white)}
+.search-box{display:flex;gap:8px;flex:1;max-width:360px}
+.search-box input{flex:1;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);border-radius:8px;padding:9px 14px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--white);outline:none}
+.search-box input::placeholder{color:rgba(255,255,255,.35)}
+.search-box input:focus{border-color:var(--teal3);background:rgba(255,255,255,.12)}
+.search-btn{background:var(--teal);color:var(--white);border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:.2s}
+.search-btn:hover{background:var(--teal2)}
+.patients-grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+.patients-list{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);overflow:hidden;max-height:600px;overflow-y:auto}
+.patient-item{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:12px}
+.patient-item:hover{background:rgba(255,255,255,.06)}
+.patient-item.active{background:rgba(13,115,119,.2);border-left:3px solid var(--teal3)}
+.patient-item:last-child{border-bottom:none}
+.patient-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal3));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--white);flex-shrink:0}
+.patient-info h4{font-size:13.5px;font-weight:600;color:var(--white);margin-bottom:2px}
+.patient-info p{font-size:11.5px;color:rgba(255,255,255,.45)}
+.patient-empty{text-align:center;padding:32px;color:rgba(255,255,255,.35);font-size:13.5px}
+/* Patient detail card */
+.patient-detail{background:var(--white);border-radius:var(--r2);overflow:hidden}
+.patient-detail-header{background:linear-gradient(135deg,var(--navy2),var(--navy3));padding:20px 24px;display:flex;align-items:center;gap:16px}
+.patient-detail-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal3));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--white);flex-shrink:0}
+.patient-detail-header h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--white);margin-bottom:3px}
+.patient-detail-header p{font-size:12px;color:rgba(255,255,255,.5)}
+.patient-detail-body{padding:20px 24px}
+.detail-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.detail-section:last-child{border:none;margin:0;padding:0}
+.detail-section-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-family:'Inter',sans-serif}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-field label{display:block;font-size:10.5px;font-weight:600;color:var(--muted);margin-bottom:4px;letter-spacing:.2px}
+.detail-field input,.detail-field textarea{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--surface);outline:none;transition:.2s}
+.detail-field input:focus,.detail-field textarea:focus{border-color:var(--teal);background:var(--white)}
+.detail-field textarea{height:80px;resize:none;grid-column:1/-1}
+.detail-field.full{grid-column:1/-1}
+.detail-save-btn{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:8px;padding:10px 22px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:4px}
+.detail-save-btn:hover{opacity:.9}
+.detail-saved{display:none;font-size:12px;color:var(--green);font-weight:600;margin-left:10px}
+.detail-saved.show{display:inline}
+/* Consultation history */
+.consult-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px 16px;margin-bottom:10px}
+.consult-item:last-child{margin:0}
+.consult-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.consult-item-service{font-size:13px;font-weight:600;color:var(--navy)}
+.consult-item-date{font-size:11.5px;color:var(--muted)}
+.consult-item-obs{font-size:12.5px;color:var(--slate);line-height:1.55;margin-top:4px}
+.consult-item-valor{font-size:12px;font-weight:600;color:var(--teal);margin-top:4px}
+.no-detail{text-align:center;padding:48px 24px;color:var(--muted);background:var(--white);border-radius:var(--r2)}
+.no-detail p{font-size:14px;margin-top:8px}
+@media(max-width:860px){.patients-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════
+   ATESTADOS
+══════════════════════════════ */
+.atestado-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.atestado-tab{border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.atestado-tab:hover{background:rgba(255,255,255,.12);color:var(--white)}
+.atestado-tab.active{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.atestado-form{background:var(--white);border-radius:var(--r2);padding:24px;display:none}
+.atestado-form.active{display:block}
+.atestado-form h4{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:18px}
+.atestado-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.atestado-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px}
+.atestado-field input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--surface);outline:none;transition:.2s;box-sizing:border-box}
+.atestado-field input:focus{border-color:var(--teal);background:var(--white)}
+.atestado-field.full{grid-column:1/-1}
+.atestado-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
+.atestado-btn-preview{background:var(--surface);border:1.5px solid var(--border);color:var(--navy);border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.atestado-btn-preview:hover{background:var(--border)}
+.atestado-btn-send{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.atestado-btn-send:hover{opacity:.9;transform:translateY(-1px)}
+.atestado-status{font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;display:none}
+.atestado-status.ok{display:inline-block;background:rgba(56,161,105,.1);color:var(--green)}
+.atestado-status.err{display:inline-block;background:rgba(229,62,62,.1);color:var(--red)}
+.atestado-preview-box{margin-top:16px;display:none}
+.atestado-preview-box iframe{width:100%;height:500px;border:1px solid var(--border);border-radius:8px}
+@media(max-width:640px){.atestado-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">Consultas<span>Online</span></div>
-  <div class="icon">✓</div>
-  <h1>Pagamento Confirmado!</h1>
-  <p>A sua consulta foi agendada com sucesso.</p>
-  <p>Vai receber um email de confirmação com todos os detalhes e a fatura em breve.</p>
-  <div class="highlight">
-    <p>📧 <strong>Verifique o seu email</strong></p>
-    <p style="font-size:13px;color:#64748b">A confirmação e fatura são enviadas automaticamente. Verifique também a pasta de spam.</p>
+
+<!-- ════════ NAV ════════ -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo" onclick="showPage('home')">
+      <div class="logo-icon">🩺</div>
+      <span class="logo-text">Consultas<span>Online</span></span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-tab active" id="tab-home" onclick="showPage('home')">🏠 <span>Home</span></button>
+      <button class="nav-tab" id="tab-blog" onclick="showPage('blog')">📰 <span>Artigos de Saúde</span></button>
+      <button class="nav-tab" id="tab-admin" onclick="showAdminLogin()" style="opacity:.6;font-size:12px">🔐 Admin</button>
+      <div class="nav-sep"></div>
+      <button class="nav-cta" onclick="openServiceSelector()">Marcar Consulta</button>
+    </div>
   </div>
-  <a href="/" class="btn">Voltar ao Website →</a>
+</nav>
+
+<!-- ════════════════════════════════════════
+     HOME PAGE
+════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-pill"><div class="pulse-dot"></div><span>Disponível agora</span></div>
+      <h1 class="hero-title">Consultas médicas<br/>online, <em>simples</em><br/>e sem esperas</h1>
+      <p class="hero-sub">Marque a sua consulta em segundos. Pague por MBWay e receba a fatura no email. Tudo sem sair de casa.</p>
+      <div class="hero-btns">
+        <button class="btn-main" onclick="openServiceSelector()">Marcar Consulta</button>
+        <button class="btn-ghost" onclick="showPage('blog')">Artigos de Saúde →</button>
+      </div>
+    </div>
+    <div style="position:relative" class="hero-card-wrap">
+      <div class="fb1 float-badge"><div class="fb-dot fb-green">✓</div>Consulta confirmada</div>
+      <div class="hero-card">
+        <div class="hero-card-title">Serviços disponíveis</div>
+        <div class="service-mini-grid">
+          <div class="service-mini" onclick="openServiceSelector()">
+            <div class="service-mini-left"><div class="service-mini-icon">📋</div><div class="service-mini-name">Atestado de Amamentação</div></div>
+            <div class="service-mini-price">35€</div>
+          </div>
+          <div class="service-mini" onclick="openServiceSelector()">
+            <div class="service-mini-left"><div class="service-mini-icon">🏥</div><div class="service-mini-name">Emissão de Baixa Médica</div></div>
+            <div class="service-mini-price">40€</div>
+          </div>
+          <div class="service-mini" onclick="openServiceSelector()">
+            <div class="service-mini-left"><div class="service-mini-icon">💊</div><div class="service-mini-name">Renovação de Medicamentos</div></div>
+            <div class="service-mini-price">40€</div>
+          </div>
+        </div>
+        <button class="hero-card-cta" onclick="openServiceSelector()">Ver todos os serviços →</button>
+      </div>
+      <div class="fb2 float-badge"><div class="fb-dot fb-amber">🧾</div>Fatura enviada por email</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="home-section how-bg">
+  <div class="container">
+    <div class="fade-up" style="text-align:center">
+      <div class="sec-label">Como funciona</div>
+      <h2 class="sec-title">4 passos simples</h2>
+      <p class="sec-sub" style="margin:12px auto 0">Da marcação à consulta, tudo online e sem complicações.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step fade-up">
+        <div class="step-circle">01</div>
+        <h3>Escolhe o Serviço</h3>
+        <p>Seleciona o tipo de consulta ou atestado que precisa, com preço claro desde o início.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-circle">02</div>
+        <h3>Agenda o Horário</h3>
+        <p>Escolhe o dia e hora disponível no calendário. Confirmação imediata por email.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-circle">03</div>
+        <h3>Paga por MBWay</h3>
+        <p>Pagamento rápido e seguro pelo telemóvel. Fatura emitida automaticamente.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-circle">04</div>
+        <h3>Consulta Online</h3>
+        <p>Videoconsulta no browser, sem instalações. Documentos enviados por email.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="home-section">
+  <div class="container">
+    <div class="fade-up">
+      <div class="sec-label">Plataforma</div>
+      <h2 class="sec-title">Tudo numa só plataforma</h2>
+      <p class="sec-sub">Seguro, simples e certificado. Porque a saúde não deve ser complicada.</p>
+    </div>
+    <div class="feats-grid">
+      <div class="feat fade-up">
+        <div class="feat-ico">📅</div>
+        <h3>Agendamento Imediato</h3>
+        <p>Calendário com disponibilidade em tempo real. Sem chamadas, sem filas de espera. Confirmação instantânea.</p>
+        <span class="feat-tag">CALENDÁRIO ONLINE</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">📱</div>
+        <h3>Pagamento por MBWay</h3>
+        <p>Insira o número de telemóvel, confirme no app MB WAY. Também aceita Referência MB e cartão bancário.</p>
+        <span class="feat-tag">PAGAMENTO SEGURO</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">🧾</div>
+        <h3>Fatura Automática</h3>
+        <p>Após o pagamento, a fatura é gerada e enviada para o seu email em menos de 30 segundos. Com NIF e certificação AT.</p>
+        <span class="feat-tag">CERTIFICADA AT</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">🎥</div>
+        <h3>Videoconsulta HD</h3>
+        <p>Consulta por videochamada diretamente no browser. Sem instalar software. Encriptada de ponta a ponta.</p>
+        <span class="feat-tag">ENCRIPTAÇÃO E2E</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">🔒</div>
+        <h3>Dados Protegidos</h3>
+        <p>Toda a informação clínica está protegida em conformidade com o RGPD. Acesso exclusivo do utente.</p>
+        <span class="feat-tag">RGPD CONFORME</span>
+      </div>
+      <div class="feat fade-up">
+        <div class="feat-ico">📄</div>
+        <h3>Documentos Digitais</h3>
+        <p>Receitas, atestados e declarações emitidos eletronicamente e enviados por email. Com validade legal em Portugal.</p>
+        <span class="feat-tag">VALIDADE LEGAL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVOICE STRIP -->
+<section class="invoice-strip">
+  <div class="container">
+    <div class="invoice-inner">
+      <div class="inv-text fade-up">
+        <div class="sec-label" style="color:var(--teal3)">Faturação</div>
+        <h2 class="sec-title">Fatura automática, certificada e no seu email</h2>
+        <p class="sec-sub">Emitida após o pagamento com certificação da Autoridade Tributária. Enviada em segundos.</p>
+        <ul class="inv-checks">
+          <li><div class="inv-check-ico">✓</div>Certificada pela Autoridade Tributária (AT)</li>
+          <li><div class="inv-check-ico">✓</div>IVA isento — artigo 9.º do CIVA (prestações de saúde)</li>
+          <li><div class="inv-check-ico">✓</div>PDF compatível com o portal e-fatura</li>
+          <li><div class="inv-check-ico">✓</div>Facilita reembolso por seguro de saúde</li>
+          <li><div class="inv-check-ico">✓</div>Enviada para o email em menos de 30 segundos</li>
+        </ul>
+        <div class="email-tag">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f4929580818695b4979b9a8781988095879b9a989d9a91da979b99">[email&#160;protected]</a> &nbsp;·&nbsp; Envio automático</div>
+      </div>
+      <div class="fade-up">
+        <div class="inv-card">
+          <div class="inv-head">
+            <div>
+              <div class="inv-brand-lg">Consultas<span>Online</span></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px">consultas-online.pt</div>
+            </div>
+            <div class="inv-meta-sm"><strong>FT 2024/2841</strong><br/>15/03/2024<br/><span style="color:var(--green);font-weight:700">● PAGO</span></div>
+          </div>
+          <div class="inv-row"><span>Consulta — Infeção Urinária</span><span>—</span></div>
+          <div class="inv-row"><span style="font-size:11px;color:var(--muted)">15/03/2024 · 10:30 · Videoconsulta</span><span>40,00 €</span></div>
+          <div class="inv-total-row"><span>Total (IVA isento — art. 9.º CIVA)</span><span>40,00 €</span></div>
+          <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">Certificada AT · Código QR disponível no PDF</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="home-section">
+  <div class="container">
+    <div class="fade-up" style="text-align:center">
+      <div class="sec-label">Preços</div>
+      <h2 class="sec-title">Transparência total,<br/>sem surpresas</h2>
+      <p class="sec-sub" style="margin:12px auto 0">Dois preços simples conforme o tipo de serviço.</p>
+    </div>
+    <div class="price-cards">
+      <div class="price-card fade-up">
+        <div class="price-name">Atestados</div>
+        <div class="price-val"><sup>€</sup>35<sub>/atestado</sub></div>
+        <p class="price-desc">Para situações que requerem comprovativo médico escrito.</p>
+        <ul class="price-list">
+          <li>Atestado de amamentação</li>
+          <li>Atestado para falta escolar</li>
+          <li>Atestado para carta de condução</li>
+          <li>Documento emitido digitalmente</li>
+          <li>Fatura automática por email</li>
+        </ul>
+        <button class="price-cta cta-outline" onclick="openServiceSelector()">Solicitar Atestado</button>
+      </div>
+      <div class="price-card featured fade-up">
+        <div class="price-card-badge">MAIS SOLICITADO</div>
+        <div class="price-name">Consultas Online</div>
+        <div class="price-val"><sup>€</sup>40<sub>/consulta</sub></div>
+        <p class="price-desc">Videoconsulta com emissão de receita, baixa ou documento no próprio dia.</p>
+        <ul class="price-list">
+          <li>Emissão / renovação de baixa médica</li>
+          <li>Renovação de medicamentos</li>
+          <li>Consulta de infeção urinária</li>
+          <li>Cessação tabágica</li>
+          <li>Consulta de amigdalite</li>
+          <li>Doenças sexualmente transmissíveis</li>
+          <li>Videoconsulta + receita digital</li>
+          <li>Fatura automática por email</li>
+        </ul>
+        <button class="price-cta cta-solid" onclick="openServiceSelector()">Marcar Consulta</button>
+      </div>
+      <div class="price-card fade-up">
+        <div class="price-name">MBWay · Ref. MB · Cartão</div>
+        <div class="price-val" style="font-size:32px;margin-top:8px">Pagamento<br/>Fácil</div>
+        <p class="price-desc">Aceite todos os métodos de pagamento habituais em Portugal.</p>
+        <ul class="price-list">
+          <li>MB WAY — confirmação no telemóvel</li>
+          <li>Referência Multibanco</li>
+          <li>Cartão Visa / Mastercard</li>
+          <li>Pagamento 100% seguro</li>
+          <li>Fatura emitida automaticamente</li>
+          <li>IVA isento (saúde)</li>
+        </ul>
+        <button class="price-cta cta-outline" onclick="openServiceSelector()">Começar Agora</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo" onclick="showPage('home')"><div class="logo-icon">🩺</div><span class="logo-text">Consultas<span>Online</span></span></div>
+        <p>Consultas médicas online em Portugal. Agendamento imediato, pagamento por MBWay, faturação automática.</p>
+        <div class="cert-badges"><div class="cert-badge">RGPD</div><div class="cert-badge">AT CERT.</div><div class="cert-badge">E2E</div></div>
+      </div>
+      <div class="footer-col">
+        <h5>Serviços</h5>
+        <ul>
+          <li><a onclick="openServiceSelector()">Atestados</a></li>
+          <li><a onclick="openServiceSelector()">Emissão de Baixa</a></li>
+          <li><a onclick="openServiceSelector()">Renovação de Medicamentos</a></li>
+          <li><a onclick="openServiceSelector()">Consultas Online</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Informação</h5>
+        <ul>
+          <li><a onclick="showPage('blog')">Artigos de Saúde</a></li>
+          <li><a onclick="showPage('como-funciona')">Como Funciona</a></li>
+          <li><a onclick="showPage('precos')">Preços</a></li>
+          <li><a onclick="showPage('seguranca')">Segurança</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Suporte</h5>
+        <ul>
+          <li><a onclick="showPage('ajuda')">Ajuda</a></li>
+          <li><a onclick="showPage('privacidade')">Política de Privacidade</a></li>
+          <li><a onclick="showPage('termos')">Termos de Serviço</a></li>
+          <li><a onclick="showPage('contacto')">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 ConsultasOnline · Todos os direitos reservados</span>
+      <div style="display:flex;gap:16px"><a onclick="showPage('privacidade')">Privacidade</a><a onclick="showPage('termos')">Termos</a><a onclick="showPage('contacto')">Contacto</a></div>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /page-home -->
+
+
+<!-- ════════════════════════════════════════
+     BLOG PAGE
+════════════════════════════════════════ -->
+<div class="page" id="page-blog">
+<div class="blog-page">
+  <div class="blog-hero">
+    <div class="blog-hero-inner">
+      <div class="sec-label" style="color:var(--teal3)">Biblioteca Médica</div>
+      <h1>Artigos de <em>Saúde</em></h1>
+      <p>Informação médica rigorosa, sustentada em evidência científica, para decisões mais informadas sobre a sua saúde.</p>
+    </div>
+  </div>
+  <div class="blog-filter-bar">
+    <div class="blog-filter-inner">
+      <span class="f-label">Filtrar:</span>
+      <div class="f-chip active" onclick="filterBlog('todos',this)">Todos</div>
+      <div class="f-chip" onclick="filterBlog('infecoes',this)">Infeções</div>
+      <div class="f-chip" onclick="filterBlog('trabalho',this)">Trabalho &amp; Escola</div>
+      <div class="f-chip" onclick="filterBlog('obesidade',this)">Peso &amp; Obesidade</div>
+      <div class="f-chip" onclick="filterBlog('dst',this)">DST</div>
+      <div class="f-chip" onclick="filterBlog('medicacao',this)">Medicação &amp; Baixas</div>
+    </div>
+  </div>
+  <div class="blog-layout">
+    <div class="blog-list" id="blogList">
+
+      <div class="bcard" data-cat="infecoes" onclick="openArticle('itu')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#0d4a60,#0d7377)">💧</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Infeções</span><span class="bdate">12 Mar 2024</span><span class="bread">· 8 min</span></div>
+          <h2 class="bcard-title">Infeção Urinária: Causas, Sintomas e Tratamento</h2>
+          <p class="bcard-excerpt">A infeção do trato urinário é uma das patologias mais frequentes em Portugal. Saiba como identificar, tratar e prevenir com base em evidência científica.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="trabalho" onclick="openArticle('faltas-trabalho')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#1e3a5f,#1e4d7b)">💼</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Trabalho &amp; Legal</span><span class="bdate">8 Mar 2024</span><span class="bread">· 6 min</span></div>
+          <h2 class="bcard-title">Faltas ao Trabalho por Doença: Como Justificar</h2>
+          <p class="bcard-excerpt">Tudo sobre declarações médicas, baixas, o Código do Trabalho português e os seus direitos como trabalhador quando está doente.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="trabalho" onclick="openArticle('faltas-escola')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#2d4a22,#3d7a2c)">🎓</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Escola &amp; Família</span><span class="bdate">5 Mar 2024</span><span class="bread">· 5 min</span></div>
+          <h2 class="bcard-title">Faltas à Escola por Doença: Como Justificar</h2>
+          <p class="bcard-excerpt">O que diz a lei portuguesa, documentos necessários e prazos para apresentar ao diretor de turma. Como obter declaração médica online.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="infecoes" onclick="openArticle('garganta')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#5c1a1a,#8b2b2b)">🤒</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Infeções</span><span class="bdate">1 Mar 2024</span><span class="bread">· 7 min</span></div>
+          <h2 class="bcard-title">Dor de Garganta: Vírus, Bactérias e Quando Tomar Antibiótico</h2>
+          <p class="bcard-excerpt">Amigdalite, faringite — quando é viral e quando é bacteriana? Quando deve tomar antibiótico. Critérios de Centor e evidência atual.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="obesidade" onclick="openArticle('ozempic')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#3d1a6b,#6b2fb8)">⚕️</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Peso &amp; Obesidade</span><span class="bdate">25 Fev 2024</span><span class="bread">· 10 min</span></div>
+          <h2 class="bcard-title">Ozempic, Mounjaro e Wegovy: O Guia Completo sobre GLP-1</h2>
+          <p class="bcard-excerpt">Semaglutido, tirzepatido — os medicamentos que revolucionaram o tratamento da obesidade. Eficácia, segurança e quem pode tomar.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="dst" onclick="openArticle('dst')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#1a4a3f,#0d7377)">🔬</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Saúde Sexual</span><span class="bdate">20 Fev 2024</span><span class="bread">· 9 min</span></div>
+          <h2 class="bcard-title">Doenças Sexualmente Transmissíveis: Guia Completo</h2>
+          <p class="bcard-excerpt">VIH, gonorreia, sífilis, herpes, HPV — sintomas, rastreio, tratamento e prevenção segundo as guidelines europeias.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-baixa')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#4a3000,#8b6000)">📋</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Baixas</span><span class="bdate">15 Fev 2024</span><span class="bread">· 6 min</span></div>
+          <h2 class="bcard-title">Renovação de Baixa Médica: Tudo o que Precisa de Saber</h2>
+          <p class="bcard-excerpt">Como funciona o CIT em Portugal, prazos, regras da Segurança Social e como renovar a sua baixa sem sair de casa.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-medicamentos')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#1a3a1a,#2d7a2d)">💊</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Medicação</span><span class="bdate">10 Fev 2024</span><span class="bread">· 7 min</span></div>
+          <h2 class="bcard-title">Renovação de Medicamentos: Como Funciona em Portugal</h2>
+          <p class="bcard-excerpt">Receita Sem Papel, INFARMED, comparticipação do SNS — como renovar a sua medicação habitual online sem complicações.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
+    </div><!-- /blog-list -->
+
+    <div class="blog-sidebar">
+      <div class="sb-card">
+        <div class="sb-head"><h3>Marcar Consulta</h3><p>Disponível hoje</p></div>
+        <div class="sb-body">
+          <p style="font-size:13px;color:var(--slate);margin-bottom:13px;line-height:1.6">Tem dúvidas sobre a sua saúde? Marque uma consulta online rapidamente.</p>
+          <button class="sb-btn" onclick="openServiceSelector()">📅 Marcar Agora</button>
+        </div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-head"><h3>Mais Lidos</h3><p>Esta semana</p></div>
+        <div class="sb-body" style="padding:0 18px">
+          <ul class="pop-list">
+            <li class="pop-item" onclick="openArticle('ozempic')"><div class="pop-n">01</div><div class="pop-title">Ozempic, Mounjaro e Wegovy: Guia GLP-1</div></li>
+            <li class="pop-item" onclick="openArticle('itu')"><div class="pop-n">02</div><div class="pop-title">Infeção Urinária: Tratamento</div></li>
+            <li class="pop-item" onclick="openArticle('renovacao-baixa')"><div class="pop-n">03</div><div class="pop-title">Renovação de Baixa Médica</div></li>
+            <li class="pop-item" onclick="openArticle('dst')"><div class="pop-n">04</div><div class="pop-title">DST: Guia Completo</div></li>
+            <li class="pop-item" onclick="openArticle('faltas-trabalho')"><div class="pop-n">05</div><div class="pop-title">Faltas ao Trabalho por Doença</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-head"><h3>Temas</h3><p>Navegue por categoria</p></div>
+        <div class="sb-body">
+          <div class="tag-cloud">
+            <div class="tag">Infeções</div><div class="tag">Baixas</div><div class="tag">Receitas</div><div class="tag">Obesidade</div><div class="tag">DST</div><div class="tag">Garganta</div><div class="tag">Pediatria</div><div class="tag">Trabalho</div><div class="tag">GLP-1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</body>
-</html>`);
-});
+</div><!-- /page-blog -->
 
-// Get booked slots for a specific date
-app.get('/booked-slots/:dateKey', async (req, res) => {
-  if (!MONGO_URI) return res.json([]);
-  try {
-    const slots = await BookedSlot.find({ dateKey: req.params.dateKey }, 'time -_id');
-    res.json(slots.map(s => s.time));
-  } catch (err) {
-    res.json([]);
+
+<!-- ════════════════════════════════════════
+     ARTICLES
+════════════════════════════════════════ -->
+
+<!-- ITU -->
+<div class="article-view" id="article-itu">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💧 Infeções</div>
+    <h1 class="art-title">Infeção Urinária: Causas, Sintomas e Tratamento</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>12 Março 2024</span></div><div class="art-meta-item">⏱ <span>8 min leitura</span></div><div class="art-meta-item">🔬 <span>Referências científicas</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>O que é uma Infeção do Trato Urinário?</h2>
+    <p>A infeção do trato urinário (ITU) é uma das infeções bacterianas mais comuns em ambulatório. Pode envolver a uretra (uretrite), a bexiga (cistite) ou os rins (pielonefrite). A cistite aguda não complicada é a forma mais prevalente em mulheres adultas saudáveis.</p>
+    <div class="ibox"><div class="ibox-title">🔬 Agente mais frequente</div><p>A <em>Escherichia coli</em> é responsável por 80–85% das ITU não complicadas. (Foxman, <em>Nature Reviews Microbiology</em>, 2010)</p></div>
+    <h2>Sintomas</h2>
+    <ul><li><strong>Disúria</strong> — ardor ou dor ao urinar</li><li><strong>Polaquiúria</strong> — necessidade frequente de urinar em pequenas quantidades</li><li><strong>Urgência miccional</strong> — vontade súbita e intensa</li><li><strong>Hematúria</strong> — urina com sangue visível (~30% dos casos)</li><li><strong>Dor suprapúbica</strong> — desconforto na zona inferior do abdómen</li></ul>
+    <p>Na pielonefrite (infeção renal) surgem ainda <strong>febre alta, calafrios e lombalgia</strong>. Esta forma exige avaliação urgente.</p>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Quando ir às urgências</div><p>Febre superior a 38,5°C, dores lombares intensas, vómitos ou ausência de melhoria ao fim de 48h de antibiótico — estes sinais requerem avaliação presencial urgente.</p></div>
+    <h2>Diagnóstico</h2>
+    <p>A tira-teste de urina é o exame de primeira linha. A urocultura com antibiograma é recomendada em ITU recorrente, gestação ou suspeita de pielonefrite.</p>
+    <h2>Tratamento de Primeira Linha (DGS)</h2>
+    <ul><li><strong>Nitrofurantoína</strong> 100mg 2×/dia, 5 dias</li><li><strong>Fosfomicina trometamol</strong> 3g dose única</li><li><strong>Pivmecilinam</strong> 400mg 2×/dia, 3–7 dias</li></ul>
+    <h2>Prevenção de Recorrências</h2>
+    <ul><li>Ingestão de líquidos ≥1,5L/dia</li><li>Profilaxia pós-coital (antibiótico dose única)</li><li>Arando vermelho — evidência moderada (Cochrane Review, 2023)</li><li>Estrogénios locais em mulheres pós-menopáusicas</li></ul>
+    <div class="art-cta"><h3>Tem sintomas de infeção urinária?</h3><p>Consulta online com diagnóstico e receita em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta ITU — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Foxman B. <em>Urinary tract infection syndromes.</em> Infect Dis Clin North Am. 2014;28(1):1-13.</li>
+      <li>Gupta K, et al. <em>International clinical practice guidelines for uncomplicated cystitis.</em> Clin Infect Dis. 2011;52(5):e103-120.</li>
+      <li>EAU Guidelines on Urological Infections. European Association of Urology, 2023.</li>
+      <li>Jepson RG, et al. <em>Cranberries for preventing UTI.</em> Cochrane Database Syst Rev. 2023.</li>
+      <li>DGS. <em>Infeções do Trato Urinário — Norma de Orientação Clínica.</em> 2021.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- FALTAS TRABALHO -->
+<div class="article-view" id="article-faltas-trabalho">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💼 Trabalho &amp; Legal</div>
+    <h1 class="art-title">Faltas ao Trabalho por Doença: Como Justificar</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>8 Março 2024</span></div><div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Enquadramento Legal — Código do Trabalho</h2>
+    <p>As faltas ao trabalho por doença são reguladas pelo <strong>Código do Trabalho (Lei n.º 7/2009)</strong> e pela legislação da Segurança Social. Conhecer os seus direitos é fundamental para proteger o vínculo laboral.</p>
+    <h2>Documentos para Justificar</h2>
+    <ul><li><strong>Declaração médica</strong> — para faltas de curta duração (1 a 3 dias). Justifica a ausência perante o empregador mas não confere subsídio.</li><li><strong>Certificado de Incapacidade Temporária (CIT)</strong> — obrigatório a partir do 4.º dia consecutivo. Emitido eletronicamente pelo médico diretamente para a Segurança Social.</li></ul>
+    <div class="ibox"><div class="ibox-title">📋 Prazo legal</div><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade. O processo é totalmente digital.</p></div>
+    <h2>Subsídio de Doença</h2>
+    <p>O subsídio é pago pela Segurança Social a partir do <strong>4.º dia</strong>. Os primeiros 3 dias não são remunerados (período de espera), salvo diferente previsão em contrato coletivo.</p>
+    <ul><li>Até 30 dias: <strong>55%</strong> da remuneração de referência</li><li>31 a 90 dias: <strong>60%</strong></li><li>91 a 365 dias: <strong>70%</strong></li><li>Mais de 365 dias: <strong>75%</strong></li></ul>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Proteção laboral</div><p>Faltas justificadas por doença devidamente documentadas <strong>não podem constituir justa causa de despedimento</strong>, nos termos do artigo 351.º do Código do Trabalho.</p></div>
+    <div class="art-cta"><h3>Precisa de declaração médica urgente?</h3><p>Emissão no próprio dia, enviada por email.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Agora — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Lei n.º 7/2009. <em>Código do Trabalho Português.</em> Diário da República.</li>
+      <li>Decreto-Lei n.º 28/2004. <em>Regime jurídico de proteção social na doença.</em></li>
+      <li>Portaria n.º 115/2021. <em>Regras de emissão de CIT.</em> Ministério da Saúde.</li>
+      <li>Instituto da Segurança Social. <em>Guia Prático — Subsídio de Doença.</em> ISS, 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- FALTAS ESCOLA -->
+<div class="article-view" id="article-faltas-escola">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🎓 Escola &amp; Família</div>
+    <h1 class="art-title">Faltas à Escola por Doença: Como Justificar</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>5 Março 2024</span></div><div class="art-meta-item">⏱ <span>5 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>O que diz a Lei</h2>
+    <p>As faltas escolares por doença são reguladas pelo <strong>Estatuto do Aluno e Ética Escolar (Lei n.º 51/2012)</strong>. A doença é uma causa de falta justificada.</p>
+    <h2>Documentos Aceites</h2>
+    <ul><li><strong>Declaração médica</strong> — indica o período de incapacidade, sem revelar o diagnóstico (protegido por sigilo médico).</li><li><strong>Declaração dos encarregados de educação</strong> — válida até <strong>3 dias por período letivo</strong> no ensino básico. Acima desse limite, é obrigatória declaração médica.</li></ul>
+    <div class="ibox"><div class="ibox-title">📋 Prazo para justificar</div><p>A justificação deve ser entregue ao Diretor de Turma nos <strong>3 dias úteis</strong> seguintes ao regresso do aluno, salvo motivo de força maior.</p></div>
+    <h2>Limites de Faltas</h2>
+    <p>No ensino secundário, o limite é equivalente a <strong>10% da carga horária</strong> de cada disciplina. Acima desse limite, mesmo com justificação médica, o aluno pode ficar sem avaliação por faltas.</p>
+    <h2>Conteúdo da Declaração Médica</h2>
+    <ul><li>Nome e data de nascimento do aluno</li><li>Período de incapacidade (datas início/fim)</li><li>Referência ao sigilo do diagnóstico</li><li>Identificação e carimbo do médico emitente</li></ul>
+    <div class="art-cta"><h3>O seu filho está doente?</h3><p>Declaração médica emitida por videoconsulta, no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Atestado para Escola — 35€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Lei n.º 51/2012. <em>Estatuto do Aluno e Ética Escolar.</em></li>
+      <li>Despacho Normativo n.º 1-F/2016. <em>Avaliação dos alunos do ensino básico e secundário.</em></li>
+      <li>DGE. <em>Orientações sobre faltismo escolar.</em> Direção-Geral da Educação, 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- GARGANTA -->
+<div class="article-view" id="article-garganta">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🤒 Infeções</div>
+    <h1 class="art-title">Dor de Garganta: Quando Tomar Antibiótico</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>1 Março 2024</span></div><div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Vírica ou Bacteriana?</h2>
+    <p>Até <strong>80% das faringoamigdalites são de origem viral</strong> e não beneficiam de antibiótico. Apenas 15–30% têm etiologia bacteriana — principalmente o <em>Streptococcus pyogenes</em> (EBHGA).</p>
+    <h2>Critérios de Centor (McIsaac)</h2>
+    <p>Esta ferramenta clínica estima a probabilidade de infeção estreptocócica:</p>
+    <ul><li>Exsudado amigdalino (pus) — <strong>+1 ponto</strong></li><li>Adenopatias cervicais dolorosas — <strong>+1 ponto</strong></li><li>Ausência de tosse — <strong>+1 ponto</strong></li><li>Febre ≥38°C — <strong>+1 ponto</strong></li><li>Idade 3–14 anos — <strong>+1</strong>; idade 45+ — <strong>-1</strong></li></ul>
+    <p>Score ≥3: considerar antibiótico ou teste rápido. Score ≤1: origem viral — <strong>antibiótico não indicado</strong>.</p>
+    <div class="ibox danger"><div class="ibox-title">🚨 Alerta — Abcesso Periamigdalino</div><p>Trismo (dificuldade em abrir a boca), voz "engrolada" e desvio da úvula são sinais de abcesso periamigdalino — emergência cirúrgica urgente.</p></div>
+    <h2>Tratamento</h2>
+    <ul><li><strong>Amoxicilina</strong> 500mg 3×/dia, 10 dias — primeira linha (DGS)</li><li>Alerta à penicilina: azitromicina ou claritromicina</li><li>Ibuprofeno para alívio sintomático da dor e febre</li></ul>
+    <div class="art-cta"><h3>Com dor de garganta persistente?</h3><p>Avaliação online e receita adequada em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta Amigdalite — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Centor RM, et al. <em>The diagnosis of strep throat in adults.</em> Med Decis Making. 1981;1(3):239-246.</li>
+      <li>McIsaac WJ, et al. <em>A clinical score to reduce unnecessary antibiotic use.</em> CMAJ. 1998;158(1):75-83.</li>
+      <li>Hayward G, et al. <em>Corticosteroids for pain relief in sore throat.</em> BMJ. 2017;358:j3887.</li>
+      <li>DGS. <em>Norma 007/2012: Faringoamigdalite.</em> (atualizada 2022).</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- OZEMPIC -->
+<div class="article-view" id="article-ozempic">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">⚕️ Peso &amp; Obesidade</div>
+    <h1 class="art-title">Ozempic, Mounjaro e Wegovy: Guia Completo sobre GLP-1</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>25 Fev 2024</span></div><div class="art-meta-item">⏱ <span>10 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>A Revolução dos Agonistas GLP-1</h2>
+    <p>O semaglutido (Ozempic/Wegovy) e o tirzepatido (Mounjaro) representam a maior evolução no tratamento farmacológico da obesidade em décadas, com reduções ponderais sem precedentes em ensaios clínicos de fase 3.</p>
+    <h2>Ozempic vs Wegovy — Qual a diferença?</h2>
+    <ul><li><strong>Ozempic</strong> (semaglutido s.c. 0,5–2 mg) — aprovado para <strong>diabetes tipo 2</strong>; frequentemente utilizado off-label para perda de peso.</li><li><strong>Wegovy</strong> (semaglutido s.c. 2,4 mg) — aprovado especificamente para <strong>obesidade</strong> (IMC ≥30, ou ≥27 com comorbilidade).</li><li><strong>Rybelsus</strong> (semaglutido oral) — aprovado para diabetes tipo 2 em Portugal.</li></ul>
+    <div class="ibox"><div class="ibox-title">📊 Estudo STEP 1 (NEJM, 2021)</div><p>O semaglutido 2,4 mg causou redução média de <strong>14,9% do peso corporal</strong> em 68 semanas vs. 2,4% no placebo. (Wilding et al., N Engl J Med 2021)</p></div>
+    <h2>Mounjaro (Tirzepatido) — Dupla Ação GLP-1/GIP</h2>
+    <p>No estudo SURMOUNT-1, o tirzepatido 15 mg atingiu reduções de <strong>até 22,5% do peso corporal</strong> — os maiores resultados alguma vez obtidos com medicação para obesidade sem cirurgia. (Jastreboff et al., NEJM 2022)</p>
+    <h2>Como funcionam</h2>
+    <ul><li>Redução do apetite via centros hipotalâmicos</li><li>Aumento da saciedade pós-prandial</li><li>Esvaziamento gástrico mais lento</li><li>Melhoria da sensibilidade à insulina</li></ul>
+    <h2>Efeitos Secundários</h2>
+    <ul><li>Náuseas (40–50%), geralmente ligeiras e transitórias</li><li>Vómitos, diarreia, obstipação</li><li>Redução do apetite (efeito terapêutico)</li></ul>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Contraindicações</div><p>Gravidez, aleitamento, história de carcinoma medular da tiróide ou NEM tipo 2, pancreatite aguda prévia. <strong>Exige sempre prescrição médica.</strong></p></div>
+    <h2>Preservar Massa Muscular</h2>
+    <p>25–40% da perda de peso pode ser massa magra. A combinação com exercício de resistência e ingestão proteica adequada (≥1,2–1,6 g/kg/dia) é essencial.</p>
+    <div class="art-cta"><h3>Quer discutir opções de perda de peso?</h3><p>Consulta de avaliação e orientação terapêutica.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta Online — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Wilding JPH, et al. <em>Once-Weekly Semaglutide in Overweight or Obesity.</em> N Engl J Med. 2021;384:989-1002. (STEP 1)</li>
+      <li>Jastreboff AM, et al. <em>Tirzepatide for Obesity.</em> N Engl J Med. 2022;387:205-216. (SURMOUNT-1)</li>
+      <li>Drucker DJ. <em>The biology of incretin hormones.</em> Cell Metab. 2006;3(3):153-165.</li>
+      <li>EMA. <em>Wegovy — Summary of Product Characteristics.</em> 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- DST -->
+<div class="article-view" id="article-dst">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🔬 Saúde Sexual</div>
+    <h1 class="art-title">Doenças Sexualmente Transmissíveis: Guia Completo</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>20 Fev 2024</span></div><div class="art-meta-item">⏱ <span>9 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Contexto Europeu</h2>
+    <p>Segundo o ECDC, em 2022 registaram-se aumentos de 48% na gonorreia e 34% na sífilis na UE face ao ano anterior. O diagnóstico precoce é determinante para o tratamento eficaz e para travar a transmissão.</p>
+    <h2>As IST Mais Frequentes</h2>
+    <h3>VIH</h3>
+    <p>Com terapêutica antirretroviral atual, a esperança de vida é próxima da da população geral. A <strong>PrEP</strong> (tenofovir/emtricitabina) reduz o risco de transmissão em &gt;99% (Grant et al., NEJM 2010). Rastreio recomendado a todos os adultos sexualmente ativos.</p>
+    <h3>Gonorreia (<em>N. gonorrhoeae</em>)</h3>
+    <p>Tratamento: <strong>ceftriaxona 500mg IM dose única</strong>. Resistência crescente a fluoroquinolonas e azitromicina. Frequentemente assintomática na mulher — pode causar doença inflamatória pélvica e infertilidade.</p>
+    <h3>Sífilis (<em>Treponema pallidum</em>)</h3>
+    <p>Três fases: cancro indolor (primária) → rash palmoplantar (secundária) → lesões cardiovasculares/neurológicas (terciária). Tratamento: <strong>penicilina G benzatínica</strong> — altamente eficaz.</p>
+    <h3>Clamídia</h3>
+    <p>IST bacteriana mais prevalente. Frequentemente assintomática. Tratamento: <strong>azitromicina 1g dose única</strong> ou doxiciclina 7 dias.</p>
+    <h3>HPV e Cancro do Colo do Útero</h3>
+    <p>Os tipos 16 e 18 são responsáveis por 70% dos cancros do colo. A <strong>vacina HPV</strong> (Gardasil 9, incluída no PNV) é altamente protetora. O rastreio cervical regular é essencial.</p>
+    <div class="ibox"><div class="ibox-title">🛡️ Prevenção</div><p>O preservativo, usado consistente e corretamente, reduz significativamente o risco de transmissão. Para VIH, a PrEP acrescenta proteção adicional.</p></div>
+    <h2>Rastreio — Com que frequência?</h2>
+    <ul><li>Homens que têm sexo com homens: VIH, sífilis, gonorreia, clamídia cada 3–6 meses</li><li>Múltiplos parceiros: rastreio anual</li><li>Gravidez: VIH, sífilis, hepatite B/C obrigatório</li></ul>
+    <div class="art-cta"><h3>Quer fazer rastreio de forma discreta?</h3><p>Consulta confidencial. Pedido de análises enviado por email.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta DST — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>ECDC. <em>STI in Europe, 2022.</em> European Centre for Disease Prevention and Control, 2023.</li>
+      <li>Workowski KA, et al. <em>STI Treatment Guidelines, 2021.</em> MMWR. 2021;70(4):1-187.</li>
+      <li>Grant RM, et al. <em>Preexposure Chemoprophylaxis for HIV.</em> N Engl J Med. 2010;363:2587-2599.</li>
+      <li>IUSTI. <em>European Guidelines on Common STIs.</em> 2023.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- RENOVAÇÃO BAIXA -->
+<div class="article-view" id="article-renovacao-baixa">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">📋 Baixas</div>
+    <h1 class="art-title">Renovação de Baixa Médica: Tudo o que Precisa de Saber</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>15 Fev 2024</span></div><div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>O Sistema CIT em Portugal</h2>
+    <p>A baixa médica é formalizada pelo <strong>Certificado de Incapacidade Temporária (CIT)</strong>, enviado eletronicamente pelo médico diretamente para a Segurança Social. O trabalhador não precisa de entregar nenhum papel.</p>
+    <h2>Quando Renovar</h2>
+    <ul><li>Quando a incapacidade se mantém após o período do CIT inicial</li><li>Quando o médico define um prazo de reavaliação</li><li>Não existe limite legal ao número de renovações com fundamento clínico</li></ul>
+    <div class="ibox"><div class="ibox-title">📱 Renovação por Videoconsulta</div><p>Os CIT podem ser emitidos após videoconsulta. É possível renovar a baixa médica sem sair de casa.</p></div>
+    <h2>Prazos Críticos</h2>
+    <ul><li>O CIT deve cobrir o período de incapacidade sem interrupção</li><li>Qualquer gap entre CITs pode resultar em perda do subsídio</li><li>Em hospitalização, o CIT é emitido pelo hospital</li></ul>
+    <h2>Baixa por Acidente de Trabalho</h2>
+    <p>Regime distinto — gerido pela seguradora do empregador. O subsídio é 100% do salário desde o 1.º dia e é pago pela seguradora.</p>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Verificações da Segurança Social</div><p>A SS pode verificar a incapacidade presencialmente. O trabalhador deve estar em condições compatíveis com o diagnóstico declarado.</p></div>
+    <div class="art-cta"><h3>Precisa de renovar a baixa?</h3><p>CIT emitido eletronicamente no próprio dia por videoconsulta.</p><button class="art-cta-btn" onclick="openServiceSelector()">Renovar Baixa — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>Decreto-Lei n.º 28/2004. <em>Proteção na eventualidade de doença.</em></li>
+      <li>Portaria n.º 115/2021. <em>Certificado de Incapacidade Temporária.</em></li>
+      <li>ISS. <em>Guia Prático — Subsídio de Doença 2024.</em></li>
+      <li>Lei n.º 98/2009. <em>Acidentes de trabalho e doenças profissionais.</em></li>
+    </ol></div>
+  </div></div>
+</div>
+
+<!-- RENOVAÇÃO MEDICAMENTOS -->
+<div class="article-view" id="article-renovacao-medicamentos">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💊 Medicação</div>
+    <h1 class="art-title">Renovação de Medicamentos: Como Funciona em Portugal</h1>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>10 Fev 2024</span></div><div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
+  </div></div>
+  <div class="art-body-wrap"><div class="art-body">
+    <h2>Receita Sem Papel (RSP)</h2>
+    <p>Desde 2016, Portugal adotou integralmente a <strong>Receita Sem Papel</strong>, gerida pelo SPMS. A receita é enviada por SMS e/ou email ao utente, que a apresenta na farmácia sem necessitar de papel.</p>
+    <h2>Tipos de Receita</h2>
+    <ul><li><strong>Receita normal</strong> — válida 30 dias, até 4 embalagens por medicamento.</li><li><strong>Receita renovável</strong> — para uso crónico. Válida 6 meses, com 3 vias de dispensa mensal.</li><li><strong>Receita especial</strong> — para psicotrópicos e estupefacientes. Regras mais restritas.</li></ul>
+    <div class="ibox"><div class="ibox-title">💡 Receita crónica — dispensa trimestral</div><p>Para doentes crónicos estáveis, é possível emitir receitas renováveis com levantamento trimestral na farmácia.</p></div>
+    <h2>Comparticipação do SNS</h2>
+    <ul><li><strong>Escalão A</strong> (insulinas, antiepiléticos…): 90% comparticipado</li><li><strong>Escalão B</strong> (cardiovasculares, diabetes…): 69%</li><li><strong>Escalão C</strong>: 37%</li><li><strong>Escalão D</strong>: 15%</li></ul>
+    <h2>Como Renovar Online</h2>
+    <ol><li>Agende videoconsulta</li><li>O médico avalia e valida a continuidade da medicação</li><li>Receita enviada eletronicamente por SMS/email</li><li>Levantamento na farmácia com o código da receita</li></ol>
+    <div class="ibox warn"><div class="ibox-title">⚠️ Medicamentos com regras especiais</div><p>Psicotrópicos, estupefacientes e medicamentos hospitalares exigem avaliação presencial e processos específicos.</p></div>
+    <div class="art-cta"><h3>Precisa de renovar medicação?</h3><p>Receita eletrónica emitida no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Renovar Medicação — 40€</button></div>
+    <div class="refs"><h3>Referências</h3><ol class="ref-list">
+      <li>INFARMED. <em>Estatísticas do Medicamento 2022.</em> 2023.</li>
+      <li>Portaria n.º 284/2016. <em>Prescrição e dispensa de medicamentos.</em></li>
+      <li>Despacho n.º 2935-B/2016. <em>Sistema de Receita Sem Papel.</em></li>
+      <li>EMA. <em>Guideline on bioequivalence.</em> 2010.</li>
+    </ol></div>
+  </div></div>
+</div>
+
+
+
+<!-- ════════════════════════════════════════
+     PAGE: COMO FUNCIONA
+════════════════════════════════════════ -->
+<div class="page" id="page-como-funciona">
+<div class="inner-page">
+  <div class="inner-hero"><div class="inner-hero-inner">
+    <div class="sec-label" style="color:var(--teal3)">Processo</div>
+    <h1>Como Funciona</h1>
+    <p>Em 4 passos simples, da marcação à consulta. Sem filas, sem deslocações.</p>
+  </div></div>
+  <div class="inner-body">
+    <div class="info-cards">
+      <div class="info-card"><div class="info-card-icon">📋</div><h4>Escolha o Serviço</h4><p>Selecione o tipo de consulta ou atestado que precisa, com o preço apresentado de forma clara.</p></div>
+      <div class="info-card"><div class="info-card-icon">📅</div><h4>Agende o Horário</h4><p>Escolha o dia e hora disponível no calendário em tempo real. Confirmação imediata por email.</p></div>
+      <div class="info-card"><div class="info-card-icon">📱</div><h4>Pague por MBWay</h4><p>Pagamento rápido e seguro pelo telemóvel. Fatura emitida e enviada por email automaticamente.</p></div>
+    </div>
+
+    <h2>Passo 1 — Escolha o tipo de serviço</h2>
+    <p>Na página principal, clique em <strong>"Marcar Consulta"</strong>. Vai aparecer uma lista com todos os serviços disponíveis — atestados (35€) e consultas online (40€). Cada serviço tem uma descrição clara para que saiba exatamente o que está a contratar.</p>
+
+    <h2>Passo 2 — Selecione o dia e hora</h2>
+    <p>Após escolher o serviço, é apresentado um calendário com a disponibilidade em tempo real. Escolha o dia e o horário que melhor se adequa à sua agenda. Receberá uma confirmação imediata por email com todos os detalhes.</p>
+
+    <h2>Passo 3 — Preencha os seus dados e pague</h2>
+    <p>Introduza o seu nome, email e telemóvel. O pagamento é feito de forma segura por <strong>MBWay</strong>, Referência Multibanco ou cartão bancário. Após a confirmação do pagamento, a fatura é gerada automaticamente e enviada para o seu email em menos de 30 segundos.</p>
+
+    <h2>Passo 4 — Consulta por videochamada</h2>
+    <p>No dia e hora marcados, aceda ao link enviado por email e entre na sala de videoconsulta diretamente no browser — sem instalar aplicações. A consulta decorre de forma privada e encriptada. No final, os documentos (receita, atestado, declaração) são enviados digitalmente para o seu email.</p>
+
+    <hr class="inner-divider"/>
+    <h2>Perguntas Frequentes</h2>
+
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Preciso de instalar alguma aplicação? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Não. A videoconsulta funciona diretamente no browser do seu telemóvel, tablet ou computador. Não é necessário instalar nada.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Posso remarcar ou cancelar? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Sim. Pode remarcar ou cancelar até 48 horas antes da consulta agendada, enviando um email para <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1b0a1beb8be91b2bebfa2a4bda5b0a2fcbebfbdb8bfb4ffa1a5">[email&#160;protected]</a>. Cancelamentos com menos de 48 horas de antecedência não têm direito a reembolso.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Os documentos emitidos têm validade legal? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Sim. Todos os atestados, declarações e receitas emitidos têm validade legal em Portugal. As faturas são certificadas pela Autoridade Tributária (AT).</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Em quanto tempo recebo os documentos? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Os documentos são enviados por email durante ou imediatamente após a consulta, em formato PDF.</div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px">
+      <button class="btn-main" onclick="openServiceSelector()">Marcar Consulta Agora</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: PREÇOS
+════════════════════════════════════════ -->
+<div class="page" id="page-precos">
+<div class="inner-page">
+  <div class="inner-hero"><div class="inner-hero-inner">
+    <div class="sec-label" style="color:var(--teal3)">Preços</div>
+    <h1>Preços Transparentes</h1>
+    <p>Dois preços simples, sem taxas ocultas. Sabe sempre o que vai pagar antes de confirmar.</p>
+  </div></div>
+  <div class="inner-body">
+    <div class="info-cards">
+      <div class="info-card"><div class="info-card-icon">📋</div><h4>Atestados</h4><p style="font-size:28px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--teal);margin:8px 0">35€</p><p>Amamentação, falta escolar, carta de condução</p></div>
+      <div class="info-card" style="border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.07)"><div class="info-card-icon">🩺</div><h4>Consultas Online</h4><p style="font-size:28px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--teal);margin:8px 0">40€</p><p>Baixa médica, receitas, consultas diversas</p></div>
+      <div class="info-card"><div class="info-card-icon">🧾</div><h4>Fatura Incluída</h4><p style="font-size:15px;color:var(--teal);font-weight:600;margin:8px 0">Gratuita</p><p>Emitida automaticamente em todos os serviços</p></div>
+    </div>
+
+    <h2>O que está incluído em cada serviço</h2>
+
+    <h3>Atestados — 35€</h3>
+    <ul>
+      <li>Videoconsulta de avaliação (até 20 minutos)</li>
+      <li>Emissão do documento em PDF com validade legal</li>
+      <li>Envio por email no próprio dia</li>
+      <li>Fatura certificada AT incluída</li>
+    </ul>
+
+    <h3>Consultas Online — 40€</h3>
+    <ul>
+      <li>Videoconsulta de até 30 minutos</li>
+      <li>Emissão de receita médica digital (se aplicável)</li>
+      <li>Certificado de Incapacidade Temporária / baixa médica (se aplicável)</li>
+      <li>Envio de todos os documentos por email</li>
+      <li>Fatura certificada AT incluída</li>
+    </ul>
+
+    <h2>Métodos de pagamento aceites</h2>
+    <div class="info-cards" style="grid-template-columns:repeat(3,1fr)">
+      <div class="info-card"><div class="info-card-icon">📱</div><h4>MB WAY</h4><p>Confirmação instantânea no telemóvel</p></div>
+      <div class="info-card"><div class="info-card-icon">🏧</div><h4>Referência Multibanco</h4><p>Pague em qualquer caixa multibanco</p></div>
+      <div class="info-card"><div class="info-card-icon">💳</div><h4>Cartão</h4><p>Visa, Mastercard e cartões de débito</p></div>
+    </div>
+
+    <h2>Faturação</h2>
+    <p>Todos os serviços incluem fatura certificada pela Autoridade Tributária (AT), emitida automaticamente após o pagamento e enviada para o seu email. As prestações de serviços de saúde estão isentas de IVA nos termos do artigo 9.º do CIVA.</p>
+    <p>A fatura pode ser emitida em nome individual (com ou sem NIF) ou em nome de empresa, facilitando o reembolso por seguros de saúde.</p>
+
+    <div style="text-align:center;margin-top:40px">
+      <button class="btn-main" onclick="openServiceSelector()">Marcar Consulta Agora</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: SEGURANÇA
+════════════════════════════════════════ -->
+<div class="page" id="page-seguranca">
+<div class="inner-page">
+  <div class="inner-hero"><div class="inner-hero-inner">
+    <div class="sec-label" style="color:var(--teal3)">Segurança</div>
+    <h1>A sua privacidade é<br/>a nossa prioridade</h1>
+    <p>Os seus dados clínicos são tratados com o mais elevado nível de segurança e confidencialidade.</p>
+  </div></div>
+  <div class="inner-body">
+    <div class="info-cards">
+      <div class="info-card"><div class="info-card-icon">🔒</div><h4>Encriptação E2E</h4><p>Todas as videoconsultas e comunicações são encriptadas de ponta a ponta.</p></div>
+      <div class="info-card"><div class="info-card-icon">🇪🇺</div><h4>Conformidade RGPD</h4><p>Tratamento de dados pessoais em conformidade com o Regulamento Geral de Proteção de Dados.</p></div>
+      <div class="info-card"><div class="info-card-icon">🏦</div><h4>Pagamentos Seguros</h4><p>Processamento de pagamentos via Stripe, certificado PCI DSS nível 1. Os dados do cartão nunca passam pelos nossos servidores.</p></div>
+    </div>
+
+    <h2>Proteção de Dados Pessoais</h2>
+    <p>A ConsultasOnline trata os seus dados pessoais e clínicos de acordo com o <strong>Regulamento Geral de Proteção de Dados (RGPD)</strong> e a legislação portuguesa aplicável. Os seus dados são utilizados exclusivamente para a prestação dos serviços contratados e nunca são partilhados com terceiros sem o seu consentimento explícito.</p>
+
+    <h2>Sigilo Médico</h2>
+    <p>Toda a informação clínica partilhada durante as consultas está protegida pelo <strong>sigilo médico</strong>, consagrado no artigo 85.º do Código Deontológico da Ordem dos Médicos. Apenas o profissional de saúde e o utente têm acesso ao conteúdo das consultas.</p>
+
+    <h2>Segurança dos Pagamentos</h2>
+    <p>Os pagamentos são processados pela <strong>Stripe</strong>, uma das plataformas de pagamento mais seguras do mundo, certificada com o nível 1 do PCI DSS — o padrão mais elevado da indústria. Os dados do seu cartão bancário são encriptados diretamente no browser e nunca passam pelos nossos servidores.</p>
+
+    <h2>Videoconsultas Privadas</h2>
+    <p>As consultas por videochamada decorrem em salas virtuais privadas, com <strong>encriptação de ponta a ponta (E2E)</strong>. Não são gravadas nem partilhadas. Apenas o utente e o profissional de saúde têm acesso à sala durante a consulta.</p>
+
+    <h2>Os seus direitos</h2>
+    <p>Nos termos do RGPD, tem o direito de aceder, corrigir, apagar ou solicitar a portabilidade dos seus dados pessoais. Para exercer qualquer um destes direitos, contacte-nos através de <a href="/cdn-cgi/l/email-protection#caabbaa5a3a58aa9a5a4b9bfa6beabb9e7a5a4a6a3a4afe4babe" style="color:var(--teal)"><span class="__cf_email__" data-cfemail="c4a5b4abadab84a7abaab7b1a8b0a5b7e9abaaa8adaaa1eab4b0">[email&#160;protected]</span></a>.</p>
+
+    <div style="text-align:center;margin-top:40px">
+      <button class="btn-main" onclick="openServiceSelector()">Marcar Consulta</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: AJUDA
+════════════════════════════════════════ -->
+<div class="page" id="page-ajuda">
+<div class="inner-page">
+  <div class="inner-hero"><div class="inner-hero-inner">
+    <div class="sec-label" style="color:var(--teal3)">Suporte</div>
+    <h1>Centro de Ajuda</h1>
+    <p>Encontre respostas às perguntas mais frequentes ou entre em contacto connosco.</p>
+  </div></div>
+  <div class="inner-body">
+    <h2>Perguntas Frequentes</h2>
+
+    <h3 style="margin-top:24px;margin-bottom:12px;font-size:16px;color:var(--slate);font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.3px;text-transform:uppercase">Agendamento</h3>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Como marco uma consulta? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Clique em "Marcar Consulta" no menu superior, escolha o serviço pretendido, selecione o dia e hora disponíveis, preencha os seus dados e proceda ao pagamento.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Posso cancelar ou remarcar? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Sim, pode cancelar ou remarcar até 48 horas antes da consulta. Envie um email para <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="89e8f9e6e0e6c9eae6e7fafce5fde8faa4e6e7e5e0e7eca7f9fd">[email&#160;protected]</a> com o número de confirmação.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Quanto tempo dura a consulta? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">As consultas online têm duração de até 30 minutos. Os atestados têm duração de até 20 minutos.</div>
+    </div>
+
+    <h3 style="margin-top:28px;margin-bottom:12px;font-size:16px;color:var(--slate);font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.3px;text-transform:uppercase">Pagamento</h3>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Quais os métodos de pagamento aceites? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Aceitamos MB WAY, Referência Multibanco e cartão bancário (Visa/Mastercard).</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Quando recebo a fatura? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">A fatura é emitida automaticamente após a confirmação do pagamento e enviada para o seu email em menos de 30 segundos.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Posso pedir reembolso ao seguro de saúde? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Sim. A fatura emitida tem todos os dados necessários para solicitar reembolso ao seu seguro de saúde. A maioria dos seguros aceita consultas de telemedicina.</div>
+    </div>
+
+    <h3 style="margin-top:28px;margin-bottom:12px;font-size:16px;color:var(--slate);font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.3px;text-transform:uppercase">Técnico</h3>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Preciso de instalar alguma aplicação? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Não. A videoconsulta funciona diretamente no browser. Recomendamos Google Chrome ou Safari atualizados.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">O que fazer se tiver problemas técnicos? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Tente recarregar a página ou usar outro browser. Se o problema persistir, contacte-nos em <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e081908f898fa0838f8e93958c948193cd8f8e8c898e85ce9094">[email&#160;protected]</a> e remarcamos a consulta sem custo.</div>
+    </div>
+
+    <hr class="inner-divider"/>
+    <p style="text-align:center;font-size:15px;color:var(--slate)">Não encontrou a resposta? Envie-nos um email para <a href="/cdn-cgi/l/email-protection#e98e8c9b8885a98a86879a9c859d889ac486878580878cc7999d" style="color:var(--teal);font-weight:600"><span class="__cf_email__" data-cfemail="f6919384979ab695999885839a829785db99989a9f9893d88682">[email&#160;protected]</span></a> ou <a href="#" onclick="showPage('contacto')" style="color:var(--teal);font-weight:600">use o formulário →</a></p>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: CONTACTO
+════════════════════════════════════════ -->
+<div class="page" id="page-contacto">
+<div class="inner-page">
+  <div class="inner-hero"><div class="inner-hero-inner">
+    <div class="sec-label" style="color:var(--teal3)">Contacto</div>
+    <h1>Fale Connosco</h1>
+    <p>Estamos aqui para ajudar. Resposta garantida em até 24 horas úteis.</p>
+  </div></div>
+  <div class="inner-body">
+    <div class="contact-grid">
+      <div class="contact-form-box">
+        <h3>Envie-nos uma mensagem</h3>
+        <div class="cfield"><label>Nome Completo</label><input type="text" id="cName" placeholder="O seu nome"/></div>
+        <div class="cfield"><label>Email</label><input type="email" id="cEmail" placeholder="email@exemplo.pt"/></div>
+        <div class="cfield"><label>Assunto</label>
+          <select id="cSubject">
+            <option value="">Selecione o assunto</option>
+            <option>Dúvida sobre agendamento</option>
+            <option>Problema com pagamento</option>
+            <option>Problema técnico</option>
+            <option>Questão sobre fatura</option>
+            <option>Cancelamento / Remarcação</option>
+            <option>Outro assunto</option>
+          </select>
+        </div>
+        <div class="cfield"><label>Mensagem</label><textarea id="cMessage" placeholder="Descreva a sua dúvida ou questão..."></textarea></div>
+        <button class="csubmit" onclick="submitContact()">Enviar Mensagem →</button>
+        <div class="contact-success" id="contactSuccess">✅ Mensagem enviada! Responderemos em até 24 horas úteis.</div>
+      </div>
+      <div>
+        <div class="contact-info-box">
+          <h3>Informações de Contacto</h3>
+          <div class="contact-item">
+            <div class="contact-item-icon">📧</div>
+            <div class="contact-item-text"><strong>Email</strong><a href="/cdn-cgi/l/email-protection#89eeecfbe8e5c9eae6e7fafce5fde8faa4e6e7e5e0e7eca7f9fd"><span class="__cf_email__" data-cfemail="f2959780939eb2919d9c81879e869381df9d9c9e9b9c97dc8286">[email&#160;protected]</span></a></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">🕐</div>
+            <div class="contact-item-text"><strong>Horário de Atendimento</strong><span>Segunda a Sexta: 9h00 – 18h00<br/>Sábados: 9h00 – 13h00</span></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">⏱</div>
+            <div class="contact-item-text"><strong>Tempo de Resposta</strong><span>Até 24 horas úteis</span></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">🌐</div>
+            <div class="contact-item-text"><strong>Serviço</strong><span>100% online — sem morada física</span></div>
+          </div>
+        </div>
+        <div class="contact-info-box" style="margin-top:16px;background:linear-gradient(135deg,var(--navy),var(--navy3));border-color:transparent">
+          <h3 style="color:var(--white)">Precisa de ajuda urgente?</h3>
+          <p style="font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:16px">Para questões urgentes relacionadas com uma consulta marcada para hoje, inclua o número de confirmação no email para <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8deae8ffece1cdeee2e3fef8e1f9ecfea0e2e3e1e4e3e8a3fdf9">[email&#160;protected]</a>.</p>
+          <button class="csubmit" onclick="showPage('ajuda')">Ver Perguntas Frequentes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: PRIVACIDADE
+════════════════════════════════════════ -->
+<div class="page" id="page-privacidade">
+<div class="inner-page">
+  <div class="inner-hero"><div class="inner-hero-inner">
+    <div class="sec-label" style="color:var(--teal3)">Legal</div>
+    <h1>Política de Privacidade</h1>
+    <p>Como recolhemos, utilizamos e protegemos os seus dados pessoais.</p>
+  </div></div>
+  <div class="inner-body">
+    <p class="legal-updated">Última atualização: 1 de Janeiro de 2024</p>
+    <div class="legal-toc">
+      <h4>Índice</h4>
+      <ol>
+        <li onclick="document.getElementById('priv1').scrollIntoView({behavior:'smooth'})">Responsável pelo Tratamento</li>
+        <li onclick="document.getElementById('priv2').scrollIntoView({behavior:'smooth'})">Dados Recolhidos</li>
+        <li onclick="document.getElementById('priv3').scrollIntoView({behavior:'smooth'})">Finalidade do Tratamento</li>
+        <li onclick="document.getElementById('priv4').scrollIntoView({behavior:'smooth'})">Base Legal</li>
+        <li onclick="document.getElementById('priv5').scrollIntoView({behavior:'smooth'})">Conservação dos Dados</li>
+        <li onclick="document.getElementById('priv6').scrollIntoView({behavior:'smooth'})">Partilha com Terceiros</li>
+        <li onclick="document.getElementById('priv7').scrollIntoView({behavior:'smooth'})">Os seus Direitos</li>
+        <li onclick="document.getElementById('priv8').scrollIntoView({behavior:'smooth'})">Cookies</li>
+        <li onclick="document.getElementById('priv9').scrollIntoView({behavior:'smooth'})">Contacto</li>
+      </ol>
+    </div>
+
+    <h2 id="priv1">1. Responsável pelo Tratamento</h2>
+    <p>O responsável pelo tratamento dos seus dados pessoais é a plataforma <strong>ConsultasOnline</strong>, um serviço 100% online, acessível através de <a href="/cdn-cgi/l/email-protection#4d2c3d2224220d2e22233e3821392c3e60222321242328633d39" style="color:var(--teal)"><span class="__cf_email__" data-cfemail="fa9b8a959395ba999594898f968e9b89d795949693949fd48a8e">[email&#160;protected]</span></a>.</p>
+
+    <h2 id="priv2">2. Dados Recolhidos</h2>
+    <p>Recolhemos os seguintes dados pessoais:</p>
+    <ul>
+      <li><strong>Dados de identificação:</strong> nome completo, NIF (opcional)</li>
+      <li><strong>Dados de contacto:</strong> endereço de email, número de telemóvel</li>
+      <li><strong>Dados clínicos:</strong> motivo da consulta, informação partilhada durante a videoconsulta</li>
+      <li><strong>Dados de pagamento:</strong> método de pagamento utilizado (os dados do cartão são processados pela Stripe e nunca armazenados nos nossos servidores)</li>
+      <li><strong>Dados de utilização:</strong> endereço IP, browser, data e hora de acesso</li>
+    </ul>
+
+    <h2 id="priv3">3. Finalidade do Tratamento</h2>
+    <p>Os seus dados são utilizados para:</p>
+    <ul>
+      <li>Prestação dos serviços de saúde contratados</li>
+      <li>Gestão de agendamentos e comunicações relacionadas</li>
+      <li>Emissão de faturas e documentos fiscais</li>
+      <li>Cumprimento de obrigações legais</li>
+      <li>Melhoria dos nossos serviços</li>
+    </ul>
+
+    <h2 id="priv4">4. Base Legal</h2>
+    <p>O tratamento dos seus dados tem como base legal a <strong>execução do contrato</strong> de prestação de serviços, o <strong>cumprimento de obrigações legais</strong> (nomeadamente fiscais) e, para dados clínicos, o <strong>consentimento explícito</strong> que presta ao utilizar os nossos serviços.</p>
+
+    <h2 id="priv5">5. Conservação dos Dados</h2>
+    <p>Os dados pessoais são conservados pelo período estritamente necessário à prestação dos serviços e ao cumprimento das obrigações legais aplicáveis. Os dados clínicos são conservados por um mínimo de 5 anos, conforme exigido pela legislação de saúde portuguesa.</p>
+
+    <h2 id="priv6">6. Partilha com Terceiros</h2>
+    <p>Os seus dados não são vendidos nem partilhados com terceiros para fins comerciais. Podemos partilhar dados com:</p>
+    <ul>
+      <li><strong>Stripe:</strong> processamento de pagamentos</li>
+      <li><strong>InvoiceXpress:</strong> emissão de faturas</li>
+      <li><strong>SendGrid:</strong> envio de emails transacionais</li>
+      <li><strong>Autoridades competentes:</strong> quando exigido por lei</li>
+    </ul>
+    <p>Todos os subcontratantes estão sujeitos a acordos de tratamento de dados conformes com o RGPD.</p>
+
+    <h2 id="priv7">7. Os seus Direitos</h2>
+    <p>Nos termos do RGPD, tem os seguintes direitos:</p>
+    <ul>
+      <li><strong>Acesso:</strong> solicitar uma cópia dos seus dados pessoais</li>
+      <li><strong>Retificação:</strong> corrigir dados inexatos ou incompletos</li>
+      <li><strong>Apagamento:</strong> solicitar a eliminação dos seus dados</li>
+      <li><strong>Portabilidade:</strong> receber os seus dados em formato estruturado</li>
+      <li><strong>Oposição:</strong> opor-se ao tratamento dos seus dados</li>
+      <li><strong>Limitação:</strong> solicitar a limitação do tratamento</li>
+    </ul>
+    <p>Para exercer qualquer destes direitos, contacte-nos em <a href="/cdn-cgi/l/email-protection#0b6a7b6462644b686465787e677f6a782664656762656e257b7f" style="color:var(--teal)"><span class="__cf_email__" data-cfemail="a3c2d3cccacce3c0cccdd0d6cfd7c2d08ecccdcfcacdc68dd3d7">[email&#160;protected]</span></a>. Tem também o direito de apresentar reclamação à <strong>CNPD</strong> (Comissão Nacional de Proteção de Dados) em <a href="https://www.cnpd.pt" target="_blank" style="color:var(--teal)">cnpd.pt</a>.</p>
+
+    <h2 id="priv8">8. Cookies</h2>
+    <p>Utilizamos cookies estritamente necessários para o funcionamento do website. Não utilizamos cookies de rastreamento ou publicidade de terceiros.</p>
+
+    <h2 id="priv9">9. Contacto</h2>
+    <p>Para qualquer questão relacionada com a proteção dos seus dados, contacte-nos em <a href="/cdn-cgi/l/email-protection#d0b1a0bfb9bf90b3bfbea3a5bca4b1a3fdbfbebcb9beb5fea0a4" style="color:var(--teal)"><span class="__cf_email__" data-cfemail="6001100f090f20030f0e13150c1401134d0f0e0c090e054e1014">[email&#160;protected]</span></a>.</p>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE: TERMOS
+════════════════════════════════════════ -->
+<div class="page" id="page-termos">
+<div class="inner-page">
+  <div class="inner-hero"><div class="inner-hero-inner">
+    <div class="sec-label" style="color:var(--teal3)">Legal</div>
+    <h1>Termos de Serviço</h1>
+    <p>As condições que regem a utilização da plataforma ConsultasOnline.</p>
+  </div></div>
+  <div class="inner-body">
+    <p class="legal-updated">Última atualização: 1 de Janeiro de 2024</p>
+    <div class="legal-toc">
+      <h4>Índice</h4>
+      <ol>
+        <li onclick="document.getElementById('term1').scrollIntoView({behavior:'smooth'})">Identificação</li>
+        <li onclick="document.getElementById('term2').scrollIntoView({behavior:'smooth'})">Objeto e Aceitação</li>
+        <li onclick="document.getElementById('term3').scrollIntoView({behavior:'smooth'})">Serviços Prestados</li>
+        <li onclick="document.getElementById('term4').scrollIntoView({behavior:'smooth'})">Preços e Pagamento</li>
+        <li onclick="document.getElementById('term5').scrollIntoView({behavior:'smooth'})">Cancelamento e Reembolso</li>
+        <li onclick="document.getElementById('term6').scrollIntoView({behavior:'smooth'})">Obrigações do Utilizador</li>
+        <li onclick="document.getElementById('term7').scrollIntoView({behavior:'smooth'})">Limitação de Responsabilidade</li>
+        <li onclick="document.getElementById('term8').scrollIntoView({behavior:'smooth'})">Alterações aos Termos</li>
+        <li onclick="document.getElementById('term9').scrollIntoView({behavior:'smooth'})">Lei Aplicável</li>
+      </ol>
+    </div>
+
+    <h2 id="term1">1. Identificação</h2>
+    <p>A plataforma <strong>ConsultasOnline</strong> é um serviço de saúde 100% online, acessível em <a href="https://consultas-online.pt" style="color:var(--teal)">consultas-online.pt</a>. Contacto: <a href="/cdn-cgi/l/email-protection#197e7c6b7875597a76776a6c756d786a3476777570777c37696d" style="color:var(--teal)"><span class="__cf_email__" data-cfemail="46212334272a0625292835332a3227356b29282a2f2823683632">[email&#160;protected]</span></a>.</p>
+
+    <h2 id="term2">2. Objeto e Aceitação</h2>
+    <p>Os presentes Termos de Serviço regulam a utilização da plataforma <strong>consultas-online.pt</strong> e a contratação dos serviços de saúde online disponibilizados. Ao utilizar a plataforma, o utilizador aceita integralmente estes termos.</p>
+
+    <h2 id="term3">3. Serviços Prestados</h2>
+    <p>A ConsultasOnline disponibiliza os seguintes serviços de saúde online:</p>
+    <ul>
+      <li>Emissão de atestados médicos (amamentação, falta escolar, carta de condução)</li>
+      <li>Emissão e renovação de baixa médica (CIT)</li>
+      <li>Renovação de medicamentos (receita eletrónica)</li>
+      <li>Consultas de medicina geral (infeção urinária, amigdalite, cessação tabágica, DST)</li>
+    </ul>
+    <p>Os serviços são prestados por profissionais de saúde devidamente habilitados e registados na Ordem dos Médicos.</p>
+
+    <h2 id="term4">4. Preços e Pagamento</h2>
+    <p>Os preços em vigor são os apresentados no momento da contratação. Atualmente:</p>
+    <ul>
+      <li><strong>Atestados:</strong> 35€ (IVA isento)</li>
+      <li><strong>Consultas online:</strong> 40€ (IVA isento)</li>
+    </ul>
+    <p>O pagamento é exigido no momento da marcação, sendo aceites MB WAY, Referência Multibanco e cartão bancário. A fatura é emitida automaticamente após confirmação do pagamento.</p>
+
+    <h2 id="term5">5. Cancelamento e Reembolso</h2>
+    <p><strong>Cancelamento com mais de 48 horas de antecedência:</strong> reembolso total do valor pago, no prazo de 5 a 10 dias úteis para o método de pagamento original.</p>
+    <p><strong>Cancelamento com menos de 48 horas de antecedência:</strong> não há lugar a reembolso, mas é oferecida uma remarcação sem custo.</p>
+    <p><strong>Falha técnica imputável à plataforma:</strong> reembolso total ou remarcação, à escolha do utilizador.</p>
+
+    <h2 id="term6">6. Obrigações do Utilizador</h2>
+    <p>O utilizador compromete-se a:</p>
+    <ul>
+      <li>Fornecer informações verdadeiras e completas no momento do registo e durante as consultas</li>
+      <li>Estar disponível no horário agendado, com ligação à internet estável</li>
+      <li>Não utilizar a plataforma para fins ilícitos ou fraudulentos</li>
+      <li>Não partilhar o acesso à plataforma com terceiros</li>
+    </ul>
+
+    <h2 id="term7">7. Limitação de Responsabilidade</h2>
+    <p>A ConsultasOnline não se responsabiliza por diagnósticos incorretos resultantes de informações incompletas ou falsas fornecidas pelo utilizador. Os profissionais de saúde que prestam os serviços são individualmente responsáveis pelos atos médicos praticados, de acordo com a legislação em vigor.</p>
+    <p>A plataforma não substitui os cuidados de saúde presenciais em situações de urgência ou emergência médica.</p>
+
+    <h2 id="term8">8. Alterações aos Termos</h2>
+    <p>A ConsultasOnline reserva-se o direito de alterar os presentes termos a qualquer momento. As alterações serão comunicadas por email e publicadas nesta página com indicação da data de entrada em vigor.</p>
+
+    <h2 id="term9">9. Lei Aplicável</h2>
+    <p>Os presentes termos são regidos pela lei portuguesa. Para resolução de litígios, é competente o tribunal da comarca de Lisboa, sem prejuízo do recurso a meios alternativos de resolução de conflitos de consumo disponíveis em <a href="https://www.consumidor.gov.pt" target="_blank" style="color:var(--teal)">consumidor.gov.pt</a>.</p>
+  </div>
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     ADMIN PANEL
+════════════════════════════════════════ -->
+<div class="page" id="page-admin">
+<div class="admin-page">
+
+  <!-- LOGIN -->
+  <div id="adminLogin" style="padding-top:66px;min-height:100vh;background:var(--surface)">
+    <div class="admin-login">
+      <h2>Área de Administração</h2>
+      <p>Introduza a password para aceder ao painel de gestão.</p>
+      <div class="admin-login-err" id="adminLoginErr">Password incorreta. Tente novamente.</div>
+      <div class="cfield"><label>Password</label><input type="password" id="adminPwd" placeholder="••••••••" onkeypress="if(event.key==='Enter')checkAdminLogin()"/></div>
+      <button class="admin-save-btn" onclick="checkAdminLogin()">Entrar →</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (hidden until login) -->
+  <div id="adminDashboard" style="display:none">
+    <div class="admin-hero">
+      <div class="admin-hero-inner">
+        <div>
+          <h1>Painel de Administração</h1>
+          <p>Gestão de disponibilidade e slots bloqueados</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="admin-badge">🔐 Admin</div>
+          <button onclick="adminLogout()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:none;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <div class="admin-grid">
+
+        <!-- Calendário Admin -->
+        <div>
+          <div class="admin-cal-card">
+            <h3>Selecionar Dia</h3>
+            <div class="admin-cal-nav">
+              <button class="admin-cal-btn" onclick="adminChangeMonth(-1)">&#8249;</button>
+              <h4 id="adminCalTitle">Março 2024</h4>
+              <button class="admin-cal-btn" onclick="adminChangeMonth(1)">&#8250;</button>
+            </div>
+            <div class="admin-cal-week"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
+            <div class="admin-cal-grid" id="adminCalGrid"></div>
+          </div>
+        </div>
+
+        <!-- Gestor de Slots -->
+        <div>
+          <div class="admin-slots-card">
+            <div class="admin-slots-header">
+              <h3>Gerir Horários</h3>
+              <div class="admin-date-label" id="adminDateLabel">Selecione um dia</div>
+            </div>
+            <div id="adminSlotsWrap" style="display:none">
+              <div class="admin-actions">
+                <button class="admin-btn admin-btn-block" onclick="adminToggleAll(true)">🔒 Bloquear todos</button>
+                <button class="admin-btn admin-btn-unblock" onclick="adminToggleAll(false)">🔓 Desbloquear todos</button>
+                <button class="admin-btn admin-btn-clear" onclick="adminClearDay()">✕ Limpar dia</button>
+              </div>
+              <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Clique num horário para bloquear ou desbloquear. Os slots bloqueados não aparecem disponíveis para os utentes.</p>
+              <div class="admin-slots-grid" id="adminSlotsGrid"></div>
+              <div class="admin-legend">
+                <div class="admin-legend-item"><div class="admin-legend-dot" style="background:var(--border)"></div>Disponível</div>
+                <div class="admin-legend-item"><div class="admin-legend-dot" style="background:var(--red)"></div>Bloqueado</div>
+              </div>
+              <button class="admin-save-btn" onclick="adminSaveSlots()">💾 Guardar Alterações</button>
+              <div class="admin-saved-msg" id="adminSavedMsg">✅ Alterações guardadas com sucesso!</div>
+            </div>
+            <div id="adminSlotsEmpty" style="text-align:center;padding:32px;color:var(--muted);font-size:14px">
+              ← Selecione um dia no calendário para gerir os horários
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Resumo de slots bloqueados -->
+      <div class="admin-summary-card">
+        <h3>Slots Bloqueados — Resumo</h3>
+        <div id="adminSummary"><div class="summary-empty">Nenhum slot bloqueado ainda.</div></div>
+      </div>
+
+      <!-- Atestados -->
+      <div class="admin-summary-card" style="margin-top:24px">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--navy);margin-bottom:6px">Emitir Atestados</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Preencha os dados, gere o PDF e envie por email ao utente.</p>
+
+        <div class="atestado-tabs">
+          <button class="atestado-tab active" onclick="switchAtestado('amamentacao',this)">🤱 Amamentação</button>
+          <button class="atestado-tab" onclick="switchAtestado('doenca',this)">🤒 Doença (Falta Escolar)</button>
+        </div>
+
+        <!-- Amamentação -->
+        <div class="atestado-form active" id="form-amamentacao">
+          <h4>Atestado de Amamentação</h4>
+          <div class="atestado-grid">
+            <div class="atestado-field full"><label>Nome completo da utente *</label><input id="a1-nome" placeholder="Maria João Silva Santos"/></div>
+            <div class="atestado-field"><label>Data de nascimento da utente *</label><input id="a1-nasc" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Nº Cartão de Cidadão *</label><input id="a1-cc" placeholder="12345678 9 ZY0"/></div>
+            <div class="atestado-field full"><label>Nome do filho(a) *</label><input id="a1-filho" placeholder="João Silva Santos"/></div>
+            <div class="atestado-field"><label>Data de nascimento do filho(a) *</label><input id="a1-nasc-filho" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Data da consulta *</label><input id="a1-data" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field full"><label>Email da utente (para envio)</label><input id="a1-email" placeholder="email@exemplo.pt" type="email"/></div>
+          </div>
+          <div class="atestado-actions">
+            <button class="atestado-btn-preview" onclick="gerarAtestado('amamentacao',false)">👁 Pré-visualizar PDF</button>
+            <button class="atestado-btn-send" onclick="gerarAtestado('amamentacao',true)">📧 Gerar e Enviar por Email</button>
+            <span class="atestado-status" id="status-amamentacao"></span>
+          </div>
+          <div class="atestado-preview-box" id="preview-amamentacao">
+            <iframe id="iframe-amamentacao"></iframe>
+          </div>
+        </div>
+
+        <!-- Falta Escolar -->
+        <div class="atestado-form" id="form-doenca">
+          <h4>Atestado de Doença (Falta Escolar)</h4>
+          <div class="atestado-grid">
+            <div class="atestado-field full"><label>Nome completo do(a) utente *</label><input id="a2-nome" placeholder="Pedro António Ferreira Costa"/></div>
+            <div class="atestado-field"><label>Data de nascimento *</label><input id="a2-nasc" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Nº Cartão de Cidadão *</label><input id="a2-cc" placeholder="12345678 9 ZY0"/></div>
+            <div class="atestado-field"><label>Afastamento de (data início) *</label><input id="a2-inicio" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Afastamento até (data fim) *</label><input id="a2-fim" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Data da consulta *</label><input id="a2-data" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field full"><label>Email do(a) utente (para envio)</label><input id="a2-email" placeholder="email@exemplo.pt" type="email"/></div>
+          </div>
+          <div class="atestado-actions">
+            <button class="atestado-btn-preview" onclick="gerarAtestado('doenca',false)">👁 Pré-visualizar PDF</button>
+            <button class="atestado-btn-send" onclick="gerarAtestado('doenca',true)">📧 Gerar e Enviar por Email</button>
+            <span class="atestado-status" id="status-doenca"></span>
+          </div>
+          <div class="atestado-preview-box" id="preview-doenca">
+            <iframe id="iframe-doenca"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registos Clínicos -->
+      <div class="patients-section">
+        <div class="patients-header">
+          <div>
+            <h3>Registos Clínicos dos Utentes</h3>
+            <p id="patientsSubtitle" style="font-size:12.5px;color:rgba(255,255,255,.45);margin-top:4px">—</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input type="date" id="patientDateFilter" onchange="filterByDate(this.value)"
+              style="border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;color:var(--white);outline:none;cursor:pointer"/>
+            <button class="search-btn" onclick="loadPatients(true)" style="background:rgba(255,255,255,.15);font-size:12px;padding:8px 14px;border:1px solid rgba(255,255,255,.2)">👥 Todos</button>
+            <div class="search-box">
+              <input type="text" id="patientSearch" placeholder="Pesquisar por nome ou nº utente…" oninput="searchPatients()"/>
+              <button class="search-btn" onclick="searchPatients()">🔍</button>
+            </div>
+          </div>
+        </div>
+        <div class="patients-grid">
+          <!-- Lista de utentes -->
+          <div class="patients-list" id="patientsList">
+            <div class="patient-empty">A carregar utentes…</div>
+          </div>
+          <!-- Detalhe do utente -->
+          <div id="patientDetail">
+            <div class="no-detail">
+              <div style="font-size:40px">👤</div>
+              <p>Selecione um utente para ver a sua ficha clínica</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SERVICE SELECTOR MODAL
+════════════════════════════════════════ -->
+<div class="overlay" id="serviceModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div>
+        <h2>Marcar Consulta</h2>
+        <p>Escolha o serviço que pretende</p>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- STEP 1: Service Selection -->
+    <div class="service-selector" id="step1">
+      <h3>Selecione o tipo de consulta ou atestado:</h3>
+      <div class="services-grid" id="servicesGrid">
+
+        <div class="svc-card" onclick="selectService(this,'Atestado de Amamentação',35,'Atestado','atestado-amamentacao')">
+          <span class="svc-icon">🤱</span>
+          <div class="badge-atestado">ATESTADO</div>
+          <div class="svc-name">Atestado de Amamentação</div>
+          <p class="svc-desc">Documento médico que certifica o período de amamentação, para fins laborais, de seguro ou de subsídio.</p>
+          <div class="svc-price">35€ <sub>/atestado</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Atestado para Falta Escolar',35,'Atestado','atestado-escola')">
+          <span class="svc-icon">🎓</span>
+          <div class="badge-atestado">ATESTADO</div>
+          <div class="svc-name">Atestado para Falta Escolar</div>
+          <p class="svc-desc">Declaração médica para justificar ausências escolares, com indicação do período de incapacidade e sigilo do diagnóstico.</p>
+          <div class="svc-price">35€ <sub>/atestado</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Atestado para Carta de Condução',35,'Atestado','atestado-conducao')">
+          <span class="svc-icon">🚗</span>
+          <div class="badge-atestado">ATESTADO</div>
+          <div class="svc-name">Atestado para Carta de Condução</div>
+          <p class="svc-desc">Declaração de aptidão médica exigida para obtenção ou renovação da licença de condução em Portugal.</p>
+          <div class="svc-price">35€ <sub>/atestado</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Emissão de Baixa Médica',40,'Consulta','baixa-medica')">
+          <span class="svc-icon">🏥</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Emissão de Baixa Médica</div>
+          <p class="svc-desc">Avaliação clínica e emissão do Certificado de Incapacidade Temporária (CIT) para a Segurança Social, por videoconsulta.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Renovação de Medicamentos',40,'Consulta','renovacao-medicamentos')">
+          <span class="svc-icon">💊</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Renovação de Medicamentos</div>
+          <p class="svc-desc">Avaliação e renovação de receita médica para medicação de uso crónico. Receita eletrónica enviada por email.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de Infeção Urinária',40,'Consulta','consulta-infecao-urinaria')">
+          <span class="svc-icon">💧</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Consulta de Infeção Urinária</div>
+          <p class="svc-desc">Avaliação dos sintomas, diagnóstico diferencial e prescrição do antibiótico adequado segundo as guidelines nacionais.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de Cessação Tabágica',40,'Consulta','consulta-cessacao-tabagica')">
+          <span class="svc-icon">🚭</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Consulta de Cessação Tabágica</div>
+          <p class="svc-desc">Avaliação do grau de dependência, aconselhamento e prescrição de apoio farmacológico (adesivos, vareniclina, bupropiona).</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de Amigdalite',40,'Consulta','consulta-amigdalite')">
+          <span class="svc-icon">🤒</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Consulta de Amigdalite</div>
+          <p class="svc-desc">Avaliação da dor de garganta com critérios clínicos validados para distinguir infeção viral de bacteriana e decidir antibiótico.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+        <div class="svc-card" onclick="selectService(this,'Consulta de DST / IST',40,'Consulta','consulta-dst')">
+          <span class="svc-icon">🔬</span>
+          <div class="badge-consulta">CONSULTA</div>
+          <div class="svc-name">Doenças Sexualmente Transmissíveis</div>
+          <p class="svc-desc">Consulta confidencial com avaliação de risco, pedido de análises de rastreio e orientação terapêutica. Total privacidade.</p>
+          <div class="svc-price">40€ <sub>/consulta</sub></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STEP 2: Booking -->
+    <div class="booking-form" id="step2">
+      <div style="padding:0 28px;padding-top:20px">
+        <button class="step-back" onclick="goBackToServices()">← Escolher outro serviço</button>
+        <div class="selected-service-banner" id="svcBanner">
+          <div class="ssb-left">
+            <div class="ssb-icon" id="svcBannerIcon">💊</div>
+            <div>
+              <div class="ssb-name" id="svcBannerName">Serviço</div>
+              <div class="ssb-type" id="svcBannerType">Consulta Online · 30 min</div>
+            </div>
+          </div>
+          <div class="ssb-price" id="svcBannerPrice">40€</div>
+        </div>
+      </div>
+      <div class="booking-cols" style="padding:0 28px 8px">
+        <!-- Calendar col -->
+        <div>
+          <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;font-family:'Inter',sans-serif">Escolha o dia e hora</h3>
+          <div class="cal-wrap">
+            <div class="cal-nav-row">
+              <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+              <h4 id="calTitle">Março 2024</h4>
+              <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+            </div>
+            <div class="cal-week"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+          <div class="time-section" id="timeSection" style="display:none">
+            <h4>Horários disponíveis</h4>
+            <div class="time-grid" id="timeGrid">
+              <!-- Gerado dinamicamente pelo JS -->
+            </div>
+          </div>
+        </div>
+        <!-- Form col -->
+        <div>
+          <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;font-family:'Inter',sans-serif">Os seus dados</h3>
+          <div class="field"><label>Nome Completo *</label><input type="text" id="bookName" placeholder="João Manuel Costa"/></div>
+          <div class="field"><label>Email *</label><input type="email" id="bookEmail" placeholder="joao@email.pt"/></div>
+          <div class="field"><label>Telemóvel</label><input type="tel" id="bookPhone" placeholder="+351 9XX XXX XXX"/></div>
+          <div class="field"><label>Número de Utente SNS</label><input type="text" id="bookNumUtente" placeholder="000 000 000" maxlength="12"/></div>
+          <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea id="bookObs" placeholder="Descreva brevemente o motivo da consulta..."></textarea></div>
+
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px">
+            <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px">💳 Pagamento seguro via Stripe</p>
+            <p style="font-size:12.5px;color:var(--slate);line-height:1.6;margin-bottom:12px">Após confirmar, será redirecionado para a página segura de pagamento do Stripe onde pode pagar com <strong>MBWay</strong>, <strong>Referência MB</strong> ou <strong>Cartão</strong>.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--slate)">📱 MBWay</div>
+              <div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--slate)">🏧 Multibanco</div>
+              <div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--slate)">💳 Cartão</div>
+            </div>
+          </div>
+
+          <div class="inv-toggle" onclick="toggleInvoice()">
+            <input type="checkbox" id="invCheck"/>
+            <label for="invCheck">🧾 Emitir fatura com dados de faturação</label>
+          </div>
+          <div class="inv-extra" id="invExtra">
+            <div class="field"><label>Nome / Empresa</label><input placeholder="João Costa ou Empresa, Lda."/></div>
+            <div class="field"><label>NIF</label><input placeholder="123 456 789"/></div>
+            <div class="field"><label>Morada (opcional)</label><input placeholder="Rua, nº, Código Postal"/></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer-row">
+        <div>
+          <div class="footer-price" id="footerPrice">40,00€ <span id="footerDesc">Consulta Online · 30 min</span></div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:3px">Fatura enviada automaticamente após pagamento</div>
+        </div>
+        <button class="confirm-btn" onclick="confirmBooking()">Confirmar e Pagar →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-top"><div class="toast-ic">✓</div><strong>Consulta Confirmada!</strong></div>
+  <p>Agendamento realizado com sucesso.<br/>Fatura enviada para o seu email. 🎉</p>
+</div>
+
+<!-- CHAT -->
+<div class="chat-widget">
+  <div class="chat-box" id="chatBox">
+    <div class="chat-hd">
+      <div class="chat-hd-av">🩺</div>
+      <div><h4>Apoio ConsultasOnline</h4><p>● Online · Responde rapidamente</p></div>
+      <button class="chat-x" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="cmsg cmsg-bot">Olá! 👋 Como posso ajudá-lo? Posso esclarecer dúvidas sobre os nossos serviços ou ajudá-lo a marcar uma consulta.</div>
+    </div>
+    <div class="chat-inp-row">
+      <input class="chat-inp" id="chatInp" placeholder="Escreva uma mensagem..." onkeypress="chatEnter(event)"/>
+      <button class="chat-send-btn" onclick="sendChat()">&#10148;</button>
+    </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()">💬</button>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+// ══════════════════════════════════════
+// STRIPE CONFIG — substitua pelas suas chaves
+// ══════════════════════════════════════
+var STRIPE_PK = 'pk_test_XXXXXXXXXXXXXXXXXXXXXXXX';
+var API_URL   = 'https://consultasonline-production.up.railway.app';
+
+// ══════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════
+window.showPage = function(p) {
+  document.querySelectorAll('.page').forEach(function(x){ x.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(x){ x.classList.remove('active'); });
+  var page = document.getElementById('page-' + p);
+  if (page) page.classList.add('active');
+  var tab = document.getElementById('tab-' + p);
+  if (tab) { tab.classList.add('active'); }
+  else {
+    var fallback = document.getElementById(p === 'blog' ? 'tab-blog' : 'tab-home');
+    if (fallback) fallback.classList.add('active');
   }
-});
+  closeAllArticles();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(checkVisible, 200);
+};
 
-app.get('/services', (req, res) => {
-  res.json(Object.entries(SERVICES).map(([id, s]) => ({ id, name: s.name, price: s.price / 100 })));
-});
-
-app.post('/create-checkout-session', async (req, res) => {
-  const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes } = req.body;
-
-  const service = SERVICES[serviceId];
-  if (!service) return res.status(400).json({ error: 'Servico invalido.' });
-
-  const clientUrl = process.env.CLIENT_URL || 'https://consultas-online.pt';
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      payment_method_types: ['card', 'mb_way', 'multibanco'],
-      line_items: [{
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: service.name,
-            description: 'Consulta online em ' + date + ' às ' + time,
-          },
-          unit_amount: service.price,
-        },
-        quantity: 1,
-      }],
-      customer_email: customerEmail,
-      metadata: {
-        serviceId,
-        serviceName: service.name,
-        date,
-        time,
-        customerEmail,
-        customerName,
-        nif:          nif          || '',
-        telefone:     telefone     || '',
-        numeroUtente: numeroUtente || '',
-        observacoes:  observacoes  || '',
-      },
-      success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: clientUrl + '/?cancelado=1',
-      locale: 'pt',
-      billing_address_collection: 'auto',
-      payment_intent_data: {
-        description: service.name + ' - ' + date + ' as ' + time,
-        receipt_email: customerEmail,
-      },
-      custom_text: {
-        submit: { message: 'O seu pagamento é processado de forma segura pelo Stripe.' },
-      },
-    });
-
-    return res.json({ url: session.url, sessionId: session.id });
-
-  } catch (err) {
-    console.error('Stripe Checkout error:', err.message);
-    return res.status(500).json({ error: err.message });
-  }
-});
-
-
-app.get('/payment-status/:id', async (req, res) => {
-  try {
-    const pi = await stripe.paymentIntents.retrieve(req.params.id);
-    res.json({ status: pi.status });
-  } catch (err) {
-    res.status(404).json({ error: 'Nao encontrado.' });
-  }
-});
-
-app.post('/webhook', async (req, res) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    return res.status(400).send('Webhook Error: ' + err.message);
-  }
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    // Read ALL metadata fields safely
-    const meta = session.metadata || {};
-    const serviceId    = meta.serviceId    || '';
-    const serviceName  = meta.serviceName  || '';
-    const date         = meta.date         || '';
-    const time         = meta.time         || '';
-    const customerEmail = meta.customerEmail 
-      || (session.customer_details && session.customer_details.email) 
-      || session.customer_email 
-      || '';
-    const customerName = meta.customerName 
-      || (session.customer_details && session.customer_details.name) 
-      || '';
-    const nif          = meta.nif          || '';
-    const telefone     = meta.telefone     || '';
-    const numeroUtente = meta.numeroUtente || '';
-    const observacoes  = meta.observacoes  || '';
-    const amountEur    = session.amount_total ? (session.amount_total / 100).toFixed(2).replace('.', ',') + ' EUR' : '—';
-    console.log('Checkout completo:', session.id);
-    console.log('  -> Email:', customerEmail);
-    console.log('  -> Nome:', customerName);
-    console.log('  -> Servico:', serviceName);
-    console.log('  -> Data/Hora:', date, time);
-    if (!customerEmail) {
-      console.error('ERRO: customerEmail em falta no webhook!');
-      return res.json({ received: true });
-    }
-    try {
-      // 1. Guardar slot como ocupado
-      if (MONGO_URI && date && time) {
-        try {
-          // Convert date DD/MM/YYYY to YYYY-MM-DD
-          const parts = (date || '').split('/');
-          const dateKey = parts.length === 3 ? parts[2] + '-' + parts[1] + '-' + parts[0] : date;
-          await BookedSlot.findOneAndUpdate(
-            { dateKey, time },
-            { dateKey, time, serviceId, serviceName, customerEmail, stripeSession: session.id },
-            { upsert: true, new: true }
-          );
-          console.log('Slot ocupado:', dateKey, time);
-        } catch(slotErr) {
-          console.warn('Erro ao guardar slot:', slotErr.message);
-        }
-      }
-
-      // 2. Guardar registo clínico do utente
-      await upsertUtente({
-        nomeCompleto: customerName,
-        email: customerEmail,
-        telefone,
-        numeroUtente,
-        nif,
-        observacoes,
-        dataConsulta: date,
-        hora: time,
-        servico: serviceName,
-        stripeSession: session.id,
-        valor: session.amount_total / 100,
-      });
-
-      // 3. Criar link Google Meet
-      const meetLink = await createMeetLink({ customerName, customerEmail, serviceName, date, time });
-
-      // 4. Emitir fatura (só se tiver nome)
-      let invoiceData = null;
-      if (customerName && customerEmail) {
-        invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
-      } else {
-        console.warn('Fatura ignorada: nome ou email em falta', { customerName, customerEmail });
-      }
-
-      // 5. Enviar email (só se tiver email)
-      if (customerEmail) {
-        await sendConfirmationEmail({ to: customerEmail, name: customerName || 'Utente', serviceName, date, time, amountEur, meetLink, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
-      } else {
-        console.warn('Email ignorado: endereco em falta');
-      }
-    } catch(e) { console.error('Erro email/fatura:', e.message); }
-    return res.json({ received: true });
-  }
-
-  if (event.type === 'payment_intent.succeeded') {
-    // Ignorado — usamos checkout.session.completed que tem todos os metadados
-    console.log('Pagamento confirmado:', event.data.object.id, '(tratado via checkout.session.completed)');
-  }
-
-  res.json({ received: true });
-});
-
-// ─────────────────────────────────────────────
-// GOOGLE MEET — Link fixo de videoconsulta
-// ─────────────────────────────────────────────
-function createMeetLink({ customerName, customerEmail, serviceName, date, time }) {
-  console.log('Meet link gerado para:', customerName, date, time);
-  return Promise.resolve(MEET_LINK);
+// ══════════════════════════════════════
+// ARTICLE NAVIGATION
+// ══════════════════════════════════════
+window.openArticle = function(id) {
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  var blog = document.getElementById('page-blog');
+  if (blog) blog.style.display = 'none';
+  var art = document.getElementById('article-' + id);
+  if (art) art.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+window.closeArticle = function() {
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  var blog = document.getElementById('page-blog');
+  if (blog) blog.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+function closeAllArticles() {
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  var blog = document.getElementById('page-blog');
+  if (blog) blog.style.display = '';
 }
 
-
-async function createInvoice({ customerName, customerEmail, nif, serviceName, amount, date }) {
-  const apiKey = process.env.INVOICEXPRESS_API_KEY;
-  const account = process.env.INVOICEXPRESS_ACCOUNT;
-  if (!apiKey || !account) { console.warn('InvoiceXpress nao configurado.'); return null; }
-
-  // Validar campos obrigatórios
-  const safeName = (customerName || '').trim();
-  const safeEmail = (customerEmail || '').trim();
-  if (!safeName || !safeEmail) {
-    console.warn('InvoiceXpress ignorado: nome ou email em falta', { safeName, safeEmail });
-    return null;
-  }
-
-  // Usar um NIF genérico se não fornecido ou se for igual ao NIF da conta
-  // (InvoiceXpress não permite faturar para o próprio NIF da conta)
-  const safeNif = nif && nif.trim() && nif.trim() !== process.env.INVOICEXPRESS_OWN_NIF
-    ? nif.trim()
-    : null;
-
-  console.log('InvoiceXpress a processar:', { safeName, safeEmail, safeNif, serviceName, amount, date });
-
-  try {
-    // 1. Criar ou encontrar cliente
-    let clientId;
-    try {
-      const clientRes = await axios.post(
-        'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey,
-        { client: {
-          name: safeName,
-          email: safeEmail,
-          country: 'Portugal',
-          ...(safeNif ? { fiscal_id: safeNif } : {})
-        }}
-      );
-      clientId = clientRes.data.client.id;
-      console.log('InvoiceXpress cliente criado:', clientId);
-    } catch (clientErr) {
-      const status = clientErr.response && clientErr.response.status;
-      const errData = clientErr.response && clientErr.response.data;
-      console.log('InvoiceXpress cliente erro status:', status, JSON.stringify(errData));
-
-      // Cliente já existe (422) — pesquisar pelo nome usando a API correcta
-      if (status === 422) {
-        try {
-          const searchRes = await axios.get(
-            'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_name=' + encodeURIComponent(safeName)
-          );
-          const clients = searchRes.data && searchRes.data.clients;
-          if (clients && clients.length > 0) {
-            clientId = clients[0].id;
-            console.log('InvoiceXpress cliente existente encontrado:', clientId);
-          } else {
-            console.error('InvoiceXpress: cliente nao encontrado na pesquisa');
-            return null;
-          }
-        } catch (searchErr) {
-          console.error('InvoiceXpress pesquisa erro:', searchErr.response && JSON.stringify(searchErr.response.data) || searchErr.message);
-          return null;
-        }
-      } else {
-        throw clientErr;
-      }
-    }
-
-    // 2. Criar fatura
-    console.log('InvoiceXpress a criar fatura para cliente:', clientId);
-    const invoiceRes = await axios.post(
-      'https://' + account + '.app.invoicexpress.com/invoices.json?api_key=' + apiKey,
-      { invoice: {
-        date,
-        due_date: date,
-        client: { id: String(clientId), name: safeName },
-        items: [{
-          name: serviceName,
-          description: 'Prestacao de servicos de saude online',
-          unit_price: String(amount.toFixed(2)),
-          quantity: '1',
-          unit: 'service',
-          tax: { name: process.env.INVOICEXPRESS_TAX_NAME || 'Isento artigo 9º do CIVA' }
-        }],
-        observations: 'IVA isento ao abrigo do artigo 9 do CIVA'
-      }}
-    );
-
-    if (!invoiceRes.data || !invoiceRes.data.invoice) {
-      console.error('InvoiceXpress: resposta inesperada ao criar fatura:', JSON.stringify(invoiceRes.data));
-      return null;
-    }
-    const invoice = invoiceRes.data.invoice;
-    console.log('InvoiceXpress fatura criada:', invoice.id, invoice.sequence_number);
-
-    // 3. Finalizar fatura
-    console.log('InvoiceXpress a finalizar fatura:', invoice.id);
-    try {
-      const finalizeRes = await axios.put(
-        'https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '/change-state.json?api_key=' + apiKey,
-        { invoice: { state: 'finalized' } }
-      );
-      console.log('InvoiceXpress fatura finalizada:', finalizeRes.data && finalizeRes.data.invoice && finalizeRes.data.invoice.status);
-    } catch (finalErr) {
-      console.error('InvoiceXpress erro ao finalizar:', finalErr.response && JSON.stringify(finalErr.response.data) || finalErr.message);
-    }
-
-    // 4. Obter PDF (aguardar para o PDF ser gerado)
-    console.log('InvoiceXpress a aguardar PDF...');
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    let pdfUrl = null;
-    try {
-      const pdfRes = await axios.get(
-        'https://' + account + '.app.invoicexpress.com/api/pdf/' + invoice.id + '.json?api_key=' + apiKey
-      );
-      pdfUrl = pdfRes.data && pdfRes.data.output && pdfRes.data.output.pdfUrl;
-      console.log('InvoiceXpress PDF:', pdfUrl ? 'gerado com sucesso' : 'pendente');
-    } catch (pdfErr) {
-      console.error('InvoiceXpress erro PDF:', pdfErr.message);
-    }
-
-    // Buscar numero de fatura actualizado (após finalização)
-    let invoiceNumber = invoice.sequence_number;
-    try {
-      const updatedRes = await axios.get(
-        'https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '.json?api_key=' + apiKey
-      );
-      const updated = updatedRes.data && updatedRes.data.invoice;
-      if (updated) {
-        invoiceNumber = updated.sequence_number || updated.id;
-        console.log('InvoiceXpress numero fatura:', invoiceNumber, 'estado:', updated.status);
-      }
-    } catch(e) { console.warn('InvoiceXpress nao conseguiu obter numero final'); }
-
-    return { invoiceNumber, url: pdfUrl };
-
-  } catch (err) {
-    const errDetail = err.response ? JSON.stringify(err.response.data) : err.message;
-    console.error('InvoiceXpress error detalhe:', errDetail);
-    console.error('InvoiceXpress stack:', err.stack ? err.stack.split('\n')[0] : 'n/a');
-    return null;
-  }
-}
-
-async function sendConfirmationEmail({ to, name, serviceName, date, time, amountEur, meetLink, invoiceUrl, invoiceNum }) {
-  const invoiceLine = invoiceUrl
-    ? '<p style="margin:8px 0;font-size:14px">🧾 <strong>Fatura:</strong>' + (invoiceNum && invoiceNum !== 'rascunho' ? ' ' + invoiceNum + ' —' : '') + ' <a href="' + invoiceUrl + '" style="color:#0d7377;font-weight:600">Descarregar PDF</a></p>'
-    : '';
-  const meetLine = meetLink
-    ? '<div style="background:linear-gradient(135deg,#0b1d35,#0d3b4f);border-radius:10px;padding:16px 20px;margin:16px 0">'
-      + '<p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#17c4a8;letter-spacing:.3px">🎥 LINK DA VIDEOCONSULTA</p>'
-      + '<p style="margin:0 0 12px;font-size:12.5px;color:rgba(255,255,255,.6)">Clique no botão abaixo no dia e hora marcados para entrar na consulta:</p>'
-      + '<a href="' + meetLink + '" style="display:inline-block;background:#17c4a8;color:#0b1d35;text-decoration:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:700">Entrar na Videoconsulta →</a>'
-      + '<p style="margin:10px 0 0;font-size:11px;color:rgba(255,255,255,.35)">Ou copie o link: ' + meetLink + '</p>'
-      + '</div>'
-    : '';
-
-  const html = '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
-    + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden">'
-    + '<div style="background:#0b1d35;padding:20px 28px"><span style="font-size:20px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
-    + '<div style="padding:24px 28px">'
-    + '<h2 style="color:#0b1d35;margin:0 0 12px">Consulta Confirmada! ✅</h2>'
-    + '<p style="color:#4a5568;margin:0 0 16px">Ola <strong>' + name + '</strong>, o seu agendamento foi confirmado.</p>'
-    + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:16px">'
-    + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Servico: <strong>' + serviceName + '</strong></p>'
-    + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Data: <strong>' + date + '</strong></p>'
-    + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Hora: <strong>' + time + '</strong></p>'
-    + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Valor pago: <strong>' + amountEur + '</strong></p>'
-    + invoiceLine
-    + '</div>'
-    + meetLine
-    + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:16px">'
-    + '</div>'
-    + '<p style="font-size:12px;color:#8a9bb0">Duvidas? geral@consultas-online.pt</p>'
-    + '</div></div></body></html>';
-
-  await sgMail.send({
-    to,
-    from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-    subject: 'Consulta confirmada - ' + serviceName + ' | ' + date + ' as ' + time,
-    html,
-    text: 'Ola ' + name + ',\n\nConsulta confirmada!\nServico: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nValor: ' + amountEur,
+// ══════════════════════════════════════
+// BLOG FILTER
+// ══════════════════════════════════════
+window.filterBlog = function(cat, el) {
+  document.querySelectorAll('.f-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelectorAll('.bcard').forEach(function(c){
+    c.style.display = (cat === 'todos' || c.dataset.cat === cat) ? '' : 'none';
   });
+};
+
+// ══════════════════════════════════════
+// SERVICE MODAL
+// ══════════════════════════════════════
+var currentService = { name: '', price: 40, type: '', id: '' };
+var currentPayMethod = 'mbway';
+
+window.openServiceSelector = function() {
+  var modal = document.getElementById('serviceModal');
+  if (!modal) { console.error('Modal not found'); return; }
+  modal.classList.add('open');
+  var s1 = document.getElementById('step1');
+  var s2 = document.getElementById('step2');
+  if (s1) s1.style.display = 'block';
+  if (s2) s2.classList.remove('show');
+  document.querySelectorAll('.svc-card').forEach(function(c){ c.classList.remove('selected'); });
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeModal = function() {
+  var modal = document.getElementById('serviceModal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+  if (mbwayPollingTimer) { clearTimeout(mbwayPollingTimer); mbwayPollingTimer = null; }
+};
+
+var modal = document.getElementById('serviceModal');
+if (modal) {
+  modal.addEventListener('click', function(e){ if (e.target === this) window.closeModal(); });
 }
 
-// ─────────────────────────────────────────────
-// ROTA: Formulário de Contacto
-// POST /contact
-// ─────────────────────────────────────────────
-app.post('/contact', async (req, res) => {
-  const { name, email, subject, message } = req.body;
+var svcIcons = {
+  'Atestado de Amamentação':'🤱','Atestado para Falta Escolar':'🎓',
+  'Atestado para Carta de Condução':'🚗','Emissão de Baixa Médica':'🏥',
+  'Renovação de Medicamentos':'💊','Consulta de Infeção Urinária':'💧',
+  'Consulta de Cessação Tabágica':'🚭','Consulta de Amigdalite':'🤒',
+  'Consulta de DST / IST':'🔬'
+};
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'Por favor preencha todos os campos obrigatorios.' });
-  }
+window.selectService = function(el, name, price, type, id) {
+  document.querySelectorAll('.svc-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  currentService = { name: name, price: price, type: type, id: id };
+  setTimeout(function() {
+    var s1 = document.getElementById('step1');
+    var s2 = document.getElementById('step2');
+    if (s1) s1.style.display = 'none';
+    if (s2) s2.classList.add('show');
+    var icon = svcIcons[name] || '🩺';
+    function set(id, val, prop) { var el = document.getElementById(id); if (el) { if (prop === 'html') el.innerHTML = val; else el.textContent = val; } }
+    set('svcBannerIcon', icon);
+    set('svcBannerName', name);
+    set('svcBannerType', type === 'Atestado' ? 'Atestado Digital · Enviado por email' : 'Consulta Online · Videochamada');
+    set('svcBannerPrice', price + '€');
+    set('footerPrice', price + ',00€ <span>' + name + '</span>', 'html');
+    set('mbAmount', price + ',00€');
+    currentPayMethod = 'mbway';
+    selectPay(document.querySelector('.pay-tab'), 'mbway');
+    var ms = document.getElementById('mbwayStatus');
+    var mg = document.getElementById('mbRefGrid');
+    if (ms) ms.classList.remove('show');
+    if (mg) mg.style.display = 'none';
+    renderCalendar();
+  }, 180);
+};
 
+window.goBackToServices = function() {
+  var s1 = document.getElementById('step1');
+  var s2 = document.getElementById('step2');
+  if (s2) s2.classList.remove('show');
+  if (s1) s1.style.display = 'block';
+  selectedDay = null;
+};
+
+// ══════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════
+var currentDate = new Date();
+var selectedDay = null;
+var months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+var ALL_SLOTS = [
+  '09:00','09:30','10:00','10:30','11:00','11:30',
+  '12:00','12:30','13:00','13:30','14:00','14:30',
+  '15:00','15:30','16:00','16:30','17:00','17:30',
+  '18:00','18:30','19:00','19:30','20:00','20:30','21:00'
+];
+
+function getBlockedSlots(dateKey) {
   try {
-    // Email para a equipa ConsultasOnline
-    await sgMail.send({
-      to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
-      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline — Formulario' },
-      replyTo: { email, name },
-      subject: '[Contacto] ' + (subject || 'Nova mensagem') + ' — ' + name,
-      html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
-        + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
-        + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>'
-        + '&nbsp;&nbsp;<span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);font-size:11px;padding:3px 10px;border-radius:12px">Nova Mensagem</span></div>'
-        + '<div style="padding:22px 24px">'
-        + '<table style="width:100%;border-collapse:collapse;font-size:14px">'
-        + '<tr><td style="padding:8px 0;color:#8a9bb0;font-weight:600;width:100px">Nome</td><td style="padding:8px 0;color:#0b1d35">' + name + '</td></tr>'
-        + '<tr><td style="padding:8px 0;color:#8a9bb0;font-weight:600">Email</td><td style="padding:8px 0"><a href="mailto:' + email + '" style="color:#0d7377">' + email + '</a></td></tr>'
-        + '<tr><td style="padding:8px 0;color:#8a9bb0;font-weight:600">Assunto</td><td style="padding:8px 0;color:#0b1d35">' + (subject || '—') + '</td></tr>'
-        + '</table>'
-        + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-top:16px">'
-        + '<p style="margin:0 0 6px;font-size:12px;font-weight:700;color:#8a9bb0;letter-spacing:.5px;text-transform:uppercase">Mensagem</p>'
-        + '<p style="margin:0;font-size:14px;color:#334155;line-height:1.7">' + message.replace(/\n/g, '<br/>') + '</p>'
-        + '</div>'
-        + '<p style="margin-top:16px;font-size:12px;color:#8a9bb0">Respondido diretamente para: ' + email + '</p>'
-        + '</div></div></body></html>',
-      text: 'Nova mensagem de contacto\n\nNome: ' + name + '\nEmail: ' + email + '\nAssunto: ' + (subject || '—') + '\n\nMensagem:\n' + message,
-    });
-
-    // Email de confirmação para o utilizador
-    await sgMail.send({
-      to: email,
-      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-      subject: 'Recebemos a sua mensagem — ConsultasOnline',
-      html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
-        + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
-        + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
-        + '<div style="padding:22px 24px">'
-        + '<h2 style="color:#0b1d35;margin:0 0 12px;font-family:Georgia,serif">Mensagem recebida! ✅</h2>'
-        + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + name + '</strong>,<br/><br/>Recebemos a sua mensagem e responderemos em ate 24 horas uteis para <strong>' + email + '</strong>.</p>'
-        + '<div style="background:#f4f7fb;border-radius:10px;padding:14px;margin:16px 0;font-size:13px;color:#64748b"><strong>Assunto:</strong> ' + (subject || '—') + '</div>'
-        + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Se tiver urgencia, envie email diretamente para <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
-        + '</div></div></body></html>',
-      text: 'Ola ' + name + ',\n\nRecebemos a sua mensagem. Responderemos em ate 24 horas uteis.\n\nConsultasOnline\ngeral@consultas-online.pt',
-    });
-
-    console.log('Formulario de contacto recebido de:', email);
-    res.json({ success: true });
-
-  } catch (err) {
-    console.error('Erro ao enviar email de contacto:', err.message);
-    res.status(500).json({ error: 'Erro ao enviar mensagem. Tente novamente ou contacte-nos diretamente.' });
-  }
-});
-
-// ─────────────────────────────────────────────
-// ROTAS DE REGISTOS CLÍNICOS (protegidas)
-// ─────────────────────────────────────────────
-
-// Middleware de autenticação admin
-function adminAuth(req, res, next) {
-  const key = req.headers['x-admin-key'] || req.query.adminKey;
-  if (!key || key !== process.env.ADMIN_SECRET) {
-    return res.status(401).json({ error: 'Não autorizado.' });
-  }
-  next();
+    var data = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+    return data[dateKey] || [];
+  } catch(e) { return []; }
 }
 
-// Listar todos os utentes
-app.get('/admin/utentes', adminAuth, async (req, res) => {
-  if (!MONGO_URI) return res.json([]);
-  try {
-    const utentes = await Utente.find({}, '-__v').sort({ atualizado: -1 });
-    res.json(utentes);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+function getDateKey() {
+  if (!selectedDay) return null;
+  var y = currentDate.getFullYear();
+  var m = String(currentDate.getMonth() + 1).padStart(2, '0');
+  var d = String(selectedDay).padStart(2, '0');
+  return y + '-' + m + '-' + d;
+}
+
+function renderTimeSlots() {
+  var grid = document.getElementById('timeGrid');
+  if (!grid) return;
+  var key = getDateKey();
+  if (!key) return;
+
+  // Show loading
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:12px;font-size:12px;color:var(--muted)">A verificar disponibilidade…</div>';
+
+  // Fetch booked slots from server
+  fetch(API_URL + '/booked-slots/' + key)
+    .then(function(r){ return r.json(); })
+    .then(function(serverBooked) {
+      var adminBlocked = getBlockedSlots(key);
+      var allUnavailable = serverBooked.concat(adminBlocked);
+      _renderSlotGrid(grid, key, allUnavailable);
+    })
+    .catch(function() {
+      // Fallback to admin-only blocked slots if server unreachable
+      var adminBlocked = getBlockedSlots(key);
+      _renderSlotGrid(grid, key, adminBlocked);
+    });
+}
+
+function _renderSlotGrid(grid, key, unavailableSlots) {
+  var now = new Date();
+  var todayKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  var isToday = (key === todayKey);
+  var html = '';
+  ALL_SLOTS.forEach(function(slot) {
+    var parts = slot.split(':');
+    var hh = parseInt(parts[0]);
+    var mm = parseInt(parts[1]);
+    var cls = 't-slot';
+    var unavailable = unavailableSlots.indexOf(slot) !== -1;
+    if (isToday) {
+      var slotDate = new Date();
+      slotDate.setHours(hh, mm, 0, 0);
+      if (slotDate <= now) { cls += ' taken'; unavailable = true; }
+    }
+    if (unavailable) { cls = 't-slot taken'; }
+    html += '<div class="' + cls + '"' + (unavailable ? '' : ' onclick="selectTime(this)"') + '>' + slot + '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+window.renderCalendar = function() {
+  var grid = document.getElementById('calGrid');
+  if (!grid) return;
+  var y = currentDate.getFullYear();
+  var m = currentDate.getMonth();
+  var titleEl = document.getElementById('calTitle');
+  if (titleEl) titleEl.textContent = months[m] + ' ' + y;
+  var first = new Date(y, m, 1).getDay();
+  var days = new Date(y, m + 1, 0).getDate();
+  var today = new Date();
+  var html = '';
+  for (var i = 0; i < first; i++) html += '<div class="cal-d empty"></div>';
+  for (var d = 1; d <= days; d++) {
+    var isPast = new Date(y, m, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var isTdy = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
+    var isSel = selectedDay === d && m === currentDate.getMonth() && y === currentDate.getFullYear();
+    var cls = 'cal-d' + (isPast ? ' past' : isSel ? ' sel' : isTdy ? ' today' : '');
+    var clk = isPast ? '' : 'onclick="selDay(' + d + ')"';
+    html += '<div class="' + cls + '" ' + clk + '>' + d + '</div>';
   }
-});
+  grid.innerHTML = html;
+};
 
-// Obter utente específico
-app.get('/admin/utentes/:id', adminAuth, async (req, res) => {
-  if (!MONGO_URI) return res.json(null);
-  try {
-    const utente = await Utente.findById(req.params.id);
-    if (!utente) return res.status(404).json({ error: 'Não encontrado.' });
-    res.json(utente);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+window.changeMonth = function(dir) {
+  currentDate.setMonth(currentDate.getMonth() + dir);
+  renderCalendar();
+};
 
-// Atualizar notas clínicas do utente
-app.put('/admin/utentes/:id', adminAuth, async (req, res) => {
-  if (!MONGO_URI) return res.json({ ok: false });
-  try {
-    const { notas, dataNascimento, morada, telefone, numeroUtente } = req.body;
-    const utente = await Utente.findByIdAndUpdate(
-      req.params.id,
-      { $set: { notas, dataNascimento, morada, telefone, numeroUtente, atualizado: new Date() } },
-      { new: true }
-    );
-    res.json(utente);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+window.selDay = function(d) {
+  selectedDay = d;
+  renderCalendar();
+  renderTimeSlots();
+  var ts = document.getElementById('timeSection');
+  if (ts) ts.style.display = 'block';
+};
 
-// Pesquisar utentes
-app.get('/admin/utentes-search', adminAuth, async (req, res) => {
-  if (!MONGO_URI) return res.json([]);
-  try {
-    const q = req.query.q || '';
-    const utentes = await Utente.find({
-      $or: [
-        { nomeCompleto: { $regex: q, $options: 'i' } },
-        { email: { $regex: q, $options: 'i' } },
-        { numeroUtente: { $regex: q, $options: 'i' } },
-      ]
-    }, '-__v').limit(20);
-    res.json(utentes);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+window.selectTime = function(el) {
+  if (el.classList.contains('taken') || el.classList.contains('blocked')) return;
+  document.querySelectorAll('.t-slot').forEach(function(t){ t.classList.remove('sel'); });
+  el.classList.add('sel');
+};
 
+// ══════════════════════════════════════
+// PAYMENT — via Stripe Checkout
+// ══════════════════════════════════════
+var mbwayPollingTimer = null;
 
+window.selectPay = function(el, t) {
+  // kept for compatibility — not used with Checkout
+};
 
+function setConfirmBtn(loading, text) {
+  var btn = document.querySelector('.confirm-btn');
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.textContent = loading ? (text || 'A redirecionar…') : 'Confirmar e Pagar →';
+  btn.style.opacity = loading ? '.7' : '1';
+}
 
-// ─────────────────────────────────────────────
-// ATESTADOS — Gerar PDF com PDFKit e Enviar
-// ─────────────────────────────────────────────
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
-const pathMod = require('path');
-
-// Load signature once at startup
-let sigBuffer = null;
-try {
-  const sigPath = pathMod.join(__dirname, 'assinatura_b64.txt');
-  if (fs.existsSync(sigPath)) {
-    const b64 = fs.readFileSync(sigPath, 'utf8').trim();
-    sigBuffer = Buffer.from(b64, 'base64');
-    console.log('Assinatura carregada:', sigBuffer.length, 'bytes');
+function showMbwayStatus(state, msg) {
+  var s = document.getElementById('mbwayStatus');
+  var sp = document.getElementById('mbwaySpin');
+  var txt = document.getElementById('mbwayMsg');
+  if (!s) return;
+  s.classList.add('show');
+  if (txt) txt.textContent = msg;
+  if (state === 'pending') {
+    if (sp) sp.style.display = 'block';
+    s.style.background = 'rgba(214,158,46,.07)'; s.style.borderColor = 'rgba(214,158,46,.25)';
+    if (txt) txt.style.color = 'var(--amber)';
+  } else if (state === 'success') {
+    if (sp) sp.style.display = 'none';
+    s.style.background = 'rgba(56,161,105,.07)'; s.style.borderColor = 'rgba(56,161,105,.25)';
+    if (txt) txt.style.color = 'var(--green)';
   } else {
-    console.warn('assinatura_b64.txt nao encontrado');
+    if (sp) sp.style.display = 'none';
+    s.style.background = 'rgba(229,62,62,.07)'; s.style.borderColor = 'rgba(229,62,62,.25)';
+    if (txt) txt.style.color = 'var(--red)';
   }
-} catch(e) { console.error('Erro ao carregar assinatura:', e.message); }
-
-function meses(n) {
-  const m = ['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const i = parseInt(n) - 1;
-  return (i >= 0 && i < 12) ? m[i] : n;
 }
 
-function dataPT(d) {
-  try {
-    const p = d.split('/');
-    return parseInt(p[0]) + ' de ' + meses(p[1]) + ' de ' + p[2];
-  } catch(e) { return d; }
+function pollMbwayStatus(paymentIntentId, attempt) {
+  attempt = attempt || 0;
+  // Stop polling if modal is closed or max attempts reached
+  var modal = document.getElementById('serviceModal');
+  if (!modal || !modal.classList.contains('open')) { setConfirmBtn(false); return; }
+  if (attempt > 24) { showMbwayStatus('error', '⏱ Tempo expirado. Tente novamente.'); setConfirmBtn(false); return; }
+  if (mbwayPollingTimer) clearTimeout(mbwayPollingTimer);
+  mbwayPollingTimer = setTimeout(function() {
+    fetch(API_URL + '/payment-status/' + paymentIntentId)
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        if (data.status === 'succeeded') {
+          mbwayPollingTimer = null;
+          showMbwayStatus('success', '✅ Pagamento confirmado! Email enviado.');
+          setConfirmBtn(false);
+          setTimeout(function(){ closeModal(); showToast(); }, 1500);
+        } else if (data.status === 'requires_action' || data.status === 'processing' || data.status === 'requires_payment_method') {
+          pollMbwayStatus(paymentIntentId, attempt + 1);
+        } else {
+          mbwayPollingTimer = null;
+          showMbwayStatus('error', '❌ Pagamento não confirmado. Tente novamente.');
+          setConfirmBtn(false);
+        }
+      })
+      .catch(function(){
+        if (attempt < 5) pollMbwayStatus(paymentIntentId, attempt + 1);
+        else { showMbwayStatus('error', '❌ Erro de ligação.'); setConfirmBtn(false); }
+      });
+  }, 5000);
 }
 
-function gerarPDF(tipo, dados) {
-  return new Promise((resolve, reject) => {
-    try {
-      const doc = new PDFDocument({ size: 'A4', margin: 70 });
-      const chunks = [];
-      doc.on('data', c => chunks.push(c));
-      doc.on('end', () => resolve(Buffer.concat(chunks)));
-      doc.on('error', reject);
+window.confirmBooking = function() {
+  var name       = document.getElementById('bookName')     ? document.getElementById('bookName').value.trim()     : '';
+  var email      = document.getElementById('bookEmail')    ? document.getElementById('bookEmail').value.trim()    : '';
+  var phone      = document.getElementById('bookPhone')    ? document.getElementById('bookPhone').value.trim()    : '';
+  var numUtente  = document.getElementById('bookNumUtente')? document.getElementById('bookNumUtente').value.trim(): '';
+  var obs        = document.getElementById('bookObs')      ? document.getElementById('bookObs').value.trim()      : '';
+  var selSlot    = document.querySelector('.t-slot.sel');
 
-      const w = doc.page.width;
-      const margin = 70;
-      const textW = w - margin * 2;
+  if (!name || !email) { alert('Por favor preencha o nome e email.'); return; }
+  if (!selectedDay) { alert('Por favor selecione um dia no calendário.'); return; }
+  if (!selSlot) { alert('Por favor selecione um horário disponível.'); return; }
 
-      // Top border
-      doc.moveTo(margin, 60).lineTo(w - margin, 60).lineWidth(3).strokeColor('#0b1d35').stroke();
+  var y = currentDate.getFullYear(), m = currentDate.getMonth();
+  var dateStr = String(selectedDay).padStart(2,'0') + '/' + String(m+1).padStart(2,'0') + '/' + y;
+  var timeStr = selSlot.textContent.trim();
+  var invChecked = document.getElementById('invCheck');
+  var nifEl = document.querySelector('#invExtra input[placeholder="123 456 789"]');
+  var nif = (invChecked && invChecked.checked && nifEl) ? nifEl.value : '';
 
-      // Title
-      doc.fontSize(18).font('Helvetica-Bold').fillColor('#0b1d35')
-         .text('ATESTADO MEDICO', margin, 75, { align: 'center', width: textW });
+  setConfirmBtn(true, 'A redirecionar para pagamento…');
 
-      // Teal line under title
-      doc.moveTo(margin + 80, 102).lineTo(w - margin - 80, 102).lineWidth(1).strokeColor('#0d7377').stroke();
+  fetch(API_URL + '/create-checkout-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      serviceId:     currentService.id,
+      customerEmail: email,
+      customerName:  name,
+      date:          dateStr,
+      time:          timeStr,
+      nif:           nif          || undefined,
+      telefone:      phone        || undefined,
+      numeroUtente:  numUtente    || undefined,
+      observacoes:   obs          || undefined,
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (data.error) throw new Error(data.error);
+    window.location.href = data.url;
+  })
+  .catch(function(err){
+    alert('Erro: ' + err.message);
+    setConfirmBtn(false);
+  });
+};
 
-      // Body
-      doc.fontSize(11).font('Helvetica').fillColor('#000000');
-      let y = 118;
+function showToast() {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 6000);
+}
 
-      const writeJ = (text, opts = {}) => {
-        doc.font(opts.bold ? 'Helvetica-Bold' : 'Helvetica')
-           .fontSize(11).fillColor('#000000')
-           .text(text, margin, y, { width: textW, align: 'justify', lineGap: 2 });
-        y = doc.y + (opts.after || 4);
-      };
+window.toggleInvoice = function() {
+  var cb = document.getElementById('invCheck');
+  if (!cb) return;
+  cb.checked = !cb.checked;
+  var extra = document.getElementById('invExtra');
+  if (extra) extra.classList.toggle('show', cb.checked);
+};
 
-      const writeName = (name) => {
-        doc.font('Helvetica-Bold').fontSize(11).fillColor('#0b1d35')
-           .text(name || '', margin, y, { width: textW });
-        y = doc.y + 2;
-        doc.moveTo(margin, y).lineTo(w - margin, y).lineWidth(0.5).strokeColor('#94a3b8').stroke();
-        y += 8;
-      };
+// ══════════════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════════════
+var ADMIN_PASSWORD = 'consultas2024admin';
+var adminDate = new Date();
+var adminSelectedDay = null;
+var adminSelectedKey = null;
+var adminMonths = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-      writeJ('Eu, Dra. Patricia Mendonca Ferraz, medica inscrita na Ordem dos Medicos com a cedula profissional n. 57713, atesto que:', { after: 10 });
+var ADMIN_ALL_SLOTS = [
+  '09:00','09:30','10:00','10:30','11:00','11:30',
+  '12:00','12:30','13:00','13:30','14:00','14:30',
+  '15:00','15:30','16:00','16:30','17:00','17:30',
+  '18:00','18:30','19:00','19:30','20:00','20:30','21:00'
+];
 
-      if (tipo === 'amamentacao') {
-        writeJ('A utente', { after: 4 });
-        writeName(dados.nome_utente);
-        writeJ('nascida em ' + (dados.data_nasc_utente||'') + ', portadora do Cartao de Cidadao n. ' + (dados.cc_utente||'') + ', encontra-se atualmente em periodo de amamentacao do(a) seu(sua) filho(a)', { after: 4 });
-        writeName(dados.nome_filho);
-        writeJ('nascido(a) em ' + (dados.data_nasc_filho||'') + '.', { after: 16 });
-        writeJ('Este atestado e passado a pedido da interessada para os devidos efeitos legais.', { after: 4 });
+window.showAdminLogin = function() {
+  document.querySelectorAll('.page').forEach(function(x){ x.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(x){ x.classList.remove('active'); });
+  var page = document.getElementById('page-admin');
+  if (page) page.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+    var login = document.getElementById('adminLogin');
+    var dash = document.getElementById('adminDashboard');
+    if (login) login.style.display = 'none';
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); initPatientsDate(); loadPatients(); }
+  }
+};
+
+window.checkAdminLogin = function() {
+  var pwd = document.getElementById('adminPwd');
+  if (!pwd) return;
+  if (pwd.value === ADMIN_PASSWORD) {
+    sessionStorage.setItem('adminLoggedIn', 'true');
+    var login = document.getElementById('adminLogin');
+    var dash = document.getElementById('adminDashboard');
+    if (login) login.style.display = 'none';
+    if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); initPatientsDate(); loadPatients(); }
+  } else {
+    var err = document.getElementById('adminLoginErr');
+    if (err) err.classList.add('show');
+    pwd.value = '';
+    pwd.focus();
+  }
+};
+
+window.adminLogout = function() {
+  sessionStorage.removeItem('adminLoggedIn');
+  var login = document.getElementById('adminLogin');
+  var dash = document.getElementById('adminDashboard');
+  if (login) login.style.display = 'block';
+  if (dash) dash.style.display = 'none';
+  var pwd = document.getElementById('adminPwd');
+  if (pwd) pwd.value = '';
+  window.showPage('home');
+};
+
+function renderAdminCalendar() {
+  var grid = document.getElementById('adminCalGrid');
+  if (!grid) return;
+  var y = adminDate.getFullYear(), m = adminDate.getMonth();
+  var title = document.getElementById('adminCalTitle');
+  if (title) title.textContent = adminMonths[m] + ' ' + y;
+  var first = new Date(y, m, 1).getDay();
+  var days = new Date(y, m + 1, 0).getDate();
+  var today = new Date();
+  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  var html = '';
+  for (var i = 0; i < first; i++) html += '<div class="admin-day empty"></div>';
+  for (var d = 1; d <= days; d++) {
+    var key = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    var isPast = new Date(y,m,d) < new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    var isToday = d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    var isSel = adminSelectedKey === key;
+    var hasBlocked = blocked[key] && blocked[key].length > 0;
+    var cls = 'admin-day' + (isPast?' past':isSel?' selected':isToday?' today':'') + (hasBlocked?' has-blocked':'');
+    var clk = isPast ? '' : 'onclick="adminSelectDay(' + d + ')"';
+    html += '<div class="' + cls + '" ' + clk + '>' + d + '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+window.adminChangeMonth = function(dir) {
+  adminDate.setMonth(adminDate.getMonth() + dir);
+  renderAdminCalendar();
+};
+
+window.adminSelectDay = function(d) {
+  adminSelectedDay = d;
+  var y = adminDate.getFullYear(), m = adminDate.getMonth();
+  adminSelectedKey = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+  renderAdminCalendar();
+  var wrap = document.getElementById('adminSlotsWrap');
+  var empty = document.getElementById('adminSlotsEmpty');
+  var saved = document.getElementById('adminSavedMsg');
+  if (wrap) wrap.style.display = 'block';
+  if (empty) empty.style.display = 'none';
+  if (saved) saved.classList.remove('show');
+  var dateObj = new Date(y, m, d);
+  var dayNames = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  var label = document.getElementById('adminDateLabel');
+  if (label) label.textContent = dayNames[dateObj.getDay()] + ', ' + String(d).padStart(2,'0') + '/' + String(m+1).padStart(2,'0') + '/' + y;
+  renderAdminSlots();
+};
+
+function renderAdminSlots() {
+  var grid = document.getElementById('adminSlotsGrid');
+  if (!grid) return;
+  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  var dayBlocked = blocked[adminSelectedKey] || [];
+  var html = '';
+  ADMIN_ALL_SLOTS.forEach(function(slot) {
+    var isBlocked = dayBlocked.indexOf(slot) !== -1;
+    var cls = 'admin-slot' + (isBlocked ? ' blocked' : '');
+    html += '<div class="' + cls + '" onclick="adminToggleSlot(this,\'' + slot + '\')">' + slot + '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+window.adminToggleSlot = function(el) {
+  el.classList.toggle('blocked');
+  var saved = document.getElementById('adminSavedMsg');
+  if (saved) saved.classList.remove('show');
+};
+
+window.adminToggleAll = function(block) {
+  document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
+    if (block) el.classList.add('blocked');
+    else el.classList.remove('blocked');
+  });
+};
+
+window.adminClearDay = function() {
+  document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
+    el.classList.remove('blocked');
+  });
+};
+
+window.adminSaveSlots = function() {
+  if (!adminSelectedKey) return;
+  var blockedSlots = [];
+  document.querySelectorAll('#adminSlotsGrid .admin-slot.blocked').forEach(function(el){
+    blockedSlots.push(el.textContent.trim());
+  });
+  var allBlocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  if (blockedSlots.length > 0) allBlocked[adminSelectedKey] = blockedSlots;
+  else delete allBlocked[adminSelectedKey];
+  localStorage.setItem('blocked_slots', JSON.stringify(allBlocked));
+  var saved = document.getElementById('adminSavedMsg');
+  if (saved) saved.classList.add('show');
+  renderAdminCalendar();
+  renderAdminSummary();
+  setTimeout(function(){ if (saved) saved.classList.remove('show'); }, 3000);
+};
+
+function renderAdminSummary() {
+  var container = document.getElementById('adminSummary');
+  if (!container) return;
+  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  var keys = Object.keys(blocked).filter(function(k){ return blocked[k] && blocked[k].length > 0; }).sort();
+  if (keys.length === 0) { container.innerHTML = '<div class="summary-empty">Nenhum slot bloqueado ainda.</div>'; return; }
+  var html = '';
+  keys.forEach(function(key) {
+    var slots = blocked[key];
+    var parts = key.split('-');
+    var label = parts[2] + '/' + parts[1] + '/' + parts[0];
+    html += '<div class="summary-day"><div class="summary-day-title">📅 ' + label + ' — ' + slots.length + ' slot(s)</div><div class="summary-chips">';
+    slots.forEach(function(slot){
+      html += '<div class="summary-chip">' + slot + ' <span class="summary-chip-x" onclick="adminUnblockSlot(\'' + key + '\',\'' + slot + '\')">✕</span></div>';
+    });
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+window.adminUnblockSlot = function(dateKey, slot) {
+  var allBlocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
+  if (allBlocked[dateKey]) {
+    allBlocked[dateKey] = allBlocked[dateKey].filter(function(s){ return s !== slot; });
+    if (allBlocked[dateKey].length === 0) delete allBlocked[dateKey];
+    localStorage.setItem('blocked_slots', JSON.stringify(allBlocked));
+    renderAdminSummary();
+    renderAdminCalendar();
+    if (adminSelectedKey === dateKey) renderAdminSlots();
+  }
+};
+
+// ══════════════════════════════════════
+// REGISTOS CLÍNICOS — Admin
+// ══════════════════════════════════════
+var ADMIN_SECRET = ADMIN_PASSWORD;
+window._getAdminHeaders = function(){ return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET }; };
+var allPatientsCache = [];
+
+window.adminHeaders = function() {
+  return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET };
+};
+
+function getTodayISO() {
+  // Use local date components to avoid UTC offset shifting the day
+  var d = new Date();
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, '0');
+  var day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
+function isoToPT(iso) {
+  // Pure string manipulation — avoids timezone offset issues
+  var p = (iso || '').split('-');
+  if (p.length !== 3) return iso;
+  return p[2] + '/' + p[1] + '/' + p[0];
+}
+
+window.initPatientsDate = function() {
+  var inp = document.getElementById('patientDateFilter');
+  if (inp) inp.value = getTodayISO();
+}
+
+window.filterByDate = function(isoDate) {
+  if (!isoDate) return;
+  // Fix: parse date parts directly to avoid any browser timezone issues
+  var parts = isoDate.split('-');
+  var ptDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+  var subtitle = document.getElementById('patientsSubtitle');
+  var list = document.getElementById('patientsList');
+  var dayLabel = ptDate.slice(0,5);
+  console.log('filterByDate called with:', isoDate, '-> ptDate:', ptDate);
+
+  // If cache is empty, load first then filter
+  if (!allPatientsCache.length) {
+    list.innerHTML = '<div class="patient-empty">A carregar…</div>';
+    fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        allPatientsCache = data || [];
+        window.filterByDate(isoDate); // retry now cache is filled
+      })
+      .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar.</div>'; });
+    return;
+  }
+
+  var filtered = allPatientsCache.filter(function(u) {
+    return u.consultas && u.consultas.some(function(c) {
+      return c.dataConsulta === ptDate;
+    });
+  });
+
+  if (!filtered.length) {
+    if (subtitle) subtitle.textContent = 'Sem consultas em ' + dayLabel;
+    list.innerHTML = '<div class="patient-empty">Nenhuma consulta para ' + dayLabel + '.</div>';
+    return;
+  }
+  if (subtitle) subtitle.textContent = filtered.length + ' consulta(s) — ' + dayLabel;
+  renderPatientList(filtered);
+}
+
+window.loadPatients = function(showAll) {
+  var list = document.getElementById('patientsList');
+  if (!list) return;
+  list.innerHTML = '<div class="patient-empty">A carregar…</div>';
+  var subtitle = document.getElementById('patientsSubtitle');
+
+  // Clear date filter if showing all
+  if (showAll) {
+    var inp = document.getElementById('patientDateFilter');
+    if (inp) inp.value = '';
+    if (subtitle) subtitle.textContent = 'Todos os utentes';
+  }
+
+  fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      allPatientsCache = data || [];
+      if (!allPatientsCache.length) {
+        list.innerHTML = '<div class="patient-empty">Nenhum utente registado ainda.</div>';
+        if (subtitle) subtitle.textContent = '0 utentes';
+        return;
+      }
+      if (showAll) {
+        // Show ALL patients
+        if (subtitle) subtitle.textContent = allPatientsCache.length + ' utente(s) no total';
+        renderPatientList(allPatientsCache);
       } else {
-        writeJ('O(a) utente', { after: 4 });
-        writeName(dados.nome_utente);
-        writeJ('nascido(a) em ' + (dados.data_nasc_utente||'') + ', portador(a) do Cartao de Cidadao n. ' + (dados.cc_utente||'') + ', necessita de afastamento das atividades escolares no periodo compreendido entre ' + (dados.data_inicio||'') + ' e ' + (dados.data_fim||'') + ' por motivos de doenca.', { after: 16 });
-        writeJ('Este atestado e passado a pedido do(a) interessado(a) para os devidos efeitos legais.', { after: 4 });
+        // Filter by selected date (today by default)
+        var inp2 = document.getElementById('patientDateFilter');
+        if (inp2 && inp2.value) {
+          filterByDate(inp2.value);
+        } else {
+          if (subtitle) subtitle.textContent = allPatientsCache.length + ' utente(s) no total';
+          renderPatientList(allPatientsCache);
+        }
       }
+    })
+    .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar. Verifique a ligação.</div>'; });
+}
 
-      // Date
-      y += 16;
-      const dataFmt = dados.data_consulta ? dataPT(dados.data_consulta) : '';
-      doc.font('Helvetica').fontSize(11).fillColor('#000000').text('Viseu, ' + dataFmt, margin, y);
-      y = doc.y + 28;
+window.searchPatients = function() {
+  var q = document.getElementById('patientSearch');
+  if (!q) return;
+  var term = q.value.trim().toLowerCase();
+  var subtitle = document.getElementById('patientsSubtitle');
+  var list = document.getElementById('patientsList');
+  if (!term) {
+    var inp = document.getElementById('patientDateFilter');
+    if (inp && inp.value) { filterByDate(inp.value); }
+    else { renderPatientList(allPatientsCache); }
+    return;
+  }
+  var results = allPatientsCache.filter(function(u) {
+    return (u.nomeCompleto||'').toLowerCase().indexOf(term) !== -1
+        || (u.email||'').toLowerCase().indexOf(term) !== -1
+        || (u.numeroUtente||'').toLowerCase().indexOf(term) !== -1
+        || (u.telefone||'').toLowerCase().indexOf(term) !== -1;
+  });
+  if (subtitle) subtitle.textContent = results.length + ' resultado(s) para "' + q.value.trim() + '"';
+  if (!results.length) { list.innerHTML = '<div class="patient-empty">Sem resultados.</div>'; return; }
+  renderPatientList(results);
+}
 
-      // Signature line
-      doc.moveTo(margin, y).lineTo(margin + 255, y).lineWidth(0.8).strokeColor('#0b1d35').stroke();
-
-      // Signature image above line
-      if (sigBuffer) {
-        try {
-          const sigH = 45;
-          const sigW = sigH * (2033/530);
-          doc.image(sigBuffer, margin, y - sigH, { width: sigW, height: sigH });
-        } catch(imgErr) { console.warn('Sig image error:', imgErr.message); }
-      }
-
-      y += 12;
-      doc.font('Helvetica').fontSize(9).fillColor('#64748b')
-         .text('Dra. Patricia Mendonca Ferraz  |  Cedula n. 57713', margin, y);
-
-      // Footer
-      const pageH = doc.page.height;
-      doc.moveTo(margin, pageH - 52).lineTo(w - margin, pageH - 52).lineWidth(1.5).strokeColor('#0b1d35').stroke();
-      doc.fontSize(8).fillColor('#94a3b8')
-         .text('ConsultasOnline  |  www.consultas-online.pt  |  geral@consultas-online.pt', margin, pageH - 38, { align: 'center', width: textW });
-
-      doc.end();
-    } catch(err) { reject(err); }
+window.renderPatientList = function(utentes) {
+  var list = document.getElementById('patientsList');
+  if (!list) return;
+  var html = '';
+  utentes.forEach(function(u) {
+    var initials = (u.nomeCompleto||'?').split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
+    var lastConsulta = u.consultas&&u.consultas.length ? u.consultas[u.consultas.length-1].servico : 'Sem consultas';
+    html += '<div class="patient-item" data-id="' + u._id + '">'
+      + '<div class="patient-avatar">' + initials + '</div>'
+      + '<div class="patient-info"><h4>' + (u.nomeCompleto||'—') + '</h4>'
+      + '<p>' + (u.email||'—') + '</p>'
+      + '<p style="font-size:10.5px;color:rgba(255,255,255,.3)">' + lastConsulta + '</p></div>'
+      + '</div>';
+  });
+  list.innerHTML = html;
+  list.querySelectorAll('.patient-item').forEach(function(el) {
+    el.addEventListener('click', function() { loadPatientDetail(this.dataset.id); });
   });
 }
 
-app.post('/admin/gerar-atestado', adminAuth, async (req, res) => {
-  const { tipo, dados, enviarEmail } = req.body;
-  if (!tipo || !dados) return res.status(400).json({ error: 'Tipo e dados obrigatorios.' });
+window.loadPatientDetail = function(id) {
+  document.querySelectorAll('.patient-item').forEach(function(el){
+    el.classList.toggle('active', el.dataset.id === id);
+  });
+  var detail = document.getElementById('patientDetail');
+  detail.innerHTML = '<div class="no-detail"><div style="font-size:32px">⏳</div><p>A carregar ficha…</p></div>';
+  fetch(API_URL + '/admin/utentes/' + id, { headers: adminHeaders() })
+    .then(function(r){ return r.json(); })
+    .then(function(u) { renderPatientDetail(u); })
+    .catch(function(){ detail.innerHTML = '<div class="no-detail"><p>Erro ao carregar ficha.</p></div>'; });
+}
 
-  try {
-    const pdfBuffer = await gerarPDF(tipo, dados);
-    const pdfB64 = pdfBuffer.toString('base64');
+window.renderPatientDetail = function(u) {
+  var detail = document.getElementById('patientDetail');
+  if (!u || !u._id) { detail.innerHTML = '<div class="no-detail"><p>Dados nao encontrados.</p></div>'; return; }
+  var initials = (u.nomeCompleto||'?').split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
+  var numConsultas = u.consultas ? u.consultas.length : 0;
 
-    if (enviarEmail && dados.email) {
-      const nomeDoc = tipo === 'amamentacao' ? 'Atestado de Amamentacao' : 'Atestado de Doenca';
-      await sgMail.send({
-        to: dados.email,
-        from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-        subject: nomeDoc + ' — ConsultasOnline',
-        html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
-          + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
-          + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
-          + '<div style="padding:22px 24px">'
-          + '<h2 style="color:#0b1d35;margin:0 0 12px">Documento em anexo</h2>'
-          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + (dados.nome_utente||'') + '</strong>,</p>'
-          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Segue em anexo o seu ' + nomeDoc.toLowerCase() + ' emitido pela Dra. Patricia Mendonca Ferraz.</p>'
-          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">O documento tem validade legal e pode ser utilizado para os devidos efeitos.</p>'
-          + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Duvidas? <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
-          + '</div></div></body></html>',
-        text: 'Ola ' + (dados.nome_utente||'') + ',\n\nSegue em anexo o seu ' + nomeDoc + '.\n\nConsultasOnline',
-        attachments: [{
-          content: pdfB64,
-          filename: nomeDoc.replace(/ /g,'_') + '.pdf',
-          type: 'application/pdf',
-          disposition: 'attachment',
-        }],
+  // Build per-consultation HTML with individual clinical notes
+  var consultasHtml = '';
+  if (numConsultas > 0) {
+    u.consultas.slice().reverse().forEach(function(c, idx) {
+      var realIdx = numConsultas - 1 - idx;
+      var dt = c.dataConsulta ? c.dataConsulta + ' as ' + (c.hora||'') : '---';
+      consultasHtml += '<div style="border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+        + '<span style="font-size:13.5px;font-weight:600;color:var(--navy)">🩺 ' + (c.servico||'---') + '</span>'
+        + '<span style="font-size:12px;color:var(--muted)">' + dt + '</span>'
+        + '</div>'
+        + (c.observacoes ? '<div style="font-size:12.5px;color:var(--slate);background:var(--surface);border-radius:7px;padding:8px 12px;margin-bottom:10px">📝 <strong>Motivo:</strong> ' + c.observacoes + '</div>' : '')
+        + (c.valor ? '<div style="font-size:12px;font-weight:600;color:var(--teal);margin-bottom:10px">💶 ' + c.valor.toFixed(2).replace('.',',') + ' EUR</div>' : '')
+        + '<div style="border-top:1px solid var(--border);padding-top:12px">'
+        + '<label style="font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Registo Clinico</label>'
+        + '<textarea id="cNotes-' + realIdx + '" '
+        + 'style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;color:var(--navy);background:var(--surface);outline:none;resize:vertical;min-height:80px;box-sizing:border-box;transition:.2s">'
+        + (c.notaClinica||'') + '</textarea>'
+        + '<div style="margin-top:8px;display:flex;align-items:center;gap:10px">'
+        + '<button data-uid="' + u._id + '" data-idx="' + realIdx + '" class="save-consult-btn" '
+        + 'style="background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:7px;padding:8px 18px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">'
+        + '💾 Guardar Registo</button>'
+        + '<span id="cSaved-' + realIdx + '" style="display:none;font-size:12px;color:var(--green);font-weight:600">Guardado!</span>'
+        + '</div></div></div>';
+    });
+  } else {
+    consultasHtml = '<p style="font-size:13px;color:var(--muted)">Nenhuma consulta registada.</p>';
+  }
+
+  detail.innerHTML = '<div class="patient-detail">'
+    + '<div class="patient-detail-header">'
+    + '<div class="patient-detail-avatar">' + initials + '</div>'
+    + '<div><h3>' + (u.nomeCompleto||'---') + '</h3>'
+    + '<p>' + (u.email||'---') + ' · ' + numConsultas + ' consulta(s)</p></div>'
+    + '</div>'
+    + '<div class="patient-detail-body">'
+    + '<div class="detail-section">'
+    + '<div class="detail-section-title" style="cursor:pointer;display:flex;justify-content:space-between" onclick="window.toggleDados()">'
+    + 'Dados Pessoais <span id="pDadosA">▼</span></div>'
+    + '<div id="pDados"><div class="detail-grid" style="margin-top:10px">'
+    + '<div class="detail-field"><label>Telemovel</label><input id="pTelefone" value="' + (u.telefone||'') + '" placeholder="+351 9XX XXX XXX"/></div>'
+    + '<div class="detail-field"><label>N Utente SNS</label><input id="pNumUtente" value="' + (u.numeroUtente||'') + '" placeholder="000 000 000"/></div>'
+    + '<div class="detail-field"><label>Data de Nascimento</label><input id="pDtNasc" value="' + (u.dataNascimento||'') + '" placeholder="DD/MM/AAAA"/></div>'
+    + '<div class="detail-field"><label>NIF</label><input id="pNif" value="' + (u.nif||'') + '" placeholder="123 456 789"/></div>'
+    + '<div class="detail-field full"><label>Morada</label><input id="pMorada" value="' + (u.morada||'') + '" placeholder="Rua, n, Codigo Postal"/></div>'
+    + '</div>'
+    + '<button class="detail-save-btn" id="detailSaveBtn" data-id="' + u._id + '" style="margin-top:12px">Guardar Dados Pessoais</button>'
+    + '<span class="detail-saved" id="patientSaved" style="margin-left:10px">Guardado!</span>'
+    + '</div></div>'
+    + '<div class="detail-section">'
+    + '<div class="detail-section-title">Consultas (' + numConsultas + ')</div>'
+    + consultasHtml
+    + '</div>'
+    + '</div></div>';
+
+  setTimeout(function() {
+    var btn = document.getElementById('detailSaveBtn');
+    if (btn) btn.addEventListener('click', function() { window.savePatientDetail(this.dataset.id); });
+    detail.querySelectorAll('.save-consult-btn').forEach(function(b) {
+      b.addEventListener('click', function() {
+        window.saveConsultNote(this.dataset.uid, parseInt(this.dataset.idx));
       });
-      console.log('Atestado enviado para:', dados.email);
+    });
+  }, 50);
+};
+
+window.saveConsultNote = function(utenteId, consultIdx) {
+  var textarea = document.getElementById('cNotes-' + consultIdx);
+  if (!textarea) return;
+  fetch(API_URL + '/admin/utentes/' + utenteId + '/consulta/' + consultIdx, {
+    method: 'PUT',
+    headers: (typeof adminHeaders === 'function' ? adminHeaders() : window._getAdminHeaders()),
+    body: JSON.stringify({ notaClinica: textarea.value })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function() {
+    var s = document.getElementById('cSaved-' + consultIdx);
+    if (s) { s.style.display = 'inline'; setTimeout(function(){ s.style.display = 'none'; }, 3000); }
+  })
+  .catch(function(){ alert('Erro ao guardar registo clinico.'); });
+};
+
+window.toggleDados = function() {
+  var s = document.getElementById('pDados');
+  var a = document.getElementById('pDadosA');
+  if (!s) return;
+  var hidden = s.style.display === 'none';
+  s.style.display = hidden ? '' : 'none';
+  if (a) a.textContent = hidden ? 'V' : '>';
+};
+
+window.savePatientDetail = function(id) {
+  var body = {
+    telefone:       (document.getElementById('pTelefone')||{}).value||'',
+    numeroUtente:   (document.getElementById('pNumUtente')||{}).value||'',
+    dataNascimento: (document.getElementById('pDtNasc')||{}).value||'',
+    morada:         (document.getElementById('pMorada')||{}).value||'',
+    notas:          (document.getElementById('pNotas') ? document.getElementById('pNotas').value : ''),
+  };
+  fetch(API_URL + '/admin/utentes/' + id, { method: 'PUT', headers: adminHeaders(), body: JSON.stringify(body) })
+    .then(function(r){ return r.json(); })
+    .then(function() {
+      var s = document.getElementById('patientSaved');
+      if (s) { s.classList.add('show'); setTimeout(function(){ s.classList.remove('show'); }, 3000); }
+    })
+    .catch(function(){ alert('Erro ao guardar.'); });
+};
+
+
+// ══════════════════════════════════════
+// ATESTADOS
+// ══════════════════════════════════════
+
+window.switchAtestado = function(tipo, btn) {
+  document.querySelectorAll('.atestado-tab').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.atestado-form').forEach(function(f){ f.classList.remove('active'); });
+  btn.classList.add('active');
+  var form = document.getElementById('form-' + tipo);
+  if (form) form.classList.add('active');
+};
+
+window.gerarAtestado = function(tipo, enviarEmail) {
+  var dados = {};
+  var statusEl = document.getElementById('status-' + tipo);
+  var previewBox = document.getElementById('preview-' + tipo);
+  var tipoServidor = tipo === 'doenca' ? 'falta_escolar' : tipo;
+
+  if (tipo === 'amamentacao') {
+    dados = {
+      nome_utente:      (document.getElementById('a1-nome')||{}).value || '',
+      data_nasc_utente: (document.getElementById('a1-nasc')||{}).value || '',
+      cc_utente:        (document.getElementById('a1-cc')||{}).value || '',
+      nome_filho:       (document.getElementById('a1-filho')||{}).value || '',
+      data_nasc_filho:  (document.getElementById('a1-nasc-filho')||{}).value || '',
+      data_consulta:    (document.getElementById('a1-data')||{}).value || '',
+      email:            (document.getElementById('a1-email')||{}).value || '',
+    };
+  } else {
+    dados = {
+      nome_utente:      (document.getElementById('a2-nome')||{}).value || '',
+      data_nasc_utente: (document.getElementById('a2-nasc')||{}).value || '',
+      cc_utente:        (document.getElementById('a2-cc')||{}).value || '',
+      data_inicio:      (document.getElementById('a2-inicio')||{}).value || '',
+      data_fim:         (document.getElementById('a2-fim')||{}).value || '',
+      data_consulta:    (document.getElementById('a2-data')||{}).value || '',
+      email:            (document.getElementById('a2-email')||{}).value || '',
+    };
+  }
+
+  if (!dados.nome_utente || !dados.data_consulta) {
+    if (statusEl) { statusEl.textContent = 'Preencha o nome e a data da consulta.'; statusEl.className = 'atestado-status err'; }
+    return;
+  }
+  if (enviarEmail && !dados.email) {
+    if (statusEl) { statusEl.textContent = 'Insira o email do utente para enviar.'; statusEl.className = 'atestado-status err'; }
+    return;
+  }
+
+  if (statusEl) { statusEl.textContent = 'A gerar PDF...'; statusEl.className = 'atestado-status ok'; }
+
+  fetch(API_URL + '/admin/gerar-atestado', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
+    body: JSON.stringify({ tipo: tipoServidor, dados: dados, enviarEmail: enviarEmail })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (data.error) {
+      if (statusEl) { statusEl.textContent = 'Erro: ' + data.error; statusEl.className = 'atestado-status err'; }
+      return;
     }
+    if (previewBox) {
+      previewBox.style.display = 'block';
+      var iframe = document.getElementById('iframe-' + tipo);
+      if (iframe) iframe.src = 'data:application/pdf;base64,' + data.pdf;
+    }
+    var msg = enviarEmail && data.sent ? 'PDF enviado por email!' : 'PDF gerado! Veja a pre-visualizacao abaixo.';
+    if (statusEl) { statusEl.textContent = msg; statusEl.className = 'atestado-status ok'; }
+  })
+  .catch(function(err) {
+    if (statusEl) { statusEl.textContent = 'Erro: ' + err.message; statusEl.className = 'atestado-status err'; }
+  });
+};
 
-    res.json({ pdf: pdfB64, sent: !!(enviarEmail && dados.email) });
-  } catch(err) {
-    console.error('Erro ao gerar atestado:', err.message);
-    res.status(500).json({ error: err.message });
-  }
-});
+// FAQ
+// ══════════════════════════════════════
+window.toggleFaq = function(el) {
+  var isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(f){ f.classList.remove('open'); });
+  if (!isOpen) el.classList.add('open');
+};
 
-
-// Guardar nota clínica de uma consulta específica
-app.put('/admin/utentes/:id/consulta/:idx', adminAuth, async (req, res) => {
-  if (!MONGO_URI) return res.json({ ok: false });
+// ══════════════════════════════════════
+// CONTACT FORM
+// ══════════════════════════════════════
+window.submitContact = async function() {
+  var name    = document.getElementById('cName') ? document.getElementById('cName').value.trim() : '';
+  var email   = document.getElementById('cEmail') ? document.getElementById('cEmail').value.trim() : '';
+  var subject = document.getElementById('cSubject') ? document.getElementById('cSubject').value : '';
+  var message = document.getElementById('cMessage') ? document.getElementById('cMessage').value.trim() : '';
+  if (!name || !email || !message) { alert('Por favor preencha o nome, email e mensagem.'); return; }
+  var btn = document.querySelector('.csubmit');
+  if (btn) { btn.textContent = 'A enviar…'; btn.disabled = true; }
   try {
-    const { notaClinica } = req.body;
-    const idx = parseInt(req.params.idx);
-    const utente = await Utente.findById(req.params.id);
-    if (!utente) return res.status(404).json({ error: 'Utente nao encontrado.' });
-    if (utente.consultas[idx] === undefined) return res.status(404).json({ error: 'Consulta nao encontrada.' });
-    utente.consultas[idx].notaClinica = notaClinica;
-    utente.markModified('consultas');
-    await utente.save();
-    res.json({ ok: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    var res = await fetch(API_URL + '/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, subject: subject, message: message })
+    });
+    var data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Erro ao enviar.');
+    var suc = document.getElementById('contactSuccess');
+    if (suc) suc.classList.add('show');
+    if (document.getElementById('cName')) document.getElementById('cName').value = '';
+    if (document.getElementById('cEmail')) document.getElementById('cEmail').value = '';
+    if (document.getElementById('cMessage')) document.getElementById('cMessage').value = '';
+    if (document.getElementById('cSubject')) document.getElementById('cSubject').value = '';
+    if (btn) btn.textContent = 'Mensagem Enviada ✓';
+  } catch(err) {
+    alert('Erro: ' + err.message);
+    if (btn) { btn.textContent = 'Enviar Mensagem →'; btn.disabled = false; }
   }
-});
+};
 
-app.listen(PORT, () => {
-  console.log('ConsultasOnline - Server Running - porta ' + PORT);
-});
+// ══════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════
+window.toggleChat = function() {
+  var box = document.getElementById('chatBox');
+  if (box) box.classList.toggle('open');
+};
+window.chatEnter = function(e) { if (e.key === 'Enter') window.sendChat(); };
+var chatReplies = [
+  'Claro! Pode marcar diretamente clicando em "Marcar Consulta" no menu superior.',
+  'Os atestados custam 35€ e as consultas 40€. Pagamento por MBWay, Referência MB ou cartão.',
+  'Após o pagamento, a fatura é enviada automaticamente para o seu email em menos de 30 segundos.',
+  'Temos disponibilidade hoje. Clique em "Marcar Consulta" para ver os horários disponíveis.',
+  'Os documentos são emitidos digitalmente e enviados por email com validade legal em Portugal.',
+  'Para dúvidas adicionais, contacte-nos em geral@consultas-online.pt'
+];
+var chatIdx = 0;
+window.sendChat = function() {
+  var inp = document.getElementById('chatInp');
+  var box = document.getElementById('chatMsgs');
+  if (!inp || !box) return;
+  var msg = inp.value.trim();
+  if (!msg) return;
+  box.innerHTML += '<div class="cmsg cmsg-user">' + msg + '</div>';
+  inp.value = '';
+  box.scrollTop = box.scrollHeight;
+  setTimeout(function(){
+    box.innerHTML += '<div class="cmsg cmsg-bot">' + chatReplies[chatIdx % chatReplies.length] + '</div>';
+    chatIdx++;
+    box.scrollTop = box.scrollHeight;
+  }, 750);
+};
+
+// ══════════════════════════════════════
+// SCROLL ANIMATIONS
+// ══════════════════════════════════════
+function checkVisible() {
+  document.querySelectorAll('.fade-up').forEach(function(el) {
+    var page = el.closest('.page');
+    if (page && !page.classList.contains('active')) return;
+    var rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 60) el.classList.add('visible');
+  });
+}
+window.addEventListener('scroll', checkVisible, { passive: true });
+setTimeout(checkVisible, 100);
+setTimeout(checkVisible, 400);
+setTimeout(function() {
+  document.querySelectorAll('.page.active .fade-up').forEach(function(el){ el.classList.add('visible'); });
+}, 700);
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
+
+})(); // end IIFE
+</script>
+
+</body>
+</html>
