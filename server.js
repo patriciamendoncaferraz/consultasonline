@@ -359,23 +359,95 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
   const account = process.env.INVOICEXPRESS_ACCOUNT;
   if (!apiKey || !account) { console.warn('InvoiceXpress nao configurado.'); return null; }
 
-  try {
-    const clientRes = await axios.post(
-      'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey,
-      { client: { name: customerName, email: customerEmail, country: 'Portugal', ...(nif ? { fiscal_id: nif } : {}) } }
-    );
-    const clientId = clientRes.data.client.id;
+  // Validar campos obrigatórios
+  const safeName = (customerName || '').trim();
+  const safeEmail = (customerEmail || '').trim();
+  if (!safeName || !safeEmail) {
+    console.warn('InvoiceXpress ignorado: nome ou email em falta', { safeName, safeEmail });
+    return null;
+  }
 
+  // Usar um NIF genérico se não fornecido ou se for igual ao NIF da conta
+  // (InvoiceXpress não permite faturar para o próprio NIF da conta)
+  const safeNif = nif && nif.trim() && nif.trim() !== process.env.INVOICEXPRESS_OWN_NIF
+    ? nif.trim()
+    : null;
+
+  try {
+    // 1. Criar ou encontrar cliente
+    let clientId;
+    try {
+      const clientRes = await axios.post(
+        'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey,
+        { client: {
+          name: safeName,
+          email: safeEmail,
+          country: 'Portugal',
+          ...(safeNif ? { fiscal_id: safeNif } : {})
+        }}
+      );
+      clientId = clientRes.data.client.id;
+      console.log('InvoiceXpress cliente criado:', clientId);
+    } catch (clientErr) {
+      // Se o cliente já existe, pesquisar pelo email
+      if (clientErr.response && clientErr.response.status === 422) {
+        try {
+          const searchRes = await axios.get(
+            'https://' + account + '.app.invoicexpress.com/clients/find-by-email.json?api_key=' + apiKey + '&email=' + encodeURIComponent(safeEmail)
+          );
+          clientId = searchRes.data.client.id;
+          console.log('InvoiceXpress cliente existente:', clientId);
+        } catch (searchErr) {
+          // Cliente não encontrado por email, tentar por nome
+          const searchByName = await axios.get(
+            'https://' + account + '.app.invoicexpress.com/clients/find-by-name.json?api_key=' + apiKey + '&name=' + encodeURIComponent(safeName)
+          );
+          clientId = searchByName.data.client.id;
+          console.log('InvoiceXpress cliente por nome:', clientId);
+        }
+      } else {
+        throw clientErr;
+      }
+    }
+
+    // 2. Criar fatura
     const invoiceRes = await axios.post(
       'https://' + account + '.app.invoicexpress.com/invoices.json?api_key=' + apiKey,
-      { invoice: { date, due_date: date, client: { id: clientId }, items: [{ name: serviceName, description: 'Prestacao de servicos de saude online', unit_price: amount.toFixed(2), quantity: '1', tax: { name: 'IVA Isento' } }], observations: 'IVA isento nos termos do artigo 9. do CIVA' } }
+      { invoice: {
+        date,
+        due_date: date,
+        client: { id: clientId },
+        items: [{
+          name: serviceName,
+          description: 'Prestacao de servicos de saude online',
+          unit_price: amount.toFixed(2),
+          quantity: '1',
+          tax: { name: 'IVA Isento' }
+        }],
+        observations: 'IVA isento nos termos do artigo 9. do CIVA'
+      }}
     );
 
     const invoice = invoiceRes.data.invoice;
-    await axios.put('https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '/change-state.json?api_key=' + apiKey, { invoice: { state: 'finalized' } });
-    const pdfRes = await axios.get('https://' + account + '.app.invoicexpress.com/api/pdf/' + invoice.id + '.json?api_key=' + apiKey);
+    console.log('InvoiceXpress fatura criada:', invoice.id);
 
-    return { invoiceNumber: invoice.sequence_number, url: pdfRes.data && pdfRes.data.output && pdfRes.data.output.pdfUrl };
+    // 3. Finalizar fatura
+    await axios.put(
+      'https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '/change-state.json?api_key=' + apiKey,
+      { invoice: { state: 'finalized' } }
+    );
+
+    // 4. Obter PDF (aguardar um momento para o PDF ser gerado)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    const pdfRes = await axios.get(
+      'https://' + account + '.app.invoicexpress.com/api/pdf/' + invoice.id + '.json?api_key=' + apiKey
+    );
+
+    const pdfUrl = pdfRes.data && pdfRes.data.output && pdfRes.data.output.pdfUrl;
+    console.log('InvoiceXpress PDF:', pdfUrl ? 'gerado' : 'pendente');
+
+    return { invoiceNumber: invoice.sequence_number, url: pdfUrl };
+
   } catch (err) {
     console.error('InvoiceXpress error:', err.response && err.response.data || err.message);
     return null;
