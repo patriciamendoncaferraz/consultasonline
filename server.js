@@ -380,7 +380,7 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
         }}
       );
       clientId = clientRes.data.client.id;
-      console.log('InvoiceXpress cliente criado:', clientId);
+      console.log('InvoiceXpress cliente criado/encontrado:', clientId);
     } catch (clientErr) {
       // Se o cliente já existe, pesquisar pelo email
       if (clientErr.response && clientErr.response.status === 422) {
@@ -415,29 +415,36 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
           description: 'Prestacao de servicos de saude online',
           unit_price: amount.toFixed(2),
           quantity: '1',
-          tax: { name: 'IVA Isento' }
+          unit: 'unidade',
+          tax: { name: process.env.INVOICEXPRESS_TAX_NAME || 'IVA Isento' }
         }],
-        observations: 'IVA isento nos termos do artigo 9. do CIVA'
+        observations: 'IVA isento ao abrigo do artigo 9 do CIVA'
       }}
     );
 
+    if (!invoiceRes.data || !invoiceRes.data.invoice) {
+      console.error('InvoiceXpress: resposta inesperada ao criar fatura:', JSON.stringify(invoiceRes.data));
+      return null;
+    }
     const invoice = invoiceRes.data.invoice;
-    console.log('InvoiceXpress fatura criada:', invoice.id);
+    console.log('InvoiceXpress fatura criada:', invoice.id, invoice.sequence_number);
 
     // 3. Finalizar fatura
+    console.log('InvoiceXpress a finalizar fatura:', invoice.id);
     await axios.put(
       'https://' + account + '.app.invoicexpress.com/invoices/' + invoice.id + '/change-state.json?api_key=' + apiKey,
       { invoice: { state: 'finalized' } }
     );
 
     // 4. Obter PDF (aguardar um momento para o PDF ser gerado)
+    console.log('InvoiceXpress a aguardar PDF...');
     await new Promise(resolve => setTimeout(resolve, 2000));
     const pdfRes = await axios.get(
       'https://' + account + '.app.invoicexpress.com/api/pdf/' + invoice.id + '.json?api_key=' + apiKey
     );
 
     const pdfUrl = pdfRes.data && pdfRes.data.output && pdfRes.data.output.pdfUrl;
-    console.log('InvoiceXpress PDF:', pdfUrl ? 'gerado' : 'pendente');
+    console.log('InvoiceXpress PDF:', pdfUrl ? pdfUrl : 'pendente - ' + JSON.stringify(pdfRes.data));
 
     return { invoiceNumber: invoice.sequence_number, url: pdfUrl };
 
