@@ -472,7 +472,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .admin-hero h1{font-size:32px;font-weight:700;color:var(--white)}
 .admin-hero p{font-size:14px;color:rgba(255,255,255,.5);margin-top:4px}
 .admin-badge{background:rgba(214,158,46,.15);border:1px solid rgba(214,158,46,.3);color:var(--amber);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.4px}
-.admin-body{max-width:1000px;margin:0 auto;padding:32px 28px}
+.admin-body{max-width:1000px;margin:0 auto;padding:32px 28px;background:var(--navy);min-height:60vh}
 .admin-grid{display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start}
 /* Admin calendar */
 .admin-cal-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
@@ -538,8 +538,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 /* ══════════════════════════════
    REGISTOS CLÍNICOS
 ══════════════════════════════ */
-.patients-section{margin-top:28px}
-.patients-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px}
+.patients-section{margin-top:28px;background:var(--navy)}
+.patients-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;background:var(--navy)}
 .patients-header h3{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--white)}
 .search-box{display:flex;gap:8px;flex:1;max-width:360px}
 .search-box input{flex:1;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);border-radius:8px;padding:9px 14px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--white);outline:none}
@@ -1794,7 +1794,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <input type="date" id="patientDateFilter" onchange="filterByDate(this.value)"
               style="border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;color:var(--white);outline:none;cursor:pointer"/>
-            <button class="search-btn" onclick="loadPatients()" style="background:rgba(255,255,255,.1);font-size:12px;padding:8px 14px">👥 Todos</button>
+            <button class="search-btn" onclick="loadPatients(true)" style="background:rgba(255,255,255,.15);font-size:12px;padding:8px 14px;border:1px solid rgba(255,255,255,.2)">👥 Todos</button>
             <div class="search-box">
               <input type="text" id="patientSearch" placeholder="Pesquisar por nome ou nº utente…" oninput="searchPatients()"/>
               <button class="search-btn" onclick="searchPatients()">🔍</button>
@@ -2620,10 +2620,27 @@ function filterByDate(isoDate) {
   var ptDate = isoToPT(isoDate);
   var subtitle = document.getElementById('patientsSubtitle');
   var list = document.getElementById('patientsList');
-  var filtered = allPatientsCache.filter(function(u) {
-    return u.consultas && u.consultas.some(function(c) { return c.dataConsulta === ptDate; });
-  });
   var dayLabel = ptDate.slice(0,5);
+
+  // If cache is empty, load first then filter
+  if (!allPatientsCache.length) {
+    list.innerHTML = '<div class="patient-empty">A carregar…</div>';
+    fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        allPatientsCache = data || [];
+        filterByDate(isoDate); // retry now cache is filled
+      })
+      .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar.</div>'; });
+    return;
+  }
+
+  var filtered = allPatientsCache.filter(function(u) {
+    return u.consultas && u.consultas.some(function(c) {
+      return c.dataConsulta === ptDate;
+    });
+  });
+
   if (!filtered.length) {
     if (subtitle) subtitle.textContent = 'Sem consultas em ' + dayLabel;
     list.innerHTML = '<div class="patient-empty">Nenhuma consulta para ' + dayLabel + '.</div>';
@@ -2633,11 +2650,19 @@ function filterByDate(isoDate) {
   renderPatientList(filtered);
 }
 
-function loadPatients() {
+function loadPatients(showAll) {
   var list = document.getElementById('patientsList');
   if (!list) return;
   list.innerHTML = '<div class="patient-empty">A carregar…</div>';
   var subtitle = document.getElementById('patientsSubtitle');
+
+  // Clear date filter if showing all
+  if (showAll) {
+    var inp = document.getElementById('patientDateFilter');
+    if (inp) inp.value = '';
+    if (subtitle) subtitle.textContent = 'Todos os utentes';
+  }
+
   fetch(API_URL + '/admin/utentes', { headers: adminHeaders() })
     .then(function(r){ return r.json(); })
     .then(function(data) {
@@ -2647,15 +2672,22 @@ function loadPatients() {
         if (subtitle) subtitle.textContent = '0 utentes';
         return;
       }
-      var inp = document.getElementById('patientDateFilter');
-      if (inp && inp.value) {
-        filterByDate(inp.value);
-      } else {
+      if (showAll) {
+        // Show ALL patients
         if (subtitle) subtitle.textContent = allPatientsCache.length + ' utente(s) no total';
         renderPatientList(allPatientsCache);
+      } else {
+        // Filter by selected date (today by default)
+        var inp2 = document.getElementById('patientDateFilter');
+        if (inp2 && inp2.value) {
+          filterByDate(inp2.value);
+        } else {
+          if (subtitle) subtitle.textContent = allPatientsCache.length + ' utente(s) no total';
+          renderPatientList(allPatientsCache);
+        }
       }
     })
-    .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar.</div>'; });
+    .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar. Verifique a ligação.</div>'; });
 }
 
 function searchPatients() {
