@@ -410,6 +410,7 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
     }
 
     // 2. Criar fatura
+    console.log('InvoiceXpress a criar fatura para cliente:', clientId);
     const invoiceRes = await axios.post(
       'https://' + account + '.app.invoicexpress.com/invoices.json?api_key=' + apiKey,
       { invoice: {
@@ -422,7 +423,7 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
           unit_price: amount.toFixed(2),
           quantity: '1',
           unit: 'unidade',
-          tax: { name: process.env.INVOICEXPRESS_TAX_NAME || 'IVA Isento' }
+          tax: { name: process.env.INVOICEXPRESS_TAX_NAME || 'Isento artigo 9º do CIVA' }
         }],
         observations: 'IVA isento ao abrigo do artigo 9 do CIVA'
       }}
