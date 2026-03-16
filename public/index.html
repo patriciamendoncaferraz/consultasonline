@@ -2616,12 +2616,12 @@ function isoToPT(iso) {
   return p[2] + '/' + p[1] + '/' + p[0];
 }
 
-function initPatientsDate() {
+window.initPatientsDate = function() {
   var inp = document.getElementById('patientDateFilter');
   if (inp) inp.value = getTodayISO();
 }
 
-function filterByDate(isoDate) {
+window.filterByDate = function(isoDate) {
   if (!isoDate) return;
   // Fix: parse date parts directly to avoid any browser timezone issues
   var parts = isoDate.split('-');
@@ -2638,7 +2638,7 @@ function filterByDate(isoDate) {
       .then(function(r){ return r.json(); })
       .then(function(data) {
         allPatientsCache = data || [];
-        filterByDate(isoDate); // retry now cache is filled
+        window.filterByDate(isoDate); // retry now cache is filled
       })
       .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar.</div>'; });
     return;
@@ -2659,7 +2659,7 @@ function filterByDate(isoDate) {
   renderPatientList(filtered);
 }
 
-function loadPatients(showAll) {
+window.loadPatients = function(showAll) {
   var list = document.getElementById('patientsList');
   if (!list) return;
   list.innerHTML = '<div class="patient-empty">A carregar…</div>';
@@ -2699,7 +2699,7 @@ function loadPatients(showAll) {
     .catch(function(){ list.innerHTML = '<div class="patient-empty">Erro ao carregar. Verifique a ligação.</div>'; });
 }
 
-function searchPatients() {
+window.searchPatients = function() {
   var q = document.getElementById('patientSearch');
   if (!q) return;
   var term = q.value.trim().toLowerCase();
@@ -2722,7 +2722,7 @@ function searchPatients() {
   renderPatientList(results);
 }
 
-function renderPatientList(utentes) {
+window.renderPatientList = function(utentes) {
   var list = document.getElementById('patientsList');
   if (!list) return;
   var html = '';
@@ -2742,7 +2742,7 @@ function renderPatientList(utentes) {
   });
 }
 
-function loadPatientDetail(id) {
+window.loadPatientDetail = function(id) {
   document.querySelectorAll('.patient-item').forEach(function(el){
     el.classList.toggle('active', el.dataset.id === id);
   });
@@ -2754,7 +2754,7 @@ function loadPatientDetail(id) {
     .catch(function(){ detail.innerHTML = '<div class="no-detail"><p>Erro ao carregar ficha.</p></div>'; });
 }
 
-function renderPatientDetail(u) {
+window.renderPatientDetail = function(u) {
   var detail = document.getElementById('patientDetail');
   if (!u || !u._id) { detail.innerHTML = '<div class="no-detail"><p>Dados não encontrados.</p></div>'; return; }
   var initials = (u.nomeCompleto||'?').split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
