@@ -388,10 +388,7 @@ async function createMeetLink({ customerName, customerEmail, serviceName, date, 
       conferenceDataVersion: 1,
       requestBody: {
         summary: serviceName + ' — ' + customerName,
-        description: 'Consulta online agendada via ConsultasOnline
-
-Utente: ' + customerName + '
-Email: ' + customerEmail,
+        description: 'Consulta online agendada via ConsultasOnline. Utente: ' + customerName + ' Email: ' + customerEmail,
         start: {
           dateTime: startTime.toISOString(),
           timeZone: 'Europe/Lisbon',
