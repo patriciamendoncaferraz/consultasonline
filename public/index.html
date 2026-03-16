@@ -1817,8 +1817,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Preencha os dados, gere o PDF e envie por email ao utente.</p>
 
         <div class="atestado-tabs">
-          <button class="atestado-tab active" onclick="switchAtestado('amamentacao',this)">🤱 Atestado de Amamentação</button>
-          <button class="atestado-tab" onclick="switchAtestado('falta_escolar',this)">🎓 Atestado de Falta Escolar</button>
+          <button class="atestado-tab active" onclick="switchAtestado('amamentacao',this)">🤱 Amamentação</button>
+          <button class="atestado-tab" onclick="switchAtestado('doenca',this)">🤒 Doença (Falta Escolar)</button>
         </div>
 
         <!-- Amamentação -->
@@ -1844,8 +1844,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         </div>
 
         <!-- Falta Escolar -->
-        <div class="atestado-form" id="form-falta_escolar">
-          <h4>Atestado de Falta Escolar</h4>
+        <div class="atestado-form" id="form-doenca">
+          <h4>Atestado de Doença (Falta Escolar)</h4>
           <div class="atestado-grid">
             <div class="atestado-field full"><label>Nome completo do(a) utente *</label><input id="a2-nome" placeholder="Pedro António Ferreira Costa"/></div>
             <div class="atestado-field"><label>Data de nascimento *</label><input id="a2-nasc" placeholder="DD/MM/AAAA"/></div>
@@ -1856,12 +1856,12 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
             <div class="atestado-field full"><label>Email do(a) utente (para envio)</label><input id="a2-email" placeholder="email@exemplo.pt" type="email"/></div>
           </div>
           <div class="atestado-actions">
-            <button class="atestado-btn-preview" onclick="gerarAtestado('falta_escolar',false)">👁 Pré-visualizar PDF</button>
-            <button class="atestado-btn-send" onclick="gerarAtestado('falta_escolar',true)">📧 Gerar e Enviar por Email</button>
-            <span class="atestado-status" id="status-falta_escolar"></span>
+            <button class="atestado-btn-preview" onclick="gerarAtestado('doenca',false)">👁 Pré-visualizar PDF</button>
+            <button class="atestado-btn-send" onclick="gerarAtestado('doenca',true)">📧 Gerar e Enviar por Email</button>
+            <span class="atestado-status" id="status-doenca"></span>
           </div>
-          <div class="atestado-preview-box" id="preview-falta_escolar">
-            <iframe id="iframe-falta_escolar"></iframe>
+          <div class="atestado-preview-box" id="preview-doenca">
+            <iframe id="iframe-doenca"></iframe>
           </div>
         </div>
       </div>
@@ -2676,11 +2676,12 @@ window.adminUnblockSlot = function(dateKey, slot) {
 // REGISTOS CLÍNICOS — Admin
 // ══════════════════════════════════════
 var ADMIN_SECRET = ADMIN_PASSWORD;
+window._getAdminHeaders = function(){ return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET }; };
 var allPatientsCache = [];
 
-function adminHeaders() {
+window.adminHeaders = function() {
   return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET };
-}
+};
 
 function getTodayISO() {
   // Use local date components to avoid UTC offset shifting the day
@@ -2913,7 +2914,7 @@ window.saveConsultNote = function(utenteId, consultIdx) {
   if (!textarea) return;
   fetch(API_URL + '/admin/utentes/' + utenteId + '/consulta/' + consultIdx, {
     method: 'PUT',
-    headers: adminHeaders(),
+    headers: (typeof adminHeaders === 'function' ? adminHeaders() : window._getAdminHeaders()),
     body: JSON.stringify({ notaClinica: textarea.value })
   })
   .then(function(r){ return r.json(); })
