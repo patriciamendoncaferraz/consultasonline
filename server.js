@@ -6,6 +6,16 @@ const sgMail   = require('@sendgrid/mail');
 const axios    = require('axios');
 const path     = require('path');
 const mongoose = require('mongoose');
+const { google } = require('googleapis');
+
+// Google Calendar OAuth2 client
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  'urn:ietf:wg:oauth:2.0:oob'
+);
+oauth2Client.setCredentials({ refresh_token: process.env.GOOGLE_REFRESH_TOKEN });
+const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -319,7 +329,10 @@ app.post('/webhook', async (req, res) => {
         valor: session.amount_total / 100,
       });
 
-      // 3. Emitir fatura (só se tiver nome)
+      // 3. Criar link Google Meet
+      const meetLink = await createMeetLink({ customerName, customerEmail, serviceName, date, time });
+
+      // 4. Emitir fatura (só se tiver nome)
       let invoiceData = null;
       if (customerName && customerEmail) {
         invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
@@ -327,11 +340,11 @@ app.post('/webhook', async (req, res) => {
         console.warn('Fatura ignorada: nome ou email em falta', { customerName, customerEmail });
       }
 
-      // 4. Enviar email (só se tiver email)
+      // 5. Enviar email (só se tiver email)
       if (customerEmail) {
-        await sendConfirmationEmail({ to: customerEmail, name: customerName || 'Utente', serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
+        await sendConfirmationEmail({ to: customerEmail, name: customerName || 'Utente', serviceName, date, time, amountEur, meetLink, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
       } else {
-        console.warn('Email ignorado: endereço em falta');
+        console.warn('Email ignorado: endereco em falta');
       }
     } catch(e) { console.error('Erro email/fatura:', e.message); }
     return res.json({ received: true });
@@ -344,6 +357,80 @@ app.post('/webhook', async (req, res) => {
 
   res.json({ received: true });
 });
+
+// ─────────────────────────────────────────────
+// GOOGLE CALENDAR — Criar evento com Meet
+// ─────────────────────────────────────────────
+async function createMeetLink({ customerName, customerEmail, serviceName, date, time }) {
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_REFRESH_TOKEN) {
+    console.warn('Google Calendar nao configurado.');
+    return null;
+  }
+  try {
+    // Parse date DD/MM/YYYY and time HH:MM
+    const dateParts = date.split('/');
+    const timeParts = time.split(':');
+    if (dateParts.length !== 3 || timeParts.length !== 2) {
+      console.warn('Data ou hora invalida para Google Calendar:', date, time);
+      return null;
+    }
+    const year  = parseInt(dateParts[2]);
+    const month = parseInt(dateParts[1]) - 1;
+    const day   = parseInt(dateParts[0]);
+    const hour  = parseInt(timeParts[0]);
+    const min   = parseInt(timeParts[1]);
+
+    const startTime = new Date(year, month, day, hour, min, 0);
+    const endTime   = new Date(year, month, day, hour + 1, min, 0); // 1 hora de duração
+
+    const event = await calendar.events.insert({
+      calendarId: 'primary',
+      conferenceDataVersion: 1,
+      requestBody: {
+        summary: serviceName + ' — ' + customerName,
+        description: 'Consulta online agendada via ConsultasOnline
+
+Utente: ' + customerName + '
+Email: ' + customerEmail,
+        start: {
+          dateTime: startTime.toISOString(),
+          timeZone: 'Europe/Lisbon',
+        },
+        end: {
+          dateTime: endTime.toISOString(),
+          timeZone: 'Europe/Lisbon',
+        },
+        attendees: [
+          { email: customerEmail },
+        ],
+        conferenceData: {
+          createRequest: {
+            requestId: 'consulta-' + Date.now(),
+            conferenceSolutionKey: { type: 'hangoutsMeet' },
+          },
+        },
+        reminders: {
+          useDefault: false,
+          overrides: [
+            { method: 'email', minutes: 60 },
+            { method: 'popup', minutes: 15 },
+          ],
+        },
+      },
+    });
+
+    const meetLink = event.data.conferenceData &&
+      event.data.conferenceData.entryPoints &&
+      event.data.conferenceData.entryPoints.find(e => e.entryPointType === 'video');
+
+    const link = meetLink ? meetLink.uri : event.data.hangoutLink;
+    console.log('Google Meet link criado:', link);
+    return link;
+  } catch (err) {
+    console.error('Google Calendar erro:', err.message);
+    return null;
+  }
+}
 
 async function createInvoice({ customerName, customerEmail, nif, serviceName, amount, date }) {
   const apiKey = process.env.INVOICEXPRESS_API_KEY;
@@ -486,9 +573,17 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
   }
 }
 
-async function sendConfirmationEmail({ to, name, serviceName, date, time, amountEur, invoiceUrl, invoiceNum }) {
+async function sendConfirmationEmail({ to, name, serviceName, date, time, amountEur, meetLink, invoiceUrl, invoiceNum }) {
   const invoiceLine = invoiceUrl
     ? '<p style="margin:8px 0;font-size:14px">🧾 <strong>Fatura:</strong>' + (invoiceNum && invoiceNum !== 'rascunho' ? ' ' + invoiceNum + ' —' : '') + ' <a href="' + invoiceUrl + '" style="color:#0d7377;font-weight:600">Descarregar PDF</a></p>'
+    : '';
+  const meetLine = meetLink
+    ? '<div style="background:linear-gradient(135deg,#0b1d35,#0d3b4f);border-radius:10px;padding:16px 20px;margin:16px 0">'
+      + '<p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#17c4a8;letter-spacing:.3px">🎥 LINK DA VIDEOCONSULTA</p>'
+      + '<p style="margin:0 0 12px;font-size:12.5px;color:rgba(255,255,255,.6)">Clique no botão abaixo no dia e hora marcados para entrar na consulta:</p>'
+      + '<a href="' + meetLink + '" style="display:inline-block;background:#17c4a8;color:#0b1d35;text-decoration:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:700">Entrar na Videoconsulta →</a>'
+      + '<p style="margin:10px 0 0;font-size:11px;color:rgba(255,255,255,.35)">Ou copie o link: ' + meetLink + '</p>'
+      + '</div>'
     : '';
 
   const html = '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
@@ -503,6 +598,9 @@ async function sendConfirmationEmail({ to, name, serviceName, date, time, amount
     + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Hora: <strong>' + time + '</strong></p>'
     + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Valor pago: <strong>' + amountEur + '</strong></p>'
     + invoiceLine
+    + '</div>'
+    + meetLine
+    + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:16px">'
     + '</div>'
     + '<p style="font-size:12px;color:#8a9bb0">Duvidas? geral@consultas-online.pt</p>'
     + '</div></div></body></html>';
