@@ -380,23 +380,29 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
         }}
       );
       clientId = clientRes.data.client.id;
-      console.log('InvoiceXpress cliente criado/encontrado:', clientId);
+      console.log('InvoiceXpress cliente criado:', clientId);
     } catch (clientErr) {
-      // Se o cliente já existe, pesquisar pelo email
-      if (clientErr.response && clientErr.response.status === 422) {
+      const status = clientErr.response && clientErr.response.status;
+      const errData = clientErr.response && clientErr.response.data;
+      console.log('InvoiceXpress cliente erro status:', status, JSON.stringify(errData));
+
+      // Cliente já existe (422) — pesquisar pelo nome usando a API correcta
+      if (status === 422) {
         try {
           const searchRes = await axios.get(
-            'https://' + account + '.app.invoicexpress.com/clients/find-by-email.json?api_key=' + apiKey + '&email=' + encodeURIComponent(safeEmail)
+            'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_name=' + encodeURIComponent(safeName)
           );
-          clientId = searchRes.data.client.id;
-          console.log('InvoiceXpress cliente existente:', clientId);
+          const clients = searchRes.data && searchRes.data.clients;
+          if (clients && clients.length > 0) {
+            clientId = clients[0].id;
+            console.log('InvoiceXpress cliente existente encontrado:', clientId);
+          } else {
+            console.error('InvoiceXpress: cliente nao encontrado na pesquisa');
+            return null;
+          }
         } catch (searchErr) {
-          // Cliente não encontrado por email, tentar por nome
-          const searchByName = await axios.get(
-            'https://' + account + '.app.invoicexpress.com/clients/find-by-name.json?api_key=' + apiKey + '&name=' + encodeURIComponent(safeName)
-          );
-          clientId = searchByName.data.client.id;
-          console.log('InvoiceXpress cliente por nome:', clientId);
+          console.error('InvoiceXpress pesquisa erro:', searchErr.response && JSON.stringify(searchErr.response.data) || searchErr.message);
+          return null;
         }
       } else {
         throw clientErr;
