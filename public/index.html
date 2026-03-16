@@ -588,6 +588,33 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .no-detail{text-align:center;padding:48px 24px;color:var(--muted);background:var(--white);border-radius:var(--r2)}
 .no-detail p{font-size:14px;margin-top:8px}
 @media(max-width:860px){.patients-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════
+   ATESTADOS
+══════════════════════════════ */
+.atestado-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.atestado-tab{border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.atestado-tab:hover{background:rgba(255,255,255,.12);color:var(--white)}
+.atestado-tab.active{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.atestado-form{background:var(--white);border-radius:var(--r2);padding:24px;display:none}
+.atestado-form.active{display:block}
+.atestado-form h4{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:18px}
+.atestado-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.atestado-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px}
+.atestado-field input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--navy);background:var(--surface);outline:none;transition:.2s;box-sizing:border-box}
+.atestado-field input:focus{border-color:var(--teal);background:var(--white)}
+.atestado-field.full{grid-column:1/-1}
+.atestado-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
+.atestado-btn-preview{background:var(--surface);border:1.5px solid var(--border);color:var(--navy);border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.atestado-btn-preview:hover{background:var(--border)}
+.atestado-btn-send{background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s}
+.atestado-btn-send:hover{opacity:.9;transform:translateY(-1px)}
+.atestado-status{font-size:13px;font-weight:600;padding:8px 14px;border-radius:8px;display:none}
+.atestado-status.ok{display:inline-block;background:rgba(56,161,105,.1);color:var(--green)}
+.atestado-status.err{display:inline-block;background:rgba(229,62,62,.1);color:var(--red)}
+.atestado-preview-box{margin-top:16px;display:none}
+.atestado-preview-box iframe{width:100%;height:500px;border:1px solid var(--border);border-radius:8px}
+@media(max-width:640px){.atestado-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1782,6 +1809,61 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
       <div class="admin-summary-card">
         <h3>Slots Bloqueados — Resumo</h3>
         <div id="adminSummary"><div class="summary-empty">Nenhum slot bloqueado ainda.</div></div>
+      </div>
+
+      <!-- Atestados -->
+      <div class="admin-summary-card" style="margin-top:24px">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--navy);margin-bottom:6px">Emitir Atestados</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:18px">Preencha os dados, gere o PDF e envie por email ao utente.</p>
+
+        <div class="atestado-tabs">
+          <button class="atestado-tab active" onclick="switchAtestado('amamentacao',this)">🤱 Atestado de Amamentação</button>
+          <button class="atestado-tab" onclick="switchAtestado('falta_escolar',this)">🎓 Atestado de Falta Escolar</button>
+        </div>
+
+        <!-- Amamentação -->
+        <div class="atestado-form active" id="form-amamentacao">
+          <h4>Atestado de Amamentação</h4>
+          <div class="atestado-grid">
+            <div class="atestado-field full"><label>Nome completo da utente *</label><input id="a1-nome" placeholder="Maria João Silva Santos"/></div>
+            <div class="atestado-field"><label>Data de nascimento da utente *</label><input id="a1-nasc" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Nº Cartão de Cidadão *</label><input id="a1-cc" placeholder="12345678 9 ZY0"/></div>
+            <div class="atestado-field full"><label>Nome do filho(a) *</label><input id="a1-filho" placeholder="João Silva Santos"/></div>
+            <div class="atestado-field"><label>Data de nascimento do filho(a) *</label><input id="a1-nasc-filho" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Data da consulta *</label><input id="a1-data" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field full"><label>Email da utente (para envio)</label><input id="a1-email" placeholder="email@exemplo.pt" type="email"/></div>
+          </div>
+          <div class="atestado-actions">
+            <button class="atestado-btn-preview" onclick="gerarAtestado('amamentacao',false)">👁 Pré-visualizar PDF</button>
+            <button class="atestado-btn-send" onclick="gerarAtestado('amamentacao',true)">📧 Gerar e Enviar por Email</button>
+            <span class="atestado-status" id="status-amamentacao"></span>
+          </div>
+          <div class="atestado-preview-box" id="preview-amamentacao">
+            <iframe id="iframe-amamentacao"></iframe>
+          </div>
+        </div>
+
+        <!-- Falta Escolar -->
+        <div class="atestado-form" id="form-falta_escolar">
+          <h4>Atestado de Falta Escolar</h4>
+          <div class="atestado-grid">
+            <div class="atestado-field full"><label>Nome completo do(a) utente *</label><input id="a2-nome" placeholder="Pedro António Ferreira Costa"/></div>
+            <div class="atestado-field"><label>Data de nascimento *</label><input id="a2-nasc" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Nº Cartão de Cidadão *</label><input id="a2-cc" placeholder="12345678 9 ZY0"/></div>
+            <div class="atestado-field"><label>Afastamento de (data início) *</label><input id="a2-inicio" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Afastamento até (data fim) *</label><input id="a2-fim" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field"><label>Data da consulta *</label><input id="a2-data" placeholder="DD/MM/AAAA"/></div>
+            <div class="atestado-field full"><label>Email do(a) utente (para envio)</label><input id="a2-email" placeholder="email@exemplo.pt" type="email"/></div>
+          </div>
+          <div class="atestado-actions">
+            <button class="atestado-btn-preview" onclick="gerarAtestado('falta_escolar',false)">👁 Pré-visualizar PDF</button>
+            <button class="atestado-btn-send" onclick="gerarAtestado('falta_escolar',true)">📧 Gerar e Enviar por Email</button>
+            <span class="atestado-status" id="status-falta_escolar"></span>
+          </div>
+          <div class="atestado-preview-box" id="preview-falta_escolar">
+            <iframe id="iframe-falta_escolar"></iframe>
+          </div>
+        </div>
       </div>
 
       <!-- Registos Clínicos -->
