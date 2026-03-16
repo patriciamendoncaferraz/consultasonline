@@ -2756,49 +2756,91 @@ window.loadPatientDetail = function(id) {
 
 window.renderPatientDetail = function(u) {
   var detail = document.getElementById('patientDetail');
-  if (!u || !u._id) { detail.innerHTML = '<div class="no-detail"><p>Dados não encontrados.</p></div>'; return; }
+  if (!u || !u._id) { detail.innerHTML = '<div class="no-detail"><p>Dados nao encontrados.</p></div>'; return; }
   var initials = (u.nomeCompleto||'?').split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
   var numConsultas = u.consultas ? u.consultas.length : 0;
+
+  // Build per-consultation HTML with individual clinical notes
   var consultasHtml = '';
   if (numConsultas > 0) {
-    u.consultas.slice().reverse().forEach(function(c) {
-      var dt = c.dataConsulta ? c.dataConsulta + ' às ' + (c.hora||'') : '—';
-      consultasHtml += '<div class="consult-item">'
-        + '<div class="consult-item-header"><span class="consult-item-service">🩺 ' + (c.servico||'—') + '</span>'
-        + '<span class="consult-item-date">' + dt + '</span></div>'
-        + (c.observacoes ? '<div class="consult-item-obs">📝 ' + c.observacoes + '</div>' : '')
-        + (c.valor ? '<div class="consult-item-valor">💶 ' + c.valor.toFixed(2).replace('.',',') + ' €</div>' : '')
-        + '</div>';
+    u.consultas.slice().reverse().forEach(function(c, idx) {
+      var realIdx = numConsultas - 1 - idx;
+      var dt = c.dataConsulta ? c.dataConsulta + ' as ' + (c.hora||'') : '---';
+      consultasHtml += '<div style="border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+        + '<span style="font-size:13.5px;font-weight:600;color:var(--navy)">🩺 ' + (c.servico||'---') + '</span>'
+        + '<span style="font-size:12px;color:var(--muted)">' + dt + '</span>'
+        + '</div>'
+        + (c.observacoes ? '<div style="font-size:12.5px;color:var(--slate);background:var(--surface);border-radius:7px;padding:8px 12px;margin-bottom:10px">📝 <strong>Motivo:</strong> ' + c.observacoes + '</div>' : '')
+        + (c.valor ? '<div style="font-size:12px;font-weight:600;color:var(--teal);margin-bottom:10px">💶 ' + c.valor.toFixed(2).replace('.',',') + ' EUR</div>' : '')
+        + '<div style="border-top:1px solid var(--border);padding-top:12px">'
+        + '<label style="font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:6px">Registo Clinico</label>'
+        + '<textarea id="cNotes-' + realIdx + '" '
+        + 'style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;color:var(--navy);background:var(--surface);outline:none;resize:vertical;min-height:80px;box-sizing:border-box;transition:.2s">'
+        + (c.notaClinica||'') + '</textarea>'
+        + '<div style="margin-top:8px;display:flex;align-items:center;gap:10px">'
+        + '<button data-uid="' + u._id + '" data-idx="' + realIdx + '" class="save-consult-btn" '
+        + 'style="background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:7px;padding:8px 18px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">'
+        + '💾 Guardar Registo</button>'
+        + '<span id="cSaved-' + realIdx + '" style="display:none;font-size:12px;color:var(--green);font-weight:600">Guardado!</span>'
+        + '</div></div></div>';
     });
-  } else { consultasHtml = '<p style="font-size:13px;color:var(--muted)">Nenhuma consulta registada.</p>'; }
+  } else {
+    consultasHtml = '<p style="font-size:13px;color:var(--muted)">Nenhuma consulta registada.</p>';
+  }
 
   detail.innerHTML = '<div class="patient-detail">'
     + '<div class="patient-detail-header">'
     + '<div class="patient-detail-avatar">' + initials + '</div>'
-    + '<div><h3>' + (u.nomeCompleto||'—') + '</h3>'
-    + '<p>' + (u.email||'—') + ' · ' + numConsultas + ' consulta(s)</p></div>'
-    + '</div><div class="patient-detail-body">'
-    + '<div class="detail-section"><div class="detail-section-title">Dados Pessoais</div><div class="detail-grid">'
-    + '<div class="detail-field"><label>Telemóvel</label><input id="pTelefone" value="' + (u.telefone||'') + '" placeholder="+351 9XX XXX XXX"/></div>'
-    + '<div class="detail-field"><label>Nº Utente SNS</label><input id="pNumUtente" value="' + (u.numeroUtente||'') + '" placeholder="000 000 000"/></div>'
+    + '<div><h3>' + (u.nomeCompleto||'---') + '</h3>'
+    + '<p>' + (u.email||'---') + ' · ' + numConsultas + ' consulta(s)</p></div>'
+    + '</div>'
+    + '<div class="patient-detail-body">'
+    + '<div class="detail-section">'
+    + '<div class="detail-section-title" style="cursor:pointer;display:flex;justify-content:space-between" onclick="var s=document.getElementById('pDados');var a=document.getElementById('pDadosA');s.style.display=s.style.display==='none'?'':'none';a.textContent=s.style.display==='none'?'▶':'▼'">'
+    + 'Dados Pessoais <span id="pDadosA">▼</span></div>'
+    + '<div id="pDados"><div class="detail-grid" style="margin-top:10px">'
+    + '<div class="detail-field"><label>Telemovel</label><input id="pTelefone" value="' + (u.telefone||'') + '" placeholder="+351 9XX XXX XXX"/></div>'
+    + '<div class="detail-field"><label>N Utente SNS</label><input id="pNumUtente" value="' + (u.numeroUtente||'') + '" placeholder="000 000 000"/></div>'
     + '<div class="detail-field"><label>Data de Nascimento</label><input id="pDtNasc" value="' + (u.dataNascimento||'') + '" placeholder="DD/MM/AAAA"/></div>'
     + '<div class="detail-field"><label>NIF</label><input id="pNif" value="' + (u.nif||'') + '" placeholder="123 456 789"/></div>'
-    + '<div class="detail-field full"><label>Morada</label><input id="pMorada" value="' + (u.morada||'') + '" placeholder="Rua, nº, Código Postal"/></div>'
-    + '</div></div>'
-    + '<div class="detail-section"><div class="detail-section-title">Notas Clínicas</div>'
-    + '<div class="detail-grid"><div class="detail-field full"><textarea id="pNotas" placeholder="Anotações clínicas, alergias, medicação habitual…">' + (u.notas||'') + '</textarea></div></div>'
-    + '<button class="detail-save-btn" id="detailSaveBtn" data-id="' + u._id + '">💾 Guardar Alterações</button>'
-    + '<span class="detail-saved" id="patientSaved">✅ Guardado!</span>'
+    + '<div class="detail-field full"><label>Morada</label><input id="pMorada" value="' + (u.morada||'') + '" placeholder="Rua, n, Codigo Postal"/></div>'
     + '</div>'
-    + '<div class="detail-section"><div class="detail-section-title">Histórico de Consultas (' + numConsultas + ')</div>'
-    + consultasHtml + '</div>'
+    + '<button class="detail-save-btn" id="detailSaveBtn" data-id="' + u._id + '" style="margin-top:12px">Guardar Dados Pessoais</button>'
+    + '<span class="detail-saved" id="patientSaved" style="margin-left:10px">Guardado!</span>'
+    + '</div></div>'
+    + '<div class="detail-section">'
+    + '<div class="detail-section-title">Consultas (' + numConsultas + ')</div>'
+    + consultasHtml
+    + '</div>'
     + '</div></div>';
 
   setTimeout(function() {
     var btn = document.getElementById('detailSaveBtn');
     if (btn) btn.addEventListener('click', function() { window.savePatientDetail(this.dataset.id); });
+    detail.querySelectorAll('.save-consult-btn').forEach(function(b) {
+      b.addEventListener('click', function() {
+        window.saveConsultNote(this.dataset.uid, parseInt(this.dataset.idx));
+      });
+    });
   }, 50);
-}
+};
+
+window.saveConsultNote = function(utenteId, consultIdx) {
+  var textarea = document.getElementById('cNotes-' + consultIdx);
+  if (!textarea) return;
+  fetch(API_URL + '/admin/utentes/' + utenteId + '/consulta/' + consultIdx, {
+    method: 'PUT',
+    headers: adminHeaders(),
+    body: JSON.stringify({ notaClinica: textarea.value })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function() {
+    var s = document.getElementById('cSaved-' + consultIdx);
+    if (s) { s.style.display = 'inline'; setTimeout(function(){ s.style.display = 'none'; }, 3000); }
+  })
+  .catch(function(){ alert('Erro ao guardar registo clinico.'); });
+};
 
 window.savePatientDetail = function(id) {
   var body = {
@@ -2806,7 +2848,7 @@ window.savePatientDetail = function(id) {
     numeroUtente:   (document.getElementById('pNumUtente')||{}).value||'',
     dataNascimento: (document.getElementById('pDtNasc')||{}).value||'',
     morada:         (document.getElementById('pMorada')||{}).value||'',
-    notas:          (document.getElementById('pNotas')||{}).value||'',
+    notas:          (document.getElementById('pNotas') ? document.getElementById('pNotas').value : ''),
   };
   fetch(API_URL + '/admin/utentes/' + id, { method: 'PUT', headers: adminHeaders(), body: JSON.stringify(body) })
     .then(function(r){ return r.json(); })
