@@ -33,6 +33,7 @@ const consultaSchema = new mongoose.Schema({
   observacoes:  String,
   stripeSession:String,
   valor:        Number,
+  notaClinica:  String,
 }, { _id: true });
 
 const utenteSchema = new mongoose.Schema({
@@ -537,6 +538,24 @@ app.get('/admin/utentes-search', adminAuth, async (req, res) => {
       ]
     }, '-__v').limit(20);
     res.json(utentes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Guardar nota clínica de uma consulta específica
+app.put('/admin/utentes/:id/consulta/:idx', adminAuth, async (req, res) => {
+  if (!MONGO_URI) return res.json({ ok: false });
+  try {
+    const { notaClinica } = req.body;
+    const idx = parseInt(req.params.idx);
+    const utente = await Utente.findById(req.params.id);
+    if (!utente) return res.status(404).json({ error: 'Utente nao encontrado.' });
+    if (utente.consultas[idx] === undefined) return res.status(404).json({ error: 'Consulta nao encontrada.' });
+    utente.consultas[idx].notaClinica = notaClinica;
+    utente.markModified('consultas');
+    await utente.save();
+    res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
