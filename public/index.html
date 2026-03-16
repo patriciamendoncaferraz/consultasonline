@@ -2797,7 +2797,7 @@ window.renderPatientDetail = function(u) {
     + '</div>'
     + '<div class="patient-detail-body">'
     + '<div class="detail-section">'
-    + '<div class="detail-section-title" style="cursor:pointer;display:flex;justify-content:space-between" onclick="var s=document.getElementById('pDados');var a=document.getElementById('pDadosA');s.style.display=s.style.display==='none'?'':'none';a.textContent=s.style.display==='none'?'▶':'▼'">'
+    + '<div class="detail-section-title" style="cursor:pointer;display:flex;justify-content:space-between" onclick="window.toggleDados()">'
     + 'Dados Pessoais <span id="pDadosA">▼</span></div>'
     + '<div id="pDados"><div class="detail-grid" style="margin-top:10px">'
     + '<div class="detail-field"><label>Telemovel</label><input id="pTelefone" value="' + (u.telefone||'') + '" placeholder="+351 9XX XXX XXX"/></div>'
@@ -2840,6 +2840,15 @@ window.saveConsultNote = function(utenteId, consultIdx) {
     if (s) { s.style.display = 'inline'; setTimeout(function(){ s.style.display = 'none'; }, 3000); }
   })
   .catch(function(){ alert('Erro ao guardar registo clinico.'); });
+};
+
+window.toggleDados = function() {
+  var s = document.getElementById('pDados');
+  var a = document.getElementById('pDadosA');
+  if (!s) return;
+  var hidden = s.style.display === 'none';
+  s.style.display = hidden ? '' : 'none';
+  if (a) a.textContent = hidden ? 'V' : '>';
 };
 
 window.savePatientDetail = function(id) {
