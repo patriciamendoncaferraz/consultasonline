@@ -2601,12 +2601,18 @@ function adminHeaders() {
 }
 
 function getTodayISO() {
+  // Use local date components to avoid UTC offset shifting the day
   var d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, '0');
+  var day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
 }
 
 function isoToPT(iso) {
-  var p = iso.split('-');
+  // Pure string manipulation — avoids timezone offset issues
+  var p = (iso || '').split('-');
+  if (p.length !== 3) return iso;
   return p[2] + '/' + p[1] + '/' + p[0];
 }
 
@@ -2617,10 +2623,13 @@ function initPatientsDate() {
 
 function filterByDate(isoDate) {
   if (!isoDate) return;
-  var ptDate = isoToPT(isoDate);
+  // Fix: parse date parts directly to avoid any browser timezone issues
+  var parts = isoDate.split('-');
+  var ptDate = parts[2] + '/' + parts[1] + '/' + parts[0];
   var subtitle = document.getElementById('patientsSubtitle');
   var list = document.getElementById('patientsList');
   var dayLabel = ptDate.slice(0,5);
+  console.log('filterByDate called with:', isoDate, '-> ptDate:', ptDate);
 
   // If cache is empty, load first then filter
   if (!allPatientsCache.length) {
