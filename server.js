@@ -416,13 +416,13 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
       { invoice: {
         date,
         due_date: date,
-        client: { id: clientId },
+        client: { id: String(clientId), name: safeName },
         items: [{
           name: serviceName,
           description: 'Prestacao de servicos de saude online',
-          unit_price: amount.toFixed(2),
+          unit_price: String(amount.toFixed(2)),
           quantity: '1',
-          unit: 'unidade',
+          unit: 'service',
           tax: { name: process.env.INVOICEXPRESS_TAX_NAME || 'Isento artigo 9º do CIVA' }
         }],
         observations: 'IVA isento ao abrigo do artigo 9 do CIVA'
