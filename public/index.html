@@ -439,80 +439,6 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .csubmit:hover{transform:translateY(-2px);box-shadow:0 7px 24px rgba(13,115,119,.32)}
 .contact-success{display:none;background:rgba(56,161,105,.07);border:1px solid rgba(56,161,105,.25);border-radius:10px;padding:16px 20px;margin-top:14px;font-size:14px;color:var(--green);font-weight:500}
 .contact-success.show{display:block}
-  // ══════════════════════════════════════
-// ATESTADOS
-// ══════════════════════════════════════
-
-window.switchAtestado = function(tipo, btn) {
-  document.querySelectorAll('.atestado-tab').forEach(function(b){ b.classList.remove('active'); });
-  document.querySelectorAll('.atestado-form').forEach(function(f){ f.classList.remove('active'); });
-  btn.classList.add('active');
-  var form = document.getElementById('form-' + tipo);
-  if (form) form.classList.add('active');
-};
-
-window.gerarAtestado = function(tipo, enviarEmail) {
-  var dados = {};
-  var statusEl = document.getElementById('status-' + tipo);
-  var previewBox = document.getElementById('preview-' + tipo);
-  var tipoServidor = tipo === 'doenca' ? 'falta_escolar' : tipo;
-
-  if (tipo === 'amamentacao') {
-    dados = {
-      nome_utente:      (document.getElementById('a1-nome')||{}).value || '',
-      data_nasc_utente: (document.getElementById('a1-nasc')||{}).value || '',
-      cc_utente:        (document.getElementById('a1-cc')||{}).value || '',
-      nome_filho:       (document.getElementById('a1-filho')||{}).value || '',
-      data_nasc_filho:  (document.getElementById('a1-nasc-filho')||{}).value || '',
-      data_consulta:    (document.getElementById('a1-data')||{}).value || '',
-      email:            (document.getElementById('a1-email')||{}).value || '',
-    };
-  } else {
-    dados = {
-      nome_utente:      (document.getElementById('a2-nome')||{}).value || '',
-      data_nasc_utente: (document.getElementById('a2-nasc')||{}).value || '',
-      cc_utente:        (document.getElementById('a2-cc')||{}).value || '',
-      data_inicio:      (document.getElementById('a2-inicio')||{}).value || '',
-      data_fim:         (document.getElementById('a2-fim')||{}).value || '',
-      data_consulta:    (document.getElementById('a2-data')||{}).value || '',
-      email:            (document.getElementById('a2-email')||{}).value || '',
-    };
-  }
-
-  if (!dados.nome_utente || !dados.data_consulta) {
-    if (statusEl) { statusEl.textContent = 'Preencha o nome e a data da consulta.'; statusEl.className = 'atestado-status err'; }
-    return;
-  }
-  if (enviarEmail && !dados.email) {
-    if (statusEl) { statusEl.textContent = 'Insira o email do utente para enviar.'; statusEl.className = 'atestado-status err'; }
-    return;
-  }
-
-  if (statusEl) { statusEl.textContent = 'A gerar PDF...'; statusEl.className = 'atestado-status ok'; }
-
-  fetch(API_URL + '/admin/gerar-atestado', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
-    body: JSON.stringify({ tipo: tipoServidor, dados: dados, enviarEmail: enviarEmail })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data) {
-    if (data.error) {
-      if (statusEl) { statusEl.textContent = 'Erro: ' + data.error; statusEl.className = 'atestado-status err'; }
-      return;
-    }
-    if (previewBox) {
-      previewBox.style.display = 'block';
-      var iframe = document.getElementById('iframe-' + tipo);
-      if (iframe) iframe.src = 'data:application/pdf;base64,' + data.pdf;
-    }
-    var msg = enviarEmail && data.sent ? 'PDF enviado por email!' : 'PDF gerado! Veja a pre-visualizacao abaixo.';
-    if (statusEl) { statusEl.textContent = msg; statusEl.className = 'atestado-status ok'; }
-  })
-  .catch(function(err) {
-    if (statusEl) { statusEl.textContent = 'Erro: ' + err.message; statusEl.className = 'atestado-status err'; }
-  });
-};
 /* FAQ */
 .faq-item{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
 .faq-q{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:14.5px;font-weight:600;color:var(--navy);transition:.2s;background:var(--white)}
@@ -3023,6 +2949,82 @@ window.savePatientDetail = function(id) {
       if (s) { s.classList.add('show'); setTimeout(function(){ s.classList.remove('show'); }, 3000); }
     })
     .catch(function(){ alert('Erro ao guardar.'); });
+};
+
+
+// ══════════════════════════════════════
+// ATESTADOS
+// ══════════════════════════════════════
+
+window.switchAtestado = function(tipo, btn) {
+  document.querySelectorAll('.atestado-tab').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.atestado-form').forEach(function(f){ f.classList.remove('active'); });
+  btn.classList.add('active');
+  var form = document.getElementById('form-' + tipo);
+  if (form) form.classList.add('active');
+};
+
+window.gerarAtestado = function(tipo, enviarEmail) {
+  var dados = {};
+  var statusEl = document.getElementById('status-' + tipo);
+  var previewBox = document.getElementById('preview-' + tipo);
+  var tipoServidor = tipo === 'doenca' ? 'falta_escolar' : tipo;
+
+  if (tipo === 'amamentacao') {
+    dados = {
+      nome_utente:      (document.getElementById('a1-nome')||{}).value || '',
+      data_nasc_utente: (document.getElementById('a1-nasc')||{}).value || '',
+      cc_utente:        (document.getElementById('a1-cc')||{}).value || '',
+      nome_filho:       (document.getElementById('a1-filho')||{}).value || '',
+      data_nasc_filho:  (document.getElementById('a1-nasc-filho')||{}).value || '',
+      data_consulta:    (document.getElementById('a1-data')||{}).value || '',
+      email:            (document.getElementById('a1-email')||{}).value || '',
+    };
+  } else {
+    dados = {
+      nome_utente:      (document.getElementById('a2-nome')||{}).value || '',
+      data_nasc_utente: (document.getElementById('a2-nasc')||{}).value || '',
+      cc_utente:        (document.getElementById('a2-cc')||{}).value || '',
+      data_inicio:      (document.getElementById('a2-inicio')||{}).value || '',
+      data_fim:         (document.getElementById('a2-fim')||{}).value || '',
+      data_consulta:    (document.getElementById('a2-data')||{}).value || '',
+      email:            (document.getElementById('a2-email')||{}).value || '',
+    };
+  }
+
+  if (!dados.nome_utente || !dados.data_consulta) {
+    if (statusEl) { statusEl.textContent = 'Preencha o nome e a data da consulta.'; statusEl.className = 'atestado-status err'; }
+    return;
+  }
+  if (enviarEmail && !dados.email) {
+    if (statusEl) { statusEl.textContent = 'Insira o email do utente para enviar.'; statusEl.className = 'atestado-status err'; }
+    return;
+  }
+
+  if (statusEl) { statusEl.textContent = 'A gerar PDF...'; statusEl.className = 'atestado-status ok'; }
+
+  fetch(API_URL + '/admin/gerar-atestado', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_PASSWORD },
+    body: JSON.stringify({ tipo: tipoServidor, dados: dados, enviarEmail: enviarEmail })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (data.error) {
+      if (statusEl) { statusEl.textContent = 'Erro: ' + data.error; statusEl.className = 'atestado-status err'; }
+      return;
+    }
+    if (previewBox) {
+      previewBox.style.display = 'block';
+      var iframe = document.getElementById('iframe-' + tipo);
+      if (iframe) iframe.src = 'data:application/pdf;base64,' + data.pdf;
+    }
+    var msg = enviarEmail && data.sent ? 'PDF enviado por email!' : 'PDF gerado! Veja a pre-visualizacao abaixo.';
+    if (statusEl) { statusEl.textContent = msg; statusEl.className = 'atestado-status ok'; }
+  })
+  .catch(function(err) {
+    if (statusEl) { statusEl.textContent = 'Erro: ' + err.message; statusEl.className = 'atestado-status err'; }
+  });
 };
 
 // FAQ
