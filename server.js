@@ -333,7 +333,7 @@ app.post('/webhook', async (req, res) => {
       } else {
         console.warn('Email ignorado: endereço em falta');
       }
-    } catch(e) { console.error('Erro email/fatura:', e.message); }
+    } catch(e) { console.error('Erro email/fatura:', e.message, e.stack ? e.stack.split('\n')[1] : ''); }
     return res.json({ received: true });
   }
 
@@ -363,6 +363,8 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
   const safeNif = nif && nif.trim() && nif.trim() !== process.env.INVOICEXPRESS_OWN_NIF
     ? nif.trim()
     : null;
+
+  console.log('InvoiceXpress a processar:', { safeName, safeEmail, safeNif, serviceName, amount, date });
 
   try {
     // 1. Criar ou encontrar cliente
@@ -440,7 +442,10 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
     return { invoiceNumber: invoice.sequence_number, url: pdfUrl };
 
   } catch (err) {
-    console.error('InvoiceXpress error:', err.response && err.response.data || err.message);
+    const errDetail = err.response ? JSON.stringify(err.response.data) : err.message;
+    console.error('InvoiceXpress error detalhe:', errDetail);
+    console.error('InvoiceXpress stack:', err.stack ? err.stack.split('
+')[0] : 'n/a');
     return null;
   }
 }
