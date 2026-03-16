@@ -338,17 +338,8 @@ app.post('/webhook', async (req, res) => {
   }
 
   if (event.type === 'payment_intent.succeeded') {
-    const pi = event.data.object;
-    const { serviceName, date, time, customerEmail, customerName, nif } = pi.metadata;
-    const amountEur = (pi.amount / 100).toFixed(2).replace('.', ',') + ' EUR';
-    console.log('Pagamento confirmado:', pi.id, serviceName);
-
-    try {
-      const invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: pi.amount / 100, date: new Date().toISOString().split('T')[0] });
-      await sendConfirmationEmail({ to: customerEmail, name: customerName || customerEmail.split('@')[0], serviceName, date, time, amountEur, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
-    } catch (e) {
-      console.error('Erro email/fatura:', e.message);
-    }
+    // Ignorado — usamos checkout.session.completed que tem todos os metadados
+    console.log('Pagamento confirmado:', event.data.object.id, '(tratado via checkout.session.completed)');
   }
 
   res.json({ received: true });
