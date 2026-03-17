@@ -3271,9 +3271,9 @@ var chatReplies = [
   'O pagamento e feito de forma segura por MBWay, Referencia Multibanco ou cartao bancario.',
   'Apos o pagamento recebe confirmacao por email com todos os detalhes da consulta.',
   'As consultas online tem duracao de ate 30 minutos, por videochamada no browser.',
-  'Para cancelar ou remarcar envie email para geral@consultas-online.pt com 48h de antecedencia.',
+  'Para cancelar ou remarcar envie email para <span data-email></span> com 48h de antecedencia.',
   'A fatura e emitida automaticamente e enviada para o seu email apos confirmacao do pagamento.',
-  'Para questoes adicionais, contacte-nos em <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a>',
+  'Para questoes adicionais, contacte-nos em <a href="mailto:geral@consultas-online.pt" data-mailto><span data-email></span></a>',
 ];
 var chatIdx = 0;
 
@@ -3320,6 +3320,31 @@ window.addEventListener('popstate', function(e) {
 });
 
 try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
+
+
+// Render emails dynamically to prevent obfuscation
+(function() {
+  var u = 'geral', d = 'consultas-online.pt', e = u + '@' + d;
+  function renderEmails() {
+    document.querySelectorAll('[data-email]').forEach(function(el) {
+      el.textContent = e;
+      var p = el.parentElement;
+      if (p && p.tagName === 'A') p.href = 'mailto:' + e;
+    });
+    document.querySelectorAll('[data-mailto]').forEach(function(el) {
+      el.href = 'mailto:' + e;
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderEmails);
+  } else {
+    renderEmails();
+  }
+  // Re-run after page navigation
+  window.addEventListener('popstate', renderEmails);
+  var origShowPage = window.showPage;
+  window.showPage = function() { origShowPage.apply(this, arguments); setTimeout(renderEmails, 100); };
+})();
 
 })(); // end IIFE
 </script>
