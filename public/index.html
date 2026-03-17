@@ -641,14 +641,6 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 </style>
 </head>
 <body>
-<script>
-// Immediately show home page before any rendering
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelectorAll('.page').forEach(function(p) {
-    p.style.display = p.id === 'page-home' ? 'block' : 'none';
-  });
-});
-</script>
 
 <!-- ════════ NAV ════════ -->
 <nav>
@@ -1071,12 +1063,20 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
   </div>
 </div>
-</div>
 </div><!-- /page-blog -->
 
 
+<!-- ════════════════════════════════════════
+     ARTICLES
+════════════════════════════════════════ -->
+
+<!-- ITU -->
+<div class="article-view" id="article-itu">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💧 Infeções</div>
     <h1 class="art-title">Infeção Urinária: Causas, Sintomas e Tratamento</h1>
-    <div class="art-meta-item">⏱ <span>8 min leitura</span></div><div class="art-meta-item">🔬 <span>Referências científicas</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>12 Março 2024</span></div><div class="art-meta-item">⏱ <span>8 min leitura</span></div><div class="art-meta-item">🔬 <span>Referências científicas</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>O que é uma Infeção do Trato Urinário?</h2>
@@ -1103,8 +1103,13 @@ document.addEventListener("DOMContentLoaded", function() {
   </div></div>
 </div>
 
+<!-- FALTAS TRABALHO -->
+<div class="article-view" id="article-faltas-trabalho">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💼 Trabalho &amp; Legal</div>
     <h1 class="art-title">Faltas ao Trabalho por Doença: Como Justificar</h1>
-    <div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>8 Março 2024</span></div><div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>Enquadramento Legal — Código do Trabalho</h2>
@@ -1126,8 +1131,13 @@ document.addEventListener("DOMContentLoaded", function() {
   </div></div>
 </div>
 
+<!-- FALTAS ESCOLA -->
+<div class="article-view" id="article-faltas-escola">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🎓 Escola &amp; Família</div>
     <h1 class="art-title">Faltas à Escola por Doença: Como Justificar</h1>
-    <div class="art-meta-item">⏱ <span>5 min leitura</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>5 Março 2024</span></div><div class="art-meta-item">⏱ <span>5 min leitura</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>O que diz a Lei</h2>
@@ -1148,8 +1158,13 @@ document.addEventListener("DOMContentLoaded", function() {
   </div></div>
 </div>
 
+<!-- GARGANTA -->
+<div class="article-view" id="article-garganta">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🤒 Infeções</div>
     <h1 class="art-title">Dor de Garganta: Quando Tomar Antibiótico</h1>
-    <div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>1 Março 2024</span></div><div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>Vírica ou Bacteriana?</h2>
@@ -1171,8 +1186,13 @@ document.addEventListener("DOMContentLoaded", function() {
   </div></div>
 </div>
 
+<!-- OZEMPIC -->
+<div class="article-view" id="article-ozempic">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">⚕️ Peso &amp; Obesidade</div>
     <h1 class="art-title">Ozempic, Mounjaro e Wegovy: Guia Completo sobre GLP-1</h1>
-    <div class="art-meta-item">⏱ <span>10 min leitura</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>25 Fev 2024</span></div><div class="art-meta-item">⏱ <span>10 min leitura</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>A Revolução dos Agonistas GLP-1</h2>
@@ -1198,8 +1218,13 @@ document.addEventListener("DOMContentLoaded", function() {
   </div></div>
 </div>
 
+<!-- DST -->
+<div class="article-view" id="article-dst">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">🔬 Saúde Sexual</div>
     <h1 class="art-title">Doenças Sexualmente Transmissíveis: Guia Completo</h1>
-    <div class="art-meta-item">⏱ <span>9 min leitura</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>20 Fev 2024</span></div><div class="art-meta-item">⏱ <span>9 min leitura</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>Contexto Europeu</h2>
@@ -1229,8 +1254,12 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 
 <!-- RENOVAÇÃO BAIXA -->
+<div class="article-view" id="article-renovacao-baixa">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">📋 Baixas</div>
     <h1 class="art-title">Renovação de Baixa Médica: Tudo o que Precisa de Saber</h1>
-    <div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>15 Fev 2024</span></div><div class="art-meta-item">⏱ <span>6 min leitura</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>O Sistema CIT em Portugal</h2>
@@ -1254,8 +1283,12 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 
 <!-- RENOVAÇÃO MEDICAMENTOS -->
+<div class="article-view" id="article-renovacao-medicamentos">
+  <div class="art-hero"><div class="art-hero-inner">
+    <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+    <div class="art-cat">💊 Medicação</div>
     <h1 class="art-title">Renovação de Medicamentos: Como Funciona em Portugal</h1>
-    <div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
+    <div class="art-meta"><div class="art-meta-item">📅 <span>10 Fev 2024</span></div><div class="art-meta-item">⏱ <span>7 min leitura</span></div></div>
   </div></div>
   <div class="art-body-wrap"><div class="art-body">
     <h2>Receita Sem Papel (RSP)</h2>
@@ -2000,7 +2033,6 @@ document.addEventListener("DOMContentLoaded", function() {
         <!-- Calendar col -->
         <div>
           <h3 style="font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;font-family:'Inter',sans-serif">Escolha o dia e hora</h3>
-          <p style="font-size:12px;color:#d97706;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px">⚠️ ATENÇÃO: fuso horário PT Continente</p>
           <div class="cal-wrap">
             <div class="cal-nav-row">
               <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
@@ -2011,7 +2043,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="cal-grid" id="calGrid"></div>
           </div>
           <div class="time-section" id="timeSection" style="display:none">
-            <h4>Horários disponíveis</h4><p style="font-size:12px;color:var(--amber);font-weight:600;margin:-4px 0 10px;display:flex;align-items:center;gap:5px">⚠️ Atenção: fuso horário PT Continente</p>
+            <h4>Horários disponíveis</h4>
             <div class="time-grid" id="timeGrid">
               <!-- Gerado dinamicamente pelo JS -->
             </div>
@@ -2104,11 +2136,6 @@ document.addEventListener("DOMContentLoaded", function() {
 <script>
 (function() {
 'use strict';
-
-// Show home page on load
-var homeEl = document.getElementById('page-home');
-if (homeEl) homeEl.classList.add('active');
-
 
 // ══════════════════════════════════════
 // STRIPE CONFIG — substitua pelas suas chaves
@@ -3249,6 +3276,7 @@ var chatReplies = [
   'Para questoes adicionais, contacte-nos em <a href="mailto:geral@consultas-online.pt" data-mailto><span data-email></span></a>',
 ];
 var chatIdx = 0;
+
 window.sendChat = function() {
   var inp = document.getElementById('chatInput');
   var box = document.getElementById('chatMessages');
@@ -3263,6 +3291,10 @@ window.sendChat = function() {
     box.scrollTop = box.scrollHeight;
   }, 750);
 };
+
+// ══════════════════════════════════════
+// SCROLL ANIMATIONS
+// ══════════════════════════════════════
 function checkVisible() {
   document.querySelectorAll('.fade-up').forEach(function(el) {
     var page = el.closest('.page');
@@ -3276,13 +3308,21 @@ setTimeout(checkVisible, 100);
 setTimeout(function() {
   document.querySelectorAll('.page.active .fade-up').forEach(function(el){ el.classList.add('visible'); });
 }, 300);
+
 window.addEventListener('popstate', function(e) {
-  if (e.state && e.state.article) { window.closeArticle(); }
-  else if (e.state && e.state.page) { window.showPage(e.state.page, false); }
-  else { window.showPage('home', false); }
+  if (e.state && e.state.article) {
+    window.closeArticle();
+  } else if (e.state && e.state.page) {
+    window.showPage(e.state.page, false);
+  } else {
+    window.showPage('home', false);
+  }
 });
+
 try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
+
 })(); // end IIFE
 </script>
+
 </body>
 </html>
