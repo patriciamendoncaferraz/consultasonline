@@ -2171,6 +2171,7 @@ window.showPage = function(p) {
 // ARTICLE NAVIGATION
 // ══════════════════════════════════════
 window.openArticle = function(id) {
+  history.pushState({ article: id }, '', '#artigo-' + id);
   document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
   var blog = document.getElementById('page-blog');
   if (blog) blog.style.display = 'none';
@@ -2180,8 +2181,7 @@ window.openArticle = function(id) {
 };
 window.closeArticle = function() {
   document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
-  var blog = document.getElementById('page-blog');
-  if (blog) blog.style.display = 'block';
+  window.showPage('blog');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 function closeAllArticles() {
@@ -3313,6 +3313,17 @@ setTimeout(function() {
 // INIT
 // ══════════════════════════════════════
 try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
+
+// Handle browser back button
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.article) {
+    // Going back to an article - just close it
+    window.closeArticle();
+  } else {
+    // Going back - close article and go to blog
+    window.closeArticle();
+  }
+});
 
 })(); // end IIFE
 </script>
