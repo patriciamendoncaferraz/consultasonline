@@ -2043,7 +2043,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
             <div class="cal-grid" id="calGrid"></div>
           </div>
           <div class="time-section" id="timeSection" style="display:none">
-            <h4>Horários disponíveis</h4>
+            <h4>Horários disponíveis <span style="font-size:11px;font-weight:400;color:var(--muted)">(PT Continental — WET/WEST)</span></h4>
             <div class="time-grid" id="timeGrid">
               <!-- Gerado dinamicamente pelo JS -->
             </div>
@@ -3292,9 +3292,6 @@ window.sendChat = function() {
   }, 750);
 };
 
-// ══════════════════════════════════════
-// SCROLL ANIMATIONS
-// ══════════════════════════════════════
 function checkVisible() {
   document.querySelectorAll('.fade-up').forEach(function(el) {
     var page = el.closest('.page');
