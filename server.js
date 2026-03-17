@@ -201,10 +201,13 @@ app.post('/upload-anexos', async (req, res) => {
       disposition: 'attachment',
     }));
 
+    const toEmail = 'geral@consultas-online.pt';
+    const fromEmail = process.env.FROM_EMAIL || 'geral@consultas-online.pt';
+    console.log('A enviar anexos para:', toEmail, 'de:', fromEmail);
     await sgMail.send({
-      to: process.env.FROM_EMAIL || 'geral@consultas-online.pt',
-      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-      subject: 'Anexos — ' + nomeServico + ' — ' + (customerName || customerEmail),
+      to: toEmail,
+      from: { email: fromEmail, name: 'ConsultasOnline — Anexos' },
+      subject: '[ANEXOS] ' + nomeServico + ' — ' + (customerName || customerEmail),
       html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
         + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
         + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>'
@@ -223,11 +226,12 @@ app.post('/upload-anexos', async (req, res) => {
       attachments,
     });
 
-    console.log('Anexos enviados:', ficheiros.length, 'ficheiros de', customerEmail);
+    console.log('Anexos enviados com sucesso:', ficheiros.length, 'ficheiros de', customerEmail);
     res.json({ ok: true });
   } catch (err) {
-    console.error('Erro ao enviar anexos:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Erro ao enviar anexos:', err.response ? JSON.stringify(err.response.body) : err.message);
+    // Don't fail the request - just log the error
+    res.json({ ok: false, error: err.message });
   }
 });
 
