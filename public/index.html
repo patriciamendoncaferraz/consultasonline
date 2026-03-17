@@ -778,7 +778,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
       <div class="feat fade-up">
         <div class="feat-ico">📄</div>
         <h3>Documentos Digitais</h3>
-        <p>Receitas, atestados e declarações emitidos eletronicamente e enviados por email. Com validade legal em Portugal.</p>
+        <p>Receitas, atestados e declarações emitidos eletronicamente e enviados por email.</p>
         <span class="feat-tag">VALIDADE LEGAL</span>
       </div>
     </div>
@@ -3320,31 +3320,6 @@ window.addEventListener('popstate', function(e) {
 });
 
 try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
-
-
-// Render emails dynamically to prevent obfuscation
-(function() {
-  var u = 'geral', d = 'consultas-online.pt', e = u + '@' + d;
-  function renderEmails() {
-    document.querySelectorAll('[data-email]').forEach(function(el) {
-      el.textContent = e;
-      var p = el.parentElement;
-      if (p && p.tagName === 'A') p.href = 'mailto:' + e;
-    });
-    document.querySelectorAll('[data-mailto]').forEach(function(el) {
-      el.href = 'mailto:' + e;
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderEmails);
-  } else {
-    renderEmails();
-  }
-  // Re-run after page navigation
-  window.addEventListener('popstate', renderEmails);
-  var origShowPage = window.showPage;
-  window.showPage = function() { origShowPage.apply(this, arguments); setTimeout(renderEmails, 100); };
-})();
 
 })(); // end IIFE
 </script>
