@@ -36,6 +36,8 @@ const consultaSchema = new mongoose.Schema({
   stripeSession:String,
   valor:        Number,
   notaClinica:  String,
+  temAnexos:    Boolean,
+  numAnexos:    Number,
 }, { _id: true });
 
 const utenteSchema = new mongoose.Schema({
@@ -72,10 +74,10 @@ bookedSlotSchema.index({ dateKey: 1, time: 1 }, { unique: true });
 const BookedSlot = mongoose.models.BookedSlot || mongoose.model('BookedSlot', bookedSlotSchema);
 
 // Guardar/atualizar utente e adicionar consulta
-async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor }) {
+async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor, temAnexos, numAnexos }) {
   if (!MONGO_URI || !email) return null;
   try {
-    const novaConsulta = { data: new Date(), dataConsulta, hora, servico, observacoes, stripeSession, valor };
+    const novaConsulta = { data: new Date(), dataConsulta, hora, servico, observacoes, stripeSession, valor, temAnexos: !!temAnexos, numAnexos: numAnexos || 0 };
     const utente = await Utente.findOneAndUpdate(
       { email },
       {
@@ -107,8 +109,8 @@ app.use(express.static(__dirname));
 const SERVICES = {
   'atestado-amamentacao':       { name: 'Atestado de Amamentação',          price: 3500 },
   'atestado-escola':            { name: 'Atestado para Falta Escolar',       price: 3500 },
-  'atestado-conducao':          { name: 'Atestado para Carta de Condução',   price: 3500 },
-  'baixa-medica':               { name: 'Emissão de Baixa Médica',           price: 4000 },
+  'atestado-conducao':          { name: 'Atestado para Carta de Condução',   price: 4500 },
+  'baixa-medica':               { name: 'Emissão de Baixa Médica',           price: 5500 },
   'renovacao-medicamentos':     { name: 'Renovação de Medicamentos',         price: 4000 },
   'consulta-infecao-urinaria':  { name: 'Consulta de Infeção Urinária',      price: 4000 },
   'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 4000 },
@@ -184,7 +186,7 @@ app.get('/services', (req, res) => {
 });
 
 app.post('/create-checkout-session', async (req, res) => {
-  const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes } = req.body;
+  const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes, temAnexos, numAnexos } = req.body;
 
   const service = SERVICES[serviceId];
   if (!service) return res.status(400).json({ error: 'Servico invalido.' });
@@ -218,6 +220,8 @@ app.post('/create-checkout-session', async (req, res) => {
         telefone:     telefone     || '',
         numeroUtente: numeroUtente || '',
         observacoes:  observacoes  || '',
+        temAnexos:    temAnexos ? 'sim' : '',
+        numAnexos:    numAnexos ? String(numAnexos) : '',
       },
       success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: clientUrl + '/?cancelado=1',
@@ -307,6 +311,8 @@ app.post('/webhook', async (req, res) => {
       }
 
       // 2. Guardar registo clínico do utente
+      const temAnexosMeta = meta.temAnexos === 'sim';
+      const numAnexosMeta = parseInt(meta.numAnexos || '0') || 0;
       await upsertUtente({
         nomeCompleto: customerName,
         email: customerEmail,
@@ -319,6 +325,8 @@ app.post('/webhook', async (req, res) => {
         servico: serviceName,
         stripeSession: session.id,
         valor: session.amount_total / 100,
+        temAnexos: temAnexosMeta,
+        numAnexos: numAnexosMeta,
       });
 
       // 3. Criar link Google Meet
