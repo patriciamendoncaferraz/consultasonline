@@ -615,6 +615,29 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .atestado-preview-box{margin-top:16px;display:none}
 .atestado-preview-box iframe{width:100%;height:500px;border:1px solid var(--border);border-radius:8px}
 @media(max-width:640px){.atestado-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════
+   FILE UPLOAD
+══════════════════════════════ */
+.upload-section{margin-top:14px;display:none}
+.upload-section.show{display:block}
+.upload-notice{background:rgba(214,158,46,.08);border:1px solid rgba(214,158,46,.25);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.upload-notice p{font-size:13px;color:#92600a;line-height:1.6;margin-bottom:6px}
+.upload-notice p:last-child{margin:0}
+.upload-notice strong{color:#7c4f08}
+.upload-warning{background:rgba(229,62,62,.07);border:1px solid rgba(229,62,62,.2);border-radius:8px;padding:10px 14px;margin-top:8px}
+.upload-warning p{font-size:12px;color:var(--red);line-height:1.55;margin:0}
+.upload-drop{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:.2s;background:var(--surface)}
+.upload-drop:hover,.upload-drop.dragover{border-color:var(--teal);background:rgba(13,115,119,.04)}
+.upload-drop-icon{font-size:28px;margin-bottom:8px}
+.upload-drop p{font-size:13px;color:var(--muted);margin:0}
+.upload-drop span{font-size:12px;color:var(--teal);font-weight:600}
+.upload-input{display:none}
+.upload-files-list{margin-top:10px}
+.upload-file-item{display:flex;align-items:center;justify-content:space-between;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:12.5px}
+.upload-file-name{color:var(--navy);font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-file-size{color:var(--muted);font-size:11px;margin:0 10px}
+.upload-file-remove{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:0;line-height:1}
 </style>
 </head>
 <body>
@@ -809,7 +832,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
     <div class="price-cards">
       <div class="price-card fade-up">
         <div class="price-name">Atestados</div>
-        <div class="price-val"><sup>€</sup>35<sub>/atestado</sub></div>
+        <div class="price-val"><sup>€</sup>35–45<sub>/atestado</sub></div>
         <p class="price-desc">Para situações que requerem comprovativo médico escrito.</p>
         <ul class="price-list">
           <li>Atestado de amamentação</li>
@@ -1938,7 +1961,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
           <div class="svc-price">35€ <sub>/atestado</sub></div>
         </div>
 
-        <div class="svc-card" onclick="selectService(this,'Atestado para Carta de Condução',35,'Atestado','atestado-conducao')">
+        <div class="svc-card" onclick="selectService(this,'Atestado para Carta de Condução',45,'Atestado','atestado-conducao')">
           <span class="svc-icon">🚗</span>
           <div class="badge-atestado">ATESTADO</div>
           <div class="svc-name">Atestado para Carta de Condução</div>
@@ -1946,7 +1969,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
           <div class="svc-price">35€ <sub>/atestado</sub></div>
         </div>
 
-        <div class="svc-card" onclick="selectService(this,'Emissão de Baixa Médica',40,'Consulta','baixa-medica')">
+        <div class="svc-card" onclick="selectService(this,'Emissão de Baixa Médica',55,'Consulta','baixa-medica')">
           <span class="svc-icon">🏥</span>
           <div class="badge-consulta">CONSULTA</div>
           <div class="svc-name">Emissão de Baixa Médica</div>
@@ -1965,7 +1988,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         <div class="svc-card" onclick="selectService(this,'Consulta de Infeção Urinária',40,'Consulta','consulta-infecao-urinaria')">
           <span class="svc-icon">💧</span>
           <div class="badge-consulta">CONSULTA</div>
-          <div class="svc-name">Consulta de Infeção Urinária</div>
+          <div class="svc-name">Consulta de Infeção Urinária</div><div style="font-size:10.5px;color:var(--amber);font-weight:600;margin-top:2px">👩 Apenas adultos — sexo feminino</div>
           <p class="svc-desc">Avaliação dos sintomas, diagnóstico diferencial e prescrição do antibiótico adequado segundo as guidelines nacionais.</p>
           <div class="svc-price">40€ <sub>/consulta</sub></div>
         </div>
@@ -1981,7 +2004,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
         <div class="svc-card" onclick="selectService(this,'Consulta de Amigdalite',40,'Consulta','consulta-amigdalite')">
           <span class="svc-icon">🤒</span>
           <div class="badge-consulta">CONSULTA</div>
-          <div class="svc-name">Consulta de Amigdalite</div>
+          <div class="svc-name">Consulta de Amigdalite</div><div style="font-size:10.5px;color:var(--amber);font-weight:600;margin-top:2px">👤 Apenas adultos</div>
           <p class="svc-desc">Avaliação da dor de garganta com critérios clínicos validados para distinguir infeção viral de bacteriana e decidir antibiótico.</p>
           <div class="svc-price">40€ <sub>/consulta</sub></div>
         </div>
@@ -2040,6 +2063,23 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
           <div class="field"><label>Telemóvel</label><input type="tel" id="bookPhone" placeholder="+351 9XX XXX XXX"/></div>
           <div class="field"><label>Número de Utente SNS</label><input type="text" id="bookNumUtente" placeholder="000 000 000" maxlength="12"/></div>
           <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea id="bookObs" placeholder="Descreva brevemente o motivo da consulta..."></textarea></div>
+
+        <!-- Upload section - shown for specific services -->
+        <div class="upload-section" id="uploadSection">
+          <div class="upload-notice" id="uploadNotice">
+            <p id="uploadNoticeText"></p>
+            <div class="upload-warning" id="uploadWarning" style="display:none">
+              <p id="uploadWarningText"></p>
+            </div>
+          </div>
+          <div class="upload-drop" id="uploadDrop" onclick="document.getElementById('uploadInput').click()" ondragover="uploadDragOver(event)" ondragleave="uploadDragLeave(event)" ondrop="uploadDrop(event)">
+            <div class="upload-drop-icon">📎</div>
+            <p>Arraste ficheiros aqui ou <span>clique para seleccionar</span></p>
+            <p style="font-size:11px;margin-top:4px;color:var(--muted)">PDF, imagens, Word — máx. 10MB por ficheiro</p>
+          </div>
+          <input type="file" id="uploadInput" class="upload-input" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.heic" onchange="uploadFilesSelected(this.files)"/>
+          <div class="upload-files-list" id="uploadFilesList"></div>
+        </div>
 
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px">
             <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px">💳 Pagamento seguro via Stripe</p>
@@ -2204,6 +2244,9 @@ window.selectService = function(el, name, price, type, id) {
   document.querySelectorAll('.svc-card').forEach(function(c){ c.classList.remove('selected'); });
   el.classList.add('selected');
   currentService = { name: name, price: price, type: type, id: id };
+  uploadedFiles = []; // reset uploads
+  var list = document.getElementById('uploadFilesList');
+  if (list) list.innerHTML = '';
   setTimeout(function() {
     var s1 = document.getElementById('step1');
     var s2 = document.getElementById('step2');
@@ -2223,6 +2266,7 @@ window.selectService = function(el, name, price, type, id) {
     var mg = document.getElementById('mbRefGrid');
     if (ms) ms.classList.remove('show');
     if (mg) mg.style.display = 'none';
+    showUploadSection(id);
     renderCalendar();
   }, 180);
 };
@@ -2443,24 +2487,34 @@ window.confirmBooking = function() {
 
   setConfirmBtn(true, 'A redirecionar para pagamento…');
 
-  fetch(API_URL + '/create-checkout-session', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      serviceId:     currentService.id,
-      customerEmail: email,
-      customerName:  name,
-      date:          dateStr,
-      time:          timeStr,
-      nif:           nif          || undefined,
-      telefone:      phone        || undefined,
-      numeroUtente:  numUtente    || undefined,
-      observacoes:   obs          || undefined,
-    })
+  filesToBase64().then(function(filesB64) {
+    return fetch(API_URL + '/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        serviceId:     currentService.id,
+        customerEmail: email,
+        customerName:  name,
+        date:          dateStr,
+        time:          timeStr,
+        nif:           nif       || undefined,
+        telefone:      phone     || undefined,
+        numeroUtente:  numUtente || undefined,
+        observacoes:   obs       || undefined,
+        temAnexos:     filesB64.length > 0 ? true : undefined,
+        numAnexos:     filesB64.length > 0 ? filesB64.length : undefined,
+      })
+    });
   })
   .then(function(r){ return r.json(); })
   .then(function(data) {
     if (data.error) throw new Error(data.error);
+    // Store files in sessionStorage for after payment
+    if (uploadedFiles.length > 0) {
+      sessionStorage.setItem('pendingFiles', JSON.stringify(
+        uploadedFiles.map(function(f){ return { name: f.name, size: f.size, type: f.type }; })
+      ));
+    }
     window.location.href = data.url;
   })
   .catch(function(err){
@@ -2849,9 +2903,10 @@ window.renderPatientDetail = function(u) {
     u.consultas.slice().reverse().forEach(function(c, idx) {
       var realIdx = numConsultas - 1 - idx;
       var dt = c.dataConsulta ? c.dataConsulta + ' as ' + (c.hora||'') : '---';
+      var anexosTag = c.temAnexos ? '<span style="background:rgba(214,158,46,.12);color:#92600a;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px">📎 ' + (c.numAnexos||'') + ' anexo(s) enviado(s)</span>' : '';
       consultasHtml += '<div style="border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px">'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
-        + '<span style="font-size:13.5px;font-weight:600;color:var(--navy)">🩺 ' + (c.servico||'---') + '</span>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">'
+        + '<span style="font-size:13.5px;font-weight:600;color:var(--navy)">🩺 ' + (c.servico||'---') + anexosTag + '</span>'
         + '<span style="font-size:12px;color:var(--muted)">' + dt + '</span>'
         + '</div>'
         + (c.observacoes ? '<div style="font-size:12.5px;color:var(--slate);background:var(--surface);border-radius:7px;padding:8px 12px;margin-bottom:10px">📝 <strong>Motivo:</strong> ' + c.observacoes + '</div>' : '')
@@ -2951,6 +3006,124 @@ window.savePatientDetail = function(id) {
     .catch(function(){ alert('Erro ao guardar.'); });
 };
 
+
+
+// ══════════════════════════════════════
+// FILE UPLOAD
+// ══════════════════════════════════════
+var uploadedFiles = [];
+
+var UPLOAD_NOTICES = {
+  'baixa-medica': {
+    text: '📋 Para a emissão de baixa médica, anexe todos os relatórios médicos e exames que possua (resultados de análises, exames de imagem, cartas de referenciação, etc.). Quanto mais informação fornecer, mais precisa será a avaliação.',
+    warning: null
+  },
+  'atestado-conducao': {
+    text: '🪪 Para o atestado de carta de condução, anexe uma fotografia da sua carta de condução (frente e verso).',
+    warning: '⚠️ Se tiver mais de 70 anos, epilepsia, apneia do sono, doenças cardíacas, doenças visuais, doenças auditivas ou diabetes, deve também submeter relatório do seu médico assistente sobre o controlo destas patologias. Caso não submeta a informação solicitada, poderá não ser possível emitir o atestado.'
+  }
+};
+
+function showUploadSection(serviceId) {
+  var section = document.getElementById('uploadSection');
+  var notice = document.getElementById('uploadNoticeText');
+  var warning = document.getElementById('uploadWarning');
+  var warningText = document.getElementById('uploadWarningText');
+  if (!section) return;
+
+  var info = UPLOAD_NOTICES[serviceId];
+  if (info) {
+    section.classList.add('show');
+    if (notice) notice.textContent = info.text;
+    if (warning && warningText) {
+      if (info.warning) {
+        warning.style.display = 'block';
+        warningText.textContent = info.warning;
+      } else {
+        warning.style.display = 'none';
+      }
+    }
+  } else {
+    section.classList.remove('show');
+    uploadedFiles = [];
+    var list = document.getElementById('uploadFilesList');
+    if (list) list.innerHTML = '';
+  }
+}
+
+window.uploadDragOver = function(e) {
+  e.preventDefault();
+  var drop = document.getElementById('uploadDrop');
+  if (drop) drop.classList.add('dragover');
+};
+
+window.uploadDragLeave = function(e) {
+  var drop = document.getElementById('uploadDrop');
+  if (drop) drop.classList.remove('dragover');
+};
+
+window.uploadDrop = function(e) {
+  e.preventDefault();
+  var drop = document.getElementById('uploadDrop');
+  if (drop) drop.classList.remove('dragover');
+  if (e.dataTransfer && e.dataTransfer.files) {
+    uploadFilesSelected(e.dataTransfer.files);
+  }
+};
+
+window.uploadFilesSelected = function(files) {
+  var maxSize = 10 * 1024 * 1024; // 10MB
+  for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+    if (file.size > maxSize) {
+      alert('O ficheiro "' + file.name + '" é demasiado grande (máx. 10MB).');
+      continue;
+    }
+    // Check duplicate
+    var exists = uploadedFiles.some(function(f){ return f.name === file.name && f.size === file.size; });
+    if (!exists) uploadedFiles.push(file);
+  }
+  renderUploadList();
+};
+
+function renderUploadList() {
+  var list = document.getElementById('uploadFilesList');
+  if (!list) return;
+  if (!uploadedFiles.length) { list.innerHTML = ''; return; }
+  var html = '';
+  uploadedFiles.forEach(function(file, idx) {
+    var sizeStr = file.size > 1024*1024 ? (file.size/1024/1024).toFixed(1) + ' MB' : Math.round(file.size/1024) + ' KB';
+    html += '<div class="upload-file-item">'
+      + '<span class="upload-file-name">📄 ' + file.name + '</span>'
+      + '<span class="upload-file-size">' + sizeStr + '</span>'
+      + '<button class="upload-file-remove" onclick="removeUploadFile(' + idx + ')">✕</button>'
+      + '</div>';
+  });
+  list.innerHTML = html;
+}
+
+window.removeUploadFile = function(idx) {
+  uploadedFiles.splice(idx, 1);
+  renderUploadList();
+};
+
+// Convert files to base64 for sending
+function filesToBase64() {
+  return Promise.all(uploadedFiles.map(function(file) {
+    return new Promise(function(resolve) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        resolve({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          data: e.target.result.split(',')[1] // base64 only
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  }));
+}
 
 // ══════════════════════════════════════
 // ATESTADOS
