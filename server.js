@@ -201,7 +201,7 @@ app.post('/upload-anexos', async (req, res) => {
       disposition: 'attachment',
     }));
 
-    const toEmail = 'geral@consultas-online.pt';
+    const toEmail = 'patricia.mendonca.ferraz@gmail.com';
     const fromEmail = process.env.FROM_EMAIL || 'geral@consultas-online.pt';
     console.log('A enviar anexos para:', toEmail, 'de:', fromEmail);
     await sgMail.send({
