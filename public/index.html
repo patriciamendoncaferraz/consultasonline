@@ -2150,7 +2150,7 @@ var API_URL   = 'https://consultasonline-production.up.railway.app';
 // ══════════════════════════════════════
 // PAGE NAVIGATION
 // ══════════════════════════════════════
-window.showPage = function(p) {
+window.showPage = function(p, pushState) {
   document.querySelectorAll('.page').forEach(function(x){ x.classList.remove('active'); });
   document.querySelectorAll('.nav-tab').forEach(function(x){ x.classList.remove('active'); });
   var page = document.getElementById('page-' + p);
@@ -2164,6 +2164,10 @@ window.showPage = function(p) {
   closeAllArticles();
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(checkVisible, 200);
+  // Push history state so browser back button works
+  if (pushState !== false) {
+    history.pushState({ page: p }, '', p === 'home' ? '/' : '#' + p);
+  }
 };
 
 // ══════════════════════════════════════
@@ -3316,11 +3320,12 @@ try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
 // Handle browser back button
 window.addEventListener('popstate', function(e) {
   if (e.state && e.state.article) {
-    // Going back to an article - just close it
     window.closeArticle();
+  } else if (e.state && e.state.page) {
+    window.showPage(e.state.page, false);
   } else {
-    // Going back - close article and go to blog
-    window.closeArticle();
+    // Default: go to home
+    window.showPage('home', false);
   }
 });
 
