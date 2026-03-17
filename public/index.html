@@ -3303,4 +3303,25 @@ function checkVisible() {
 }
 window.addEventListener('scroll', checkVisible, { passive: true });
 setTimeout(checkVisible, 100);
-se
+
+setTimeout(function() {
+  document.querySelectorAll('.page.active .fade-up').forEach(function(el){ el.classList.add('visible'); });
+}, 300);
+
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.article) {
+    window.closeArticle();
+  } else if (e.state && e.state.page) {
+    window.showPage(e.state.page, false);
+  } else {
+    window.showPage('home', false);
+  }
+});
+
+try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
+
+})(); // end IIFE
+</script>
+
+</body>
+</html>
