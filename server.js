@@ -489,6 +489,7 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
         date,
         due_date: date,
         client: { id: String(clientId), name: safeName },
+        tax_exemption: 'M09',
         items: [{
           name: serviceName,
           description: 'Prestacao de servicos de saude online',
@@ -496,11 +497,10 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
           quantity: '1',
           unit: 'service',
           tax: {
-            name: process.env.INVOICEXPRESS_TAX_NAME || 'Isento artigo 9º do CIVA',
-            exemption_reason: 'M07'
+            name: process.env.INVOICEXPRESS_TAX_NAME || 'Isento artigo 9º do CIVA'
           }
         }],
-        observations: 'IVA isento nos termos do artigo 9.º do CIVA (prestacoes de servicos de saude)'
+        observations: 'IVA isento nos termos do artigo 9.º do CIVA'
       }}
     );
 
