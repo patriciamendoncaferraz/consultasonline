@@ -185,6 +185,52 @@ app.get('/services', (req, res) => {
   res.json(Object.entries(SERVICES).map(([id, s]) => ({ id, name: s.name, price: s.price / 100 })));
 });
 
+// ─────────────────────────────────────────────
+// UPLOAD ANEXOS — receber ficheiros e enviar por email
+// ─────────────────────────────────────────────
+app.post('/upload-anexos', async (req, res) => {
+  const { customerName, customerEmail, serviceId, serviceName, date, time, ficheiros } = req.body;
+  if (!ficheiros || !ficheiros.length) return res.json({ ok: true, skipped: true });
+
+  try {
+    const nomeServico = serviceName || serviceId || 'Servico desconhecido';
+    const attachments = ficheiros.map(f => ({
+      content: f.data,
+      filename: f.name,
+      type: f.type || 'application/octet-stream',
+      disposition: 'attachment',
+    }));
+
+    await sgMail.send({
+      to: process.env.FROM_EMAIL || 'geral@consultas-online.pt',
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+      subject: 'Anexos — ' + nomeServico + ' — ' + (customerName || customerEmail),
+      html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
+        + '<div style="max-width:520px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
+        + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>'
+        + '&nbsp;&nbsp;<span style="background:rgba(214,158,46,.2);color:#f6ad55;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px">📎 ANEXOS</span></div>'
+        + '<div style="padding:22px 24px">'
+        + '<h3 style="color:#0b1d35;margin:0 0 14px">Documentos submetidos pelo utente</h3>'
+        + '<table style="width:100%;font-size:13px;border-collapse:collapse">'
+        + '<tr><td style="color:#8a9bb0;font-weight:600;padding:6px 0;width:120px">Utente</td><td style="color:#0b1d35">' + (customerName || '—') + '</td></tr>'
+        + '<tr><td style="color:#8a9bb0;font-weight:600;padding:6px 0">Email</td><td style="color:#0b1d35">' + (customerEmail || '—') + '</td></tr>'
+        + '<tr><td style="color:#8a9bb0;font-weight:600;padding:6px 0">Serviço</td><td style="color:#0b1d35">' + nomeServico + '</td></tr>'
+        + '<tr><td style="color:#8a9bb0;font-weight:600;padding:6px 0">Data/Hora</td><td style="color:#0b1d35">' + (date || '—') + ' às ' + (time || '—') + '</td></tr>'
+        + '<tr><td style="color:#8a9bb0;font-weight:600;padding:6px 0">Ficheiros</td><td style="color:#0b1d35">' + ficheiros.length + ' documento(s) em anexo</td></tr>'
+        + '</table>'
+        + '</div></div></body></html>',
+      text: 'Anexos de ' + (customerName || customerEmail) + ' — ' + nomeServico + ' — ' + date + ' ' + time,
+      attachments,
+    });
+
+    console.log('Anexos enviados:', ficheiros.length, 'ficheiros de', customerEmail);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Erro ao enviar anexos:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/create-checkout-session', async (req, res) => {
   const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes, temAnexos, numAnexos } = req.body;
 
