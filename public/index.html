@@ -2488,33 +2488,52 @@ window.confirmBooking = function() {
   setConfirmBtn(true, 'A redirecionar para pagamento…');
 
   filesToBase64().then(function(filesB64) {
-    return fetch(API_URL + '/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        serviceId:     currentService.id,
-        customerEmail: email,
-        customerName:  name,
-        date:          dateStr,
-        time:          timeStr,
-        nif:           nif       || undefined,
-        telefone:      phone     || undefined,
-        numeroUtente:  numUtente || undefined,
-        observacoes:   obs       || undefined,
-        temAnexos:     filesB64.length > 0 ? true : undefined,
-        numAnexos:     filesB64.length > 0 ? filesB64.length : undefined,
-      })
+    // Step 1: send files to server (if any)
+    var uploadPromise = Promise.resolve();
+    if (filesB64.length > 0) {
+      setConfirmBtn(true, 'A enviar documentos...');
+      uploadPromise = fetch(API_URL + '/upload-anexos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName:  name,
+          customerEmail: email,
+          serviceId:     currentService.id,
+          serviceName:   currentService.name,
+          date:          dateStr,
+          time:          timeStr,
+          ficheiros:     filesB64,
+        })
+      }).then(function(r){ return r.json(); })
+      .then(function(d){ console.log('Anexos enviados:', d); })
+      .catch(function(e){ console.warn('Erro anexos (nao critico):', e.message); });
+    }
+
+    // Step 2: create checkout session
+    return uploadPromise.then(function() {
+      setConfirmBtn(true, 'A redirecionar para pagamento...');
+      return fetch(API_URL + '/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceId:     currentService.id,
+          customerEmail: email,
+          customerName:  name,
+          date:          dateStr,
+          time:          timeStr,
+          nif:           nif       || undefined,
+          telefone:      phone     || undefined,
+          numeroUtente:  numUtente || undefined,
+          observacoes:   obs       || undefined,
+          temAnexos:     filesB64.length > 0 ? true : undefined,
+          numAnexos:     filesB64.length > 0 ? filesB64.length : undefined,
+        })
+      });
     });
   })
   .then(function(r){ return r.json(); })
   .then(function(data) {
     if (data.error) throw new Error(data.error);
-    // Store files in sessionStorage for after payment
-    if (uploadedFiles.length > 0) {
-      sessionStorage.setItem('pendingFiles', JSON.stringify(
-        uploadedFiles.map(function(f){ return { name: f.name, size: f.size, type: f.type }; })
-      ));
-    }
     window.location.href = data.url;
   })
   .catch(function(err){
