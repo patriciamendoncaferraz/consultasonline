@@ -670,10 +670,25 @@ app.post('/contact', async (req, res) => {
 // ROTAS DE REGISTOS CLÍNICOS (protegidas)
 // ─────────────────────────────────────────────
 
+// Rota de login admin — valida password no servidor
+app.post('/admin/login', (req, res) => {
+  const { password } = req.body;
+  const correct = process.env.ADMIN_SECRET;
+  if (!password || !correct || password !== correct) {
+    return res.status(401).json({ ok: false, error: 'Password incorreta.' });
+  }
+  // Devolve um token simples (hash da password + salt fixo)
+  const token = Buffer.from(correct + ':consultas-admin-salt').toString('base64');
+  res.json({ ok: true, token });
+});
+
 // Middleware de autenticação admin
 function adminAuth(req, res, next) {
   const key = req.headers['x-admin-key'] || req.query.adminKey;
-  if (!key || key !== process.env.ADMIN_SECRET) {
+  const correct = process.env.ADMIN_SECRET;
+  // Aceita password directa OU token
+  const token = correct ? Buffer.from(correct + ':consultas-admin-salt').toString('base64') : null;
+  if (!key || (key !== correct && key !== token)) {
     return res.status(401).json({ error: 'Não autorizado.' });
   }
   next();
