@@ -2559,7 +2559,8 @@ window.toggleInvoice = function() {
 // ══════════════════════════════════════
 // ADMIN PANEL
 // ══════════════════════════════════════
-var ADMIN_PASSWORD = 'consultas2024admin';
+var ADMIN_PASSWORD = '';
+var ADMIN_TOKEN = sessionStorage.getItem('adminToken') || '';
 var adminDate = new Date();
 var adminSelectedDay = null;
 var adminSelectedKey = null;
@@ -2588,19 +2589,36 @@ window.showAdminLogin = function() {
 
 window.checkAdminLogin = function() {
   var pwd = document.getElementById('adminPwd');
-  if (!pwd) return;
-  if (pwd.value === ADMIN_PASSWORD) {
+  if (!pwd || !pwd.value.trim()) return;
+  var btn = document.querySelector('.admin-save-btn');
+  if (btn) { btn.textContent = 'A verificar...'; btn.disabled = true; }
+  fetch(API_URL + '/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pwd.value })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (btn) { btn.textContent = 'Entrar →'; btn.disabled = false; }
+    if (!data.ok) {
+      var err = document.getElementById('adminLoginErr');
+      if (err) err.classList.add('show');
+      pwd.value = ''; pwd.focus(); return;
+    }
+    ADMIN_TOKEN = data.token;
     sessionStorage.setItem('adminLoggedIn', 'true');
+    sessionStorage.setItem('adminToken', data.token);
     var login = document.getElementById('adminLogin');
     var dash = document.getElementById('adminDashboard');
     if (login) login.style.display = 'none';
     if (dash) { dash.style.display = 'block'; renderAdminCalendar(); renderAdminSummary(); initPatientsDate(); loadPatients(); }
-  } else {
+  })
+  .catch(function() {
+    if (btn) { btn.textContent = 'Entrar →'; btn.disabled = false; }
     var err = document.getElementById('adminLoginErr');
     if (err) err.classList.add('show');
-    pwd.value = '';
-    pwd.focus();
-  }
+    pwd.value = ''; pwd.focus();
+  });
 };
 
 window.adminLogout = function() {
@@ -2748,11 +2766,15 @@ window.adminUnblockSlot = function(dateKey, slot) {
 // REGISTOS CLÍNICOS — Admin
 // ══════════════════════════════════════
 var ADMIN_SECRET = ADMIN_PASSWORD;
-window._getAdminHeaders = function(){ return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET }; };
+window._getAdminHeaders = function(){
+  var tok = ADMIN_TOKEN || sessionStorage.getItem('adminToken') || '';
+  return { 'Content-Type': 'application/json', 'x-admin-key': tok };
+};
 var allPatientsCache = [];
 
 window.adminHeaders = function() {
-  return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_SECRET };
+  var tok = ADMIN_TOKEN || sessionStorage.getItem('adminToken') || '';
+  return { 'Content-Type': 'application/json', 'x-admin-key': tok };
 };
 
 function getTodayISO() {
