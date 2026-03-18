@@ -2590,8 +2590,21 @@ window.showAdminLogin = function() {
 window.checkAdminLogin = function() {
   var pwd = document.getElementById('adminPwd');
   if (!pwd) return;
-  if (pwd.value === ADMIN_PASSWORD) {
+  fetch(API_URL + '/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pwd.value })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (!data.ok) {
+      var err = document.getElementById('adminLoginErr');
+      if (err) err.classList.add('show');
+      pwd.value = ''; pwd.focus(); return;
+    }
+    ADMIN_TOKEN = data.token;
     sessionStorage.setItem('adminLoggedIn', 'true');
+    sessionStorage.setItem('adminToken', data.token);
     var login = document.getElementById('adminLogin');
     var dash = document.getElementById('adminDashboard');
     if (login) login.style.display = 'none';
