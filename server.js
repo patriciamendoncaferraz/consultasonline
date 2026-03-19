@@ -391,11 +391,41 @@ app.post('/webhook', async (req, res) => {
         console.warn('Fatura ignorada: nome ou email em falta', { customerName, customerEmail });
       }
 
-      // 5. Enviar email (só se tiver email)
+      // 5. Enviar email ao utente
       if (customerEmail) {
         await sendConfirmationEmail({ to: customerEmail, name: customerName || 'Utente', serviceName, date, time, amountEur, meetLink, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
       } else {
         console.warn('Email ignorado: endereco em falta');
+      }
+
+      // 6. Notificacao para a medica
+      const notifyEmail = process.env.NOTIFY_EMAIL;
+      if (notifyEmail) {
+        try {
+          await sgMail.send({
+            to: notifyEmail,
+            from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+            subject: 'Nova consulta marcada - ' + serviceName + ' | ' + date + ' as ' + time,
+            html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
+              + '<div style="max-width:500px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
+              + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">ConsultasOnline</span>'
+              + '&nbsp;&nbsp;<span style="background:rgba(23,196,168,.15);color:#17c4a8;font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700">NOVA MARCACAO</span></div>'
+              + '<div style="padding:22px 24px">'
+              + '<h2 style="color:#0b1d35;font-size:20px;margin:0 0 16px">Nova consulta confirmada</h2>'
+              + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:16px">'
+              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Servico: <strong>' + serviceName + '</strong></p>'
+              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Data: <strong>' + date + '</strong></p>'
+              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Hora: <strong>' + time + '</strong> (PT Continente)</p>'
+              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Utente: <strong>' + (customerName || '-') + '</strong></p>'
+              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Email: <strong>' + (customerEmail || '-') + '</strong></p>'
+              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Valor: <strong>' + amountEur + '</strong></p>'
+              + '</div>'
+              + '<p style="font-size:12px;color:#8a9bb0">Notificacao automatica ConsultasOnline</p>'
+              + '</div></div></body></html>',
+            text: 'Nova consulta!\nServico: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nUtente: ' + (customerName||'-') + '\nEmail: ' + (customerEmail||'-') + '\nValor: ' + amountEur,
+          });
+          console.log('Notificacao enviada para:', notifyEmail);
+        } catch(ne) { console.warn('Erro notificacao medica:', ne.message); }
       }
     } catch(e) { console.error('Erro email/fatura:', e.message); }
     return res.json({ received: true });
