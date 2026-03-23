@@ -137,6 +137,9 @@ app.get('/obrigado', (req, res) => {
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Consulta Confirmada — ConsultasOnline</title>
+<meta name="description" content="A sua consulta médica online foi confirmada com sucesso. Receberá o email de confirmação e fatura em breve."/>
+<meta name="robots" content="noindex, nofollow"/>
+<link rel="canonical" href="https://www.consultas-online.pt/"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -153,19 +156,33 @@ p{font-size:15px;color:#64748b;line-height:1.7;margin-bottom:8px}
 .logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:#0b1d35;margin-bottom:32px}
 .logo span{color:#17c4a8}
 </style>
+<!-- Schema: Confirmação de serviço médico -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ConfirmAction",
+  "name": "Consulta Médica Online Confirmada",
+  "provider": {
+    "@type": "MedicalBusiness",
+    "name": "ConsultasOnline",
+    "url": "https://www.consultas-online.pt"
+  }
+}
+</script>
 </head>
 <body>
 <div class="card">
   <div class="logo">Consultas<span>Online</span></div>
-  <div class="icon">✓</div>
+  <div class="icon" role="img" aria-label="Pagamento confirmado">✓</div>
   <h1>Pagamento Confirmado!</h1>
-  <p>A sua consulta foi agendada com sucesso.</p>
+  <p>A sua consulta médica online foi agendada com sucesso.</p>
   <p>Vai receber um email de confirmação com todos os detalhes e a fatura em breve.</p>
   <div class="highlight">
     <p>📧 <strong>Verifique o seu email</strong></p>
     <p style="font-size:13px;color:#64748b">A confirmação e fatura são enviadas automaticamente. Verifique também a pasta de spam.</p>
+    <p style="font-size:13px;color:#64748b;margin-top:8px">🎥 O link da videoconsulta está no email.</p>
   </div>
-  <a href="/" class="btn">Voltar ao Website →</a>
+  <a href="/" class="btn" aria-label="Voltar à página principal da ConsultasOnline">Voltar ao Website →</a>
 </div>
 </body>
 </html>`);
