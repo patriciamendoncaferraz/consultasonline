@@ -128,6 +128,231 @@ function formatPhone(phone) {
   return '+351' + clean;
 }
 
+
+// ─────────────────────────────────────────────────────────────────
+// ROTAS SEO — Cada artigo tem URL próprio indexável pelo Google
+// ─────────────────────────────────────────────────────────────────
+const ARTICLES = {
+  'infecao-urinaria': {
+    id: 'itu',
+    title: 'Infeção Urinária: Causas, Sintomas e Tratamento | ConsultasOnline',
+    description: 'Saiba como identificar e tratar a infeção urinária. Consulta online com diagnóstico e receita de antibiótico em 30 minutos. A partir de 40€.',
+    category: 'Infeções',
+    keywords: 'infeção urinária sintomas tratamento, consulta infeção urinária online, antibiótico infeção urinária portugal',
+  },
+  'baixa-medica': {
+    id: 'renovacao-baixa',
+    title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
+    description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
+    category: 'Baixas',
+    keywords: 'baixa médica online portugal, renovar baixa médica online, CIT online, consulta baixa médica',
+  },
+  'renovacao-medicamentos': {
+    id: 'renovacao-medicamentos',
+    title: 'Renovação de Medicamentos Online em Portugal | ConsultasOnline',
+    description: 'Renove a sua receita médica por videoconsulta. Receita electrónica enviada por SMS e email no próprio dia. A partir de 40€.',
+    category: 'Medicação',
+    keywords: 'renovar receita médica online, renovação medicamentos online portugal, receita médica online',
+  },
+  'atestado-amamentacao': {
+    id: 'amamentacao',
+    title: 'Atestado de Amamentação Online em Portugal | ConsultasOnline',
+    description: 'Obtenha o atestado de amamentação por videoconsulta. Direitos laborais, renovação após 12 meses. Emitido no próprio dia. 35€.',
+    category: 'Amamentação',
+    keywords: 'atestado amamentação online, atestado amamentação portugal, renovar atestado amamentação',
+  },
+  'atestado-carta-conducao': {
+    id: 'conducao',
+    title: 'Atestado Médico para Carta de Condução Online | ConsultasOnline',
+    description: 'Atestado de aptidão médica para carta de condução por videoconsulta. Válido no IMT. Emitido no próprio dia. 45€.',
+    category: 'Carta de Condução',
+    keywords: 'atestado carta de condução online, exame médico carta de condução online portugal, atestado IMT online',
+  },
+  'faltas-trabalho': {
+    id: 'faltas-trabalho',
+    title: 'Faltas ao Trabalho por Doença: Como Justificar | ConsultasOnline',
+    description: 'Tudo sobre declarações médicas, baixas e os seus direitos como trabalhador. Declaração médica emitida online no próprio dia.',
+    category: 'Trabalho',
+    keywords: 'faltas trabalho doença justificar, declaração médica trabalho online, baixa médica trabalho portugal',
+  },
+  'faltas-escola': {
+    id: 'faltas-escola',
+    title: 'Faltas à Escola por Doença: Como Justificar | ConsultasOnline',
+    description: 'O que diz a lei, documentos necessários e como obter declaração médica online para justificar faltas escolares. 35€.',
+    category: 'Escola',
+    keywords: 'faltas escola doença justificar, atestado falta escolar online, declaração médica escola portugal',
+  },
+  'dor-de-garganta-amigdalite': {
+    id: 'garganta',
+    title: 'Dor de Garganta e Amigdalite: Quando Tomar Antibiótico | ConsultasOnline',
+    description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
+    category: 'Infeções',
+    keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal',
+  },
+  'ozempic-glp1': {
+    id: 'ozempic',
+    title: 'Ozempic, Mounjaro e Wegovy: Guia Completo GLP-1 | ConsultasOnline',
+    description: 'Semaglutido, tirzepatido — eficácia, segurança e quem pode tomar. O guia médico completo sobre os medicamentos GLP-1.',
+    category: 'Obesidade',
+    keywords: 'ozempic portugal, wegovy portugal, mounjaro portugal, semaglutido tirzepatido guia',
+  },
+  'doencas-sexualmente-transmissiveis': {
+    id: 'dst',
+    title: 'Doenças Sexualmente Transmissíveis: Rastreio Online | ConsultasOnline',
+    description: 'Rastreio de DST/IST de forma discreta e confidencial. VIH, sífilis, gonorreia, clamídia — pedido de análises online. 40€.',
+    category: 'Saúde Sexual',
+    keywords: 'rastreio DST online portugal, teste IST online discreto, consulta DST IST online confidencial',
+  },
+  'cessacao-tabagica': {
+    id: 'cessacao',
+    title: 'Como Parar de Fumar: Guia Médico Completo | ConsultasOnline',
+    description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 40€.',
+    category: 'Cessação Tabágica',
+    keywords: 'cessação tabágica online portugal, consulta parar fumar online, vareniclina prescrição online',
+  },
+  'consulta-online': {
+    id: 'consulta-online',
+    title: 'Consulta Online em Portugal: O Guia Completo | ConsultasOnline',
+    description: 'O que é, como funciona, quanto custa e o que pode tratar numa consulta médica online em Portugal. Tudo o que precisa saber.',
+    category: 'Consulta Online',
+    keywords: 'consulta online portugal, como funciona consulta online, consulta médica online portugal guia',
+  },
+  'medico-online': {
+    id: 'medico-online',
+    title: 'Médico Online em Portugal: Como Funciona | ConsultasOnline',
+    description: 'Vantagens do médico online, o que pode pedir, segurança e sigilo médico. Como escolher uma plataforma de confiança.',
+    category: 'Médico Online',
+    keywords: 'médico online portugal, médico online videoconsulta, médico online mbway portugal',
+  },
+  'telemedicina': {
+    id: 'telemedicina',
+    title: 'Telemedicina em Portugal: O que É e Direitos do Utente | ConsultasOnline',
+    description: 'Como funciona a telemedicina em Portugal, diferenças entre SNS e privado e os seus direitos como utente.',
+    category: 'Telemedicina',
+    keywords: 'telemedicina portugal, telemedicina como funciona, teleconsulta portugal direitos utente',
+  },
+  'atestado-rastreio-saude': {
+    id: 'rastreio',
+    title: 'Rastreio de Saúde em Portugal: O Guia Completo | ConsultasOnline',
+    description: 'Rastreios recomendados pela DGS por idade e sexo, vacinação do adulto e como fazer rastreio de IST de forma discreta.',
+    category: 'Saúde Preventiva',
+    keywords: 'rastreio saúde portugal, exames preventivos portugal, rastreio oncológico portugal',
+  },
+};
+
+// Gera HTML completo para cada artigo com meta tags SEO próprias
+function buildArticlePage(slug, article) {
+  const canonicalUrl = \`https://www.consultas-online.pt/artigos/\${slug}\`;
+  return \`<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>\${article.title}</title>
+<meta name="description" content="\${article.description}"/>
+<meta name="keywords" content="\${article.keywords}"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="\${canonicalUrl}"/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="\${canonicalUrl}"/>
+<meta property="og:title" content="\${article.title}"/>
+<meta property="og:description" content="\${article.description}"/>
+<meta property="og:locale" content="pt_PT"/>
+<meta property="og:site_name" content="ConsultasOnline"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="\${article.title}"/>
+<meta name="twitter:description" content="\${article.description}"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "\${article.title}",
+  "description": "\${article.description}",
+  "url": "\${canonicalUrl}",
+  "inLanguage": "pt-PT",
+  "isPartOf": {
+    "@type": "MedicalBusiness",
+    "name": "ConsultasOnline",
+    "url": "https://www.consultas-online.pt"
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://www.consultas-online.pt"},
+      {"@type":"ListItem","position":2,"name":"Artigos de Saúde","item":"https://www.consultas-online.pt/artigos"},
+      {"@type":"ListItem","position":3,"name":"\${article.category}","item":"\${canonicalUrl}"}
+    ]
+  }
+}
+</script>
+<script>
+// Redireciona para a homepage com o artigo correcto aberto
+// O Google indexa esta página com URL próprio
+// O utilizador vê o artigo dentro da app
+window.__ARTICLE_ID__ = '\${article.id}';
+</script>
+</head>
+<body>
+<script>
+// Carrega a app principal e abre o artigo correcto
+(function() {
+  var id = '\${article.id}';
+  // Guarda o artigo a abrir antes de redirecionar
+  sessionStorage.setItem('openArticle', id);
+  // Redireciona para a homepage mantendo o contexto
+  if (window.location.pathname !== '/') {
+    window.location.replace('/#artigo-' + id);
+  }
+})();
+</script>
+<noscript>
+  <meta http-equiv="refresh" content="0;url=https://www.consultas-online.pt/#artigo-\${article.id}"/>
+</noscript>
+<!-- Conteúdo para o Google (sem JavaScript) -->
+<style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#334155}</style>
+<nav><a href="https://www.consultas-online.pt" style="color:#0d7377;font-weight:700;text-decoration:none">← ConsultasOnline</a></nav>
+<h1 style="color:#0b1d35;margin-top:24px">\${article.title.split('|')[0].trim()}</h1>
+<p style="font-size:16px;line-height:1.7">\${article.description}</p>
+<p style="margin-top:24px"><a href="https://www.consultas-online.pt" style="background:#0d7377;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">Marcar Consulta Online →</a></p>
+<p style="margin-top:32px;font-size:13px;color:#8a9bb0">A carregar artigo completo...</p>
+</noscript>
+</body>
+</html>\`;
+}
+
+// Rota para listagem de artigos
+app.get('/artigos', (req, res) => {
+  const links = Object.entries(ARTICLES).map(([slug, art]) =>
+    \`<li><a href="/artigos/\${slug}" style="color:#0d7377">\${art.title.split('|')[0].trim()}</a></li>\`
+  ).join('');
+  res.send(\`<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Artigos de Saúde | ConsultasOnline</title>
+<meta name="description" content="Artigos médicos sobre consulta online, baixa médica, atestados, infeção urinária, amigdalite e muito mais. Informação rigorosa e actualizada."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://www.consultas-online.pt/artigos"/>
+</head>
+<body style="font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px">
+<a href="/" style="color:#0d7377;font-weight:700;text-decoration:none">← ConsultasOnline</a>
+<h1 style="color:#0b1d35;margin:24px 0">Artigos de Saúde</h1>
+<ul style="line-height:2.2">\${links}</ul>
+</body>
+</html>\`);
+});
+
+// Rotas individuais para cada artigo
+app.get('/artigos/:slug', (req, res) => {
+  const slug = req.params.slug;
+  const article = ARTICLES[slug];
+  if (!article) {
+    return res.redirect(301, '/');
+  }
+  res.send(buildArticlePage(slug, article));
+});
+
 // Página de sucesso após pagamento
 app.get('/obrigado', (req, res) => {
   const sessionId = req.query.session_id || '';
