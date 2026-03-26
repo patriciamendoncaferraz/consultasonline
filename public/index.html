@@ -814,6 +814,9 @@ document.addEventListener("DOMContentLoaded", function() {
   document.querySelectorAll('.page').forEach(function(p) {
     p.style.display = p.id === 'page-home' ? 'block' : 'none';
   });
+  document.querySelectorAll('.article-view').forEach(function(a) {
+    a.style.display = 'none';
+  });
 });
 </script>
 
