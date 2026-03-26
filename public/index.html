@@ -2480,11 +2480,10 @@ var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho
 window.openArticle = function(id) {
   var slug = ARTICLE_SLUGS[id] || id;
   history.pushState({ article: id }, '', '/artigos/' + slug);
-  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
-  var blog = document.getElementById('page-blog');
-  if (blog) blog.style.display = 'none';
+  document.querySelectorAll('.page').forEach(function(p){ p.style.display = 'none'; p.classList.remove('active'); });
+  document.querySelectorAll('.article-view').forEach(function(a){ a.style.display = 'none'; a.classList.remove('active'); });
   var art = document.getElementById('article-' + id);
-  if (art) art.classList.add('active');
+  if (art) { art.style.display = 'block'; art.classList.add('active'); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 window.closeArticle = function() {
