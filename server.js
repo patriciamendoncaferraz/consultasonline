@@ -242,8 +242,8 @@ const ARTICLES = {
 
 // Gera HTML completo para cada artigo com meta tags SEO próprias
 function buildArticlePage(slug, article) {
-  const canonicalUrl = \`https://www.consultas-online.pt/artigos/\${slug}\`;
-  return \`<!DOCTYPE html>
+  const canonicalUrl = `https://www.consultas-online.pt/artigos/\${slug}`;
+  return `<!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8"/>
@@ -317,15 +317,15 @@ window.__ARTICLE_ID__ = '\${article.id}';
 <p style="margin-top:32px;font-size:13px;color:#8a9bb0">A carregar artigo completo...</p>
 </noscript>
 </body>
-</html>\`;
+</html>`;
 }
 
 // Rota para listagem de artigos
 app.get('/artigos', (req, res) => {
   const links = Object.entries(ARTICLES).map(([slug, art]) =>
-    \`<li><a href="/artigos/\${slug}" style="color:#0d7377">\${art.title.split('|')[0].trim()}</a></li>\`
+    `<li><a href="/artigos/\${slug}" style="color:#0d7377">\${art.title.split('|')[0].trim()}</a></li>`
   ).join('');
-  res.send(\`<!DOCTYPE html>
+  res.send(`<!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8"/>
@@ -340,7 +340,7 @@ app.get('/artigos', (req, res) => {
 <h1 style="color:#0b1d35;margin:24px 0">Artigos de Saúde</h1>
 <ul style="line-height:2.2">\${links}</ul>
 </body>
-</html>\`);
+</html>`);
 });
 
 // Rotas individuais para cada artigo
