@@ -312,7 +312,27 @@ app.get('/artigos/:slug', (req, res) => {
   if (!article) {
     return res.redirect(301, '/');
   }
-  res.send(buildArticlePage(slug, article));
+  // Serve the main index.html with SEO meta tags injected
+  // Read index.html and inject meta tags in the <head>
+  var fs = require('fs');
+  var path = require('path');
+  var indexPath = path.join(__dirname, 'public', 'index.html');
+  fs.readFile(indexPath, 'utf8', function(err, html) {
+    if (err) return res.redirect(301, '/');
+    var canonicalUrl = 'https://www.consultas-online.pt/artigos/' + slug;
+    var metaTags = '<meta name="description" content="' + article.description + '"/>\n'
+      + '<meta name="keywords" content="' + article.keywords + '"/>\n'
+      + '<link rel="canonical" href="' + canonicalUrl + '"/>\n'
+      + '<meta property="og:url" content="' + canonicalUrl + '"/>\n'
+      + '<meta property="og:title" content="' + article.title + '"/>\n'
+      + '<meta property="og:description" content="' + article.description + '"/>\n'
+      + '<title>' + article.title + '</title>\n'
+      + '<script>window.__OPEN_ARTICLE__ = "' + article.id + '";<\/script>\n';
+    // Replace the existing title and inject meta
+    html = html.replace(/<title>[^<]*<\/title>/, '');
+    html = html.replace('<meta charset="UTF-8"/>', '<meta charset="UTF-8"/>\n' + metaTags);
+    res.send(html);
+  });
 });
 
 // Página de sucesso após pagamento
