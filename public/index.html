@@ -2887,8 +2887,17 @@ window.showPage = function(p, pushState) {
 // ══════════════════════════════════════
 // ARTICLE NAVIGATION
 // ══════════════════════════════════════
+var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina"};
 window.openArticle = function(id) {
-  history.pushState({ article: id }, '', '#artigo-' + id);
+  var slug = ARTICLE_SLUGS[id] || id;
+  history.pushState({ article: id }, '', '/artigos/' + slug);
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  var blog = document.getElementById('page-blog');
+  if (blog) blog.style.display = 'none';
+  var art = document.getElementById('article-' + id);
+  if (art) art.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
   document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
   var blog = document.getElementById('page-blog');
   if (blog) blog.style.display = 'none';
@@ -2898,6 +2907,7 @@ window.openArticle = function(id) {
 };
 window.closeArticle = function() {
   document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  history.pushState({ page: 'blog' }, '', '/');
   window.showPage('blog');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -4050,15 +4060,29 @@ setTimeout(function() {
 }, 300);
 
 window.addEventListener('popstate', function(e) {
-  if (e.state && e.state.article) {
-    window.closeArticle();
-  } else if (e.state && e.state.page) {
-    window.showPage(e.state.page, false);
-  } else {
-    window.showPage('home', false);
+  var path = window.location.pathname;
+  if (path.indexOf('/artigos/') === 0) {
+    var slug = path.replace('/artigos/', '');
+    var artId = null;
+    Object.keys(ARTICLE_SLUGS).forEach(function(id) { if (ARTICLE_SLUGS[id] === slug) artId = id; });
+    if (artId) { window.openArticle(artId); return; }
   }
+  if (e.state && e.state.article) {
+    var art = document.getElementById('article-' + e.state.article);
+    if (art) { document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); }); art.classList.add('active'); return; }
+  }
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); });
+  if (e.state && e.state.page) { window.showPage(e.state.page, false); }
+  else { window.showPage('home', false); }
 });
 
+// Abrir artigo via sessionStorage (vindo de URL /artigos/slug)
+var __openArt = sessionStorage.getItem('openArticle');
+if (__openArt) {
+  sessionStorage.removeItem('openArticle');
+  setTimeout(function() { window.openArticle(__openArt); }, 100);
+}
+     
 try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
 
 })(); // end IIFE
