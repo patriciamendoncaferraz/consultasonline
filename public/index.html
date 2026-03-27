@@ -3548,7 +3548,7 @@ var chatFAQs = [
   { q: '🔒 Os meus dados estão seguros?', a: 'Sim. A videoconsulta é encriptada de ponta a ponta. O sigilo médico é absoluto por lei. Os seus dados são tratados em conformidade com o RGPD.' },
   { q: '📞 Como posso contactar?', a: 'Por email: geral@consultas-online.pt\nOu pelo formulário de contacto no site. Respondemos em menos de 24 horas em dias úteis.' }
 ];
-function renderChatOptions() {
+window.renderChatOptions = function() {
   var box = document.getElementById('chatMsgs');
   if (!box) return;
   var btns = chatFAQs.map(function(faq, i) {
