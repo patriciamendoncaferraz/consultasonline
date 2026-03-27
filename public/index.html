@@ -2354,11 +2354,9 @@ document.addEventListener("DOMContentLoaded", function() {
       <button class="chat-x" onclick="toggleChat()">✕</button>
     </div>
     <div class="chat-msgs" id="chatMsgs">
-      <div class="cmsg cmsg-bot">Olá! 👋 Como posso ajudá-lo? Posso esclarecer dúvidas sobre os nossos serviços ou ajudá-lo a marcar uma consulta.</div>
     </div>
-    <div class="chat-inp-row">
-      <input class="chat-inp" id="chatInp" placeholder="Escreva uma mensagem..." onkeypress="chatEnter(event)"/>
-      <button class="chat-send-btn" onclick="sendChat()">&#10148;</button>
+    <div class="chat-inp-row" style="padding:10px 12px">
+      <button onclick="renderChatOptions()" style="width:100%;background:var(--teal);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600">Ver perguntas frequentes ↑</button>
     </div>
   </div>
   <button class="chat-toggle" onclick="toggleChat()">💬</button>
@@ -3526,6 +3524,7 @@ window.submitContact = async function() {
 window.toggleChat = function() {
   var box = document.getElementById('chatBox');
   if (box) box.classList.toggle('open');
+  if (!window._chatInit) { window._chatInit = true; renderChatOptions(); }
 };
 window.chatEnter = function(e) { if (e.key === 'Enter') window.sendChat(); };
 var chatReplies = [
@@ -3539,20 +3538,36 @@ var chatReplies = [
   'Para questoes adicionais, contacte-nos em <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a>',
 ];
 var chatIdx = 0;
-window.sendChat = function() {
-  var inp = document.getElementById('chatInp');
+var chatFAQs = [
+  { q: '💰 Quais são os preços?', a: 'Os nossos preços são:\n• Atestado de amamentação — 35€\n• Atestado falta escolar — 35€\n• Atestado carta de condução — 45€\n• Renovação de medicamentos — 40€\n• Consulta (ITU, amigdalite, DST) — 40€\n• Baixa médica (CIT) — 55€\n\nTodos incluem fatura AT certificada.' },
+  { q: '🩺 Como funciona a videoconsulta?', a: 'Após o pagamento recebe um email com o link da videoconsulta. Na hora marcada entra directamente no browser — sem instalar nada. O médico avalia o seu caso e envia os documentos por email no próprio dia.' },
+  { q: '💳 Como posso pagar?', a: 'Aceitamos MBWay, Referência Multibanco e cartão bancário. O pagamento é processado de forma segura pela Stripe. A fatura AT é emitida automaticamente após o pagamento.' },
+  { q: '📄 Os documentos têm validade legal?', a: 'Sim. O CIT (baixa médica) é submetido electronicamente à Segurança Social. As receitas são Receita Sem Papel, válidas em todas as farmácias. Os atestados são aceites por empregadores e escolas.' },
+  { q: '📅 Como marco uma consulta?', a: '1. Clique em "Marcar Consulta" no menu\n2. Escolha o serviço, dia e hora\n3. Preencha os dados e pague\n4. Recebe confirmação por email com o link da videoconsulta' },
+  { q: '⏱️ Quando recebo os documentos?', a: 'Os documentos são enviados por email imediatamente após a consulta, em formato PDF — na maioria dos casos no próprio dia.' },
+  { q: '🔒 Os meus dados estão seguros?', a: 'Sim. A videoconsulta é encriptada de ponta a ponta. O sigilo médico é absoluto por lei. Os seus dados são tratados em conformidade com o RGPD.' },
+  { q: '📞 Como posso contactar?', a: 'Por email: geral@consultas-online.pt\nOu pelo formulário de contacto no site. Respondemos em menos de 24 horas em dias úteis.' }
+];
+function renderChatOptions() {
   var box = document.getElementById('chatMsgs');
-  if (!inp || !box || !inp.value.trim()) return;
-  var msg = inp.value.trim();
-  inp.value = '';
-  box.innerHTML += '<div class="cmsg cmsg-user">' + msg + '</div>';
-  box.scrollTop = box.scrollHeight;
-  setTimeout(function() {
-    box.innerHTML += '<div class="cmsg cmsg-bot">' + chatReplies[chatIdx % chatReplies.length] + '</div>';
-    chatIdx++;
-    box.scrollTop = box.scrollHeight;
-  }, 750);
+  if (!box) return;
+  var btns = chatFAQs.map(function(faq, i) {
+    return '<button onclick="window.selectChatFAQ(' + i + ')" style="display:block;width:100%;text-align:left;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-bottom:7px;cursor:pointer;font-size:12.5px;color:var(--navy);font-family:inherit;transition:background 0.15s">' + faq.q + '</button>';
+  }).join('');
+  box.innerHTML = '<div class="cmsg cmsg-bot" style="margin-bottom:10px">Olá! 👋 Em que posso ajudar?</div>' + btns;
+  box.scrollTop = 0;
+}
+window.selectChatFAQ = function(i) {
+  var box = document.getElementById('chatMsgs');
+  if (!box) return;
+  var faq = chatFAQs[i];
+  var answerHtml = faq.a.replace(/\n/g, '<br>');
+  box.innerHTML = '<div class="cmsg cmsg-user">' + faq.q + '</div>'
+    + '<div class="cmsg cmsg-bot">' + answerHtml + '</div>'
+    + '<button onclick="renderChatOptions()" style="display:block;width:100%;text-align:center;background:transparent;border:1px solid var(--teal3);border-radius:8px;padding:8px;margin-top:10px;cursor:pointer;font-size:12px;color:var(--teal3);font-family:inherit">← Voltar às perguntas</button>';
+  box.scrollTop = 0;
 };
+window.sendChat = function() { renderChatOptions(); };
 function checkVisible() {
   document.querySelectorAll('.fade-up').forEach(function(el) {
     var page = el.closest('.page');
