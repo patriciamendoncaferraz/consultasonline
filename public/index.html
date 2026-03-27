@@ -44,128 +44,50 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "MedicalBusiness",
-  "name": "ConsultasOnline",
-  "url": "https://www.consultas-online.pt",
-  "description": "Plataforma de consultas médicas online em Portugal. Baixa médica, atestados, renovação de receitas e videoconsulta. Sem esperas, pagamento por MBWay.",
-  "telephone": "",
-  "email": "geral@consultas-online.pt",
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "PT",
-    "addressRegion": "Portugal"
-  },
-  "areaServed": {
-    "@type": "Country",
-    "name": "Portugal"
-  },
-  "availableLanguage": "Portuguese",
-  "priceRange": "35€–55€",
-  "currenciesAccepted": "EUR",
-  "paymentAccepted": "MBWay, Multibanco, Cartão de Crédito",
-  "medicalSpecialty": "General Practice",
-  "sameAs": []
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  "name": "Serviços Médicos Online",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "item": {
-        "@type": "Service",
-        "name": "Emissão de Baixa Médica Online",
-        "description": "Avaliação clínica e emissão do Certificado de Incapacidade Temporária (CIT) para a Segurança Social, por videoconsulta.",
-        "provider": { "@type": "MedicalBusiness", "name": "ConsultasOnline" },
-        "offers": { "@type": "Offer", "price": "55", "priceCurrency": "EUR" }
-      }
+      "@type": "MedicalBusiness",
+      "name": "ConsultasOnline",
+      "alternateName": "Consulta Online Baixa Médica Portugal",
+      "url": "https://www.consultas-online.pt",
+      "description": "Fazer baixa médica online em Portugal. Consulta médica online para baixa médica, renovação de baixa, atestados e receitas. Sem esperas, pagamento por MBWay.",
+      "telephone": "",
+      "priceRange": "35€ - 55€",
+      "currenciesAccepted": "EUR",
+      "paymentAccepted": "MBWay, Multibanco, Cartão",
+      "areaServed": "PT",
+      "availableLanguage": "Portuguese",
+      "medicalSpecialty": "General Practice"
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "item": {
-        "@type": "Service",
-        "name": "Atestado Médico Online",
-        "description": "Atestado de amamentação, falta escolar ou carta de condução emitido digitalmente no próprio dia.",
-        "provider": { "@type": "MedicalBusiness", "name": "ConsultasOnline" },
-        "offers": { "@type": "Offer", "price": "35", "priceCurrency": "EUR" }
-      }
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "item": {
-        "@type": "Service",
-        "name": "Renovação de Medicamentos Online",
-        "description": "Renovação de receita médica para medicação crónica. Receita eletrónica enviada por email.",
-        "provider": { "@type": "MedicalBusiness", "name": "ConsultasOnline" },
-        "offers": { "@type": "Offer", "price": "40", "priceCurrency": "EUR" }
-      }
-    },
-    {
-      "@type": "ListItem",
-      "position": 4,
-      "item": {
-        "@type": "Service",
-        "name": "Consulta de Infeção Urinária Online",
-        "description": "Diagnóstico e prescrição de antibiótico para infeção urinária por videoconsulta. Apenas adultos sexo feminino.",
-        "provider": { "@type": "MedicalBusiness", "name": "ConsultasOnline" },
-        "offers": { "@type": "Offer", "price": "40", "priceCurrency": "EUR" }
-      }
-    }
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Como funciona uma consulta médica online?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Escolhe o serviço, seleciona o dia e hora disponível, paga por MBWay ou cartão e entra na videoconsulta no browser — sem instalar aplicações. Os documentos são enviados por email no próprio dia."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Posso obter baixa médica online em Portugal?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Sim. O Certificado de Incapacidade Temporária (CIT) pode ser emitido após videoconsulta. O médico envia o CIT eletronicamente para a Segurança Social. O custo é 55€."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Qual o preço das consultas médicas online?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Os atestados custam entre 35€ e 45€. As consultas online custam entre 40€ e 55€. A fatura é emitida automaticamente e enviada por email."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Os documentos emitidos online têm validade legal?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Sim. Todos os atestados, declarações e receitas têm validade legal em Portugal. As faturas são certificadas pela Autoridade Tributária (AT)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Como pagar a consulta médica online?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Aceita-se MB WAY, Referência Multibanco e cartão bancário (Visa/Mastercard). O pagamento é processado de forma segura pela Stripe."
-      }
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Como fazer baixa médica online em Portugal?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Marque uma videoconsulta na ConsultasOnline, realize a consulta por videochamada e o médico emite o CIT electronicamente para a Segurança Social no próprio dia. Custo a partir de 55€."}
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto custa uma consulta online em Portugal?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Os preços na ConsultasOnline começam em 35€ para atestados e vão até 55€ para emissão de baixa médica. Todos incluem fatura AT certificada."}
+        },
+        {
+          "@type": "Question",
+          "name": "A baixa médica online tem validade legal?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Sim. O CIT emitido após videoconsulta é submetido electronicamente pelo médico directamente à Segurança Social e tem plena validade legal em Portugal."}
+        },
+        {
+          "@type": "Question",
+          "name": "Como pagar a consulta online?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Pode pagar por MBWay, Referência Multibanco ou cartão bancário. A fatura é emitida automaticamente com certificação AT."}
+        },
+        {
+          "@type": "Question",
+          "name": "Posso renovar receitas médicas por consulta online?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Sim. A renovação de medicação crónica pode ser feita por videoconsulta. A receita electrónica é enviada por SMS e email no próprio dia, válida em qualquer farmácia em Portugal."}
+        }
+      ]
     }
   ]
 }
