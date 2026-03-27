@@ -2354,10 +2354,15 @@ document.addEventListener("DOMContentLoaded", function() {
       <button class="chat-x" onclick="toggleChat()">✕</button>
     </div>
     <div class="chat-msgs" id="chatMsgs">
+      <div class="cmsg cmsg-bot">Olá! 👋 Como posso ajudá-lo? Posso esclarecer dúvidas sobre os nossos serviços ou ajudá-lo a marcar uma consulta.</div>
     </div>
     <div class="chat-inp-row">
-      <button onclick="renderChatOptions()" style="width:100%;background:var(--teal3);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;font-family:inherit">Ver perguntas frequentes ↑</button>
+      <input class="chat-inp" id="chatInp" placeholder="Escreva uma mensagem..." onkeypress="chatEnter(event)"/>
+      <button class="chat-send-btn" onclick="sendChat()">&#10148;</button>
     </div>
+  </div>
+  <button class="chat-toggle" onclick="toggleChat()">💬</button>
+</div>
 
 <script>
 (function() {
@@ -3521,69 +3526,32 @@ window.submitContact = async function() {
 window.toggleChat = function() {
   var box = document.getElementById('chatBox');
   if (box) box.classList.toggle('open');
-  if (!window._chatInit) { window._chatInit = true; renderChatOptions(); }
 };
 window.chatEnter = function(e) { if (e.key === 'Enter') window.sendChat(); };
-var chatFAQs = [
-  {
-    q: '💰 Quais são os preços?',
-    a: 'Os nossos preços são:\n• Atestado de amamentação — 35€\n• Atestado falta escolar — 35€\n• Renovação de medicamentos — 40€\n• Consulta (ITU, amigdalite, DST) — 40€\n• Atestado carta de condução — 45€\n• Baixa médica (CIT) — 55€\n\nTodos incluem fatura AT certificada.'
-  },
-  {
-    q: '🩺 Como funciona a videoconsulta?',
-    a: 'Após o pagamento recebe um email com o link da videoconsulta. Na hora marcada entra directamente no browser — sem instalar nada. O médico avalia o seu caso e emite os documentos por email no próprio dia.'
-  },
-  {
-    q: '💳 Como posso pagar?',
-    a: 'Aceitamos MBWay, Referência Multibanco e cartão bancário (Visa/Mastercard). O pagamento é processado de forma segura. A fatura AT é emitida automaticamente após o pagamento.'
-  },
-  {
-    q: '📄 Os documentos têm validade legal?',
-    a: 'Sim, todos os documentos têm plena validade legal em Portugal:\n• O CIT (baixa médica) é submetido electronicamente à Segurança Social\n• As receitas são Receita Sem Papel, válidas em todas as farmácias\n• Os atestados são aceites por empregadores, escolas e entidades públicas'
-  },
-  {
-    q: '📅 Como marco uma consulta?',
-    a: 'É simples:\n1. Escolha o serviço no menu "Marcar Consulta"\n2. Seleccione o dia e hora disponíveis\n3. Preencha os dados e pague\n4. Recebe confirmação por email com o link da videoconsulta'
-  },
-  {
-    q: '⏱️ Qual o prazo de resposta?',
-    a: 'As consultas são realizadas na hora marcada. Os documentos são enviados por email imediatamente após a consulta — na maioria dos casos no próprio dia.'
-  },
-  {
-    q: '🔒 Os meus dados estão seguros?',
-    a: 'Sim. A videoconsulta é encriptada de ponta a ponta. O sigilo médico é absoluto por lei. Os seus dados são tratados em conformidade com o RGPD e nunca partilhados sem o seu consentimento.'
-  },
-  {
-    q: '📞 Como posso contactar?',
-    a: 'Pode contactar-nos por email: geral@consultas-online.pt\n\nOu através do formulário de contacto no site. Respondemos em menos de 24 horas em dias úteis.'
-  }
+var chatReplies = [
+  'Claro! Pode marcar diretamente clicando em "Marcar Consulta" no menu superior.',
+  'Os nossos servicos incluem atestados (35-45EUR) e consultas online (40-55EUR). Qual pretende?',
+  'O pagamento e feito de forma segura por MBWay, Referencia Multibanco ou cartao bancario.',
+  'Apos o pagamento recebe confirmacao por email com todos os detalhes da consulta.',
+  'As consultas online tem duracao de ate 30 minutos, por videochamada no browser.',
+  'Para cancelar ou remarcar envie email para <span data-email></span> com 48h de antecedencia.',
+  'A fatura e emitida automaticamente e enviada para o seu email apos confirmacao do pagamento.',
+  'Para questoes adicionais, contacte-nos em <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a>',
 ];
-
-function renderChatOptions() {
-  var box = document.getElementById('chatMsgs');
-  if (!box) return;
-  var btns = chatFAQs.map(function(faq, i) {
-    return '<button onclick="window.selectChatFAQ(' + i + ')" style="display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-bottom:7px;cursor:pointer;font-size:13px;color:var(--navy);font-family:inherit;transition:background 0.15s" onmouseover="this.style.background=\'var(--teal1)\'" onmouseout="this.style.background=\'var(--surface)\'">' + faq.q + '</button>';
-  }).join('');
-  box.innerHTML = '<div class="cmsg cmsg-bot" style="margin-bottom:10px">Olá! 👋 Em que posso ajudar? Escolha uma opção:</div>' + btns;
-  box.scrollTop = box.scrollHeight;
-}
-
-window.selectChatFAQ = function(i) {
-  var box = document.getElementById('chatMsgs');
-  if (!box) return;
-  var faq = chatFAQs[i];
-  var answerHtml = faq.a.replace(/\n/g, '<br>');
-  box.innerHTML = '<div class="cmsg cmsg-user">' + faq.q + '</div>'
-    + '<div class="cmsg cmsg-bot" style="white-space:pre-line">' + answerHtml + '</div>'
-    + '<button onclick="renderChatOptions()" style="display:block;width:100%;text-align:center;background:transparent;border:1px solid var(--teal3);border-radius:8px;padding:8px;margin-top:10px;cursor:pointer;font-size:12px;color:var(--teal3);font-family:inherit">← Voltar às perguntas</button>';
-  box.scrollTop = box.scrollHeight;
-};
-
+var chatIdx = 0;
 window.sendChat = function() {
-  renderChatOptions();
-};
-  renderChatOptions();
+  var inp = document.getElementById('chatInp');
+  var box = document.getElementById('chatMsgs');
+  if (!inp || !box || !inp.value.trim()) return;
+  var msg = inp.value.trim();
+  inp.value = '';
+  box.innerHTML += '<div class="cmsg cmsg-user">' + msg + '</div>';
+  box.scrollTop = box.scrollHeight;
+  setTimeout(function() {
+    box.innerHTML += '<div class="cmsg cmsg-bot">' + chatReplies[chatIdx % chatReplies.length] + '</div>';
+    chatIdx++;
+    box.scrollTop = box.scrollHeight;
+  }, 750);
 };
 function checkVisible() {
   document.querySelectorAll('.fade-up').forEach(function(el) {
