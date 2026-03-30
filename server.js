@@ -542,8 +542,13 @@ app.post('/webhook', async (req, res) => {
     return res.status(400).send('Webhook Error: ' + err.message);
   }
 
-  if (event.type === 'checkout.session.completed') {
+  if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
     const session = event.data.object;
+    // Só processar se o pagamento estiver confirmado
+    if (session.payment_status !== 'paid') {
+      console.log('Sessão ainda não paga, aguardando payment_intent.succeeded');
+      return res.json({ received: true });
+    }
     // Read ALL metadata fields safely
     const meta = session.metadata || {};
     const serviceId    = meta.serviceId    || '';
