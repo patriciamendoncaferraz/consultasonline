@@ -3776,7 +3776,7 @@ window.addEventListener('popstate', function(e) {
 if (window.location.hash === '#admin-rosie') {
   var btn = document.getElementById('tab-admin');
   if (btn) btn.style.display = 'inline-flex';
-  window.showAdminLogin();
+  setTimeout(function() { window.showAdminLogin(); }, 300);
 }
 // Abrir artigo quando vindo de URL /artigos/slug (injectado pelo servidor)
 if (window.__OPEN_ARTICLE__) {
