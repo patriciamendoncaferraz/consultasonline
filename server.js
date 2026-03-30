@@ -143,7 +143,7 @@ const ARTICLES = {
   'baixa-medica': {
     id: 'renovacao-baixa',
     title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
-    description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
+    description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa.',
     category: 'Baixas',
     keywords: 'baixa médica online portugal, renovar baixa médica online, CIT online, consulta baixa médica',
   },
