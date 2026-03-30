@@ -500,8 +500,12 @@ app.post('/create-checkout-session', async (req, res) => {
       },
       success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: clientUrl + '/?cancelado=1',
+      payment_method_configuration: undefined,
       locale: 'pt',
       billing_address_collection: 'auto',
+      phone_number_collection: {
+        enabled: false,
+      },
       payment_intent_data: {
         description: service.name + ' - ' + date + ' as ' + time,
         receipt_email: customerEmail,
