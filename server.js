@@ -543,15 +543,11 @@ app.post('/webhook', async (req, res) => {
   }
 
   if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
-    const sessionId = session.id;
-    // Evitar processar o mesmo evento duas vezes
-    if (global.processedSessions && global.processedSessions.has(sessionId)) {
-      console.log('Sessão já processada, ignorando:', sessionId);
+    const session = event.data.object;
+    if (session.payment_status !== 'paid') {
+      console.log('Pagamento ainda nao confirmado, ignorando:', session.payment_status);
       return res.json({ received: true });
     }
-    if (!global.processedSessions) global.processedSessions = new Set();
-    global.processedSessions.add(sessionId);
-    const session = event.data.object;
     // Só processar se o pagamento estiver confirmado
     if (session.payment_status !== 'paid') {
       console.log('Sessão ainda não paga, aguardando payment_intent.succeeded');
