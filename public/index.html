@@ -2987,10 +2987,11 @@ var ADMIN_ALL_SLOTS = [
 ];
 
 window.showAdminLogin = function() {
-  document.querySelectorAll('.page').forEach(function(x){ x.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(x){ x.classList.remove('active'); x.style.display = 'none'; });
+  document.querySelectorAll('.article-view').forEach(function(a){ a.classList.remove('active'); a.style.display = 'none'; });
   document.querySelectorAll('.nav-tab').forEach(function(x){ x.classList.remove('active'); });
   var page = document.getElementById('page-admin');
-  if (page) page.classList.add('active');
+  if (page) { page.classList.add('active'); page.style.display = 'block'; }
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (sessionStorage.getItem('adminLoggedIn') === 'true') {
     var login = document.getElementById('adminLogin');
