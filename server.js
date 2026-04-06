@@ -171,10 +171,10 @@ const ARTICLES = {
   },
   'atestado-carta-conducao': {
     id: 'conducao',
-    title: 'Atestado Médico para Carta de Condução Online | ConsultasOnline',
-    description: 'Atestado de aptidão médica para carta de condução por videoconsulta. Válido no IMT. Emitido no próprio dia. 45€.',
+    title: 'Atestado para Carta de Condução Online | Enviado ao IMT | ConsultasOnline',
+    description: 'Atestado médico para carta de condução online em Portugal. Enviado directamente ao IMT. Válido para primeira carta, renovação e troca. Emitido no próprio dia. 45€.',
     category: 'Carta de Condução',
-    keywords: 'atestado carta de condução online, exame médico carta de condução online portugal, atestado IMT online',
+    keywords: 'atestado carta de condução online, atestado médico carta de condução portugal, renovar carta de condução atestado, atestado IMT online, exame médico carta de condução online',
   },
   'faltas-trabalho': {
     id: 'faltas-trabalho',
