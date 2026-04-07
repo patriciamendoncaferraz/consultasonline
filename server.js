@@ -246,6 +246,13 @@ const ARTICLES = {
     category: 'Saúde Preventiva',
     keywords: 'rastreio saúde portugal, exames preventivos portugal, rastreio oncológico portugal',
   },
+  'dia-mundial-saude-2026': {
+    id: 'dia-saude-2026',
+    title: 'Dia Mundial da Saúde 2026: Juntos pela Ciência | ConsultasOnline',
+    description: 'O que é o Dia Mundial da Saúde 2026, qual o tema da OMS e o que pode fazer hoje pela sua saúde em Portugal. Telemedicina e ciência ao seu serviço.',
+    category: 'Saúde Global',
+    keywords: 'dia mundial saúde 2026, OMS 2026 tema, saúde portugal 2026, telemedicina portugal, consulta online portugal',
+  },
 };
 
 // Gera HTML completo para cada artigo com meta tags SEO próprias
