@@ -391,6 +391,8 @@ p{font-size:15px;color:#64748b;line-height:1.7;margin-bottom:8px}
   }
 }
 </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1803618151"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-1803618151');gtag('event','conversion',{'send_to':'AW-1803618151/purchase','value':47.0,'currency':'EUR'});</script>
 </head>
 <body>
 <div class="card">
