@@ -361,6 +361,8 @@ app.get('/obrigado', (req, res) => {
 <title>Consulta Confirmada — ConsultasOnline</title>
 <meta name="description" content="A sua consulta médica online foi confirmada com sucesso. Receberá o email de confirmação e fatura em breve."/>
 <meta name="robots" content="noindex, nofollow"/>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1803618151"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-1803618151');gtag('event','conversion',{'send_to':'AW-1803618151/qawCCN7xyJccEI-UqZhD','value':47.0,'currency':'EUR'});</script>
 <link rel="canonical" href="https://www.consultas-online.pt/"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
