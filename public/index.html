@@ -827,6 +827,60 @@ document.addEventListener("DOMContentLoaded", function() {
   </div>
 </section>
 
+<!-- SECÇÃO LEAD MAGNET -->
+<section style="background:linear-gradient(135deg,#0b1d35,#0d3a4a);padding:60px 20px">
+  <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:48px;flex-wrap:wrap">
+    <!-- Esquerda -->
+    <div style="flex:1;min-width:280px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#17c4a8;text-transform:uppercase;margin-bottom:12px">Guia Gratuito</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:36px;color:#fff;line-height:1.2;margin-bottom:14px">Guia de<br/>Primeiros Socorros</h2>
+      <p style="font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:20px">O que fazer nas emergências mais comuns antes de chegar o socorro — RCP, engasgamento, hemorragias e muito mais.</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:#17c4a8;font-size:16px">❤️</span>
+          <span style="font-size:14px;color:rgba(255,255,255,.8)">Como fazer RCP passo a passo</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:#17c4a8;font-size:16px">🫁</span>
+          <span style="font-size:14px;color:rgba(255,255,255,.8)">Engasgamento — Manobra de Heimlich</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:#17c4a8;font-size:16px">🩸</span>
+          <span style="font-size:14px;color:rgba(255,255,255,.8)">Hemorragias, queimaduras e convulsões</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="color:#17c4a8;font-size:16px">🏥</span>
+          <span style="font-size:14px;color:rgba(255,255,255,.8)">Urgências vs consulta online — quando escolher</span>
+        </div>
+      </div>
+    </div>
+    <!-- Direita — Formulário -->
+    <div style="flex:1;min-width:280px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px">
+      <div style="font-size:36px;text-align:center;margin-bottom:12px">🚑</div>
+      <h3 style="font-size:18px;font-weight:700;color:#fff;text-align:center;margin-bottom:6px">Descarregue gratuitamente</h3>
+      <p style="font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:20px">Introduza o seu nome e email para receber o PDF</p>
+      <div id="leadFormHome">
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;color:rgba(255,255,255,.7);display:block;margin-bottom:5px">Nome</label>
+          <input type="text" id="leadNameHome" placeholder="O seu nome" style="width:100%;border:1.5px solid rgba(255,255,255,.15);border-radius:9px;padding:11px 14px;font-size:14px;font-family:'Inter',sans-serif;color:#fff;background:rgba(255,255,255,.08);outline:none;box-sizing:border-box" onfocus="this.style.borderColor='#17c4a8'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"/>
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:12px;font-weight:600;color:rgba(255,255,255,.7);display:block;margin-bottom:5px">Email</label>
+          <input type="email" id="leadEmailHome" placeholder="email@exemplo.pt" style="width:100%;border:1.5px solid rgba(255,255,255,.15);border-radius:9px;padding:11px 14px;font-size:14px;font-family:'Inter',sans-serif;color:#fff;background:rgba(255,255,255,.08);outline:none;box-sizing:border-box" onfocus="this.style.borderColor='#17c4a8'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"/>
+        </div>
+        <button onclick="window.submitLeadHome()" id="leadBtnHome" style="width:100%;background:linear-gradient(135deg,#0d7377,#17c4a8);color:#fff;border:none;border-radius:9px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
+          Receber Guia Gratuito →
+        </button>
+        <p style="font-size:11px;color:rgba(255,255,255,.3);text-align:center;margin-top:10px">Sem spam. Pode cancelar a qualquer momento.</p>
+      </div>
+      <div id="leadSuccessHome" style="display:none;text-align:center;padding:16px 0">
+        <div style="font-size:36px;margin-bottom:10px">✅</div>
+        <h3 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:6px">Guia enviado!</h3>
+        <p style="font-size:13px;color:rgba(255,255,255,.6)">Verifique o seu email — o PDF está a chegar.</p>
+      </div>
+    </div>
+  </div>
+</section>
 <!-- HOW IT WORKS -->
 <section class="home-section how-bg">
   <div class="container">
@@ -3912,7 +3966,32 @@ if (window.__OPEN_ARTICLE__) {
   }
 }
 // Popup lead magnet
-window.submitLeadMagnet = function() {
+window.submitLeadHome = function() {
+  var name = document.getElementById('leadNameHome');
+  var email = document.getElementById('leadEmailHome');
+  var btn = document.getElementById('leadBtnHome');
+  name.style.borderColor = 'rgba(255,255,255,.15)';
+  email.style.borderColor = 'rgba(255,255,255,.15)';
+  if (!name.value.trim()) { name.style.borderColor = '#e53e3e'; return; }
+  if (!email.value.trim() || !email.value.includes('@')) { email.style.borderColor = '#e53e3e'; return; }
+  btn.textContent = 'A enviar...';
+  btn.disabled = true;
+  fetch('/lead-magnet', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ name: name.value.trim(), email: email.value.trim() })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function() {
+    document.getElementById('leadFormHome').style.display = 'none';
+    document.getElementById('leadSuccessHome').style.display = 'block';
+  })
+  .catch(function() {
+    btn.textContent = 'Receber Guia Gratuito →';
+    btn.disabled = false;
+  });
+};
+ window.submitLeadMagnet = function() {
   var name = document.getElementById('leadName');
   var email = document.getElementById('leadEmail');
   var btn = document.getElementById('leadSubmitBtn');
