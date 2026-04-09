@@ -10,8 +10,8 @@
      A descrição aparece por baixo (máx 160 chars)
 ════════════════════════════════════════ -->
 <title>Consulta e Consultas Médicas Online em Portugal | ConsultasOnline</title>
-<meta name="description" content="Consulta ou consultas médicas online em Portugal sem esperas. Baixa médica, atestados, receitas e videoconsulta. Pagamento por MBWay. Fatura automática. A partir de 35€."/>
-<meta name="keywords" content="consulta médica online portugal, baixa médica online, atestado médico online, renovação receita online, médico online portugal, telemedicina portugal, consulta online mbway"/>
+<meta name="description" content="Consulta ou consultas médicas online em Portugal sem esperas. Baixa médica, atestados e videoconsulta. Pagamento por MBWay. Fatura automática. A partir de 35€."/>
+<meta name="keywords" content="consulta médica online portugal, baixa médica online, atestado médico online, médico online portugal, telemedicina portugal, consulta online mbway"/>
 <meta name="author" content="ConsultasOnline"/>
 <meta name="robots" content="index, follow"/>
 <link rel="canonical" href="https://www.consultas-online.pt/"/>
@@ -50,7 +50,7 @@
       "name": "ConsultasOnline",
       "alternateName": "Consulta Online Baixa Médica Portugal",
       "url": "https://www.consultas-online.pt",
-      "description": "Fazer baixa médica online em Portugal. Consulta médica online para baixa médica, renovação de baixa, atestados e receitas. Sem esperas, pagamento por MBWay.",
+      "description": "Fazer baixa médica online em Portugal. Consulta médica online para baixa médica, renovação de baixa, atestados e consulta de acompanhamento crónico. Sem esperas, pagamento por MBWay.",
       "telephone": "",
       "priceRange": "35€ - 55€",
       "currenciesAccepted": "EUR",
@@ -81,11 +81,6 @@
           "@type": "Question",
           "name": "Como pagar a consulta online?",
           "acceptedAnswer": {"@type": "Answer", "text": "Pode pagar por MBWay, Referência Multibanco ou cartão bancário. A fatura é emitida automaticamente com certificação AT."}
-        },
-        {
-          "@type": "Question",
-          "name": "Posso renovar receitas médicas por consulta online?",
-          "acceptedAnswer": {"@type": "Answer", "text": "Sim. A renovação de medicação crónica pode ser feita por videoconsulta. A receita electrónica é enviada por SMS e email no próprio dia, válida em qualquer farmácia em Portugal."}
         }
       ]
     }
@@ -821,7 +816,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="service-mini-price">55€</div>
           </div>
           <div class="service-mini" onclick="openServiceSelector()">
-            <div class="service-mini-left"><div class="service-mini-icon">💊</div><div class="service-mini-name">Renovação de Medicamentos</div></div>
+            <div class="service-mini-left"><div class="service-mini-icon">💊</div><div class="service-mini-name">Consulta de Acompanhamento Crónico</div></div>
             <div class="service-mini-price">40€</div>
           </div>
         </div>
@@ -907,7 +902,7 @@ document.addEventListener("DOMContentLoaded", function() {
       <div class="feat fade-up">
         <div class="feat-ico">📄</div>
         <h3>Documentos Digitais</h3>
-        <p>Receitas, atestados e declarações emitidos eletronicamente e enviados por email.</p>
+        <p>Atestados e declarações emitidos eletronicamente e enviados por email.</p>
         <span class="feat-tag">VALIDADE LEGAL</span>
       </div>
     </div>
@@ -975,15 +970,15 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="price-card-badge">MAIS SOLICITADO</div>
         <div class="price-name">Consultas Online</div>
         <div class="price-val"><sup>€</sup>40–55<sub>/consulta</sub></div>
-        <p class="price-desc">Videoconsulta com emissão de receita, baixa ou documento no próprio dia.</p>
+        <p class="price-desc">Videoconsulta com emissão de baixa ou documento no próprio dia.</p>
         <ul class="price-list">
           <li>Emissão / renovação de baixa médica</li>
-          <li>Renovação de medicamentos</li>
+          <li>Consulta de Acompanhamento Crónico</li>
           <li>Consulta de infeção urinária</li>
           <li>Cessação tabágica</li>
           <li>Consulta de amigdalite</li>
           <li>Doenças sexualmente transmissíveis</li>
-          <li>Videoconsulta + receita digital</li>
+          <li>Videoconsulta</li>
           <li>Fatura automática por email</li>
         </ul>
         <button class="price-cta cta-solid" onclick="openServiceSelector()">Marcar Consulta</button>
@@ -1020,7 +1015,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <ul>
           <li><a onclick="openServiceSelector()">Atestados</a></li>
           <li><a onclick="openServiceSelector()">Emissão de Baixa</a></li>
-          <li><a onclick="openServiceSelector()">Renovação de Medicamentos</a></li>
+          <li><a onclick="openServiceSelector()">Consulta de Acompanhamento Crónico</a></li>
           <li><a onclick="openServiceSelector()">Consultas Online</a></li>
         </ul>
       </div>
@@ -1177,16 +1172,6 @@ document.addEventListener("DOMContentLoaded", function() {
         </div>
       </div>
 
-      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-medicamentos')">
-        <div class="bcard-img" style="background:linear-gradient(135deg,#1a3a1a,#2d7a2d)" role="img" aria-label="Renovação de Medicamentos em Portugal — artigo médico">💊</div>
-        <div class="bcard-body">
-          <div class="bcard-meta"><span class="bcat">Medicação</span><span class="bread">· 7 min</span></div>
-          <h2 class="bcard-title">Renovação de Medicamentos: Como Funciona em Portugal</h2>
-          <p class="bcard-excerpt">Receita Sem Papel, INFARMED, comparticipação do SNS — como renovar a sua medicação habitual online sem complicações.</p>
-          <span class="bcard-link">Ler artigo →</span>
-        </div>
-      </div>
-
       <div class="bcard" data-cat="infecoes" onclick="openArticle('cessacao')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#2d1a00,#6b3a00)" role="img" aria-label="Como parar de fumar — cessação tabágica">🚭</div>
         <div class="bcard-body">
@@ -1290,7 +1275,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="sb-head"><h3>Temas</h3><p>Navegue por categoria</p></div>
         <div class="sb-body">
           <div class="tag-cloud">
-            <div class="tag">Infeções</div><div class="tag">Baixas</div><div class="tag">Receitas</div><div class="tag">Obesidade</div><div class="tag">DST</div><div class="tag">Garganta</div><div class="tag">Pediatria</div><div class="tag">Trabalho</div><div class="tag">GLP-1</div>
+            <div class="tag">Infeções</div><div class="tag">Baixas</div><div class="tag">Obesidade</div><div class="tag">DST</div><div class="tag">Garganta</div><div class="tag">Pediatria</div><div class="tag">Trabalho</div><div class="tag">GLP-1</div>
           </div>
         </div>
       </div>
@@ -1313,18 +1298,14 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="art-meta"><div class="art-meta-item">📅 <span>2026</span></div><div class="art-meta-item">⏱ <span>8 min</span></div></div>
 </div></div>
 <div class="art-body-wrap"><div class="art-body">
-  <div class="ibox"><div class="ibox-title">💧 Consulta disponível hoje</div><p>Tem <strong>sintomas de infeção urinária</strong>? Na ConsultasOnline pode fazer uma <strong>consulta de infeção urinária online</strong> por videochamada — diagnóstico e receita de antibiótico no próprio dia. Custo: <strong>40€</strong>. Exclusivo para mulheres adultas.</p></div>
+  <div class="ibox"><div class="ibox-title">💧 Consulta disponível hoje</div><p>Tem <strong>sintomas de infeção urinária</strong>? Na ConsultasOnline pode fazer uma <strong>consulta de infeção urinária online</strong> por videochamada — diagnóstico e tratamento no próprio dia. Custo: <strong>40€</strong>. Exclusivo para mulheres adultas.</p></div>
   <h2>O que é uma Infeção do Trato Urinário?</h2>
   <p>A infeção do trato urinário (ITU) é uma das infeções bacterianas mais comuns em ambulatório. A cistite aguda não complicada é a forma mais prevalente em mulheres adultas saudáveis.</p>
   <div class="ibox"><div class="ibox-title">🔬 Agente mais frequente</div><p>A <em>Escherichia coli</em> é responsável por 80–85% das ITU não complicadas.</p></div>
   <h2>Sintomas</h2>
   <ul><li><strong>Disúria</strong> — ardor ou dor ao urinar</li><li><strong>Polaquiúria</strong> — urinar frequentemente em pequenas quantidades</li><li><strong>Hematúria</strong> — urina com sangue (~30% dos casos)</li><li><strong>Dor suprapúbica</strong> — zona inferior do abdómen</li></ul>
   <div class="ibox warn"><div class="ibox-title">⚠️ Quando ir às urgências</div><p>Febre superior a 38,5°C, dores lombares intensas ou vómitos requerem avaliação urgente.</p></div>
-  <h2>Tratamento de Primeira Linha (DGS)</h2>
-  <ul><li><strong>Nitrofurantoína</strong> 100mg 2×/dia, 5 dias</li><li><strong>Fosfomicina trometamol</strong> 3g dose única</li></ul>
-  <h2>Posso obter receita por consulta online?</h2>
-  <p>Sim. Para a ITU não complicada em mulheres adultas, a avaliação por videoconsulta é suficiente para diagnóstico e prescrição. A receita electrónica chega ao seu telemóvel.</p>
-  <div class="art-cta"><h3>Tem sintomas de infeção urinária?</h3><p>Consulta online com diagnóstico e receita em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta ITU — 40€</button></div>
+  <div class="art-cta"><h3>Tem sintomas de infeção urinária?</h3><p>Consulta online com diagnóstico e tratamento em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta ITU — 40€</button></div>
   <div class="refs"><h3>Referências</h3><ol class="ref-list">
     <li>EAU Guidelines on Urological Infections. 2023.</li>
     <li>DGS. <em>Infeções do Trato Urinário — Norma de Orientação Clínica.</em> 2021.</li>
@@ -1398,7 +1379,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="ibox danger"><div class="ibox-title">🚨 Abcesso Periamigdalino</div><p>Trismo, voz "engrolada" e desvio da úvula são sinais de emergência cirúrgica urgente.</p></div>
   <h2>Tratamento</h2>
   <ul><li><strong>Amoxicilina</strong> 500mg 3×/dia, 10 dias — primeira linha (DGS)</li></ul>
-  <div class="art-cta"><h3>Com dor de garganta persistente?</h3><p>Avaliação online e receita adequada em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta Amigdalite — 40€</button></div>
+  <div class="art-cta"><h3>Com dor de garganta persistente?</h3><p>Avaliação online e tratamento adequado em 30 minutos.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta Amigdalite — 40€</button></div>
   <div class="refs"><h3>Referências</h3><ol class="ref-list">
     <li>DGS. <em>Norma 007/2012: Faringoamigdalite.</em> (atualizada 2022).</li>
   </ol></div>
@@ -1477,29 +1458,6 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="refs"><h3>Referências</h3><ol class="ref-list">
     <li>Decreto-Lei n.º 28/2004. <em>Proteção na eventualidade de doença.</em></li>
     <li>Portaria n.º 115/2021. <em>Certificado de Incapacidade Temporária.</em></li>
-  </ol></div>
-</div></div>
-</div>
-
-<!-- RENOVAÇÃO MEDICAMENTOS -->
-<div class="article-view" id="article-renovacao-medicamentos">
-<div class="art-hero"><div class="art-hero-inner">
-  <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
-  <div class="art-cat">💊 Medicação</div>
-  <h1 class="art-title">Renovação de Medicamentos: Como Funciona em Portugal</h1>
-  <div class="art-meta"><div class="art-meta-item">📅 <span>2026</span></div><div class="art-meta-item">⏱ <span>7 min</span></div></div>
-</div></div>
-<div class="art-body-wrap"><div class="art-body">
-  <h2>Receita Sem Papel (RSP)</h2>
-  <p>Desde 2016, Portugal adotou a <strong>Receita Sem Papel</strong>. A receita é enviada por SMS e/ou email ao utente, que a apresenta na farmácia sem necessitar de papel.</p>
-  <h2>Como Renovar Online</h2>
-  <ol><li>Agende videoconsulta</li><li>O médico avalia e valida a continuidade da medicação</li><li>Receita enviada eletronicamente por SMS/email</li><li>Levantamento na farmácia com o código da receita</li></ol>
-  <h2>Quais medicamentos podem ser renovados online?</h2>
-  <p>Medicamentos para patologias crónicas estáveis (hipertensão, diabetes, dislipidemia) podem ser renovados por videoconsulta. Psicotrópicos e estupefacientes exigem avaliação presencial.</p>
-  <div class="art-cta"><h3>Precisa de renovar medicação?</h3><p>Receita eletrónica emitida no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Renovar Medicação — 40€</button></div>
-  <div class="refs"><h3>Referências</h3><ol class="ref-list">
-    <li>Portaria n.º 284/2016. <em>Prescrição e dispensa de medicamentos.</em></li>
-    <li>Despacho n.º 2935-B/2016. <em>Sistema de Receita Sem Papel.</em></li>
   </ol></div>
 </div></div>
 </div>
@@ -1660,16 +1618,16 @@ document.addEventListener("DOMContentLoaded", function() {
 </div></div>
 <div class="art-body-wrap"><div class="art-body">
   <h2>O que é uma consulta online?</h2>
-  <p>Uma <strong>consulta online</strong> é uma consulta médica realizada por videochamada, sem necessidade de deslocação ao consultório. O médico avalia os sintomas, faz o diagnóstico e emite receitas, atestados ou certificados de baixa médica — tudo digitalmente, no próprio dia.</p>
+  <p>Uma <strong>consulta online</strong> é uma consulta médica realizada por videochamada, sem necessidade de deslocação ao consultório. O médico avalia os sintomas, faz o diagnóstico e emite tratamento, atestados ou certificados de baixa médica — tudo digitalmente, no próprio dia.</p>
   <div class="ibox"><div class="ibox-title">📊 Telemedicina em Portugal</div><p>As teleconsultas aumentaram 800% entre 2019 e 2022 em Portugal. A telemedicina é hoje uma opção legal, segura e reconhecida pelo sistema de saúde português.</p></div>
   <h2>O que se pode tratar numa consulta online?</h2>
   <ul>
     <li><strong>Baixa médica</strong> — emissão e renovação do CIT para a Segurança Social</li>
-    <li><strong>Receitas médicas</strong> — renovação de medicação crónica</li>
+    <li><strong>Consulta de acompanhamento crónico</strong> — renovação de tratamento crónico</li>
     <li><strong>Atestados</strong> — amamentação, falta escolar, carta de condução</li>
-    <li><strong>Infeção urinária</strong> — diagnóstico e prescrição de antibiótico</li>
-    <li><strong>Amigdalite</strong> — avaliação e decisão sobre antibiótico</li>
-    <li><strong>Cessação tabágica</strong> — prescrição de vareniclina ou bupropiona</li>
+    <li><strong>Infeção urinária</strong> — diagnóstico e tratamento</li>
+    <li><strong>Amigdalite</strong> — avaliação e decisão sobre tratamento</li>
+    <li><strong>Cessação tabágica</strong> — avaliação e decisão sobre tratamento</li>
     <li><strong>Rastreio de DST</strong> — pedido de análises confidencial</li>
   </ul>
   <h2>Como funciona uma consulta online em Portugal</h2>
@@ -1678,7 +1636,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <li><strong>Pagamento</strong> — por MBWay, Referência Multibanco ou cartão</li>
     <li><strong>Confirmação</strong> — recebe email com o link da videoconsulta</li>
     <li><strong>Consulta</strong> — entra na videochamada directamente no browser</li>
-    <li><strong>Documentos</strong> — receitas, atestados e baixas enviados por email no próprio dia</li>
+    <li><strong>Documentos</strong> — atestados e baixas enviados por email no próprio dia</li>
   </ol>
   <h2>Quanto custa uma consulta online em Portugal?</h2>
   <ul>
@@ -1687,7 +1645,7 @@ document.addEventListener("DOMContentLoaded", function() {
   </ul>
   <p>Todos os preços incluem fatura certificada pela AT, isenta de IVA ao abrigo do artigo 9.º do CIVA.</p>
   <h2>A consulta online tem validade legal em Portugal?</h2>
-  <p>Sim. O CIT é submetido electronicamente pelo médico directamente à Segurança Social. A Receita Sem Papel é aceite em todas as farmácias. Os atestados têm validade legal junto de empregadores e escolas.</p>
+  <p>Sim. O CIT é submetido electronicamente pelo médico directamente à Segurança Social. Os atestados têm validade legal junto de empregadores e escolas.</p>
   <div class="art-cta"><h3>Precisa de uma consulta online?</h3><p>Videoconsulta no browser, sem instalar nada. Documentos enviados por email no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Consulta Online →</button></div>
   <div class="refs"><h3>Referências</h3><ol class="ref-list">
     <li>Portaria n.º 115/2021. <em>Certificado de Incapacidade Temporária por teleconsulta.</em></li>
@@ -1712,7 +1670,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <li><strong>Sem filas de espera</strong> — marcação imediata, consulta no mesmo dia</li>
     <li><strong>Sem deslocação</strong> — especialmente útil para quem trabalha ou tem mobilidade reduzida</li>
     <li><strong>Privacidade</strong> — consulta a partir de casa, sem salas de espera</li>
-    <li><strong>Documentos digitais</strong> — receitas e atestados enviados directamente por email</li>
+    <li><strong>Documentos digitais</strong> — baixas e atestados enviados directamente por email</li>
     <li><strong>Fatura automática</strong> — válida para reembolso em seguros de saúde</li>
   </ul>
   <div class="ibox"><div class="ibox-title">💡 Sabia que?</div><p>A maioria dos seguros de saúde privados em Portugal (Médis, AdvanceCare, Multicare, Fidelidade) aceita faturas de teleconsulta para reembolso.</p></div>
@@ -1749,7 +1707,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <h2>O que mudou com a telemedicina em Portugal</h2>
   <ul>
     <li><strong>Baixa médica por teleconsulta</strong> — a Portaria n.º 115/2021 permite ao médico emitir o CIT após videoconsulta</li>
-    <li><strong>Receita Sem Papel</strong> — emitida após teleconsulta e enviada por SMS/email</li>
+    <li><strong>Tratamento</strong> — emitido após teleconsulta e enviado por SMS/email</li>
     <li><strong>Atestados digitais</strong> — documentos médicos com validade legal emitidos por email</li>
   </ul>
   <h2>Telemedicina no SNS vs privada</h2>
@@ -1790,7 +1748,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   <h2>Porque a ciência importa para a sua saúde no dia a dia</h2>
   <p>Muitas das decisões médicas que tomamos todos os dias — que antibiótico tomar para uma amigdalite, quando renovar a carta de condução, como tratar uma infeção urinária — baseiam-se em décadas de investigação científica. As guidelines clínicas que os médicos seguem são o resultado de milhares de estudos e ensaios clínicos.</p>
-  <p>Na ConsultasOnline, todos os serviços seguem as orientações da <strong>Direcção-Geral de Saúde (DGS)</strong> e das principais sociedades médicas europeias. Cada consulta, cada receita e cada atestado é emitido com base em evidência científica actualizada.</p>
+  <p>Na ConsultasOnline, todos os serviços seguem as orientações da <strong>Direcção-Geral de Saúde (DGS)</strong> e das principais sociedades médicas europeias. Cada consulta, cada tratamento e cada atestado é emitido com base em evidência científica actualizada.</p>
 
   <h2>Os maiores desafios de saúde em Portugal em 2026</h2>
   <h3>Doenças crónicas não transmissíveis</h3>
@@ -1812,10 +1770,10 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="ibox warn"><div class="ibox-title">⚠️ Desinformação em saúde</div><p>Em caso de dúvida sobre qualquer informação de saúde que leia nas redes sociais, consulte um profissional de saúde ou verifique em fontes oficiais como <strong>dgs.pt</strong> ou <strong>who.int</strong>. A saúde é demasiado importante para depender de informação não verificada.</p></div>
 
   <h2>Telemedicina e ciência — uma combinação ao serviço da sua saúde</h2>
-  <p>A telemedicina é um dos avanços científicos mais importantes da última década na área da saúde primária. Em Portugal, a Portaria n.º 115/2021 reconhece legalmente a videoconsulta como forma válida de prestação de cuidados médicos — incluindo a emissão de baixas médicas, atestados e receitas.</p>
+  <p>A telemedicina é um dos avanços científicos mais importantes da última década na área da saúde primária. Em Portugal, a Portaria n.º 115/2021 reconhece legalmente a videoconsulta como forma válida de prestação de cuidados médicos — incluindo a emissão de baixas médicas, atestados e tratamentos.</p>
   <p>Na ConsultasOnline, utilizamos tecnologia segura para levar cuidados médicos a quem não tem acesso fácil a um médico presencial — seguindo exactamente os mesmos protocolos clínicos de uma consulta presencial.</p>
 
-  <div class="art-cta"><h3>Cuide da sua saúde hoje</h3><p>Baixa médica, atestados, renovação de receitas e rastreio de DST — por videoconsulta, sem filas, no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Consulta Online →</button></div>
+  <div class="art-cta"><h3>Cuide da sua saúde hoje</h3><p>Baixa médica, atestados, consulta de acompanhamento crónico e rastreio de DST — por videoconsulta, sem filas, no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Consulta Online →</button></div>
 
   <div class="refs"><h3>Referências</h3><ol class="ref-list">
     <li>OMS/PAHO. <em>World Health Day 2026 — Together for Science.</em> who.int. 2026.</li>
@@ -1853,7 +1811,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <p>Introduza o seu nome, email e telemóvel. O pagamento é feito de forma segura por <strong>MBWay</strong>, Referência Multibanco ou cartão bancário. Após a confirmação do pagamento, a fatura é gerada automaticamente e enviada para o seu email em menos de 30 segundos.</p>
 
     <h2>Passo 4 — Consulta por videochamada</h2>
-    <p>No dia e hora marcados, aceda ao link enviado por email e entre na sala de videoconsulta diretamente no browser — sem instalar aplicações. A consulta decorre de forma privada e encriptada. No final, os documentos (receita, atestado, declaração) são enviados digitalmente para o seu email.</p>
+    <p>No dia e hora marcados, aceda ao link enviado por email e entre na sala de videoconsulta diretamente no browser — sem instalar aplicações. A consulta decorre de forma privada e encriptada. No final, os documentos (tratamento, atestado, declaração) são enviados digitalmente para o seu email.</p>
 
     <hr class="inner-divider"/>
     <h2>Perguntas Frequentes</h2>
@@ -1868,7 +1826,7 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q">Os documentos emitidos têm validade legal? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a">Sim. Todos os atestados, declarações e receitas emitidos têm validade legal em Portugal. As faturas são certificadas pela Autoridade Tributária (AT).</div>
+      <div class="faq-a">Sim. Todos os atestados e declarações emitidos têm validade legal em Portugal. As faturas são certificadas pela Autoridade Tributária (AT).</div>
     </div>
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q">Em quanto tempo recebo os documentos? <span class="faq-arrow">▼</span></div>
@@ -1895,7 +1853,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="inner-body">
     <div class="info-cards">
       <div class="info-card"><div class="info-card-icon">📋</div><h4>Atestados</h4><p style="font-size:28px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--teal);margin:8px 0">35€</p><p>Amamentação, falta escolar, carta de condução</p></div>
-      <div class="info-card" style="border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.07)"><div class="info-card-icon">🩺</div><h4>Consultas Online</h4><p style="font-size:28px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--teal);margin:8px 0">40€</p><p>Baixa médica, receitas, consultas diversas</p></div>
+      <div class="info-card" style="border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,115,119,.07)"><div class="info-card-icon">🩺</div><h4>Consultas Online</h4><p style="font-size:28px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--teal);margin:8px 0">40€</p><p>Baixa médica, consultas diversas</p></div>
       <div class="info-card"><div class="info-card-icon">🧾</div><h4>Fatura Incluída</h4><p style="font-size:15px;color:var(--teal);font-weight:600;margin:8px 0">Gratuita</p><p>Emitida automaticamente em todos os serviços</p></div>
     </div>
 
@@ -1912,7 +1870,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <h3>Consultas Online — 40€ a 55€</h3>
     <ul>
       <li>Videoconsulta de até 30 minutos</li>
-      <li>Emissão de receita médica digital (se aplicável)</li>
+      <li>Consulta de Acompanhamento Crónico</li>
       <li>Certificado de Incapacidade Temporária / baixa médica (se aplicável)</li>
       <li>Envio de todos os documentos por email</li>
       <li>Fatura certificada AT incluída</li>
@@ -2215,7 +2173,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <ul>
       <li>Emissão de atestados médicos (amamentação, falta escolar, carta de condução)</li>
       <li>Emissão e renovação de baixa médica (CIT)</li>
-      <li>Renovação de medicamentos (receita eletrónica)</li>
+      <li>Consulta de acompanhamento crónico</li>
       <li>Consultas de medicina geral (infeção urinária, amigdalite, cessação tabágica, DST)</li>
     </ul>
     <p>Os serviços são prestados por profissionais de saúde devidamente habilitados e registados na Ordem dos Médicos.</p>
@@ -2484,11 +2442,11 @@ document.addEventListener("DOMContentLoaded", function() {
           <div class="svc-price">55€ <sub>/consulta</sub></div>
         </div>
 
-        <div class="svc-card" onclick="selectService(this,'Renovação de Medicamentos',40,'Consulta','renovacao-medicamentos')">
+        <div class="svc-card" onclick="selectService(this,'Consulta de Acompanhamento Crónico',40,'Consulta','renovacao-medicamentos')">
           <span class="svc-icon">💊</span>
           <div class="badge-consulta">CONSULTA</div>
-          <div class="svc-name">Renovação de Medicamentos</div>
-          <p class="svc-desc">Avaliação e renovação de receita médica para medicação de uso crónico. Receita eletrónica enviada por email.</p>
+          <div class="svc-name">Consulta de Acompanhamento Crónico</div>
+          <p class="svc-desc">Para doentes com hipertensão, diabetes, colesterol, tireoide ou outra doença crónica que precisam de acompanhamento médico regular sem deslocação.</p>
           <div class="svc-price">40€ <sub>/consulta</sub></div>
         </div>
 
@@ -2759,7 +2717,7 @@ if (modal) {
 var svcIcons = {
   'Atestado de Amamentação':'🤱','Atestado para Falta Escolar':'🎓',
   'Atestado para Carta de Condução':'🚗','Emissão de Baixa Médica':'🏥',
-  'Renovação de Medicamentos':'💊','Consulta de Infeção Urinária':'💧',
+  'Consulta de Acompanhamento Crónico':'💊','Consulta de Infeção Urinária':'💧',
   'Consulta de Cessação Tabágica':'🚭','Consulta de Amigdalite':'🤒',
   'Consulta de DST / IST':'🔬'
 };
@@ -3827,10 +3785,10 @@ var chatReplies = [
 ];
 var chatIdx = 0;
 var chatFAQs = [
-  { q: '💰 Quais são os preços?', a: 'Os nossos preços são:\n• Atestado de amamentação — 35€\n• Atestado falta escolar — 35€\n• Atestado carta de condução — 45€\n• Renovação de medicamentos — 40€\n• Consulta (ITU, amigdalite, DST) — 40€\n• Baixa médica (CIT) — 55€\n\nTodos incluem fatura AT certificada.' },
+  { q: '💰 Quais são os preços?', a: 'Os nossos preços são:\n• Atestado de amamentação — 35€\n• Atestado falta escolar — 35€\n• Atestado carta de condução — 45€\n• Consulta de Acompanhamento Crónico — 40€\n• Consulta (ITU, amigdalite, DST) — 40€\n• Baixa médica (CIT) — 55€\n\nTodos incluem fatura AT certificada.' },
   { q: '🩺 Como funciona a videoconsulta?', a: 'Após o pagamento recebe um email com o link da videoconsulta. Na hora marcada entra directamente no browser — sem instalar nada. O médico avalia o seu caso e envia os documentos por email no próprio dia.' },
   { q: '💳 Como posso pagar?', a: 'Aceitamos MBWay, Referência Multibanco e cartão bancário. O pagamento é processado de forma segura pela Stripe. A fatura AT é emitida automaticamente após o pagamento.' },
-  { q: '📄 Os documentos têm validade legal?', a: 'Sim. O CIT (baixa médica) é submetido electronicamente à Segurança Social. As receitas são Receita Sem Papel, válidas em todas as farmácias. Os atestados são aceites por empregadores e escolas.' },
+  { q: '📄 Os documentos têm validade legal?', a: 'Sim. O CIT (baixa médica) é submetido electronicamente à Segurança Social. Os atestados são aceites por empregadores e escolas.' },
   { q: '📅 Como marco uma consulta?', a: '1. Clique em "Marcar Consulta" no menu\n2. Escolha o serviço, dia e hora\n3. Preencha os dados e pague\n4. Recebe confirmação por email com o link da videoconsulta' },
   { q: '⏱️ Quando recebo os documentos?', a: 'Os documentos são enviados por email imediatamente após a consulta, em formato PDF — na maioria dos casos no próprio dia.' },
   { q: '🔒 Os meus dados estão seguros?', a: 'Sim. A videoconsulta é privada e segura. O sigilo médico é absoluto por lei. Os seus dados são tratados em conformidade com o RGPD.' },
