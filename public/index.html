@@ -2633,48 +2633,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   </div>
 </div>
-<!-- POPUP LEAD MAGNET -->
-<div id="leadPopup" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(11,29,53,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px">
-  <div style="background:#fff;border-radius:20px;max-width:480px;width:100%;box-shadow:0 8px 48px rgba(11,29,53,.2);overflow:hidden">
-    <div style="background:#0b1d35;padding:28px 28px 20px;text-align:center;position:relative">
-      <button onclick="document.getElementById('leadPopup').style.display='none';sessionStorage.setItem('leadSeen','1')" style="position:absolute;top:14px;right:16px;background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:16px">✕</button>
-      <div style="font-size:42px;margin-bottom:10px">🚑</div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#17c4a8;text-transform:uppercase;margin-bottom:8px">Guia Gratuito</div>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff;line-height:1.2;margin-bottom:8px">Guia de Primeiros Socorros</h2>
-      <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6">Descarregue grátis — o que fazer nas emergências mais comuns</p>
-    </div>
-    <div style="padding:24px 28px">
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
-        <div style="display:flex;align-items:center;gap:12px;background:#f4f7fb;border-radius:9px;padding:10px 14px">
-          <span style="font-size:18px">❤️</span><span style="font-size:13px;color:#0b1d35;font-weight:500">Como fazer RCP passo a passo</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;background:#f4f7fb;border-radius:9px;padding:10px 14px">
-          <span style="font-size:18px">🫁</span><span style="font-size:13px;color:#0b1d35;font-weight:500">Engasgamento — Manobra de Heimlich</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;background:#f4f7fb;border-radius:9px;padding:10px 14px">
-          <span style="font-size:18px">🩸</span><span style="font-size:13px;color:#0b1d35;font-weight:500">Hemorragias, queimaduras e convulsões</span>
-        </div>
-      </div>
-      <div style="margin-bottom:12px">
-        <label style="font-size:12px;font-weight:600;color:#0b1d35;display:block;margin-bottom:5px">Nome</label>
-        <input type="text" id="leadName" placeholder="O seu nome" style="width:100%;border:1.5px solid #dde6f0;border-radius:9px;padding:10px 14px;font-size:14px;font-family:'Inter',sans-serif;color:#0b1d35;background:#f4f7fb;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='#0d7377'" onblur="this.style.borderColor='#dde6f0'"/>
-      </div>
-      <div style="margin-bottom:14px">
-        <label style="font-size:12px;font-weight:600;color:#0b1d35;display:block;margin-bottom:5px">Email</label>
-        <input type="email" id="leadEmail" placeholder="email@exemplo.pt" style="width:100%;border:1.5px solid #dde6f0;border-radius:9px;padding:10px 14px;font-size:14px;font-family:'Inter',sans-serif;color:#0b1d35;background:#f4f7fb;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='#0d7377'" onblur="this.style.borderColor='#dde6f0'"/>
-      </div>
-      <button onclick="window.submitLeadMagnet()" style="width:100%;background:linear-gradient(135deg,#0d7377,#0f8c82);color:#fff;border:none;border-radius:9px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif" id="leadSubmitBtn">
-        Receber Guia Gratuito →
-      </button>
-      <div id="leadSuccess" style="display:none;margin-top:12px;background:rgba(56,161,105,.08);border:1px solid rgba(56,161,105,.25);border-radius:9px;padding:14px;text-align:center">
-        <div style="font-size:28px;margin-bottom:6px">✅</div>
-        <p style="font-size:14px;font-weight:600;color:#276749">Guia enviado!</p>
-        <p style="font-size:13px;color:#48bb78">Verifique o seu email.</p>
-      </div>
-      <p style="font-size:11px;color:#8a9bb0;text-align:center;margin-top:10px">Sem spam. Pode cancelar a qualquer momento.</p>
-    </div>
-  </div>
-</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast">
   <div class="toast-top"><div class="toast-ic">✓</div><strong>Consulta Confirmada!</strong></div>
@@ -4020,11 +3979,7 @@ window.submitLeadHome = function() {
     btn.disabled = false;
   });
 };
-setTimeout(function() {
-  if (!sessionStorage.getItem('leadSeen')) {
-    document.getElementById('leadPopup').style.display = 'flex';
-  }
-}, 30000);
+
  try { renderCalendar(); } catch(e) { console.warn('Calendar init:', e); }
 })(); // end IIFE
 </script>
