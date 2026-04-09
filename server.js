@@ -893,6 +893,40 @@ async function sendConfirmationEmail({ to, name, serviceName, date, time, amount
 // ROTA: Formulário de Contacto
 // POST /contact
 // ─────────────────────────────────────────────
+app.post('/lead-magnet', async (req, res) => {
+  const { email, name } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email em falta' });
+  try {
+    await sgMail.send({
+      to: email,
+      from: process.env.FROM_EMAIL,
+      subject: 'O seu Guia de Primeiros Socorros — ConsultasOnline',
+      html: '<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">'
+          + '<div style="background:#0b1d35;padding:32px;text-align:center;border-radius:12px 12px 0 0">'
+          + '<h1 style="color:#fff;font-size:22px;margin:0">🚑 O seu guia chegou!</h1>'
+          + '<p style="color:rgba(255,255,255,.6);margin:8px 0 0">Guia de Primeiros Socorros — ConsultasOnline</p>'
+          + '</div>'
+          + '<div style="background:#f4f7fb;padding:32px;border-radius:0 0 12px 12px">'
+          + '<p style="font-size:15px;line-height:1.7">Ola ' + (name || '') + ',</p>'
+          + '<p style="font-size:15px;line-height:1.7;margin-top:8px">Obrigado pelo seu interesse! O seu guia gratuito esta disponivel no link abaixo.</p>'
+          + '<div style="text-align:center;margin:24px 0">'
+          + '<a href="https://www.consultas-online.pt/guia-primeiros-socorros.pdf" style="background:#0d7377;color:#fff;padding:14px 32px;border-radius:9px;text-decoration:none;font-weight:600;font-size:15px">Descarregar Guia PDF →</a>'
+          + '</div>'
+          + '<p style="font-size:13px;color:#8a9bb0;line-height:1.7">Se precisar de consulta medica online — baixa medica, atestados ou renovacao de receitas — estamos disponiveis em <a href="https://www.consultas-online.pt" style="color:#0d7377">consultas-online.pt</a>.</p>'
+          + '</div></div>'
+    });
+    await sgMail.send({
+      to: process.env.NOTIFY_EMAIL,
+      from: process.env.FROM_EMAIL,
+      subject: 'Novo lead — Guia Primeiros Socorros',
+      text: 'Nome: ' + (name || 'N/A') + '\nEmail: ' + email
+    });
+    res.json({ ok: true });
+  } catch(err) {
+    console.error('Lead magnet error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
 app.post('/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
 
