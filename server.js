@@ -484,12 +484,16 @@ app.post('/upload-anexos', async (req, res) => {
 app.post('/create-checkout-session', async (req, res) => {
   const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes, temAnexos, numAnexos } = req.body;
 
-  const service = SERVICES[serviceId];
+const service = SERVICES[serviceId];
   if (!service) return res.status(400).json({ error: 'Servico invalido.' });
-
   const clientUrl = process.env.CLIENT_URL || 'https://consultas-online.pt';
-
   try {
+    // Verificar se o slot está disponível
+    const dateKey = date ? date.split('/').reverse().join('-') : '';
+    const existingSlot = await BookedSlot.findOne({ dateKey, time });
+    if (existingSlot) {
+      return res.status(400).json({ error: 'Este horario ja nao esta disponivel. Por favor escolha outro.' });
+    }
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card', 'mb_way', 'multibanco'],
