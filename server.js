@@ -1003,6 +1003,17 @@ app.post('/admin/login', (req, res) => {
   const token = Buffer.from(correct + ':consultas-admin-salt').toString('base64');
   res.json({ ok: true, token });
 });
+// Rota para obter slots disponíveis e bloqueados
+app.get('/slots', async (req, res) => {
+  const { date } = req.query;
+  if (!date) return res.status(400).json({ error: 'Data em falta' });
+  try {
+    const booked = await BookedSlot.find({ dateKey: date });
+    res.json({ booked });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // Bloquear slot
 app.post('/admin/block-slot', async (req, res) => {
   const { secret, dateKey, time, reason } = req.body;
