@@ -69,6 +69,8 @@ const bookedSlotSchema = new mongoose.Schema({
   customerEmail: String,
   stripeSession: String,
   createdAt: { type: Date, default: Date.now },
+  blocked: { type: Boolean, default: false },
+  blockedReason: { type: String, default: '' },
 });
 bookedSlotSchema.index({ dateKey: 1, time: 1 }, { unique: true });
 const BookedSlot = mongoose.models.BookedSlot || mongoose.model('BookedSlot', bookedSlotSchema);
