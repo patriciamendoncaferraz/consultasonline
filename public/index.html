@@ -797,13 +797,33 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="hero-dots"></div>
   <div class="hero-inner">
     <div>
-      <div class="hero-pill"><div class="pulse-dot"></div><span>Disponível agora</span></div>
-      <h1 class="hero-title">Consultas médicas<br/>online, <em>simples</em><br/>e sem esperas</h1>
-      <p class="hero-sub">Marque a sua consulta em segundos. Pague por MBWay ou cartão e receba a fatura no email. Tudo sem sair de casa.</p>
-      <div class="hero-btns">
-        <button class="btn-main" onclick="openServiceSelector()">Marcar Consulta</button>
-        <button class="btn-ghost" onclick="showPage('blog')">Artigos de Saúde →</button>
-      </div>
+     <div class="hero-pill"><div class="pulse-dot"></div><span>Disponível agora — consultas hoje</span></div>
+<h1 class="hero-title">Não tens médico<br/>de família? <em>Resolve<br/>hoje.</em></h1>
+<p class="hero-sub">Baixa médica, atestados e renovação de receitas por videochamada — no próprio dia, sem filas, sem deslocações.</p>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+  <span style="background:rgba(23,196,168,.12);border:1px solid rgba(23,196,168,.25);color:#17c4a8;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600">✓ Baixa médica</span>
+  <span style="background:rgba(23,196,168,.12);border:1px solid rgba(23,196,168,.25);color:#17c4a8;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600">✓ Atestados</span>
+  <span style="background:rgba(23,196,168,.12);border:1px solid rgba(23,196,168,.25);color:#17c4a8;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600">✓ Renovação receitas</span>
+  <span style="background:rgba(23,196,168,.12);border:1px solid rgba(23,196,168,.25);color:#17c4a8;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600">✓ MBWay aceite</span>
+</div>
+<div class="hero-btns">
+  <button class="btn-main" onclick="openServiceSelector()">Marcar Consulta Agora →</button>
+  <button class="btn-ghost" onclick="showPage('como-funciona')">Como funciona?</button>
+</div>
+<div style="display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:6px">
+    <span style="color:#17c4a8;font-size:14px">⭐⭐⭐⭐⭐</span>
+    <span style="font-size:12px;color:rgba(255,255,255,.5)">Médicos com cédula</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <span style="color:#17c4a8;font-size:14px">🔒</span>
+    <span style="font-size:12px;color:rgba(255,255,255,.5)">Fatura AT automática</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <span style="color:#17c4a8;font-size:14px">⚡</span>
+    <span style="font-size:12px;color:rgba(255,255,255,.5)">Documentos no próprio dia</span>
+  </div>
+</div>
     </div>
     <div style="position:relative" class="hero-card-wrap">
       <div class="fb1 float-badge"><div class="fb-dot fb-green">✓</div>Consulta confirmada</div>
