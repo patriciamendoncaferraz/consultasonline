@@ -535,6 +535,7 @@ const service = SERVICES[serviceId];
         description: service.name + ' - ' + date + ' as ' + time,
         receipt_email: customerEmail,
       },
+      allow_promotion_codes: true,
       custom_text: {
         submit: { message: 'O seu pagamento é processado de forma segura pelo Stripe.' },
       },
