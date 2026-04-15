@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express  = require('express');
+const compression = require('compression');
 const cors     = require('cors');
 const stripe   = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const sgMail   = require('@sendgrid/mail');
@@ -12,6 +13,7 @@ const MEET_LINK = process.env.MEET_LINK || 'https://meet.google.com/ukw-vjni-vyn
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app  = express();
+app.use(compression());
 const PORT = process.env.PORT || 8080;
 
 // ─────────────────────────────────────────────
