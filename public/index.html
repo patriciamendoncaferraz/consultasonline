@@ -3179,7 +3179,6 @@ function renderAdminCalendar() {
   var first = new Date(y, m, 1).getDay();
   var days = new Date(y, m + 1, 0).getDate();
   var today = new Date();
-  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
   var html = '';
   for (var i = 0; i < first; i++) html += '<div class="admin-day empty"></div>';
   for (var d = 1; d <= days; d++) {
@@ -3187,8 +3186,7 @@ function renderAdminCalendar() {
     var isPast = new Date(y,m,d) < new Date(today.getFullYear(),today.getMonth(),today.getDate());
     var isToday = d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
     var isSel = adminSelectedKey === key;
-    var hasBlocked = blocked[key] && blocked[key].length > 0;
-    var cls = 'admin-day' + (isPast?' past':isSel?' selected':isToday?' today':'') + (hasBlocked?' has-blocked':'');
+    var cls = 'admin-day' + (isPast?' past':isSel?' selected':isToday?' today':'');
     var clk = isPast ? '' : 'onclick="adminSelectDay(' + d + ')"';
     html += '<div class="' + cls + '" ' + clk + '>' + d + '</div>';
   }
@@ -3221,34 +3219,87 @@ window.adminSelectDay = function(d) {
 function renderAdminSlots() {
   var grid = document.getElementById('adminSlotsGrid');
   if (!grid) return;
-  var blocked = JSON.parse(localStorage.getItem('blocked_slots') || '{}');
-  var dayBlocked = blocked[adminSelectedKey] || [];
-  var html = '';
-  ADMIN_ALL_SLOTS.forEach(function(slot) {
-    var isBlocked = dayBlocked.indexOf(slot) !== -1;
-    var cls = 'admin-slot' + (isBlocked ? ' blocked' : '');
-    html += '<div class="' + cls + '" onclick="adminToggleSlot(this,\'' + slot + '\')">' + slot + '</div>';
-  });
-  grid.innerHTML = html;
+  if (!adminSelectedKey) { grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Seleccione um dia</p>'; return; }
+  grid.innerHTML = '<p style="color:var(--muted);font-size:13px">A carregar...</p>';
+  fetch('/slots?date=' + adminSelectedKey)
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      var bookedTimes = (data.booked || []).map(function(s){ return s.time; });
+      var blockedTimes = (data.booked || []).filter(function(s){ return s.blocked; }).map(function(s){ return s.time; });
+      var html = '';
+      ADMIN_ALL_SLOTS.forEach(function(slot) {
+        var isBlocked = blockedTimes.indexOf(slot) !== -1;
+        var isBooked = !isBlocked && bookedTimes.indexOf(slot) !== -1;
+        var cls = 'admin-slot' + (isBlocked ? ' blocked' : isBooked ? ' booked' : '');
+        var clk = isBooked ? '' : 'onclick="adminToggleSlot(this,\'' + slot + '\')"';
+        var label = isBooked ? slot + ' 🔒' : isBlocked ? slot + ' ✕' : slot;
+        html += '<div class="' + cls + '" ' + clk + '>' + label + '</div>';
+      });
+      grid.innerHTML = html;
+    })
+    .catch(function() {
+      grid.innerHTML = '<p style="color:red;font-size:13px">Erro ao carregar slots</p>';
+    });
 }
 
-window.adminToggleSlot = function(el) {
-  el.classList.toggle('blocked');
-  var saved = document.getElementById('adminSavedMsg');
-  if (saved) saved.classList.remove('show');
+window.adminToggleSlot = function(el, slot) {
+  var secret = sessionStorage.getItem('adminSecret');
+  if (!secret) {
+    secret = prompt('Password admin:');
+    if (!secret) return;
+    sessionStorage.setItem('adminSecret', secret);
+  }
+  var isBlocked = el.classList.contains('blocked');
+  var url = isBlocked ? '/admin/unblock-slot' : '/admin/block-slot';
+  var body = { secret: secret, dateKey: adminSelectedKey, time: slot };
+  if (!isBlocked) body.reason = 'Bloqueado pela clinica';
+  el.style.opacity = '0.5';
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    el.style.opacity = '1';
+    if (data.error) { alert('Erro: ' + data.error); return; }
+    renderAdminSlots();
+  })
+  .catch(function() {
+    el.style.opacity = '1';
+    alert('Erro de ligacao');
+  });
 };
-
 window.adminToggleAll = function(block) {
-  document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
-    if (block) el.classList.add('blocked');
-    else el.classList.remove('blocked');
+  var secret = sessionStorage.getItem('adminSecret');
+  if (!secret) {
+    secret = prompt('Password admin:');
+    if (!secret) return;
+    sessionStorage.setItem('adminSecret', secret);
+  }
+  var slots = document.querySelectorAll('#adminSlotsGrid .admin-slot:not(.booked)');
+  var promises = [];
+  slots.forEach(function(el) {
+    var slot = el.textContent.replace(' ✕','').replace(' 🔒','').trim();
+    var isBlocked = el.classList.contains('blocked');
+    if (block && !isBlocked) {
+      promises.push(fetch('/admin/block-slot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: secret, dateKey: adminSelectedKey, time: slot, reason: 'Bloqueado pela clinica' })
+      }));
+    } else if (!block && isBlocked) {
+      promises.push(fetch('/admin/unblock-slot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: secret, dateKey: adminSelectedKey, time: slot })
+      }));
+    }
   });
+  Promise.all(promises).then(function() { renderAdminSlots(); });
 };
-
 window.adminClearDay = function() {
-  document.querySelectorAll('#adminSlotsGrid .admin-slot').forEach(function(el){
-    el.classList.remove('blocked');
-  });
+  window.adminToggleAll(false);
 };
 
 window.adminSaveSlots = function() {
