@@ -1003,6 +1003,40 @@ app.post('/admin/login', (req, res) => {
   const token = Buffer.from(correct + ':consultas-admin-salt').toString('base64');
   res.json({ ok: true, token });
 });
+// Bloquear slot
+app.post('/admin/block-slot', async (req, res) => {
+  const { secret, dateKey, time, reason } = req.body;
+  if (secret !== process.env.ADMIN_SECRET) return res.status(403).json({ error: 'Forbidden' });
+  try {
+    const existing = await BookedSlot.findOne({ dateKey, time });
+    if (existing) return res.status(400).json({ error: 'Slot ja ocupado' });
+    await BookedSlot.create({
+      dateKey,
+      time,
+      blocked: true,
+      blockedReason: reason || 'Bloqueado',
+      serviceId: 'blocked',
+      serviceName: 'Bloqueado',
+      customerEmail: '',
+      stripeSession: '',
+    });
+    res.json({ ok: true });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Desbloquear slot
+app.post('/admin/unblock-slot', async (req, res) => {
+  const { secret, dateKey, time } = req.body;
+  if (secret !== process.env.ADMIN_SECRET) return res.status(403).json({ error: 'Forbidden' });
+  try {
+    await BookedSlot.deleteOne({ dateKey, time, blocked: true });
+    res.json({ ok: true });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Middleware de autenticação admin
 function adminAuth(req, res, next) {
