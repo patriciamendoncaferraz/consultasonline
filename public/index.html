@@ -2859,7 +2859,7 @@ window.showPage = function(p, pushState) {
 // ══════════════════════════════════════
 // ARTICLE NAVIGATION
 // ══════════════════════════════════════
-var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-mundial-saude-2026"};
+var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-mundial-saude-2026","baixa-medica-freelancer":"baixa-medica-freelancer","sem-medico-familia-freelancer":"sem-medico-familia-freelancer"};
 window.openArticle = function(id) {
   var slug = ARTICLE_SLUGS[id] || id;
   history.pushState({ article: id }, '', '/artigos/' + slug);
