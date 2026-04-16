@@ -274,8 +274,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 /* ══════════════════════════════
    SERVICE SELECTOR MODAL (STEP 1)
 ══════════════════════════════ */
-.overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(11,29,53,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
-.overlay.open{display:flex}
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;z-index:300;background:rgba(11,29,53,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex !important;width:100vw !important;height:100vh !important;top:0 !important;left:0 !important}
 .modal-box{background:var(--white);border-radius:var(--r2);max-width:820px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:var(--sh2);animation:popIn .28s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{from{opacity:0;transform:scale(.93) translateY(18px)}to{opacity:1;transform:none}}
 .modal-hdr{padding:24px 28px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
