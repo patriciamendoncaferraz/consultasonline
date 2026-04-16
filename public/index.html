@@ -2912,7 +2912,7 @@ window.showPage = function(p, pushState) {
   }
   closeAllArticles();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  setTimeout(checkVisible, 200);
+  requestAnimationFrame(checkVisible);
   // Push history state so browser back button works
   if (pushState !== false) {
     history.pushState({ page: p }, '', p === 'home' ? '/' : '#' + p);
@@ -4144,8 +4144,10 @@ function checkVisible() {
     if (rect.top < window.innerHeight + 60) el.classList.add('visible');
   });
 }
-window.addEventListener('scroll', checkVisible, { passive: true });
-setTimeout(checkVisible, 100);
+window.addEventListener('scroll', function() {
+  requestAnimationFrame(checkVisible);
+}, { passive: true });
+requestAnimationFrame(checkVisible);
 setTimeout(function() {
   document.querySelectorAll('.page.active .fade-up').forEach(function(el){ el.classList.add('visible'); });
 }, 300);
