@@ -129,6 +129,7 @@ const SERVICES = {
   'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 4000 },
   'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 4000 },
   'consulta-dst':               { name: 'Consulta DST / IST',                price: 4000 },
+  'renovacao-piula': { name: 'Renovação de Pílula Anticoncecional', price: 4000 },
 };
 
 function formatPhone(phone) {
@@ -257,6 +258,13 @@ const ARTICLES = {
     category: 'Saúde Global',
     keywords: 'dia mundial saúde 2026, OMS 2026 tema, saúde portugal 2026, telemedicina portugal, consulta online portugal',
   },
+  'renovar-pilula-anticoncecional-online': {
+  id: 'piula-online',
+  title: 'Renovar a Pílula Anticoncecional Online em Portugal | ConsultasOnline',
+  description: 'Saiba como renovar a receita da pílula por videoconsulta em Portugal. Legal, seguro, sem médico de família. Receita Sem Papel no próprio dia. 40€.',
+  category: 'Saúde da Mulher',
+  keywords: 'renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, videoconsulta pílula portugal',
+},
 };
 
 // Gera HTML completo para cada artigo com meta tags SEO próprias
