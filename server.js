@@ -1329,7 +1329,83 @@ app.put('/admin/utentes/:id/consulta/:idx', adminAuth, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+app.post('/lead-ebook', async (req, res) => {
+  const { name, email } = req.body;
+  if (!name || !email) return res.status(400).json({ ok: false, error: 'Nome e email obrigatórios.' });
 
+  const ebookUrl = (process.env.CLIENT_URL || 'https://www.consultas-online.pt') + '/ebook_saude_em_dia.pdf';
+
+  if (MONGO_URI) {
+    try {
+      await Lead.findOneAndUpdate(
+        { email },
+        { nome: name, email, fonte: 'ebook-saude-em-dia', criadoEm: new Date() },
+        { upsert: true, new: true }
+      );
+    } catch (err) {
+      console.warn('Erro ao guardar lead:', err.message);
+    }
+  }
+
+  try {
+    await sgMail.send({
+      to: email,
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+      subject: '🌿 O teu guia gratuito: A Tua Saúde em Dia',
+      html: `<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">
+        <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden">
+          <div style="background:#0b1d35;padding:20px 28px">
+            <span style="font-size:20px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>
+          </div>
+          <div style="padding:28px">
+            <h2 style="color:#0b1d35;margin:0 0 8px">Olá, ${name}! 🌿</h2>
+            <p style="color:#4a5568;margin:0 0 20px;line-height:1.6">O teu guia <strong>A Tua Saúde em Dia</strong> está pronto. Clica no botão abaixo para descarregar.</p>
+            <a href="${ebookUrl}" style="display:inline-block;background:linear-gradient(135deg,#0d7377,#17c4a8);color:#fff;text-decoration:none;border-radius:10px;padding:14px 28px;font-weight:700;font-size:15px;margin-bottom:24px">
+              📥 Descarregar o Guia Gratuito
+            </a>
+            <div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:20px">
+              <p style="margin:0 0 8px;font-size:13px;color:#0b1d35;font-weight:600">O que encontras no guia:</p>
+              <ul style="margin:0;padding-left:18px;font-size:13px;color:#4a5568;line-height:1.8">
+                <li>Checklist de exames para todas as idades</li>
+                <li>Rastreios por faixa etária (20-30, 30-40, 40-50, 50+)</li>
+                <li>Sinais de alerta que não deves ignorar</li>
+                <li>Calendário de vacinação do adulto</li>
+                <li>20 referências bibliográficas (DGS, WHO, SPG)</li>
+              </ul>
+            </div>
+            <p style="font-size:13px;color:#4a5568;line-height:1.6">Precisas de uma consulta médica online? Estamos disponíveis de segunda a domingo, das 9h às 21h.</p>
+            <a href="${process.env.CLIENT_URL || 'https://www.consultas-online.pt'}" style="display:inline-block;border:1.5px solid #0d7377;color:#0d7377;text-decoration:none;border-radius:10px;padding:10px 20px;font-weight:600;font-size:13px">Ver Serviços →</a>
+            <p style="font-size:11px;color:#8a9bb0;margin-top:24px">Dúvidas? geral@consultas-online.pt</p>
+          </div>
+        </div>
+        </body></html>`,
+      text: `Olá ${name},\n\nO teu guia está disponível em: ${ebookUrl}\n\nConsultasOnline`,
+    });
+  } catch (err) {
+    console.error('Erro ao enviar ebook:', err.message);
+    return res.status(500).json({ ok: false, error: 'Erro ao enviar email.' });
+  }
+
+  try {
+    await sgMail.send({
+      to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+      subject: '🔔 Nova lead — Ebook Saúde em Dia',
+      html: `<html><body style="font-family:Arial,sans-serif;padding:20px">
+        <h3 style="color:#0b1d35">Nova lead gerada</h3>
+        <p><strong>Nome:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Fonte:</strong> Ebook — A Tua Saúde em Dia</p>
+        <p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>
+        </body></html>`,
+      text: `Nova lead\nNome: ${name}\nEmail: ${email}\nData: ${new Date().toLocaleString('pt-PT')}`,
+    });
+  } catch (err) {
+    console.warn('Erro notificação interna:', err.message);
+  }
+
+  res.json({ ok: true });
+});
 app.listen(PORT, () => {
   console.log('ConsultasOnline - Server Running - porta ' + PORT);
 });
