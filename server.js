@@ -272,6 +272,13 @@ const ARTICLES = {
   category: 'Saúde da Mulher',
   keywords: 'renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, videoconsulta pílula portugal',
 },
+  'renovar-pilula-anticoncecional-online': {
+  id: 'piula-online',
+  title: 'Renovar Pílula Anticoncecional Online em Portugal | ConsultasOnline',
+  description: 'Renova a pílula por videoconsulta. Sem médico de família. Receita Sem Papel no email no próprio dia. Legal, seguro. A partir de 40€.',
+  category: 'Saúde da Mulher',
+  keywords: 'renovar pílula online, renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família',
+},
 };
 
 // Gera HTML completo para cada artigo com meta tags SEO próprias
