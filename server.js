@@ -76,7 +76,14 @@ const bookedSlotSchema = new mongoose.Schema({
 });
 bookedSlotSchema.index({ dateKey: 1, time: 1 }, { unique: true });
 const BookedSlot = mongoose.models.BookedSlot || mongoose.model('BookedSlot', bookedSlotSchema);
-
+const leadSchema = new mongoose.Schema({
+  nome:      { type: String, required: true },
+  email:     { type: String, required: true },
+  fonte:     { type: String, default: 'ebook-saude-em-dia' },
+  criadoEm: { type: Date, default: Date.now },
+});
+leadSchema.index({ email: 1 }, { unique: true });
+const Lead = mongoose.models.Lead || mongoose.model('Lead', leadSchema);
 // Guardar/atualizar utente e adicionar consulta
 async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor, temAnexos, numAnexos }) {
   if (!MONGO_URI || !email) return null;
