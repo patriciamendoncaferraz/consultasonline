@@ -4369,9 +4369,10 @@ window.submitEbook = function() {
   .then(function(r) { return r.json(); })
   .then(function(data) {
     if (data.ok) {
-      document.getElementById('ebookForm').style.opacity = '.4';
-      document.getElementById('ebookForm').style.pointerEvents = 'none';
-      msg.style.display = 'block';
+  btn.textContent = 'Enviado! ✅';
+  btn.disabled = true;
+  btn.style.opacity = '.7';
+  msg.style.display = 'block';
     } else {
       err.textContent = 'Ocorreu um erro. Tenta novamente.';
       err.style.display = 'block';
