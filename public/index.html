@@ -1009,13 +1009,15 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
   </div>
 </section>
-  <!-- EBOOK LEAD -->
+ <!-- EBOOK LEAD -->
 <section id="ebook-section" style="background:linear-gradient(135deg,#0b1d35 0%,#0d4a4e 100%);padding:72px 0;position:relative;overflow:hidden">
   <div style="position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(23,196,168,.07);pointer-events:none"></div>
   <div style="position:absolute;bottom:-80px;left:-40px;width:220px;height:220px;border-radius:50%;background:rgba(13,115,119,.1);pointer-events:none"></div>
   <div class="container" style="position:relative;z-index:1">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;max-width:1000px;margin:0 auto">
-      <div style="display:flex;flex-direction:column;align-items:flex-start;gap:20px">
+    <div style="display:flex;flex-wrap:wrap;gap:48px;align-items:center;max-width:1000px;margin:0 auto">
+
+      <!-- Capa ebook -->
+      <div style="flex:1;min-width:260px;display:flex;flex-direction:column;align-items:flex-start;gap:20px">
         <div style="background:linear-gradient(145deg,#f0ebe3,#faf8f5);border-radius:16px;padding:32px 28px;width:100%;max-width:280px;box-shadow:0 20px 60px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);position:relative">
           <div style="width:40px;height:4px;background:var(--teal2);border-radius:2px;margin-bottom:16px"></div>
           <div style="font-size:11px;font-weight:700;color:var(--teal);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Guia Gratuito</div>
@@ -1031,9 +1033,11 @@ document.addEventListener("DOMContentLoaded", function() {
         </div>
         <div style="font-size:13px;color:rgba(255,255,255,.5)">🌿 Gratuito. Sem spam. Cancela quando quiseres.</div>
       </div>
-      <div>
+
+      <!-- Formulário -->
+      <div style="flex:1;min-width:280px">
         <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--teal2);text-transform:uppercase;margin-bottom:12px">Download Gratuito</div>
-        <h2 style="font-size:clamp(24px,3vw,34px);font-weight:800;color:var(--white);line-height:1.2;margin-bottom:14px">
+        <h2 style="font-size:clamp(22px,3vw,34px);font-weight:800;color:var(--white);line-height:1.2;margin-bottom:14px">
           Sabes quando foram<br/>os teus últimos exames?
         </h2>
         <p style="font-size:14.5px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:28px">
@@ -1041,15 +1045,15 @@ document.addEventListener("DOMContentLoaded", function() {
         </p>
         <div id="ebookForm" style="display:flex;flex-direction:column;gap:12px">
           <input id="ebookName" type="text" placeholder="O teu nome"
-            style="border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 16px;font-size:14px;font-family:'Inter',sans-serif;background:rgba(255,255,255,.08);color:var(--white);outline:none;transition:.2s"
+            style="width:100%;box-sizing:border-box;border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 16px;font-size:14px;font-family:'Inter',sans-serif;background:rgba(255,255,255,.08);color:var(--white);outline:none;transition:.2s"
             onfocus="this.style.borderColor='var(--teal2)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"
           />
           <input id="ebookEmail" type="email" placeholder="O teu email"
-            style="border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 16px;font-size:14px;font-family:'Inter',sans-serif;background:rgba(255,255,255,.08);color:var(--white);outline:none;transition:.2s"
+            style="width:100%;box-sizing:border-box;border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 16px;font-size:14px;font-family:'Inter',sans-serif;background:rgba(255,255,255,.08);color:var(--white);outline:none;transition:.2s"
             onfocus="this.style.borderColor='var(--teal2)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"
           />
           <button onclick="window.submitEbook()" id="ebookBtn"
-            style="background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:4px">
+            style="width:100%;box-sizing:border-box;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:4px">
             Receber o Guia Gratuito →
           </button>
           <div id="ebookMsg" style="display:none;background:rgba(23,196,168,.15);border:1px solid var(--teal2);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--teal2);font-weight:600;text-align:center">
@@ -1061,6 +1065,7 @@ document.addEventListener("DOMContentLoaded", function() {
           Ao submeter concordas com a nossa <a onclick="showPage('privacidade')" style="color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline">Política de Privacidade</a>. Os teus dados não são partilhados com terceiros.
         </p>
       </div>
+
     </div>
   </div>
 </section>
