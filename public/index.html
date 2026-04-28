@@ -1111,50 +1111,7 @@ document.addEventListener("DOMContentLoaded", function() {
           <input id="ebookEmail" type="email" placeholder="O teu email"
             style="width:100%;box-sizing:border-box;border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:14px 16px;font-size:14px;font-family:'Inter',sans-serif;background:rgba(255,255,255,.08);color:var(--white);outline:none;transition:.2s"
             onfocus="this.style.borderColor='var(--teal2)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"
-          />
-         window.submitSintomas = function() {
-  var name  = (document.getElementById('sintomasName')  || {}).value || '';
-  var email = (document.getElementById('sintomasEmail') || {}).value || '';
-  var btn   = document.getElementById('sintomasBtn');
-  var msg   = document.getElementById('sintomasMsg');
-  var err   = document.getElementById('sintomasErr');
-
-  if (!name.trim() || !email.trim()) {
-    err.textContent = 'Por favor preenche o nome e o email.';
-    err.style.display = 'block'; return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    err.textContent = 'Email inválido. Verifica e tenta de novo.';
-    err.style.display = 'block'; return;
-  }
-  err.style.display = 'none';
-  btn.textContent = 'A enviar…';
-  btn.disabled = true;
-
-  fetch(API_URL + '/lead-sintomas', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: name.trim(), email: email.trim() })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (data.ok) {
-      btn.textContent = 'Enviado! ✅';
-      msg.style.display = 'block';
-    } else {
-      err.textContent = 'Ocorreu um erro. Tenta novamente.';
-      err.style.display = 'block';
-      btn.textContent = 'Receber o Guia Gratuito →';
-      btn.disabled = false;
-    }
-  })
-  .catch(function() {
-    err.textContent = 'Erro de ligação. Tenta novamente.';
-    err.style.display = 'block';
-    btn.textContent = 'Receber o Guia Gratuito →';
-    btn.disabled = false;
-  });
-};
+         
           <button onclick="window.submitEbook()" id="ebookBtn"
             style="width:100%;box-sizing:border-box;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--white);border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;margin-top:4px">
             Receber o Guia Gratuito →
