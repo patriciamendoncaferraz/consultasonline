@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express  = require('express');
-const compression = require('compression');
 const cors     = require('cors');
 const stripe   = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const sgMail   = require('@sendgrid/mail');
@@ -13,7 +12,6 @@ const MEET_LINK = process.env.MEET_LINK || 'https://meet.google.com/ukw-vjni-vyn
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const app  = express();
-app.use(compression());
 const PORT = process.env.PORT || 8080;
 
 // ─────────────────────────────────────────────
@@ -71,11 +69,10 @@ const bookedSlotSchema = new mongoose.Schema({
   customerEmail: String,
   stripeSession: String,
   createdAt: { type: Date, default: Date.now },
-  blocked: { type: Boolean, default: false },
-  blockedReason: { type: String, default: '' },
 });
 bookedSlotSchema.index({ dateKey: 1, time: 1 }, { unique: true });
 const BookedSlot = mongoose.models.BookedSlot || mongoose.model('BookedSlot', bookedSlotSchema);
+
 const leadSchema = new mongoose.Schema({
   nome:      { type: String, required: true },
   email:     { type: String, required: true },
@@ -84,6 +81,7 @@ const leadSchema = new mongoose.Schema({
 });
 leadSchema.index({ email: 1 }, { unique: true });
 const Lead = mongoose.models.Lead || mongoose.model('Lead', leadSchema);
+
 // Guardar/atualizar utente e adicionar consulta
 async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor, temAnexos, numAnexos }) {
   if (!MONGO_URI || !email) return null;
@@ -111,14 +109,6 @@ async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, 
   }
 }
 
-// Redirecionar sem www para com www
-app.use((req, res, next) => {
-  if (req.headers.host === 'consultas-online.pt') {
-    return res.redirect(301, 'https://www.consultas-online.pt' + req.url);
-  }
-  next();
-});
-
 app.use('/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
@@ -132,11 +122,11 @@ const SERVICES = {
   'atestado-conducao':          { name: 'Atestado para Carta de Condução',   price: 4500 },
   'baixa-medica':               { name: 'Emissão de Baixa Médica',           price: 5500 },
   'renovacao-medicamentos':     { name: 'Renovação de Medicamentos',         price: 4000 },
+  'renovacao-piula':            { name: 'Renovação de Pílula Anticoncecional', price: 4000 },
   'consulta-infecao-urinaria':  { name: 'Consulta de Infeção Urinária',      price: 4000 },
   'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 4000 },
   'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 4000 },
   'consulta-dst':               { name: 'Consulta DST / IST',                price: 4000 },
-  'renovacao-piula': { name: 'Renovação de Pílula Anticoncecional', price: 4000 },
 };
 
 function formatPhone(phone) {
@@ -163,7 +153,7 @@ const ARTICLES = {
   'baixa-medica': {
     id: 'renovacao-baixa',
     title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
-    description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa.',
+    description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
     category: 'Baixas',
     keywords: 'baixa médica online portugal, renovar baixa médica online, CIT online, consulta baixa médica',
   },
@@ -183,10 +173,10 @@ const ARTICLES = {
   },
   'atestado-carta-conducao': {
     id: 'conducao',
-    title: 'Atestado para Carta de Condução Online | Enviado ao IMT | ConsultasOnline',
-    description: 'Atestado médico para carta de condução online em Portugal. Enviado directamente ao IMT. Válido para primeira carta, renovação e troca. Emitido no próprio dia. 45€.',
+    title: 'Atestado Médico para Carta de Condução Online | ConsultasOnline',
+    description: 'Atestado de aptidão médica para carta de condução por videoconsulta. Válido no IMT. Emitido no próprio dia. 45€.',
     category: 'Carta de Condução',
-    keywords: 'atestado carta de condução online, atestado médico carta de condução portugal, renovar carta de condução atestado, atestado IMT online, exame médico carta de condução online',
+    keywords: 'atestado carta de condução online, exame médico carta de condução online portugal, atestado IMT online',
   },
   'faltas-trabalho': {
     id: 'faltas-trabalho',
@@ -258,27 +248,27 @@ const ARTICLES = {
     category: 'Saúde Preventiva',
     keywords: 'rastreio saúde portugal, exames preventivos portugal, rastreio oncológico portugal',
   },
-  'dia-mundial-saude-2026': {
-    id: 'dia-saude-2026',
-    title: 'Dia Mundial da Saúde 2026: Juntos pela Ciência | ConsultasOnline',
-    description: 'O que é o Dia Mundial da Saúde 2026, qual o tema da OMS e o que pode fazer hoje pela sua saúde em Portugal. Telemedicina e ciência ao seu serviço.',
-    category: 'Saúde Global',
-    keywords: 'dia mundial saúde 2026, OMS 2026 tema, saúde portugal 2026, telemedicina portugal, consulta online portugal',
+  'renovar-pilula-anticoncecional-online': {
+    id: 'piula-online',
+    title: 'Renovar a Pílula Anticoncecional Online em Portugal | ConsultasOnline',
+    description: 'Saiba como renovar a receita da pílula por videoconsulta em Portugal. Legal, seguro, sem médico de família. Receita Sem Papel no próprio dia. 40€.',
+    category: 'Saúde da Mulher',
+    keywords: 'renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, videoconsulta pílula portugal',
   },
-  'renovar-pilula-anticoncecional-online': {
-  id: 'piula-online',
-  title: 'Renovar a Pílula Anticoncecional Online em Portugal | ConsultasOnline',
-  description: 'Saiba como renovar a receita da pílula por videoconsulta em Portugal. Legal, seguro, sem médico de família. Receita Sem Papel no próprio dia. 40€.',
-  category: 'Saúde da Mulher',
-  keywords: 'renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, videoconsulta pílula portugal',
-},
-  'renovar-pilula-anticoncecional-online': {
-  id: 'piula-online',
-  title: 'Renovar Pílula Anticoncecional Online em Portugal | ConsultasOnline',
-  description: 'Renova a pílula por videoconsulta. Sem médico de família. Receita Sem Papel no email no próprio dia. Legal, seguro. A partir de 40€.',
-  category: 'Saúde da Mulher',
-  keywords: 'renovar pílula online, renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família',
-},
+  'sem-medico-de-familia-portugal': {
+    id: 'sem-medico-familia',
+    title: 'Não Tem Médico de Família? O Que Fazer em Portugal | ConsultasOnline',
+    description: 'Mais de 1,5 milhões de portugueses sem médico de família. Conheça as alternativas legais para aceder a cuidados de saúde sem esperar anos.',
+    category: 'SNS & Direitos',
+    keywords: 'sem médico de família portugal, alternativas médico de família, lista espera médico família, médico online sem médico família',
+  },
+  'cistite-mulher-sintomas-tratamento': {
+    id: 'cistite-mulher',
+    title: 'Cistite na Mulher: Sintomas, Tratamento e Como Tratar Online | ConsultasOnline',
+    description: 'Tudo sobre cistite na mulher: sintomas, antibiótico adequado e quando pode tratar por videoconsulta. Consulta online disponível hoje. 40€.',
+    category: 'Saúde da Mulher',
+    keywords: 'cistite mulher sintomas tratamento, cistite online portugal, infeção urinária mulher antibiótico, cistite videoconsulta',
+  },
 };
 
 // Gera HTML completo para cada artigo com meta tags SEO próprias
@@ -387,8 +377,6 @@ app.get('/obrigado', (req, res) => {
 <title>Consulta Confirmada — ConsultasOnline</title>
 <meta name="description" content="A sua consulta médica online foi confirmada com sucesso. Receberá o email de confirmação e fatura em breve."/>
 <meta name="robots" content="noindex, nofollow"/>
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1803618151"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-1803618151');gtag('event','conversion',{'send_to':'AW-1803618151/qawCCN7xyJccEI-UqZhD','value':47.0,'currency':'EUR'});</script>
 <link rel="canonical" href="https://www.consultas-online.pt/"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -419,8 +407,6 @@ p{font-size:15px;color:#64748b;line-height:1.7;margin-bottom:8px}
   }
 }
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1803618151"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-1803618151');gtag('event','conversion',{'send_to':'AW-1803618151/qawCCN7xyJccEI-UqZhD','value':47.0,'currency':'EUR'});
 </head>
 <body>
 <div class="card">
@@ -508,16 +494,12 @@ app.post('/upload-anexos', async (req, res) => {
 app.post('/create-checkout-session', async (req, res) => {
   const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes, temAnexos, numAnexos } = req.body;
 
-const service = SERVICES[serviceId];
+  const service = SERVICES[serviceId];
   if (!service) return res.status(400).json({ error: 'Servico invalido.' });
+
   const clientUrl = process.env.CLIENT_URL || 'https://consultas-online.pt';
+
   try {
-    // Verificar se o slot está disponível
-    const dateKey = date ? date.split('/').reverse().join('-') : '';
-    const existingSlot = await BookedSlot.findOne({ dateKey, time });
-    if (existingSlot) {
-      return res.status(400).json({ error: 'Este horario ja nao esta disponivel. Por favor escolha outro.' });
-    }
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card', 'mb_way', 'multibanco'],
@@ -549,17 +531,12 @@ const service = SERVICES[serviceId];
       },
       success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: clientUrl + '/?cancelado=1',
-      payment_method_configuration: undefined,
       locale: 'pt',
       billing_address_collection: 'auto',
-      phone_number_collection: {
-        enabled: false,
-      },
       payment_intent_data: {
         description: service.name + ' - ' + date + ' as ' + time,
         receipt_email: customerEmail,
       },
-      allow_promotion_codes: true,
       custom_text: {
         submit: { message: 'O seu pagamento é processado de forma segura pelo Stripe.' },
       },
@@ -592,17 +569,8 @@ app.post('/webhook', async (req, res) => {
     return res.status(400).send('Webhook Error: ' + err.message);
   }
 
-  if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
+  if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    if (session.payment_status !== 'paid') {
-      console.log('Pagamento ainda nao confirmado, ignorando:', session.payment_status);
-      return res.json({ received: true });
-    }
-    // Só processar se o pagamento estiver confirmado
-    if (session.payment_status !== 'paid') {
-      console.log('Sessão ainda não paga, aguardando payment_intent.succeeded');
-      return res.json({ received: true });
-    }
     // Read ALL metadata fields safely
     const meta = session.metadata || {};
     const serviceId    = meta.serviceId    || '';
@@ -924,40 +892,6 @@ async function sendConfirmationEmail({ to, name, serviceName, date, time, amount
 // ROTA: Formulário de Contacto
 // POST /contact
 // ─────────────────────────────────────────────
-app.post('/lead-magnet', async (req, res) => {
-  const { email, name } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email em falta' });
-  try {
-    await sgMail.send({
-      to: email,
-      from: process.env.FROM_EMAIL,
-      subject: 'O seu Guia de Primeiros Socorros — ConsultasOnline',
-      html: '<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">'
-          + '<div style="background:#0b1d35;padding:32px;text-align:center;border-radius:12px 12px 0 0">'
-          + '<h1 style="color:#fff;font-size:22px;margin:0">🚑 O seu guia chegou!</h1>'
-          + '<p style="color:rgba(255,255,255,.6);margin:8px 0 0">Guia de Primeiros Socorros — ConsultasOnline</p>'
-          + '</div>'
-          + '<div style="background:#f4f7fb;padding:32px;border-radius:0 0 12px 12px">'
-          + '<p style="font-size:15px;line-height:1.7">Ola ' + (name || '') + ',</p>'
-          + '<p style="font-size:15px;line-height:1.7;margin-top:8px">Obrigado pelo seu interesse! O seu guia gratuito esta disponivel no link abaixo.</p>'
-          + '<div style="text-align:center;margin:24px 0">'
-          + '<a href="https://www.consultas-online.pt/guia-primeiros-socorros.pdf" style="background:#0d7377;color:#fff;padding:14px 32px;border-radius:9px;text-decoration:none;font-weight:600;font-size:15px">Descarregar Guia PDF →</a>'
-          + '</div>'
-          + '<p style="font-size:13px;color:#8a9bb0;line-height:1.7">Se precisar de consulta medica online — baixa medica, atestados ou renovacao de receitas — estamos disponiveis em <a href="https://www.consultas-online.pt" style="color:#0d7377">consultas-online.pt</a>.</p>'
-          + '</div></div>'
-    });
-    await sgMail.send({
-      to: process.env.NOTIFY_EMAIL,
-      from: process.env.FROM_EMAIL,
-      subject: 'Novo lead — Guia Primeiros Socorros',
-      text: 'Nome: ' + (name || 'N/A') + '\nEmail: ' + email
-    });
-    res.json({ ok: true });
-  } catch(err) {
-    console.error('Lead magnet error:', err.message);
-    res.status(500).json({ error: err.message });
-  }
-});
 app.post('/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
 
@@ -1031,51 +965,6 @@ app.post('/admin/login', (req, res) => {
   // Devolve um token simples (hash da password + salt fixo)
   const token = Buffer.from(correct + ':consultas-admin-salt').toString('base64');
   res.json({ ok: true, token });
-});
-// Rota para obter slots disponíveis e bloqueados
-app.get('/slots', async (req, res) => {
-  const { date } = req.query;
-  if (!date) return res.status(400).json({ error: 'Data em falta' });
-  try {
-    const booked = await BookedSlot.find({ dateKey: date });
-    res.json({ booked });
-  } catch(err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-// Bloquear slot
-app.post('/admin/block-slot', async (req, res) => {
-  const { secret, dateKey, time, reason } = req.body;
-  if (secret !== process.env.ADMIN_SECRET) return res.status(403).json({ error: 'Forbidden' });
-  try {
-    const existing = await BookedSlot.findOne({ dateKey, time });
-    if (existing) return res.status(400).json({ error: 'Slot ja ocupado' });
-    await BookedSlot.create({
-      dateKey,
-      time,
-      blocked: true,
-      blockedReason: reason || 'Bloqueado',
-      serviceId: 'blocked',
-      serviceName: 'Bloqueado',
-      customerEmail: '',
-      stripeSession: '',
-    });
-    res.json({ ok: true });
-  } catch(err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Desbloquear slot
-app.post('/admin/unblock-slot', async (req, res) => {
-  const { secret, dateKey, time } = req.body;
-  if (secret !== process.env.ADMIN_SECRET) return res.status(403).json({ error: 'Forbidden' });
-  try {
-    await BookedSlot.deleteOne({ dateKey, time, blocked: true });
-    res.json({ ok: true });
-  } catch(err) {
-    res.status(500).json({ error: err.message });
-  }
 });
 
 // Middleware de autenticação admin
@@ -1336,12 +1225,18 @@ app.put('/admin/utentes/:id/consulta/:idx', adminAuth, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// ─────────────────────────────────────────────
+// ROTA: Ebook Lead
+// POST /lead-ebook
+// ─────────────────────────────────────────────
 app.post('/lead-ebook', async (req, res) => {
   const { name, email } = req.body;
   if (!name || !email) return res.status(400).json({ ok: false, error: 'Nome e email obrigatórios.' });
 
   const ebookUrl = (process.env.CLIENT_URL || 'https://www.consultas-online.pt') + '/ebook_saude_em_dia.pdf';
 
+  // 1. Guardar lead no MongoDB
   if (MONGO_URI) {
     try {
       await Lead.findOneAndUpdate(
@@ -1354,12 +1249,14 @@ app.post('/lead-ebook', async (req, res) => {
     }
   }
 
+  // 2. Enviar ebook à lead
   try {
     await sgMail.send({
       to: email,
       from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
       subject: '🌿 O teu guia gratuito: A Tua Saúde em Dia',
-      html: `<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">
+      html: `
+        <html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">
         <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden">
           <div style="background:#0b1d35;padding:20px 28px">
             <span style="font-size:20px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>
@@ -1381,37 +1278,49 @@ app.post('/lead-ebook', async (req, res) => {
               </ul>
             </div>
             <p style="font-size:13px;color:#4a5568;line-height:1.6">Precisas de uma consulta médica online? Estamos disponíveis de segunda a domingo, das 9h às 21h.</p>
-            <a href="${process.env.CLIENT_URL || 'https://www.consultas-online.pt'}" style="display:inline-block;border:1.5px solid #0d7377;color:#0d7377;text-decoration:none;border-radius:10px;padding:10px 20px;font-weight:600;font-size:13px">Ver Serviços →</a>
+            <a href="${process.env.CLIENT_URL || 'https://www.consultas-online.pt'}" style="display:inline-block;border:1.5px solid #0d7377;color:#0d7377;text-decoration:none;border-radius:10px;padding:10px 20px;font-weight:600;font-size:13px">
+              Ver Serviços →
+            </a>
             <p style="font-size:11px;color:#8a9bb0;margin-top:24px">Dúvidas? geral@consultas-online.pt</p>
           </div>
         </div>
-        </body></html>`,
-      text: `Olá ${name},\n\nO teu guia está disponível em: ${ebookUrl}\n\nConsultasOnline`,
+        </body></html>
+      `,
+      text: `Olá ${name},\n\nO teu guia está disponível em: ${ebookUrl}\n\nConsultasOnline — consultas-online.pt`,
     });
+    console.log('Ebook enviado para:', email);
   } catch (err) {
     console.error('Erro ao enviar ebook:', err.message);
     return res.status(500).json({ ok: false, error: 'Erro ao enviar email.' });
   }
 
+  // 3. Notificação interna
   try {
     await sgMail.send({
       to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
       from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
       subject: '🔔 Nova lead — Ebook Saúde em Dia',
-      html: `<html><body style="font-family:Arial,sans-serif;padding:20px">
+      html: `
+        <html><body style="font-family:Arial,sans-serif;padding:20px">
         <h3 style="color:#0b1d35">Nova lead gerada</h3>
         <p><strong>Nome:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Fonte:</strong> Ebook — A Tua Saúde em Dia</p>
         <p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>
-        </body></html>`,
-      text: `Nova lead\nNome: ${name}\nEmail: ${email}\nData: ${new Date().toLocaleString('pt-PT')}`,
+        </body></html>
+      `,
+      text: `Nova lead\nNome: ${name}\nEmail: ${email}\nFonte: Ebook\nData: ${new Date().toLocaleString('pt-PT')}`,
     });
   } catch (err) {
     console.warn('Erro notificação interna:', err.message);
   }
+
+  res.json({ ok: true });
 });
 
+// ─────────────────────────────────────────────
+// ROTA: Lead 7 Sintomas
+// ─────────────────────────────────────────────
 app.post('/lead-sintomas', async (req, res) => {
   const { name, email } = req.body;
   if (!name || !email) return res.status(400).json({ ok: false });
@@ -1469,9 +1378,16 @@ app.post('/lead-sintomas', async (req, res) => {
       to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
       from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
       subject: '🔔 Nova lead — 7 Sintomas Femininos',
-      html: `<p><strong>Nome:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Fonte:</strong> Ebook 7 Sintomas</p><p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>`,
+      html: `<html><body style="font-family:Arial,sans-serif;padding:20px">
+        <h3 style="color:#0b1d35">Nova lead gerada</h3>
+        <p><strong>Nome:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Fonte:</strong> Ebook 7 Sintomas Femininos</p>
+        <p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>
+        </body></html>`,
       text: `Nova lead\nNome: ${name}\nEmail: ${email}\nFonte: 7 Sintomas\nData: ${new Date().toLocaleString('pt-PT')}`,
-} catch (err) { console.warn('Erro notificação sintomas:', err.message); }
+    });
+  } catch (err) { console.warn('Erro notificação sintomas:', err.message); }
 
   res.json({ ok: true });
 });
