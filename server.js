@@ -1319,6 +1319,65 @@ app.post('/lead-ebook', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
+// ROTA: Lead Primeiros Socorros
+// ─────────────────────────────────────────────
+app.post('/lead-magnet', async (req, res) => {
+  const { name, email } = req.body;
+  if (!email) return res.status(400).json({ ok: false });
+
+  const guiaUrl = (process.env.CLIENT_URL || 'https://www.consultas-online.pt') + '/guia-primeiros-socorros.pdf';
+
+  if (MONGO_URI) {
+    try {
+      await Lead.findOneAndUpdate(
+        { email },
+        { nome: name, email, fonte: 'ebook-primeiros-socorros', criadoEm: new Date() },
+        { upsert: true, new: true }
+      );
+    } catch (err) { console.warn('Erro lead magnet:', err.message); }
+  }
+
+  try {
+    await sgMail.send({
+      to: email,
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+      subject: '🚑 O teu Guia de Primeiros Socorros',
+      html: `<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">
+        <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden">
+          <div style="background:#0b1d35;padding:20px 28px">
+            <span style="font-size:20px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>
+          </div>
+          <div style="padding:28px">
+            <h2 style="color:#0b1d35;margin:0 0 8px">Olá, ${name}! 🚑</h2>
+            <p style="color:#4a5568;margin:0 0 20px;line-height:1.6">O teu <strong>Guia de Primeiros Socorros</strong> está pronto.</p>
+            <a href="${guiaUrl}" style="display:inline-block;background:linear-gradient(135deg,#0d7377,#17c4a8);color:#fff;text-decoration:none;border-radius:10px;padding:14px 28px;font-weight:700;font-size:15px;margin-bottom:24px">
+              📥 Descarregar o Guia Gratuito
+            </a>
+            <p style="font-size:11px;color:#8a9bb0;margin-top:24px">Dúvidas? geral@consultas-online.pt</p>
+          </div>
+        </div>
+        </body></html>`,
+      text: `Olá ${name},\n\nO teu guia está em: ${guiaUrl}\n\nConsultasOnline`,
+    });
+  } catch (err) {
+    console.error('Erro email lead magnet:', err.message);
+    return res.status(500).json({ ok: false });
+  }
+
+  try {
+    await sgMail.send({
+      to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
+      subject: '🔔 Nova lead — Guia Primeiros Socorros',
+      html: `<p><strong>Nome:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Fonte:</strong> Guia Primeiros Socorros</p><p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}`,
+      text: `Nova lead\nNome: ${name}\nEmail: ${email}\nFonte: Primeiros Socorros\nData: ${new Date().toLocaleString('pt-PT')}`,
+    });
+  } catch (err) { console.warn('Erro notificação lead magnet:', err.message); }
+
+  res.json({ ok: true });
+});
+
+// ─────────────────────────────────────────────
 // ROTA: Lead 7 Sintomas
 // ─────────────────────────────────────────────
 app.post('/lead-sintomas', async (req, res) => {
@@ -1391,61 +1450,7 @@ app.post('/lead-sintomas', async (req, res) => {
 
   res.json({ ok: true });
 });
-app.post('/lead-magnet', async (req, res) => {
-  const { name, email } = req.body;
-  if (!email) return res.status(400).json({ ok: false });
 
-  const guiaUrl = (process.env.CLIENT_URL || 'https://www.consultas-online.pt') + '/guia-primeiros-socorros.pdf';
-
-  if (MONGO_URI) {
-    try {
-      await Lead.findOneAndUpdate(
-        { email },
-        { nome: name, email, fonte: 'ebook-primeiros-socorros', criadoEm: new Date() },
-        { upsert: true, new: true }
-      );
-    } catch (err) { console.warn('Erro lead magnet:', err.message); }
-  }
-
-  try {
-    await sgMail.send({
-      to: email,
-      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-      subject: '🚑 O teu Guia de Primeiros Socorros',
-      html: `<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">
-        <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden">
-          <div style="background:#0b1d35;padding:20px 28px">
-            <span style="font-size:20px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span>
-          </div>
-          <div style="padding:28px">
-            <h2 style="color:#0b1d35;margin:0 0 8px">Olá, ${name}! 🚑</h2>
-            <p style="color:#4a5568;margin:0 0 20px;line-height:1.6">O teu <strong>Guia de Primeiros Socorros</strong> está pronto.</p>
-            <a href="${guiaUrl}" style="display:inline-block;background:linear-gradient(135deg,#0d7377,#17c4a8);color:#fff;text-decoration:none;border-radius:10px;padding:14px 28px;font-weight:700;font-size:15px;margin-bottom:24px">
-              📥 Descarregar o Guia Gratuito
-            </a>
-            <p style="font-size:11px;color:#8a9bb0;margin-top:24px">Dúvidas? geral@consultas-online.pt</p>
-          </div>
-        </div>
-        </body></html>`,
-      text: `Olá ${name},\n\nO teu guia está em: ${guiaUrl}\n\nConsultasOnline`,
-    });
-  } catch (err) {
-    console.error('Erro email lead magnet:', err.message);
-    return res.status(500).json({ ok: false });
-  }
-
-  try {
-    await sgMail.send({
-      to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
-      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-      subject: '🔔 Nova lead — Guia Primeiros Socorros',
-      html: `<p><strong>Nome:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Fonte:</strong> Guia Primeiros Socorros</p><p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>`,
-      text: `Nova lead\nNome: ${name}\nEmail: ${email}\nFonte: Primeiros Socorros\nData: ${new Date().toLocaleString('pt-PT')}`,
-    });
-  } catch (err) { console.warn('Erro notificação lead magnet:', err.message); }
-
-  res.json({ ok: true });
-});
 app.listen(PORT, () => {
   console.log('ConsultasOnline - Server Running - porta ' + PORT);
 });
