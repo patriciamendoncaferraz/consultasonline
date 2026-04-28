@@ -1471,15 +1471,11 @@ app.post('/lead-sintomas', async (req, res) => {
       subject: '🔔 Nova lead — 7 Sintomas Femininos',
       html: `<p><strong>Nome:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Fonte:</strong> Ebook 7 Sintomas</p><p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>`,
       text: `Nova lead\nNome: ${name}\nEmail: ${email}\nFonte: 7 Sintomas\nData: ${new Date().toLocaleString('pt-PT')}`,
-    });
-  } catch (err) { console.warn('Erro notificação sintomas:', err.message); }
+} catch (err) { console.warn('Erro notificação sintomas:', err.message); }
 
   res.json({ ok: true });
 });
-  
 
-  res.json({ ok: true });
-});
 app.listen(PORT, () => {
   console.log('ConsultasOnline - Server Running - porta ' + PORT);
 });
