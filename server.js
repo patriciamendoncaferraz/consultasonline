@@ -1476,7 +1476,7 @@ app.post('/lead-sintomas', async (req, res) => {
 
   res.json({ ok: true });
 });
-  }
+  
 
   res.json({ ok: true });
 });
