@@ -1409,7 +1409,10 @@ app.post('/lead-ebook', async (req, res) => {
     });
   } catch (err) {
     console.warn('Erro notificação interna:', err.message);
-    app.post('/lead-sintomas', async (req, res) => {
+  }
+});
+
+app.post('/lead-sintomas', async (req, res) => {
   const { name, email } = req.body;
   if (!name || !email) return res.status(400).json({ ok: false });
 
