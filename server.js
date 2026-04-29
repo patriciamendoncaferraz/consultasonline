@@ -1317,7 +1317,62 @@ app.post('/lead-ebook', async (req, res) => {
 
   res.json({ ok: true });
 });
+// ─────────────────────────────────────────────
+// ROTAS: Gestão de Slots (Admin)
+// ─────────────────────────────────────────────
 
+app.get('/slots', async (req, res) => {
+  const { date } = req.query;
+  if (!date) return res.status(400).json({ error: 'Data em falta' });
+  if (!MONGO_URI) return res.json({ booked: [] });
+  try {
+    const booked = await BookedSlot.find({ dateKey: date });
+    res.json({ booked });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/admin/block-slot', async (req, res) => {
+  const { secret, dateKey, time, reason } = req.body;
+  if (!secret || secret !== process.env.ADMIN_SECRET) {
+    return res.status(403).json({ error: 'Não autorizado.' });
+  }
+  if (!MONGO_URI) return res.status(500).json({ error: 'MongoDB não configurado.' });
+  try {
+    const existing = await BookedSlot.findOne({ dateKey, time });
+    if (existing) {
+      if (existing.blocked) return res.json({ ok: true, already: true });
+      return res.status(400).json({ error: 'Slot já ocupado por consulta.' });
+    }
+    await BookedSlot.create({
+      dateKey, time,
+      blocked: true,
+      blockedReason: reason || 'Bloqueado pela clínica',
+      serviceId: 'blocked',
+      serviceName: 'Bloqueado',
+      customerEmail: '',
+      stripeSession: '',
+    });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/admin/unblock-slot', async (req, res) => {
+  const { secret, dateKey, time } = req.body;
+  if (!secret || secret !== process.env.ADMIN_SECRET) {
+    return res.status(403).json({ error: 'Não autorizado.' });
+  }
+  if (!MONGO_URI) return res.status(500).json({ error: 'MongoDB não configurado.' });
+  try {
+    const result = await BookedSlot.deleteOne({ dateKey, time, blocked: true });
+    res.json({ ok: true, deleted: result.deletedCount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // ─────────────────────────────────────────────
 // ROTA: Lead Primeiros Socorros
 // ─────────────────────────────────────────────
