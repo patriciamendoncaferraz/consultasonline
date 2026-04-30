@@ -3851,7 +3851,7 @@ function renderAdminSlots() {
   if (!grid) return;
   if (!adminSelectedKey) { grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Seleccione um dia</p>'; return; }
   grid.innerHTML = '<p style="color:var(--muted);font-size:13px">A carregar...</p>';
-  fetch('/slots?date=' + adminSelectedKey)
+  fetch(API_URL + '/slots?date=' + adminSelectedKey)
     .then(function(r){ return r.json(); })
     .then(function(data) {
       var bookedTimes = (data.booked || []).map(function(s){ return s.time; });
@@ -3913,13 +3913,13 @@ window.adminToggleAll = function(block) {
     var slot = el.textContent.replace(' ✕','').replace(' 🔒','').trim();
     var isBlocked = el.classList.contains('blocked');
     if (block && !isBlocked) {
-      promises.push(fetch('/admin/block-slot', {
+      promises.push(fetch(API_URL + '/admin/block-slot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ secret: secret, dateKey: adminSelectedKey, time: slot, reason: 'Bloqueado pela clinica' })
       }));
     } else if (!block && isBlocked) {
-      promises.push(fetch('/admin/unblock-slot', {
+      promises.push(fetch(API_URL + '/admin/unblock-slot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ secret: secret, dateKey: adminSelectedKey, time: slot })
