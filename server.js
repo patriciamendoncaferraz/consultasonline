@@ -115,7 +115,10 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({ origin: '*' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname));
-
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  next();
+});
 const SERVICES = {
   'atestado-amamentacao':       { name: 'Atestado de Amamentação',          price: 3500 },
   'atestado-escola':            { name: 'Atestado para Falta Escolar',       price: 3500 },
@@ -1545,7 +1548,7 @@ function servicePageHTML(opts) {
 </script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',sans-serif;color:#0b1d35;background:#fff}
+  body{font-family:Arial,Helvetica,sans-serif;color:#0b1d35;background:#fff}
   .hero{background:#0b1d35;padding:80px 20px 60px;text-align:center}
   .hero h1{font-size:clamp(28px,4vw,48px);color:#fff;line-height:1.2;margin-bottom:16px;font-family:Georgia,serif}
   .hero p{font-size:17px;color:rgba(255,255,255,.65);max-width:560px;margin:0 auto 28px;line-height:1.7}
