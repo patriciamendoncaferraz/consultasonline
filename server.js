@@ -1677,54 +1677,54 @@ app.get('/atestado-amamentacao-online', (req, res) => {
     desc: 'Obtenha o atestado de amamentação por videoconsulta em Portugal. Documento com validade legal emitido e enviado por email no próprio dia. 35€. MBWay aceite.',
     h1: 'Atestado de Amamentação Online',
     price: '35',
-    body: `
+   body: `
 <div class="hero">
-  <h1>Atestado de Amamentação<br/>Online</h1>
-  <p>Documento com validade legal emitido por videoconsulta e enviado por email no próprio dia. Sem deslocação.</p>
-  <div class="price">35€</div>
-  <a class="btn" href="/#marcar">Obter Atestado Agora →</a>
+  <h1>Atestado de Amament&aacute;&ccedil;&atilde;o<br/>Online</h1>
+  <p>Documento com validade legal emitido por videoconsulta e enviado por email no pr&oacute;prio dia. Sem desloca&ccedil;&atilde;o.</p>
+  <div class="price">35&euro;</div>
+  <a class="btn" href="/#marcar">Obter Atestado Agora &rarr;</a>
 </div>
 <div class="body">
-  <h2>Para que serve o atestado de amamentação?</h2>
-  <p>O atestado de amamentação certifica que está a amamentar o seu filho, sendo indispensável para exercer os direitos laborais de dispensa de trabalho para aleitamento previstos no Código do Trabalho (artigo 47.º).</p>
+  <h2>Para que serve o atestado de amament&aacute;&ccedil;&atilde;o?</h2>
+  <p>O atestado de amament&aacute;&ccedil;&atilde;o certifica que est&aacute; a amamentar o seu filho, sendo indispens&aacute;vel para exercer os direitos laborais de dispensa de trabalho para aleitamento previstos no C&oacute;digo do Trabalho (artigo 47.&ordm;).</p>
 
   <h2>Direitos laborais com o atestado</h2>
   <ul>
-    <li><strong>Até o filho completar 1 ano:</strong> dois períodos de 30 minutos ou 1 hora por dia</li>
-    <li><strong>Do 1.º ao 2.º ano:</strong> um período de 30 minutos por dia</li>
-    <li>Dispensa de trabalho nocturno e horas extraordinárias</li>
+    <li><strong>At&eacute; o filho completar 1 ano:</strong> dois per&iacute;odos de 30 minutos ou 1 hora por dia</li>
+    <li><strong>Do 1.&ordm; ao 2.&ordm; ano:</strong> um per&iacute;odo de 30 minutos por dia</li>
+    <li>Dispensa de trabalho nocturno e horas extraordin&aacute;rias</li>
   </ul>
 
-  <div class="box"><p>⚠️ <strong>Renovação:</strong> O atestado tem validade de 3 a 6 meses. A renovação pode ser feita por videoconsulta, sem deslocação.</p></div>
+  <div class="box"><p>&Icirc;cone &#9888; <strong>Renova&ccedil;&atilde;o:</strong> O atestado tem validade de 3 a 6 meses. A renova&ccedil;&atilde;o pode ser feita por videoconsulta, sem desloca&ccedil;&atilde;o.</p></div>
 
   <h2>Como obter o atestado online</h2>
   <div class="steps">
-    <div class="step"><div class="num">01</div><p>Marca a consulta e paga por MBWay ou cartão</p></div>
-    <div class="step"><div class="num">02</div><p>Videoconsulta rápida — cerca de 15 minutos</p></div>
+    <div class="step"><div class="num">01</div><p>Marca a consulta e paga por MBWay ou cart&atilde;o</p></div>
+    <div class="step"><div class="num">02</div><p>Videoconsulta r&aacute;pida &mdash; cerca de 15 minutos</p></div>
     <div class="step"><div class="num">03</div><p>Atestado emitido em PDF com validade legal</p></div>
-    <div class="step"><div class="num">04</div><p>Documento enviado por email no próprio dia</p></div>
+    <div class="step"><div class="num">04</div><p>Documento enviado por email no pr&oacute;prio dia</p></div>
   </div>
 
   <div class="faq">
     <h2>Perguntas Frequentes</h2>
     <div class="faq-item">
-      <h4>O atestado de amamentação online tem validade legal?</h4>
+      <h4>O atestado de amament&aacute;&ccedil;&atilde;o online tem validade legal?</h4>
       <p>Sim. O documento emitido por videoconsulta tem plena validade legal junto do empregador, tal como um atestado presencial.</p>
     </div>
     <div class="faq-item">
-      <h4>Preciso de médico de família para obter o atestado?</h4>
-      <p>Não. Qualquer médico registado na Ordem dos Médicos pode emitir o atestado. A consulta online funciona independentemente do SNS.</p>
+      <h4>Preciso de m&eacute;dico de fam&iacute;lia para obter o atestado?</h4>
+      <p>N&atilde;o. Qualquer m&eacute;dico registado na Ordem dos M&eacute;dicos pode emitir o atestado. A consulta online funciona independentemente do SNS.</p>
     </div>
     <div class="faq-item">
-      <h4>Com que frequência preciso de renovar?</h4>
-      <p>O atestado tem validade de 3 a 6 meses consoante o que o médico indicar. A renovação pode ser feita por videoconsulta.</p>
+      <h4>Com que frequ&ecirc;ncia preciso de renovar?</h4>
+      <p>O atestado tem validade de 3 a 6 meses consoante o que o m&eacute;dico indicar. A renova&ccedil;&atilde;o pode ser feita por videoconsulta.</p>
     </div>
   </div>
 
   <div class="cta-box">
-    <h3>Precisa do atestado de amamentação hoje?</h3>
-    <p>Emitido por videoconsulta e enviado por email no próprio dia.</p>
-    <a class="btn" href="/#marcar">Marcar Consulta — 35€ →</a>
+    <h3>Precisa do atestado de amament&aacute;&ccedil;&atilde;o hoje?</h3>
+    <p>Emitido por videoconsulta e enviado por email no pr&oacute;prio dia.</p>
+    <a class="btn" href="/#marcar">Marcar Consulta &mdash; 35&euro; &rarr;</a>
   </div>
 </div>`
   }));
@@ -1974,34 +1974,34 @@ app.get('/atestado-falta-escolar-online', (req, res) => {
     body: `
 <div class="hero">
   <h1>Atestado para Falta<br/>Escolar Online</h1>
-  <p>Declaração médica para justificar ausências escolares, emitida por videoconsulta e enviada por email no próprio dia.</p>
-  <div class="price">35€</div>
-  <a class="btn" href="/#marcar">Obter Atestado Agora →</a>
+  <p>Declara&ccedil;&atilde;o m&eacute;dica para justificar aus&ecirc;ncias escolares, emitida por videoconsulta e enviada por email no pr&oacute;prio dia.</p>
+  <div class="price">35&euro;</div>
+  <a class="btn" href="/#marcar">Obter Atestado Agora &rarr;</a>
 </div>
 <div class="body">
   <h2>O que diz a lei</h2>
-  <p>As faltas escolares por doença são reguladas pelo Estatuto do Aluno e Ética Escolar (Lei n.º 51/2012). A declaração médica deve indicar o período de incapacidade sem revelar o diagnóstico.</p>
+  <p>As faltas escolares por doen&ccedil;a s&atilde;o reguladas pelo Estatuto do Aluno e &Eacute;tica Escolar (Lei n.&ordm; 51/2012). A declara&ccedil;&atilde;o m&eacute;dica deve indicar o per&iacute;odo de incapacidade sem revelar o diagn&oacute;stico.</p>
 
   <h2>Prazos importantes</h2>
   <ul>
-    <li>A justificação deve ser entregue ao Diretor de Turma nos <strong>3 dias úteis</strong> seguintes ao regresso</li>
-    <li>No ensino secundário o limite de faltas é <strong>10% da carga horária</strong> de cada disciplina</li>
+    <li>A justifica&ccedil;&atilde;o deve ser entregue ao Diretor de Turma nos <strong>3 dias &uacute;teis</strong> seguintes ao regresso</li>
+    <li>No ensino secund&aacute;rio o limite de faltas &eacute; <strong>10% da carga hor&aacute;ria</strong> de cada disciplina</li>
   </ul>
 
-  <div class="box"><p>✅ O atestado médico online tem plena validade legal junto das escolas e colégios em Portugal.</p></div>
+  <div class="box"><p>&#10003; O atestado m&eacute;dico online tem plena validade legal junto das escolas e col&eacute;gios em Portugal.</p></div>
 
   <h2>Como funciona</h2>
   <div class="steps">
-    <div class="step"><div class="num">01</div><p>Marca a consulta e paga por MBWay ou cartão</p></div>
-    <div class="step"><div class="num">02</div><p>Videoconsulta rápida — cerca de 15 minutos</p></div>
+    <div class="step"><div class="num">01</div><p>Marca a consulta e paga por MBWay ou cart&atilde;o</p></div>
+    <div class="step"><div class="num">02</div><p>Videoconsulta r&aacute;pida &mdash; cerca de 15 minutos</p></div>
     <div class="step"><div class="num">03</div><p>Atestado emitido em PDF com validade legal</p></div>
-    <div class="step"><div class="num">04</div><p>Documento enviado por email no próprio dia</p></div>
+    <div class="step"><div class="num">04</div><p>Documento enviado por email no pr&oacute;prio dia</p></div>
   </div>
 
   <div class="cta-box">
     <h3>Precisa do atestado para a escola hoje?</h3>
-    <p>Emitido por videoconsulta e enviado por email no próprio dia.</p>
-    <a class="btn" href="/#marcar">Marcar Consulta — 35€ →</a>
+    <p>Emitido por videoconsulta e enviado por email no pr&oacute;prio dia.</p>
+    <a class="btn" href="/#marcar">Marcar Consulta &mdash; 35&euro; &rarr;</a>
   </div>
 </div>`
   }));
