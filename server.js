@@ -1119,20 +1119,20 @@ function gerarPDF(tipo, dados) {
         y += 8;
       };
 
-      writeJ('Eu, Dra. Patricia Mendonca Ferraz, medica inscrita na Ordem dos Medicos com a cedula profissional n. 57713, atesto que:', { after: 10 });
+      writeJ('Eu, Dra. Patricia Mendonca Ferraz, médica inscrita na Ordem dos Médicos com a cédula profissional n. 57713, atesto que:', { after: 10 });
 
       if (tipo === 'amamentacao') {
         writeJ('A utente', { after: 4 });
         writeName(dados.nome_utente);
-        writeJ('nascida em ' + (dados.data_nasc_utente||'') + ', portadora do Cartao de Cidadao n. ' + (dados.cc_utente||'') + ', encontra-se atualmente em periodo de amamentacao do(a) seu(sua) filho(a)', { after: 4 });
+        writeJ('nascida em ' + (dados.data_nasc_utente||'') + ', portadora do Cartão de Cidadão n. ' + (dados.cc_utente||'') + ', encontra-se atualmente em período de amamentação do(a) seu(sua) filho(a)', { after: 4 });
         writeName(dados.nome_filho);
         writeJ('nascido(a) em ' + (dados.data_nasc_filho||'') + '.', { after: 16 });
-        writeJ('Este atestado e passado a pedido da interessada para os devidos efeitos legais.', { after: 4 });
+        writeJ('Este atestado é passado a pedido da interessada para os devidos efeitos legais.', { after: 4 });
       } else {
         writeJ('O(a) utente', { after: 4 });
         writeName(dados.nome_utente);
-        writeJ('nascido(a) em ' + (dados.data_nasc_utente||'') + ', portador(a) do Cartao de Cidadao n. ' + (dados.cc_utente||'') + ', necessita de afastamento das atividades escolares no periodo compreendido entre ' + (dados.data_inicio||'') + ' e ' + (dados.data_fim||'') + ' por motivos de doenca.', { after: 16 });
-        writeJ('Este atestado e passado a pedido do(a) interessado(a) para os devidos efeitos legais.', { after: 4 });
+        writeJ('nascido(a) em ' + (dados.data_nasc_utente||'') + ', portador(a) do Cartão de Cidadão n. ' + (dados.cc_utente||'') + ', necessita de afastamento das atividades escolares no período compreendido entre ' + (dados.data_inicio||'') + ' e ' + (dados.data_fim||'') + ' por motivos de doença.', { after: 16 });
+        writeJ('Este atestado é passado a pedido do(a) interessado(a) para os devidos efeitos legais.', { after: 4 });
       }
 
       // Date
