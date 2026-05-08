@@ -2211,6 +2211,112 @@ app.get('/consulta-rastreio-dst-online', (req, res) => {
 </div>`
   }));
 });
+// Consulta Obesidade — Mounjaro
+app.get('/consulta-obesidade-emagrecimento-online', (req, res) => {
+  res.send(servicePageHTML({
+    path: '/consulta-obesidade-emagrecimento-online',
+    serviceId: 'consulta-obesidade',
+    title: 'Consulta de Obesidade Online — Prescrição de Mounjaro em Portugal | ConsultasOnline',
+    desc: 'Consulta médica de obesidade por videoconsulta. Prescrição de Mounjaro (tirzepatido) se clinicamente indicado. Avaliação IMC e comorbidades. 55€. Sem deslocação.',
+    h1: 'Consulta de Obesidade e Emagrecimento Médico Online',
+    price: '55',
+    body: `
+<div class="hero" style="padding-top:100px">
+  <h1>Consulta de Obesidade<br/>e Emagrecimento M&eacute;dico Online</h1>
+  <p>Avalia&ccedil;&atilde;o cl&iacute;nica para prescri&ccedil;&atilde;o de Mounjaro (tirzepatido) por videoconsulta. Sem filas, sem desloca&ccedil;&atilde;o.</p>
+  <div class="price">55&euro;</div>
+  <a class="btn" href="/#marcar">Marcar Consulta Agora &rarr;</a>
+</div>
+
+<div style="background:#fff3cd;border-top:4px solid #d97706;border-bottom:4px solid #d97706;padding:24px 20px;text-align:center">
+  <div style="max-width:700px;margin:0 auto">
+    <p style="font-size:14px;font-weight:900;color:#92400e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">&#9888;&#65039; Crit&eacute;rios de Elegibilidade — Leia antes de marcar</p>
+    <p style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:10px">Indicado apenas para adultos com &Iacute;ndice de Massa Corp&oacute;rea (IMC):</p>
+    <ul style="list-style:none;font-size:14px;color:#92400e;line-height:2;margin-bottom:12px">
+      <li>&#10003; <strong>Maior ou igual a 30 kg/m&sup2;</strong> (obesidade)</li>
+      <li>&#10003; <strong>Maior ou igual a 27 kg/m&sup2;</strong> (sobrepeso) com pelo menos uma comorbidade &mdash; hipertens&atilde;o, dislipidemia, apneia do sono, doen&ccedil;a cardiovascular, pr&eacute;-diabetes ou diabetes tipo 2</li>
+    </ul>
+    <p style="font-size:14px;font-weight:900;color:#7f1d1d;text-transform:uppercase">&#128683; Se n&atilde;o se encontra nestas condi&ccedil;&otilde;es, N&Atilde;O ser&aacute; prescrito Mounjaro.</p>
+  </div>
+</div>
+
+<div class="body">
+  <h2>O que &eacute; o Mounjaro?</h2>
+  <p>O Mounjaro (tirzepatido) &eacute; um medicamento injet&aacute;vel aprovado para o tratamento da obesidade e excesso de peso em adultos com comorbidades associadas. Actua em dois receptores em simult&acirc;neo (GLP-1 e GIP), tornando-o actualmente o f&aacute;rmaco com maior efic&aacute;cia demonstrada na redu&ccedil;&atilde;o de peso.</p>
+  <div class="box"><p>&#128202; <strong>Estudo SURMOUNT-1 (NEJM, 2022):</strong> O tirzepatido 15mg atingiu redu&ccedil;&otilde;es m&eacute;dias de peso de at&eacute; 22,5% em 72 semanas &mdash; o resultado mais expressivo alguma vez registado num ensaio cl&iacute;nico de obesidade.</p></div>
+
+  <h2>Mounjaro vs Ozempic &mdash; qual a diferen&ccedil;a?</h2>
+  <ul>
+    <li><strong>Mounjaro (tirzepatido)</strong> &mdash; actua nos receptores GLP-1 e GIP. Maior efic&aacute;cia m&eacute;dia na perda de peso. Aprovado para obesidade e diabetes tipo 2.</li>
+    <li><strong>Ozempic/Wegovy (semaglutido)</strong> &mdash; actua apenas no receptor GLP-1. Muito eficaz, com vasta evid&ecirc;ncia cl&iacute;nica acumulada.</li>
+  </ul>
+  <p>A m&eacute;dica avalia o seu caso cl&iacute;nico e indica o medicamento mais adequado ao seu perfil.</p>
+
+  <h2>Quem pode fazer esta consulta?</h2>
+  <ul>
+    <li>Adultos com IMC &ge; 30 kg/m&sup2; (obesidade)</li>
+    <li>Adultos com IMC &ge; 27 kg/m&sup2; com hipertens&atilde;o, dislipidemia, apneia do sono, doen&ccedil;a cardiovascular, pr&eacute;-diabetes ou diabetes tipo 2</li>
+    <li>Sem gravidez ou aleitamento</li>
+    <li>Sem hist&oacute;rico de carcinoma medular da tiro&iacute;de ou NEM tipo 2</li>
+  </ul>
+  <div class="box" style="border-color:#e53e3e;background:rgba(229,62,62,.05)"><p>&#128683; <strong>Contraindica&ccedil;&otilde;es absolutas:</strong> Gravidez, aleitamento, hist&oacute;rico pessoal ou familiar de carcinoma medular da tiro&iacute;de, neoplasia endocrina m&uacute;ltipla tipo 2, pancreatite cr&oacute;nica activa.</p></div>
+
+  <h2>Como funciona o tratamento</h2>
+  <div class="steps">
+    <div class="step"><div class="num">01</div><p>Consulta m&eacute;dica online de avalia&ccedil;&atilde;o cl&iacute;nica (55&euro;)</p></div>
+    <div class="step"><div class="num">02</div><p>Prescri&ccedil;&atilde;o de Mounjaro se clinicamente indicado</p></div>
+    <div class="step"><div class="num">03</div><p>Receita enviada por email &mdash; v&aacute;lida em qualquer farm&aacute;cia</p></div>
+    <div class="step"><div class="num">04</div><p>Acompanhamento e ajuste de dose em consultas subsequentes</p></div>
+  </div>
+
+  <h2>Quanto custa o Mounjaro em Portugal?</h2>
+  <p>O Mounjaro n&atilde;o tem comparticipa&ccedil;&atilde;o do SNS para a indica&ccedil;&atilde;o de obesidade em Portugal. O pre&ccedil;o varia consoante a dose e a farm&aacute;cia, entre aproximadamente 180&euro; e 280&euro; por m&ecirc;s. A consulta m&eacute;dica para prescri&ccedil;&atilde;o custa <strong>55&euro;</strong> e inclui avalia&ccedil;&atilde;o cl&iacute;nica completa e emiss&atilde;o da receita.</p>
+
+  <h2>O que esperar dos resultados</h2>
+  <ul>
+    <li><strong>Semanas 1&ndash;4:</strong> in&iacute;cio com dose m&iacute;nima (2,5mg), adapta&ccedil;&atilde;o gastrointestinal</li>
+    <li><strong>M&ecirc;s 2&ndash;3:</strong> redu&ccedil;&atilde;o not&oacute;ria do apetite e primeiros resultados de peso</li>
+    <li><strong>M&ecirc;s 6:</strong> perda m&eacute;dia de 10&ndash;15% do peso corporal inicial</li>
+    <li><strong>M&ecirc;s 12&ndash;18:</strong> perda m&eacute;dia de 15&ndash;22% com a dose m&aacute;xima</li>
+  </ul>
+  <div class="box"><p>&#128161; Os resultados variam consoante o perfil cl&iacute;nico, ades&atilde;o ao tratamento e altera&ccedil;&otilde;es do estilo de vida. O Mounjaro &eacute; um aux&iacute;lio m&eacute;dico &mdash; n&atilde;o substitui uma alimenta&ccedil;&atilde;o equilibrada e actividade f&iacute;sica regular.</p></div>
+
+  <div class="faq">
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq-item">
+      <h4>Posso obter Mounjaro sem ir ao m&eacute;dico presencialmente?</h4>
+      <p>Sim. A prescri&ccedil;&atilde;o por videoconsulta &eacute; legal em Portugal desde 2020. A m&eacute;dica avalia o seu caso e, se indicado, emite a receita por email.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Preciso de an&aacute;lises antes da consulta?</h4>
+      <p>N&atilde;o &eacute; obrigat&oacute;rio mas &eacute; recomend&aacute;vel ter an&aacute;lises recentes (glicemia, fun&ccedil;&atilde;o tiro&iacute;deia, perfil lip&iacute;dico). A m&eacute;dica pode pedir an&aacute;lises na pr&oacute;pria consulta se necess&aacute;rio.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Onde compro o Mounjaro em Portugal?</h4>
+      <p>O Mounjaro est&aacute; dispon&iacute;vel em farm&aacute;cias portuguesas mediante receita m&eacute;dica. Pode haver ruturas de stock &mdash; recomendamos confirmar disponibilidade antes da consulta.</p>
+    </div>
+    <div class="faq-item">
+      <h4>O Mounjaro tem efeitos secund&aacute;rios?</h4>
+      <p>Os mais comuns s&atilde;o n&aacute;useas, v&oacute;mitos, diarreia e obstipa&ccedil;&atilde;o &mdash; geralmente ligeiros e transit&oacute;rios, especialmente nas primeiras semanas. A titula&ccedil;&atilde;o lenta da dose minimiza estes efeitos.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Preciso de consultas de seguimento?</h4>
+      <p>Sim. O tratamento com Mounjaro requer acompanhamento m&eacute;dico regular para ajuste de dose e monitoriza&ccedil;&atilde;o cl&iacute;nica. As consultas de seguimento tamb&eacute;m podem ser feitas por videoconsulta.</p>
+    </div>
+    <div class="faq-item">
+      <h4>A consulta &eacute; d&eacute;dut&iacute;vel no IRS?</h4>
+      <p>Sim. A fatura AT emitida automaticamente ap&oacute;s a consulta &eacute; v&aacute;lida como despesa de sa&uacute;de dedut&iacute;vel no IRS.</p>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Pronto para come&ccedil;ar o tratamento?</h3>
+    <p>Avalia&ccedil;&atilde;o cl&iacute;nica por videoconsulta. Prescri&ccedil;&atilde;o de Mounjaro se indicado. Dispon&iacute;vel de segunda a domingo, das 9h &agrave;s 21h.</p>
+    <a class="btn" href="/#marcar">Marcar Consulta &mdash; 55&euro; &rarr;</a>
+  </div>
+</div>`
+  }));
+});
 app.listen(PORT, () => {
   console.log('ConsultasOnline - Server Running - porta ' + PORT);
 });
