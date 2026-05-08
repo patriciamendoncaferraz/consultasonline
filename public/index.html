@@ -3180,14 +3180,33 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="svc-desc">Consulta confidencial com avaliação de risco, pedido de análises de rastreio e orientação terapêutica. Total privacidade.</p>
           <div class="svc-price">40€ <sub>/consulta</sub></div>
         </div>
+       <div class="svc-card" onclick="selectService(this,'Consulta de Obesidade — Prescrição de Mounjaro',55,'Consulta','consulta-obesidade')">
+  <span class="svc-icon">💉</span>
+  <div class="badge-consulta">CONSULTA</div>
+  <div class="svc-name">Consulta de Obesidade — Prescrição de Mounjaro</div>
+  <div style="font-size:10.5px;color:var(--amber);font-weight:600;margin-top:2px">👤 Apenas adultos</div>
+  <p class="svc-desc">Avaliação clínica para prescrição de Mounjaro (tirzepatido) se clinicamente indicado.</p>
+  <div class="svc-price">55€ <sub>/consulta</sub></div>
+</div>
 
       </div>
     </div>
 
     <!-- STEP 2: Booking -->
     <div class="booking-form" id="step2">
-      <div style="padding:0 28px;padding-top:20px">
-        <button class="step-back" onclick="goBackToServices()">← Escolher outro serviço</button>
+  <div style="padding:0 28px;padding-top:20px">
+    <button class="step-back" onclick="goBackToServices()">← Escolher outro serviço</button>
+
+    <!-- AVISO MOUNJARO -->
+    <div id="monjarnoAviso" style="display:none;background:#fff3cd;border:2px solid #d97706;border-radius:12px;padding:18px 20px;margin-bottom:18px">
+      <p style="font-size:13px;font-weight:900;color:#92400e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">⚠️ ATENÇÃO — CRITÉRIOS DE ELEGIBILIDADE</p>
+      <p style="font-size:13px;font-weight:700;color:#92400e;margin-bottom:8px">Indicado apenas para adultos com Índice de Massa Corpórea (IMC):</p>
+      <ul style="margin:0 0 10px 18px;font-size:13px;color:#92400e;line-height:1.8">
+        <li><strong>Maior ou igual a 30 kg/m²</strong> (obesidade)</li>
+        <li><strong>Maior ou igual a 27 kg/m²</strong> (sobrepeso) na presença de pelo menos uma condição de comorbidade relacionada ao peso — por exemplo: hipertensão, dislipidemia, apneia obstrutiva do sono, doença cardiovascular, pré-diabetes ou diabetes mellitus tipo 2</li>
+      </ul>
+      <p style="font-size:13.5px;font-weight:900;color:#7f1d1d;text-transform:uppercase;letter-spacing:.3px;border-top:1px solid #d97706;padding-top:10px;margin:0">🚫 Se não se encontra nestas condições, NÃO será prescrito Mounjaro.</p>
+    </div>
         <div class="selected-service-banner" id="svcBanner">
           <div class="ssb-left">
             <div class="ssb-icon" id="svcBannerIcon">💊</div>
@@ -3448,6 +3467,9 @@ window.selectService = function(el, name, price, type, id) {
     if (ms) ms.classList.remove('show');
     if (mg) mg.style.display = 'none';
     showUploadSection(id);
+    // Aviso Mounjaro
+    var avisoBox = document.getElementById('monjarnoAviso');
+    if (avisoBox) avisoBox.style.display = (id === 'consulta-obesidade') ? 'block' : 'none';
     renderCalendar();
   }, 180);
 };
@@ -4295,6 +4317,10 @@ var UPLOAD_NOTICES = {
   'atestado-conducao': {
     text: '🪪 Para o atestado de carta de condução, anexe uma fotografia da sua carta de condução (frente e verso).',
     warning: '⚠️ Se tiver mais de 70 anos, epilepsia, apneia do sono, doenças cardíacas, doenças visuais, doenças auditivas ou diabetes, deve também submeter relatório do seu médico assistente sobre o controlo destas patologias. Caso não submeta a informação solicitada, poderá não ser possível emitir o atestado.'
+  },
+  'consulta-obesidade': {
+    text: '📋 Para a consulta de obesidade, anexe análises recentes se tiver (glicemia, função tiroideia, perfil lipídico). Não é obrigatório mas facilita a avaliação clínica.',
+    warning: '⚠️ O Mounjaro só será prescrito se cumprir os critérios de IMC definidos. Se não cumprir os critérios, a consulta será igualmente realizada mas a prescrição não será emitida.'
   }
 };
 
