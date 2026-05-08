@@ -130,6 +130,7 @@ const SERVICES = {
   'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 4000 },
   'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 4000 },
   'consulta-dst':               { name: 'Consulta DST / IST',                price: 4000 },
+  'consulta-obesidade':         { name: 'Consulta de Obesidade — Prescrição de Mounjaro', price: 5500 },
 };
 
 function formatPhone(phone) {
