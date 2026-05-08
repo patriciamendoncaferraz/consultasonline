@@ -146,228 +146,510 @@ function formatPhone(phone) {
 // ─────────────────────────────────────────────────────────────────
 // ROTAS SEO — Cada artigo tem URL próprio indexável pelo Google
 // ─────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// SUBSTITUI TODA A SECÇÃO DE ARTIGOS NO server.js
+// Substitui desde "const ARTICLES = {" até ao fim da
+// rota app.get('/artigos/:slug', ...)
+// ═══════════════════════════════════════════════════════
+
 const ARTICLES = {
-  'infecao-urinaria': {
-    id: 'itu',
-    title: 'Infeção Urinária: Causas, Sintomas e Tratamento | ConsultasOnline',
-    description: 'Saiba como identificar e tratar a infeção urinária. Consulta online com diagnóstico e receita de antibiótico em 30 minutos. A partir de 40€.',
-    category: 'Infeções',
-    keywords: 'infeção urinária sintomas tratamento, consulta infeção urinária online, antibiótico infeção urinária portugal',
-  },
-  'baixa-medica': {
-    id: 'renovacao-baixa',
-    title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
-    description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
-    category: 'Baixas',
-    keywords: 'baixa médica online portugal, renovar baixa médica online, CIT online, consulta baixa médica',
-  },
-  'renovacao-medicamentos': {
-    id: 'renovacao-medicamentos',
-    title: 'Renovação de Medicamentos Online em Portugal | ConsultasOnline',
-    description: 'Renove a sua receita médica por videoconsulta. Receita electrónica enviada por SMS e email no próprio dia. A partir de 40€.',
-    category: 'Medicação',
-    keywords: 'renovar receita médica online, renovação medicamentos online portugal, receita médica online',
-  },
-  'atestado-amamentacao': {
-    id: 'amamentacao',
-    title: 'Atestado de Amamentação Online em Portugal | ConsultasOnline',
-    description: 'Obtenha o atestado de amamentação por videoconsulta. Direitos laborais, renovação após 12 meses. Emitido no próprio dia. 35€.',
-    category: 'Amamentação',
-    keywords: 'atestado amamentação online, atestado amamentação portugal, renovar atestado amamentação',
-  },
-  'atestado-carta-conducao': {
-    id: 'conducao',
-    title: 'Atestado Médico para Carta de Condução Online | ConsultasOnline',
-    description: 'Atestado de aptidão médica para carta de condução por videoconsulta. Válido no IMT. Emitido no próprio dia. 45€.',
-    category: 'Carta de Condução',
-    keywords: 'atestado carta de condução online, exame médico carta de condução online portugal, atestado IMT online',
-  },
-  'faltas-trabalho': {
-    id: 'faltas-trabalho',
-    title: 'Faltas ao Trabalho por Doença: Como Justificar | ConsultasOnline',
-    description: 'Tudo sobre declarações médicas, baixas e os seus direitos como trabalhador. Declaração médica emitida online no próprio dia.',
-    category: 'Trabalho',
-    keywords: 'faltas trabalho doença justificar, declaração médica trabalho online, baixa médica trabalho portugal',
-  },
-  'faltas-escola': {
-    id: 'faltas-escola',
-    title: 'Faltas à Escola por Doença: Como Justificar | ConsultasOnline',
-    description: 'O que diz a lei, documentos necessários e como obter declaração médica online para justificar faltas escolares. 35€.',
-    category: 'Escola',
-    keywords: 'faltas escola doença justificar, atestado falta escolar online, declaração médica escola portugal',
-  },
-  'dor-de-garganta-amigdalite': {
-    id: 'garganta',
-    title: 'Dor de Garganta e Amigdalite: Quando Tomar Antibiótico | ConsultasOnline',
-    description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
-    category: 'Infeções',
-    keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal',
-  },
-  'ozempic-glp1': {
-    id: 'ozempic',
-    title: 'Ozempic, Mounjaro e Wegovy: Guia Completo GLP-1 | ConsultasOnline',
-    description: 'Semaglutido, tirzepatido — eficácia, segurança e quem pode tomar. O guia médico completo sobre os medicamentos GLP-1.',
-    category: 'Obesidade',
-    keywords: 'ozempic portugal, wegovy portugal, mounjaro portugal, semaglutido tirzepatido guia',
-  },
-  'doencas-sexualmente-transmissiveis': {
-    id: 'dst',
-    title: 'Doenças Sexualmente Transmissíveis: Rastreio Online | ConsultasOnline',
-    description: 'Rastreio de DST/IST de forma discreta e confidencial. VIH, sífilis, gonorreia, clamídia — pedido de análises online. 40€.',
-    category: 'Saúde Sexual',
-    keywords: 'rastreio DST online portugal, teste IST online discreto, consulta DST IST online confidencial',
-  },
-  'cessacao-tabagica': {
-    id: 'cessacao',
-    title: 'Como Parar de Fumar: Guia Médico Completo | ConsultasOnline',
-    description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 40€.',
-    category: 'Cessação Tabágica',
-    keywords: 'cessação tabágica online portugal, consulta parar fumar online, vareniclina prescrição online',
-  },
-  'consulta-online': {
-    id: 'consulta-online',
-    title: 'Consulta Online em Portugal: O Guia Completo | ConsultasOnline',
-    description: 'O que é, como funciona, quanto custa e o que pode tratar numa consulta médica online em Portugal. Tudo o que precisa saber.',
-    category: 'Consulta Online',
-    keywords: 'consulta online portugal, como funciona consulta online, consulta médica online portugal guia',
-  },
-  'medico-online': {
-    id: 'medico-online',
-    title: 'Médico Online em Portugal: Como Funciona | ConsultasOnline',
-    description: 'Vantagens do médico online, o que pode pedir, segurança e sigilo médico. Como escolher uma plataforma de confiança.',
-    category: 'Médico Online',
-    keywords: 'médico online portugal, médico online videoconsulta, médico online mbway portugal',
-  },
-  'telemedicina': {
-    id: 'telemedicina',
-    title: 'Telemedicina em Portugal: O que É e Direitos do Utente | ConsultasOnline',
-    description: 'Como funciona a telemedicina em Portugal, diferenças entre SNS e privado e os seus direitos como utente.',
-    category: 'Telemedicina',
-    keywords: 'telemedicina portugal, telemedicina como funciona, teleconsulta portugal direitos utente',
-  },
-  'atestado-rastreio-saude': {
-    id: 'rastreio',
-    title: 'Rastreio de Saúde em Portugal: O Guia Completo | ConsultasOnline',
-    description: 'Rastreios recomendados pela DGS por idade e sexo, vacinação do adulto e como fazer rastreio de IST de forma discreta.',
-    category: 'Saúde Preventiva',
-    keywords: 'rastreio saúde portugal, exames preventivos portugal, rastreio oncológico portugal',
-  },
-  'renovar-pilula-anticoncecional-online': {
-    id: 'piula-online',
-    title: 'Renovar a Pílula Anticoncecional Online em Portugal | ConsultasOnline',
-    description: 'Saiba como renovar a receita da pílula por videoconsulta em Portugal. Legal, seguro, sem médico de família. Receita Sem Papel no próprio dia. 40€.',
-    category: 'Saúde da Mulher',
-    keywords: 'renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, videoconsulta pílula portugal',
-  },
-  'sem-medico-de-familia-portugal': {
-    id: 'sem-medico-familia',
-    title: 'Não Tem Médico de Família? O Que Fazer em Portugal | ConsultasOnline',
-    description: 'Mais de 1,5 milhões de portugueses sem médico de família. Conheça as alternativas legais para aceder a cuidados de saúde sem esperar anos.',
-    category: 'SNS & Direitos',
-    keywords: 'sem médico de família portugal, alternativas médico de família, lista espera médico família, médico online sem médico família',
-  },
-  'cistite-mulher-sintomas-tratamento': {
-    id: 'cistite-mulher',
-    title: 'Cistite na Mulher: Sintomas, Tratamento e Como Tratar Online | ConsultasOnline',
-    description: 'Tudo sobre cistite na mulher: sintomas, antibiótico adequado e quando pode tratar por videoconsulta. Consulta online disponível hoje. 40€.',
-    category: 'Saúde da Mulher',
-    keywords: 'cistite mulher sintomas tratamento, cistite online portugal, infeção urinária mulher antibiótico, cistite videoconsulta',
-  },
+  'infecao-urinaria':                    { id: 'itu',                      category: 'Infeções' },
+  'baixa-medica':                        { id: 'renovacao-baixa',           category: 'Baixas' },
+  'renovacao-medicamentos':              { id: 'renovacao-medicamentos',    category: 'Medicação' },
+  'atestado-amamentacao':                { id: 'amamentacao',               category: 'Amamentação' },
+  'atestado-carta-conducao':             { id: 'conducao',                  category: 'Carta de Condução' },
+  'faltas-trabalho':                     { id: 'faltas-trabalho',           category: 'Trabalho' },
+  'faltas-escola':                       { id: 'faltas-escola',             category: 'Escola' },
+  'dor-de-garganta-amigdalite':          { id: 'garganta',                  category: 'Infeções' },
+  'ozempic-glp1':                        { id: 'ozempic',                   category: 'Obesidade' },
+  'doencas-sexualmente-transmissiveis':  { id: 'dst',                       category: 'Saúde Sexual' },
+  'cessacao-tabagica':                   { id: 'cessacao',                  category: 'Cessação Tabágica' },
+  'consulta-online':                     { id: 'consulta-online',           category: 'Consulta Online' },
+  'medico-online':                       { id: 'medico-online',             category: 'Médico Online' },
+  'telemedicina':                        { id: 'telemedicina',              category: 'Telemedicina' },
+  'atestado-rastreio-saude':             { id: 'rastreio',                  category: 'Saúde Preventiva' },
+  'renovar-pilula-anticoncecional-online': { id: 'piula-online',            category: 'Saúde da Mulher' },
+  'baixa-medica-freelancer':             { id: 'baixa-medica-freelancer',   category: 'Freelancers' },
+  'sem-medico-familia-freelancer':       { id: 'sem-medico-familia-freelancer', category: 'Freelancers' },
+  'dia-saude-2026':                      { id: 'dia-saude-2026',            category: 'Saúde Global' },
 };
 
-// Gera HTML completo para cada artigo com meta tags SEO próprias
-function buildArticlePage(slug, article) {
-  var canonicalUrl = 'https://www.consultas-online.pt/artigos/' + slug;
-  var html = '<!DOCTYPE html>\n';
-  html += '<html lang="pt">\n<head>\n';
-  html += '<meta charset="UTF-8"/>\n';
-  html += '<meta name="viewport" content="width=device-width, initial-scale=1.0"/>\n';
-  html += '<title>' + article.title + '</title>\n';
-  html += '<meta name="description" content="' + article.description + '"/>\n';
-  html += '<meta name="keywords" content="' + article.keywords + '"/>\n';
-  html += '<meta name="robots" content="index, follow"/>\n';
-  html += '<link rel="canonical" href="' + canonicalUrl + '"/>\n';
-  html += '<meta property="og:type" content="article"/>\n';
-  html += '<meta property="og:url" content="' + canonicalUrl + '"/>\n';
-  html += '<meta property="og:title" content="' + article.title + '"/>\n';
-  html += '<meta property="og:description" content="' + article.description + '"/>\n';
-  html += '<meta property="og:locale" content="pt_PT"/>\n';
-  html += '<meta property="og:site_name" content="ConsultasOnline"/>\n';
-  html += '<script type=\"application/ld+json\">\n{\n';
-  html += '  "@context": "https://schema.org",\n';
-  html += '  "@type": "MedicalWebPage",\n';
-  html += '  "name": "' + article.title + '",\n';
-  html += '  "description": "' + article.description + '",\n';
-  html += '  "url": "' + canonicalUrl + '",\n';
-  html += '  "inLanguage": "pt-PT",\n';
-  html += '  "isPartOf": {"@type":"MedicalBusiness","name":"ConsultasOnline","url":"https://www.consultas-online.pt"}\n';
-  html += '}\n<\/script>\n';
-  html += '<style>body{font-family:Arial,sans-serif;max-width:860px;margin:40px auto;padding:0 20px;color:#334155}a{color:#0d7377}h1{color:#0b1d35;margin-top:24px;font-size:32px}p{font-size:16px;line-height:1.7;margin-top:12px}.btn{display:inline-block;margin-top:24px;background:#0d7377;color:#fff;padding:13px 28px;border-radius:9px;text-decoration:none;font-weight:600;font-size:15px}</style>\n';
-  html += '</head>\n<body>\n';
-  html += '<nav style="margin-bottom:8px"><a href="/">← ConsultasOnline</a></nav>\n';
-  html += '<p style="font-size:12px;color:#8a9bb0">' + article.category + '</p>\n';
-  html += '<h1>' + article.title.split('|')[0].trim() + '</h1>\n';
-  html += '<p>' + article.description + '</p>\n';
-  html += '<a href="/" class="btn">Marcar Consulta Online →</a>\n';
-  html += '<p style="margin-top:32px;font-size:13px;color:#8a9bb0">A carregar artigo completo...</p>\n';
-  html += '<script>\n';
-  html += '(function(){\n';
-  html += '  sessionStorage.setItem(\'openArticle\', \'' + article.id + '\');\n';
-  html += '  window.location.replace(\'/\');\n';
-  html += '})();\n';
-  html += '<\/script>\n';
-  html += '</body>\n</html>';
-  return html;
+// Conteúdo SSR completo de cada artigo
+const ARTICLES_CONTENT = {
+
+'infecao-urinaria': {
+  title: 'Infeção Urinária: Causas, Sintomas e Tratamento | ConsultasOnline',
+  description: 'Saiba como identificar e tratar a infeção urinária. Consulta online com diagnóstico e receita de antibiótico em 30 minutos. A partir de 40€.',
+  keywords: 'infeção urinária sintomas tratamento, consulta infeção urinária online, antibiótico infeção urinária portugal, cistite online',
+  content: `<div class="cta-top"><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>O que é uma Infeção do Trato Urinário?</h2>
+    <p>A infeção do trato urinário (ITU) é uma das infeções bacterianas mais comuns em ambulatório. A cistite aguda não complicada é a forma mais prevalente em mulheres adultas saudáveis. A <em>Escherichia coli</em> é responsável por 80–85% das ITU não complicadas.</p>
+    <h2>Sintomas</h2>
+    <ul><li><strong>Disúria</strong> — ardor ou dor ao urinar</li><li><strong>Polaquiúria</strong> — urinar frequentemente em pequenas quantidades</li><li><strong>Hematúria</strong> — urina com sangue (~30% dos casos)</li><li><strong>Dor suprapúbica</strong> — zona inferior do abdómen</li></ul>
+    <div class="warn"><strong>⚠️ Quando ir às urgências</strong><p>Febre superior a 38,5°C, dores lombares intensas ou vómitos requerem avaliação urgente presencial.</p></div>
+    <h2>Diagnóstico</h2>
+    <p>O diagnóstico de cistite não complicada é essencialmente clínico. A presença de disúria e polaquiúria sem corrimento vaginal tem um valor preditivo positivo de 90% para ITU.</p>
+    <h2>Tratamento</h2>
+    <p>As guidelines DGS e EAU recomendam antibioterapia de curta duração para cistite não complicada. Os antibióticos de primeira linha em Portugal incluem nitrofurantoína, fosfomicina e pivmecilinam.</p>
+    <h2>Prevenção</h2>
+    <ul><li>Ingestão adequada de líquidos (1,5–2L por dia)</li><li>Micção pós-coital</li><li>Evitar produtos de higiene íntima agressivos</li></ul>
+    <div class="refs"><h3>Referências</h3><ol><li>EAU Guidelines on Urological Infections. 2023.</li><li>DGS. Infeções do Trato Urinário — Norma de Orientação Clínica. 2021.</li></ol></div>`
+},
+
+'baixa-medica': {
+  title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
+  description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
+  keywords: 'baixa médica online portugal, renovar baixa médica online, CIT online, consulta baixa médica, certificado incapacidade temporária',
+  content: `<div class="cta-top"><p>📋 Precisa de baixa médica? CIT emitido por videoconsulta e submetido à Segurança Social no próprio dia. <a href="/">Marcar consulta — 55€ →</a></p></div>
+    <h2>O Sistema CIT em Portugal</h2>
+    <p>A baixa médica é formalizada pelo <strong>Certificado de Incapacidade Temporária (CIT)</strong>, enviado eletronicamente pelo médico directamente para a Segurança Social.</p>
+    <h2>Posso fazer baixa médica online em Portugal?</h2>
+    <p>Sim. A Portaria n.º 115/2021 permite a emissão do CIT após videoconsulta. O processo tem exactamente a mesma validade legal que uma consulta presencial.</p>
+    <div class="info"><strong>✅ Validade legal total</strong><p>O CIT emitido por videoconsulta tem o mesmo valor legal que o emitido presencialmente.</p></div>
+    <h2>Quem pode pedir baixa médica online?</h2>
+    <ul><li>Trabalhadores por conta de outrem com número de utente SNS válido</li><li>Trabalhadores independentes inscritos na Segurança Social</li><li>Trabalhadores com ou sem médico de família atribuído</li></ul>
+    <h2>Subsídio de Doença</h2>
+    <ul><li>Até 30 dias: <strong>55%</strong> da remuneração de referência</li><li>31–90 dias: <strong>60%</strong></li><li>91–365 dias: <strong>70%</strong></li><li>Mais de 365 dias: <strong>75%</strong></li></ul>
+    <div class="warn"><strong>⚠️ Prazo legal</strong><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade.</p></div>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>Posso fazer baixa médica sem médico de família?</h4><p>Sim. Qualquer médico registado na Ordem dos Médicos pode emitir o CIT.</p></div>
+    <div class="faq"><h4>Posso renovar a baixa por videoconsulta?</h4><p>Sim. A renovação do CIT pode ser feita por videoconsulta nas mesmas condições.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Decreto-Lei n.º 28/2004. Proteção na eventualidade de doença.</li><li>Portaria n.º 115/2021. Certificado de Incapacidade Temporária por teleconsulta.</li></ol></div>`
+},
+
+'renovacao-medicamentos': {
+  title: 'Renovação de Medicamentos Online em Portugal | ConsultasOnline',
+  description: 'Renove a sua receita médica por videoconsulta. Receita electrónica enviada por SMS e email no próprio dia. A partir de 40€.',
+  keywords: 'renovar receita médica online, renovação medicamentos online portugal, receita médica online, consulta acompanhamento crónico',
+  content: `<div class="cta-top"><p>💊 Precisa de renovar medicação crónica? Consulta de acompanhamento por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>Para que serve esta consulta?</h2>
+    <p>A consulta de acompanhamento crónico online destina-se a doentes com doenças crónicas controladas que precisam de renovar a medicação habitual sem necessidade de consulta presencial.</p>
+    <h2>Doenças crónicas abrangidas</h2>
+    <ul><li>Hipertensão arterial controlada</li><li>Diabetes tipo 2 controlada</li><li>Dislipidemia (colesterol)</li><li>Hipotiroidismo controlado</li><li>Outras doenças crónicas estáveis</li></ul>
+    <div class="info"><strong>💡 O que preparar para a consulta</strong><p>Tenha consigo a lista de medicação actual, as últimas análises disponíveis e os valores de tensão arterial recentes.</p></div>
+    <h2>A receita tem comparticipação do SNS?</h2>
+    <p>Sim. A Receita Sem Papel emitida por videoconsulta tem o mesmo valor legal que uma receita presencial. A comparticipação é aplicada automaticamente na farmácia.</p>
+    <div class="refs"><h3>Referências</h3><ol><li>INFARMED. Normas de Prescrição Eletrónica de Medicamentos. 2023.</li><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li></ol></div>`
+},
+
+'atestado-amamentacao': {
+  title: 'Atestado de Amamentação Online em Portugal | ConsultasOnline',
+  description: 'Obtenha o atestado de amamentação por videoconsulta. Direitos laborais, renovação. Emitido no próprio dia. 35€.',
+  keywords: 'atestado amamentação online, atestado amamentação portugal, renovar atestado amamentação, direitos laborais amamentação',
+  content: `<div class="cta-top"><p>🤱 Precisa do atestado de amamentação? Emitido por videoconsulta e enviado por email no próprio dia. <a href="/">Marcar consulta — 35€ →</a></p></div>
+    <h2>O que é o atestado de amamentação?</h2>
+    <p>O atestado de amamentação certifica que uma mãe está a amamentar o seu filho. É fundamental para exercer os direitos laborais de dispensa de trabalho para aleitamento previstos no Código do Trabalho (artigo 47.º).</p>
+    <h2>Direitos Laborais</h2>
+    <ul><li><strong>Até o filho completar 1 ano:</strong> dois períodos de 30 minutos ou 1 hora por dia</li><li><strong>Do 1.º ao 2.º ano:</strong> um período de 30 minutos por dia</li><li>Dispensa de trabalho nocturno e horas extraordinárias</li></ul>
+    <div class="warn"><strong>⚠️ Renovação obrigatória</strong><p>O atestado tem validade de 3 a 6 meses. A renovação pode ser feita por videoconsulta.</p></div>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>O atestado online tem validade legal?</h4><p>Sim. O documento emitido por videoconsulta tem plena validade legal junto do empregador.</p></div>
+    <div class="faq"><h4>Com que frequência preciso de renovar?</h4><p>O atestado tem validade de 3 a 6 meses consoante o que o médico indicar.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Lei n.º 7/2009. Código do Trabalho Português. Artigos 47.º e 58.º</li><li>ACT. Guia sobre Parentalidade e Trabalho. 2023.</li></ol></div>`
+},
+
+'atestado-carta-conducao': {
+  title: 'Atestado Médico para Carta de Condução Online | ConsultasOnline',
+  description: 'Atestado de aptidão médica para carta de condução por videoconsulta. Válido no IMT. Emitido no próprio dia. 45€.',
+  keywords: 'atestado carta de condução online, exame médico carta de condução online portugal, atestado IMT online, renovação carta condução médico',
+  content: `<div class="cta-top"><p>🚗 Precisa do atestado para a carta de condução? Emitido por videoconsulta e enviado ao IMT no próprio dia. <a href="/">Marcar consulta — 45€ →</a></p></div>
+    <h2>Quando é obrigatório renovar?</h2>
+    <ul><li><strong>Categoria B</strong> — cada 10 anos até aos 70 anos; depois dos 70, cada 2 anos</li><li><strong>Categorias C e D</strong> — cada 5 anos</li><li><strong>Primeira carta</strong> — obrigatório em todas as categorias</li><li><strong>Troca de carta estrangeira</strong> — obrigatório</li></ul>
+    <div class="warn"><strong>⚠️ Exame de visão obrigatório</strong><p>É obrigatório ter um exame de visão actualizado, realizado numa óptica ou oftalmologista, antes da videoconsulta.</p></div>
+    <h2>O que é avaliado?</h2>
+    <ul><li><strong>Visão</strong> — acuidade binocular mínima de 0,5; campo visual de 120°</li><li><strong>Cardiovascular</strong> — condições controladas geralmente compatíveis</li><li><strong>Neurológico</strong> — epilepsia controlada sem crises há mais de 1 ano geralmente aceite</li><li><strong>Diabetes</strong> — controlada é compatível com a condução</li></ul>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>O atestado é enviado directamente ao IMT?</h4><p>Sim. O médico envia o atestado electrónico directamente ao IMT no final da consulta.</p></div>
+    <div class="faq"><h4>Serve para primeira carta e troca de carta estrangeira?</h4><p>Sim. O mesmo atestado serve para qualquer situação.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Decreto-Lei n.º 40/2020. Regulamento de Habilitação Legal para Conduzir.</li><li>IMT. Guia de Renovação de Carta de Condução. 2023.</li></ol></div>`
+},
+
+'faltas-trabalho': {
+  title: 'Faltas ao Trabalho por Doença: Como Justificar | ConsultasOnline',
+  description: 'Tudo sobre declarações médicas, baixas e os seus direitos como trabalhador. Declaração médica emitida online no próprio dia.',
+  keywords: 'faltas trabalho doença justificar, declaração médica trabalho online, baixa médica trabalho portugal, direitos trabalhador doença',
+  content: `<div class="cta-top"><p>💼 Precisa de declaração médica para o trabalho? Emitida por videoconsulta no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>Enquadramento Legal</h2>
+    <p>As faltas ao trabalho por doença são reguladas pelo <strong>Código do Trabalho (Lei n.º 7/2009)</strong>. O trabalhador tem direito a faltar por doença sem perda de emprego, desde que cumpra as obrigações de justificação.</p>
+    <h2>Documentos para Justificar Faltas</h2>
+    <ul><li><strong>Declaração médica</strong> — para faltas de 1 a 3 dias</li><li><strong>CIT (baixa médica)</strong> — obrigatório a partir do 4.º dia consecutivo</li></ul>
+    <div class="info"><strong>📋 Prazo legal</strong><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade.</p></div>
+    <h2>Subsídio de Doença</h2>
+    <ul><li>Até 30 dias: <strong>55%</strong></li><li>31–90 dias: <strong>60%</strong></li><li>91–365 dias: <strong>70%</strong></li><li>Mais de 365 dias: <strong>75%</strong></li></ul>
+    <div class="warn"><strong>⚠️ Protecção laboral</strong><p>Faltas justificadas por doença não podem constituir justa causa de despedimento (art. 351.º CT).</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Lei n.º 7/2009. Código do Trabalho Português.</li><li>ISS. Guia Prático — Subsídio de Doença. 2023.</li></ol></div>`
+},
+
+'faltas-escola': {
+  title: 'Faltas à Escola por Doença: Como Justificar | ConsultasOnline',
+  description: 'O que diz a lei, documentos necessários e como obter declaração médica online para justificar faltas escolares. 35€.',
+  keywords: 'faltas escola doença justificar, atestado falta escolar online, declaração médica escola portugal, justificar falta escolar',
+  content: `<div class="cta-top"><p>🎓 Precisa de atestado para justificar falta escolar? Emitido por videoconsulta no próprio dia. <a href="/">Marcar consulta — 35€ →</a></p></div>
+    <h2>O que diz a Lei</h2>
+    <p>As faltas escolares por doença são reguladas pelo <strong>Estatuto do Aluno e Ética Escolar (Lei n.º 51/2012)</strong>. A justificação requer declaração médica que indique o período de incapacidade sem revelar o diagnóstico.</p>
+    <h2>Documentos Aceites</h2>
+    <ul><li><strong>Declaração médica</strong> — válida para qualquer número de dias</li><li><strong>Declaração dos encarregados de educação</strong> — válida até 3 dias por período letivo (ensino básico)</li></ul>
+    <div class="info"><strong>📋 Prazo</strong><p>A justificação deve ser entregue ao Diretor de Turma nos <strong>3 dias úteis</strong> seguintes ao regresso.</p></div>
+    <h2>Limites de Faltas</h2>
+    <ul><li><strong>Ensino básico</strong> — faltas justificadas não têm consequências directas</li><li><strong>Ensino secundário</strong> — limite de 10% da carga horária de cada disciplina</li></ul>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>A declaração médica online é aceite pelas escolas?</h4><p>Sim. Tem plena validade legal junto de escolas públicas e privadas em Portugal.</p></div>
+    <div class="faq"><h4>Posso obter a declaração para o meu filho sem o levar ao médico?</h4><p>Sim. O encarregado de educação pode fazer a videoconsulta em nome do filho menor.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Lei n.º 51/2012. Estatuto do Aluno e Ética Escolar.</li><li>DGE. Orientações sobre faltismo escolar. 2023.</li></ol></div>`
+},
+
+'dor-de-garganta-amigdalite': {
+  title: 'Dor de Garganta e Amigdalite: Quando Tomar Antibiótico | ConsultasOnline',
+  description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
+  keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal, amigdalite bacteriana viral',
+  content: `<div class="cta-top"><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por videoconsulta em 30 minutos. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>Vírica ou Bacteriana?</h2>
+    <p>Até <strong>80% das faringoamigdalites são de origem viral</strong> e não beneficiam de antibiótico. Distinguir a causa é fundamental para evitar o uso desnecessário de antibióticos.</p>
+    <h2>Critérios de Centor</h2>
+    <ul><li>Exsudado amigdalino — <strong>+1 ponto</strong></li><li>Adenopatias cervicais dolorosas — <strong>+1 ponto</strong></li><li>Ausência de tosse — <strong>+1 ponto</strong></li><li>Febre ≥38°C — <strong>+1 ponto</strong></li></ul>
+    <p>Score ≥3: considerar antibiótico. Score ≤1: causa viral provável — antibiótico não indicado.</p>
+    <div class="warn"><strong>🚨 Abcesso Periamigdalino — Urgência</strong><p>Trismo, voz "engrolada" e desvio da úvula são sinais de emergência cirúrgica urgente. Dirija-se imediatamente às urgências.</p></div>
+    <h2>Tratamento da Amigdalite Bacteriana</h2>
+    <p>Amoxicilina 500mg 3×/dia, 10 dias — primeira linha (DGS). Em caso de alergia à penicilina, azitromicina é a alternativa.</p>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>Posso obter antibiótico por videoconsulta?</h4><p>Sim, se o diagnóstico clínico indicar origem bacteriana.</p></div>
+    <div class="faq"><h4>Este serviço é apenas para adultos?</h4><p>Sim. Para crianças, recomendamos consulta presencial de pediatria.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>DGS. Norma 007/2012: Faringoamigdalite. (atualizada 2022).</li></ol></div>`
+},
+
+'ozempic-glp1': {
+  title: 'Ozempic, Mounjaro e Wegovy: Guia Completo GLP-1 | ConsultasOnline',
+  description: 'Semaglutido, tirzepatido — eficácia, segurança e quem pode tomar. O guia médico completo sobre os medicamentos GLP-1.',
+  keywords: 'ozempic portugal, wegovy portugal, mounjaro portugal, semaglutido tirzepatido guia, glp-1 obesidade portugal',
+  content: `<div class="cta-top"><p>💉 Quer saber se é candidato a Mounjaro ou Ozempic? Consulta médica de obesidade por videoconsulta. <a href="/">Marcar consulta — 55€ →</a></p></div>
+    <h2>A Revolução dos Agonistas GLP-1</h2>
+    <p>O semaglutido (Ozempic/Wegovy) e o tirzepatido (Mounjaro) representam a maior evolução no tratamento farmacológico da obesidade em décadas.</p>
+    <h2>Ozempic vs Wegovy</h2>
+    <ul><li><strong>Ozempic</strong> — aprovado para diabetes tipo 2; usado off-label para perda de peso</li><li><strong>Wegovy</strong> — aprovado especificamente para obesidade (IMC ≥30)</li></ul>
+    <div class="info"><strong>📊 Estudo STEP 1 (NEJM, 2021)</strong><p>O semaglutido 2,4mg causou redução média de 14,9% do peso corporal vs. 2,4% no placebo.</p></div>
+    <h2>Mounjaro — Dupla Acção GLP-1/GIP</h2>
+    <p>No estudo SURMOUNT-1, o tirzepatido 15mg atingiu reduções de até 22,5% do peso corporal em 72 semanas.</p>
+    <div class="warn"><strong>⚠️ Contraindicações</strong><p>Gravidez, aleitamento, história de carcinoma medular da tiróide. Exige sempre prescrição médica.</p></div>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>Posso obter Mounjaro por videoconsulta?</h4><p>Sim. A médica avalia o seu caso e, se indicado, emite a receita por email.</p></div>
+    <div class="faq"><h4>Quanto custa o Mounjaro em Portugal?</h4><p>Sem comparticipação do SNS para obesidade. O preço varia entre 180€ e 280€ por mês.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Wilding JPH, et al. Once-Weekly Semaglutide in Obesity. N Engl J Med. 2021.</li><li>Jastreboff AM, et al. Tirzepatide for Obesity. N Engl J Med. 2022.</li></ol></div>`
+},
+
+'doencas-sexualmente-transmissiveis': {
+  title: 'Doenças Sexualmente Transmissíveis: Rastreio Online | ConsultasOnline',
+  description: 'Rastreio de DST/IST de forma discreta e confidencial. VIH, sífilis, gonorreia, clamídia — pedido de análises online. 40€.',
+  keywords: 'rastreio DST online portugal, teste IST online discreto, consulta DST IST online confidencial, VIH rastreio online',
+  content: `<div class="cta-top"><p>🔬 Quer fazer rastreio de IST de forma discreta? Consulta confidencial por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>As IST Mais Frequentes</h2>
+    <h3>VIH</h3><p>A PrEP reduz o risco de transmissão em mais de 99%. Rastreio recomendado a todos os adultos sexualmente activos.</p>
+    <h3>Gonorreia</h3><p>Frequentemente assintomática na mulher. Tratamento: ceftriaxona 500mg IM dose única.</p>
+    <h3>Sífilis</h3><p>Tratamento: penicilina G benzatínica — altamente eficaz.</p>
+    <h3>Clamídia</h3><p>IST bacteriana mais prevalente. Tratamento: azitromicina 1g dose única.</p>
+    <div class="info"><strong>🔒 Total confidencialidade</strong><p>A consulta decorre em sala virtual privada, protegida pelo sigilo médico e pelo RGPD.</p></div>
+    <h2>Quem deve fazer rastreio?</h2>
+    <ul><li>Adultos sexualmente activos com múltiplos parceiros — rastreio anual</li><li>Após relação sexual desprotegida</li><li>Com sintomas como corrimento, ardor ou úlceras genitais</li></ul>
+    <div class="refs"><h3>Referências</h3><ol><li>ECDC. STI in Europe, 2022. 2023.</li><li>IUSTI. European Guidelines on Common STIs. 2023.</li></ol></div>`
+},
+
+'cessacao-tabagica': {
+  title: 'Como Parar de Fumar: Guia Médico Completo | ConsultasOnline',
+  description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 40€.',
+  keywords: 'cessação tabágica online portugal, consulta parar fumar online, vareniclina prescrição online, champix online portugal',
+  content: `<div class="cta-top"><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>Porque é tão difícil parar de fumar?</h2>
+    <p>A dependência do tabaco é uma doença crónica. Sem apoio médico, apenas 3 a 5% dos fumadores conseguem parar de forma sustentada ao fim de um ano.</p>
+    <h2>Tratamentos com Maior Evidência</h2>
+    <h3>1. Vareniclina (Champix)</h3><p>Primeira linha com maior taxa de sucesso. Em meta-análise Cochrane, duplica a probabilidade de cessação vs. placebo. Duração: 12 semanas.</p>
+    <h3>2. Bupropiona</h3><p>Alternativa eficaz, especialmente com depressão associada. Contraindicado em epilepsia.</p>
+    <h3>3. Terapêutica de Substituição Nicotínica</h3><p>Adesivos, pastilhas e inalador. A combinação de adesivo com pastilha de resgate é mais eficaz.</p>
+    <h2>Benefícios de Parar de Fumar</h2>
+    <ul><li><strong>1 ano</strong> — risco cardíaco reduzido a metade</li><li><strong>5 anos</strong> — risco de AVC igual ao de não fumador</li><li><strong>10 anos</strong> — risco de cancro do pulmão reduzido a metade</li></ul>
+    <div class="refs"><h3>Referências</h3><ol><li>Cahill K, et al. Pharmacological interventions for smoking cessation. Cochrane. 2013.</li><li>DGS. Programa Nacional para a Prevenção e Controlo do Tabagismo. 2022.</li></ol></div>`
+},
+
+'consulta-online': {
+  title: 'Consulta Online em Portugal: O Guia Completo | ConsultasOnline',
+  description: 'O que é, como funciona, quanto custa e o que pode tratar numa consulta médica online em Portugal.',
+  keywords: 'consulta online portugal, como funciona consulta online, consulta médica online portugal guia, teleconsulta portugal',
+  content: `<div class="cta-top"><p>🩺 Precisa de consulta online hoje? Disponível de segunda a domingo, das 9h às 21h. <a href="/">Marcar consulta →</a></p></div>
+    <h2>O que é uma consulta online?</h2>
+    <p>Uma consulta online é uma consulta médica realizada por videochamada. O médico avalia os sintomas, faz o diagnóstico e emite tratamento, atestados ou certificados de baixa médica — tudo digitalmente, no próprio dia.</p>
+    <h2>O que se pode tratar?</h2>
+    <ul><li><strong>Baixa médica</strong> — emissão e renovação do CIT</li><li><strong>Acompanhamento crónico</strong> — renovação de tratamento</li><li><strong>Atestados</strong> — amamentação, falta escolar, carta de condução</li><li><strong>Infeção urinária</strong> — diagnóstico e tratamento</li><li><strong>Amigdalite</strong> — avaliação e tratamento</li><li><strong>Cessação tabágica</strong> — avaliação e prescrição</li><li><strong>Rastreio de DST</strong> — pedido de análises confidencial</li><li><strong>Obesidade</strong> — prescrição de Mounjaro se indicado</li></ul>
+    <h2>Quanto custa?</h2>
+    <ul><li><strong>Atestados</strong> — 35€ a 45€</li><li><strong>Consultas online</strong> — 40€ a 55€</li></ul>
+    <p>Todos os preços incluem fatura AT, isenta de IVA (art. 9.º CIVA).</p>
+    <div class="refs"><h3>Referências</h3><ol><li>Portaria n.º 115/2021. CIT por teleconsulta.</li><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li></ol></div>`
+},
+
+'medico-online': {
+  title: 'Médico Online em Portugal: Como Funciona | ConsultasOnline',
+  description: 'Vantagens do médico online, o que pode pedir, segurança e sigilo médico. Como escolher uma plataforma de confiança.',
+  keywords: 'médico online portugal, médico online videoconsulta, médico online mbway portugal, teleconsulta médico portugal',
+  content: `<div class="cta-top"><p>👨‍⚕️ Precisa de médico online? Disponível de segunda a domingo, das 9h às 21h. <a href="/">Marcar consulta →</a></p></div>
+    <h2>O que é um médico online?</h2>
+    <p>Um médico online é um profissional de saúde devidamente habilitado e registado na Ordem dos Médicos que realiza consultas por videochamada, com as mesmas obrigações deontológicas que os médicos presenciais.</p>
+    <h2>Vantagens</h2>
+    <ul><li><strong>Sem filas</strong> — marcação imediata, consulta no mesmo dia</li><li><strong>Sem deslocação</strong> — consulta a partir de casa</li><li><strong>Documentos digitais</strong> — baixas e atestados por email</li><li><strong>Fatura automática</strong> — válida para reembolso em seguros de saúde</li></ul>
+    <div class="info"><strong>💡 Seguros de saúde</strong><p>A maioria dos seguros privados em Portugal (Médis, AdvanceCare, Multicare, Fidelidade) aceita faturas de teleconsulta para reembolso.</p></div>
+    <h2>Segurança e sigilo médico</h2>
+    <p>As consultas decorrem em salas virtuais privadas, não são gravadas. Toda a informação clínica está protegida pelo sigilo médico e pelo RGPD.</p>
+    <div class="refs"><h3>Referências</h3><ol><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li><li>Lei n.º 58/2019. RGPD — Proteção de dados pessoais.</li></ol></div>`
+},
+
+'telemedicina': {
+  title: 'Telemedicina em Portugal: O que É e Direitos do Utente | ConsultasOnline',
+  description: 'Como funciona a telemedicina em Portugal, diferenças entre SNS e privado e os seus direitos como utente.',
+  keywords: 'telemedicina portugal, telemedicina como funciona, teleconsulta portugal direitos utente, telemedicina SNS privado',
+  content: `<div class="cta-top"><p>💻 Quer experimentar uma teleconsulta? Videoconsulta no browser, sem instalar nada. <a href="/">Marcar consulta →</a></p></div>
+    <h2>O que é a telemedicina?</h2>
+    <p>A telemedicina é a prestação de cuidados de saúde à distância com recurso a tecnologias de comunicação. Em Portugal está regulamentada pela Ordem dos Médicos e pelo Ministério da Saúde.</p>
+    <h2>O que mudou com a telemedicina em Portugal</h2>
+    <ul><li><strong>Baixa médica por teleconsulta</strong> — Portaria n.º 115/2021</li><li><strong>Receita electrónica</strong> — emitida após teleconsulta, enviada por email</li><li><strong>Atestados digitais</strong> — validade legal total</li></ul>
+    <h2>SNS vs privada</h2>
+    <p><strong>SNS:</strong> teleconsultas gratuitas mas com tempos de espera elevados e dependência de médico de família.</p>
+    <p><strong>Privada:</strong> marcação imediata, horários alargados, emissão de documentos no próprio dia. Custo entre 35€ e 55€, parcialmente reembolsável por seguros de saúde.</p>
+    <h2>Direitos do utente</h2>
+    <ul><li>Sigilo médico total</li><li>Consentimento informado</li><li>Protecção de dados (RGPD)</li><li>Direito à fatura</li></ul>
+    <div class="warn"><strong>⚠️ Limitações</strong><p>A telemedicina não substitui a consulta presencial em situações de urgência. Em caso de dúvida, ligue 112 ou SNS 24 (808 24 24 24).</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li><li>Portaria n.º 115/2021. Ministério da Saúde.</li></ol></div>`
+},
+
+'atestado-rastreio-saude': {
+  title: 'Rastreio de Saúde em Portugal: O Guia Completo | ConsultasOnline',
+  description: 'Rastreios recomendados pela DGS por idade e sexo, vacinação do adulto e como fazer rastreio de IST de forma discreta.',
+  keywords: 'rastreio saúde portugal, exames preventivos portugal, rastreio oncológico portugal, check-up médico online portugal',
+  content: `<div class="cta-top"><p>🩺 Quer fazer um rastreio de saúde? Consulta online com pedido de análises personalizado. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>O que é o rastreio de saúde?</h2>
+    <p>O rastreio é a pesquisa de doenças em pessoas sem sintomas, com o objectivo de detectar precocemente condições que têm melhor prognóstico quando tratadas a tempo.</p>
+    <h2>Rastreios Recomendados</h2>
+    <h3>Para todos os adultos</h3>
+    <ul><li><strong>Tensão arterial</strong> — medição anual a partir dos 18 anos</li><li><strong>Glicemia</strong> — cada 3 anos a partir dos 45 anos</li><li><strong>Colesterol</strong> — cada 5 anos a partir dos 20 anos</li></ul>
+    <h3>Para mulheres</h3>
+    <ul><li><strong>Mamografia</strong> — dos 50 aos 69 anos, de 2 em 2 anos</li><li><strong>Citologia cervical</strong> — dos 25 aos 60 anos, de 3 em 3 anos</li></ul>
+    <h3>A partir dos 50 anos</h3>
+    <ul><li><strong>Cancro do cólon</strong> — pesquisa de sangue oculto nas fezes de 2 em 2 anos</li></ul>
+    <div class="info"><strong>💡 Rastreios oncológicos gratuitos</strong><p>Os rastreios oncológicos são gratuitos para a população-alvo. Responda sempre às convocatórias do SNS.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>DGS. Programa Nacional para as Doenças Oncológicas. 2022.</li><li>DGS. Programa Nacional de Vacinação 2024.</li></ol></div>`
+},
+
+'renovar-pilula-anticoncecional-online': {
+  title: 'Renovar a Pílula Anticoncecional Online em Portugal | ConsultasOnline',
+  description: 'Saiba como renovar a receita da pílula por videoconsulta em Portugal. Legal, seguro, sem médico de família. Receita Sem Papel no próprio dia. 40€.',
+  keywords: 'renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, videoconsulta pílula portugal',
+  content: `<div class="cta-top"><p>💊 Precisa de renovar a pílula? Receita no email no próprio dia, sem médico de família. <a href="/">Marcar consulta — 40€ →</a></p></div>
+    <h2>É legal renovar a pílula por videoconsulta?</h2>
+    <p>Sim. A prescrição por telemedicina está regulamentada em Portugal desde 2020. A médica emite a Receita Sem Papel directamente no sistema do SNS — válida em qualquer farmácia com a comparticipação do SNS.</p>
+    <h2>Quem pode renovar online?</h2>
+    <ul><li>Mulheres adultas que já tomam a mesma pílula há 6 meses ou mais</li><li>Tensão arterial normal</li><li>Sem sintomas novos nem alterações de saúde relevantes</li><li>Não fumadoras com mais de 35 anos</li></ul>
+    <h2>O que preparar</h2>
+    <ul><li>Nome comercial da pílula actual</li><li>Há quanto tempo toma esta pílula</li><li>Data da última menstruação</li><li>Lista de outros medicamentos</li></ul>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>Posso renovar sem médico de família?</h4><p>Sim. A consulta online funciona completamente independente do SNS.</p></div>
+    <div class="faq"><h4>Posso pedir receita para 6 meses?</h4><p>Sim. A médica pode emitir receita para até 6 embalagens numa só consulta.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>INFARMED. Normas de Prescrição Eletrónica. 2023.</li><li>DGS. Orientação n.º 004/2021 — Contraceção Hormonal Combinada.</li><li>FSRH Guideline: Combined Hormonal Contraception. 2023.</li></ol></div>`
+},
+
+'baixa-medica-freelancer': {
+  title: 'Baixa Médica para Trabalhadores Independentes: Guia Completo | ConsultasOnline',
+  description: 'Tens direito a baixa médica sendo freelancer? Como funciona o CIT, o subsídio de doença e como resolver tudo por videoconsulta.',
+  keywords: 'baixa médica freelancer portugal, baixa médica trabalhador independente, CIT recibos verdes, subsídio doença freelancer',
+  content: `<div class="cta-top"><p>💼 Trabalhas por conta própria e precisas de baixa médica? CIT emitido por videoconsulta em 20 minutos. <a href="/">Marcar consulta — 55€ →</a></p></div>
+    <h2>Tens direito a baixa médica sendo freelancer?</h2>
+    <p>Sim. Qualquer trabalhador independente inscrito na Segurança Social tem direito ao subsídio de doença, desde que cumpra os requisitos legais.</p>
+    <h2>Requisitos</h2>
+    <ul><li>Inscrito na Segurança Social como trabalhador independente</li><li>Pelo menos 6 meses de contribuições</li><li>CIT emitido por um médico</li><li>Não em regime de isenção de contribuições</li></ul>
+    <div class="warn"><strong>⚠️ Atenção</strong><p>Se estás isento de contribuições não tens direito ao subsídio. Ainda assim podes emitir o CIT para justificar a ausência junto de clientes.</p></div>
+    <h2>Quanto vale o subsídio?</h2>
+    <p><strong>55%</strong> da remuneração de referência (média dos últimos 6 meses). Nos primeiros 3 dias de doença não há subsídio.</p>
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq"><h4>Posso fazer baixa sem médico de família?</h4><p>Sim. Qualquer médico registado na Ordem dos Médicos pode emitir o CIT.</p></div>
+    <div class="faq"><h4>Posso deduzir a consulta no IRS?</h4><p>Sim. É uma despesa de saúde dedutível no IRS.</p></div>
+    <div class="refs"><h3>Referências</h3><ol><li>Segurança Social. Subsídio de Doença — Trabalhadores Independentes.</li><li>Portaria n.º 115/2021. CIT por teleconsulta.</li></ol></div>`
+},
+
+'sem-medico-familia-freelancer': {
+  title: 'Sem Médico de Família: Guia Completo para Freelancers em Portugal | ConsultasOnline',
+  description: 'O que podes e não podes fazer sem médico de família em Portugal. Soluções práticas para freelancers e trabalhadores remotos.',
+  keywords: 'sem médico de família portugal, alternativas médico de família, lista espera médico família, médico online sem médico família freelancer',
+  content: `<div class="cta-top"><p>🏠 Não tens médico de família? A consulta online funciona independentemente do SNS. <a href="/">Marcar consulta →</a></p></div>
+    <h2>Porque os freelancers ficam sem médico de família</h2>
+    <p>Em Portugal, mais de 1 milhão de pessoas não têm médico de família atribuído. Entre freelancers, a percentagem é ainda mais elevada — mudanças de morada frequentes e listas de espera intermináveis.</p>
+    <h2>O que podes fazer sem médico de família</h2>
+    <ul><li><strong>Baixa médica (CIT)</strong> — por videoconsulta com qualquer médico da Ordem</li><li><strong>Renovação de medicação crónica</strong> — receita enviada por email</li><li><strong>Atestados médicos</strong> — amamentação, carta de condução, falta escolar</li><li><strong>Rastreio de saúde</strong> — pedido de análises por videoconsulta</li></ul>
+    <h2>O que NÃO podes fazer sem médico de família</h2>
+    <ul><li>Rastreios oncológicos gratuitos do SNS</li><li>Referenciação para especialidade pelo SNS</li><li>Prescrição de medicamentos de dispensa hospitalar</li></ul>
+    <h2>Custos e reembolsos</h2>
+    <p>Videoconsulta entre 35€ e 55€. Fatura AT dedutível no IRS e aceite pela maioria dos seguros de saúde privados.</p>
+    <div class="refs"><h3>Referências</h3><ol><li>SNS. Inscrição no Centro de Saúde. sns24.gov.pt.</li><li>Segurança Social. Trabalhadores Independentes — Prestações.</li></ol></div>`
+},
+
+'dia-saude-2026': {
+  title: 'Dia Mundial da Saúde 2026: Juntos pela Ciência | ConsultasOnline',
+  description: '7 de Abril — o que significa este dia, qual o tema da OMS em 2026 e o que pode fazer hoje pela sua saúde em Portugal.',
+  keywords: 'dia mundial saúde 2026, OMS saúde 2026, saúde portugal 2026, telemedicina ciência portugal',
+  content: `<div class="cta-top"><p>🌍 Cuide da sua saúde hoje. Consultas médicas online disponíveis de segunda a domingo. <a href="/">Marcar consulta →</a></p></div>
+    <h2>7 de Abril — Dia Mundial da Saúde</h2>
+    <p>Celebrado anualmente desde 1948, o Dia Mundial da Saúde assinala a fundação da OMS. Em 2026, o tema é <strong>"Juntos pela Ciência"</strong> — um apelo global à confiança na evidência científica.</p>
+    <h2>Os maiores desafios de saúde em Portugal em 2026</h2>
+    <h3>Doenças crónicas</h3>
+    <p>Doenças cardiovasculares, diabetes, cancro e doenças respiratórias são as principais causas de morte em Portugal — a maioria prevenível com rastreio precoce.</p>
+    <h3>Resistência antimicrobiana</h3>
+    <p>O uso excessivo de antibióticos cria bactérias resistentes. As guidelines da DGS recomendam uso criterioso — por isso o médico avalia sempre se o antibiótico é realmente necessário.</p>
+    <h3>Acesso aos cuidados</h3>
+    <p>Mais de um milhão de portugueses não tem médico de família. A telemedicina é uma resposta validada para melhorar o acesso.</p>
+    <h2>O que pode fazer hoje</h2>
+    <ul><li>Rastreio preventivo — tensão arterial, glicemia, colesterol</li><li>Vacinação actualizada</li><li>Não interromper medicação crónica sem consultar médico</li></ul>
+    <div class="refs"><h3>Referências</h3><ol><li>OMS. World Health Day 2026. who.int.</li><li>DGS. Programa Nacional de Saúde 2030.</li></ol></div>`
 }
 
-// Rota para listagem de artigos
+};
+
+// Função que gera a página HTML completa de cada artigo para SSR
+function buildArticleSSR(slug, data) {
+  const canonical = 'https://www.consultas-online.pt/artigos/' + slug;
+  const related = Object.entries(ARTICLES)
+    .filter(([s]) => s !== slug)
+    .slice(0, 4)
+    .map(([s, a]) => {
+      const c = ARTICLES_CONTENT[s];
+      return c ? '<li><a href="/artigos/' + s + '">' + c.title.split('|')[0].trim() + '</a></li>' : '';
+    }).join('');
+
+  return `<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>${data.title}</title>
+<meta name="description" content="${data.description}"/>
+<meta name="keywords" content="${data.keywords}"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="${canonical}"/>
+<meta property="og:type" content="article"/>
+<meta property="og:url" content="${canonical}"/>
+<meta property="og:title" content="${data.title}"/>
+<meta property="og:description" content="${data.description}"/>
+<meta property="og:locale" content="pt_PT"/>
+<meta property="og:site_name" content="ConsultasOnline"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "${data.title.split('|')[0].trim()}",
+  "description": "${data.description}",
+  "url": "${canonical}",
+  "inLanguage": "pt-PT",
+  "isPartOf": {"@type":"MedicalBusiness","name":"ConsultasOnline","url":"https://www.consultas-online.pt"}
+}
+<\/script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;color:#334155;background:#fff;line-height:1.7}
+nav{background:#0b1d35;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+nav .logo{color:#fff;text-decoration:none;font-size:18px;font-weight:700}
+nav .logo span{color:#17c4a8}
+nav .nav-btn{background:#0d7377;color:#fff;text-decoration:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600}
+.wrap{max-width:780px;margin:0 auto;padding:40px 24px 80px}
+.breadcrumb{font-size:13px;color:#8a9bb0;margin-bottom:20px}
+.breadcrumb a{color:#0d7377;text-decoration:none}
+.cat{display:inline-block;background:rgba(13,115,119,.08);color:#0d7377;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;letter-spacing:.4px;text-transform:uppercase;margin-bottom:12px}
+h1{font-size:clamp(26px,4vw,40px);color:#0b1d35;line-height:1.2;margin-bottom:20px}
+h2{font-size:24px;color:#0b1d35;margin:32px 0 12px}
+h3{font-size:18px;color:#0b1d35;margin:20px 0 8px}
+p{margin-bottom:14px;font-size:15px}
+ul,ol{margin:10px 0 16px 22px}
+li{margin-bottom:7px;font-size:15px}
+a{color:#0d7377}
+.cta-top{background:linear-gradient(135deg,rgba(13,115,119,.08),rgba(23,196,168,.08));border:1px solid rgba(13,115,119,.2);border-radius:10px;padding:14px 18px;margin-bottom:28px;font-size:14px}
+.cta-top a{font-weight:700;color:#0d7377}
+.info{background:#f4f7fb;border-left:4px solid #0d7377;border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0}
+.info p{margin:4px 0 0;font-size:14px}
+.warn{background:rgba(214,158,46,.07);border-left:4px solid #d97706;border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0}
+.warn p{margin:4px 0 0;font-size:14px}
+.faq{border:1px solid #dde6f0;border-radius:10px;padding:14px 18px;margin-bottom:10px}
+.faq h4{font-size:14px;font-weight:600;color:#0b1d35;margin-bottom:6px}
+.faq p{margin:0;font-size:13.5px;color:#4a5568}
+.refs{background:#f4f7fb;border-radius:10px;padding:20px 24px;margin-top:40px}
+.refs h3{font-size:18px;color:#0b1d35;margin-bottom:12px}
+.refs ol{margin-left:18px}
+.refs li{font-size:13px;color:#64748b;margin-bottom:6px}
+.cta-bottom{background:linear-gradient(135deg,#0b1d35,#1a3a5c);border-radius:14px;padding:32px;text-align:center;margin:40px 0}
+.cta-bottom h3{font-size:24px;color:#fff;margin-bottom:8px}
+.cta-bottom p{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:18px}
+.cta-bottom a{display:inline-block;background:linear-gradient(135deg,#0d7377,#17c4a8);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:700}
+.related{margin-top:48px;padding-top:32px;border-top:1px solid #e2e8f0}
+.related h3{font-size:18px;color:#0b1d35;margin-bottom:14px}
+.related ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.related ul li a{color:#0d7377;font-size:14px;text-decoration:none;font-weight:500}
+.related ul li a:hover{text-decoration:underline}
+footer{background:#0b1d35;padding:28px 24px;text-align:center;font-size:13px;color:rgba(255,255,255,.45)}
+footer a{color:rgba(255,255,255,.6);text-decoration:none;margin:0 8px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">Consultas<span>Online</span></a>
+  <a href="/" class="nav-btn">Marcar Consulta</a>
+</nav>
+<div class="wrap">
+  <div class="breadcrumb"><a href="/">Início</a> › <a href="/artigos">Artigos de Saúde</a> › ${data.title.split('|')[0].trim()}</div>
+  <div class="cat">${ARTICLES[slug] ? ARTICLES[slug].category : 'Saúde'}</div>
+  <h1>${data.title.split('|')[0].trim()}</h1>
+  ${data.content}
+  <div class="cta-bottom">
+    <h3>Precisa de consulta médica online?</h3>
+    <p>Disponível de segunda a domingo, das 9h às 21h. Fatura AT automática incluída.</p>
+    <a href="/">Marcar Consulta Agora →</a>
+  </div>
+  <div class="related">
+    <h3>Artigos Relacionados</h3>
+    <ul>${related}</ul>
+  </div>
+</div>
+<footer>
+  <a href="/">ConsultasOnline</a>
+  <a href="/artigos">Artigos de Saúde</a>
+  <a href="/artigos/consulta-online">Consulta Online</a>
+  <a href="/artigos/baixa-medica">Baixa Médica</a>
+  <br/><br/>© 2026 ConsultasOnline · geral@consultas-online.pt
+</footer>
+<script>
+// Guarda o artigo para a SPA mas não redireciona — a página SSR é a versão principal
+if (typeof sessionStorage !== 'undefined') {
+  sessionStorage.setItem('openArticle', '${ARTICLES[slug] ? ARTICLES[slug].id : slug}');
+}
+</script>
+</body>
+</html>`;
+}
+
+// Rota de listagem
 app.get('/artigos', (req, res) => {
-  var links = Object.entries(ARTICLES).map(function(entry) {
-    var slug = entry[0]; var art = entry[1];
-    return '<li><a href="/artigos/' + slug + '" style="color:#0d7377">' + art.title.split('|')[0].trim() + '</a></li>';
-  }).join('');
-  var html = '<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>';
-  html += '<title>Artigos de Saúde | ConsultasOnline</title>';
-  html += '<meta name="description" content="Artigos médicos sobre consulta online, baixa médica, atestados e muito mais."/>';
-  html += '<meta name="robots" content="index, follow"/>';
-  html += '<link rel="canonical" href="https://www.consultas-online.pt/artigos"/>';
-  html += '</head><body style="font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px">';
-  html += '<a href="/" style="color:#0d7377;font-weight:700;text-decoration:none">← ConsultasOnline</a>';
-  html += '<h1 style="color:#0b1d35;margin:24px 0">Artigos de Saúde</h1>';
-  html += '<ul style="line-height:2.2">' + links + '</ul>';
-  html += '</body></html>';
-  res.send(html);
+  const links = Object.entries(ARTICLES_CONTENT).map(([slug, art]) =>
+    '<li><a href="/artigos/' + slug + '" style="color:#0d7377;font-size:15px">' + art.title.split('|')[0].trim() + '</a></li>'
+  ).join('');
+  res.send(`<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Artigos de Saúde | ConsultasOnline</title>
+<meta name="description" content="Artigos médicos sobre consulta online, baixa médica, atestados e muito mais. Informação baseada em evidência científica."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://www.consultas-online.pt/artigos"/>
+<style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:40px 20px;color:#334155}a{color:#0d7377}h1{color:#0b1d35;margin-bottom:24px}ul{line-height:2.4;padding-left:18px}</style>
+</head><body>
+<p><a href="/">← ConsultasOnline</a></p>
+<h1>Artigos de Saúde</h1>
+<ul>${links}</ul>
+</body></html>`);
 });
 
-
-// Rotas individuais para cada artigo
+// Rota individual — SSR completo
 app.get('/artigos/:slug', (req, res) => {
-  var slug = req.params.slug;
-  var article = ARTICLES[slug];
-  if (!article) {
-    return res.redirect(301, '/');
-  }
-  // Serve the main index.html with SEO meta tags injected
-  // Read index.html and inject meta tags in the <head>
-  var fs = require('fs');
-  var path = require('path');
-  var indexPath = path.join(__dirname, 'public', 'index.html');
-  fs.readFile(indexPath, 'utf8', function(err, html) {
-    if (err) return res.redirect(301, '/');
-    var canonicalUrl = 'https://www.consultas-online.pt/artigos/' + slug;
-    var metaTags = '<meta name="description" content="' + article.description + '"/>\n'
-      + '<meta name="keywords" content="' + article.keywords + '"/>\n'
-      + '<link rel="canonical" href="' + canonicalUrl + '"/>\n'
-      + '<meta property="og:url" content="' + canonicalUrl + '"/>\n'
-      + '<meta property="og:title" content="' + article.title + '"/>\n'
-      + '<meta property="og:description" content="' + article.description + '"/>\n'
-      + '<title>' + article.title + '</title>\n'
-      + '<script>window.__OPEN_ARTICLE__ = "' + article.id + '";<\/script>\n';
-    // Replace the existing title and inject meta
-    html = html.replace(/<title>[^<]*<\/title>/, '');
-    html = html.replace('<meta charset="UTF-8"/>', '<meta charset="UTF-8"/>\n' + metaTags);
-    res.send(html);
-  });
+  const slug = req.params.slug;
+  const data = ARTICLES_CONTENT[slug];
+  if (!data) return res.redirect(301, '/');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(buildArticleSSR(slug, data));
 });
 
 // Página de sucesso após pagamento
