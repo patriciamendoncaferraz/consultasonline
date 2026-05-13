@@ -1594,6 +1594,7 @@ app.post('/lead-ebook', async (req, res) => {
         <p><strong>Nome:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Fonte:</strong> Ebook — A Tua Saúde em Dia</p>
+        <p><strong>Marketing:</strong> ${req.body.marketing ? '✅ Aceitou receber promoções e novidades' : '❌ Não aceitou receber promoções'}</p>
         <p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>
         </body></html>
       `,
@@ -1712,7 +1713,13 @@ app.post('/lead-magnet', async (req, res) => {
       to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
       from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
       subject: '🔔 Nova lead — Guia Primeiros Socorros',
-      html: `<p><strong>Nome:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Fonte:</strong> Guia Primeiros Socorros</p><p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}`,
+      html: `<html><body style="font-family:Arial,sans-serif;padding:20px">
+        <p><strong>Nome:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Fonte:</strong> Guia Primeiros Socorros</p>
+        <p><strong>Marketing:</strong> ${req.body.marketing ? '✅ Aceitou receber promoções e novidades' : '❌ Não aceitou receber promoções'}</p>
+        <p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>
+        </body></html>`,
       text: `Nova lead\nNome: ${name}\nEmail: ${email}\nFonte: Primeiros Socorros\nData: ${new Date().toLocaleString('pt-PT')}`,
     });
   } catch (err) { console.warn('Erro notificação lead magnet:', err.message); }
@@ -1785,6 +1792,7 @@ app.post('/lead-sintomas', async (req, res) => {
         <p><strong>Nome:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Fonte:</strong> Ebook 7 Sintomas Femininos</p>
+        <p><strong>Marketing:</strong> ${req.body.marketing ? '✅ Aceitou receber promoções e novidades' : '❌ Não aceitou receber promoções'}</p>
         <p><strong>Data:</strong> ${new Date().toLocaleString('pt-PT')}</p>
         </body></html>`,
       text: `Nova lead\nNome: ${name}\nEmail: ${email}\nFonte: 7 Sintomas\nData: ${new Date().toLocaleString('pt-PT')}`,
