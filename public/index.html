@@ -1200,7 +1200,11 @@ document.addEventListener("DOMContentLoaded", function() {
         <button onclick="window.submitLeadHome()" id="leadBtnHome" style="width:100%;background:linear-gradient(135deg,#0d7377,#17c4a8);color:#fff;border:none;border-radius:9px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:.2s" onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
           Receber Guia Gratuito →
         </button>
-        <p style="font-size:11px;color:rgba(255,255,255,.3);text-align:center;margin-top:10px">Sem spam. Pode cancelar a qualquer momento.</p>
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-top:12px">
+  <input type="checkbox" id="leadMarketing" style="margin-top:3px;accent-color:#17c4a8;width:15px;height:15px;flex-shrink:0;cursor:pointer"/>
+  <label for="leadMarketing" style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;cursor:pointer">Concordo em receber emails com promoções, novidades e ofertas especiais da ConsultasOnline.</label>
+</div>
+<p style="font-size:11px;color:rgba(255,255,255,.3);text-align:center;margin-top:10px">Sem spam. Pode cancelar a qualquer momento.</p>
       </div>
       <div id="leadSuccessHome" style="display:none;text-align:center;padding:16px 0">
         <div style="font-size:36px;margin-bottom:10px">✅</div>
