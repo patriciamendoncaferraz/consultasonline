@@ -4597,7 +4597,7 @@ window.submitSintomas = function() {
   fetch(API_URL + '/lead-sintomas', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: name.trim(), email: email.trim() })
+    body: JSON.stringify({ name: name.trim(), email: email.trim(), marketing: document.getElementById('sintomasMarketing') ? document.getElementById('sintomasMarketing').checked : false })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
@@ -4643,7 +4643,7 @@ window.submitSintomas = function() {
   fetch(API_URL + '/lead-ebook', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: name.trim(), email: email.trim() })
+    body: JSON.stringify({ name: name.trim(), email: email.trim(), marketing: document.getElementById('ebookMarketing') ? document.getElementById('ebookMarketing').checked : false })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
@@ -4828,7 +4828,7 @@ window.submitLeadHome = function() {
   fetch('/lead-magnet', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ name: name.value.trim(), email: email.value.trim() })
+    body: JSON.stringify({ name: name.value.trim(), email: email.value.trim(), marketing: document.getElementById('leadMarketing') ? document.getElementById('leadMarketing').checked : false })
   })
   .then(function(r){ return r.json(); })
   .then(function() {
