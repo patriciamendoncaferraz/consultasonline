@@ -790,6 +790,7 @@ app.post('/create-checkout-session', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card', 'mb_way', 'multibanco'],
+      allow_promotion_codes: true,
       line_items: [{
         price_data: {
           currency: 'eur',
