@@ -125,7 +125,7 @@ const SERVICES = {
   'atestado-escola':            { name: 'Atestado para Falta Escolar',       price: 3500 },
   'atestado-conducao':          { name: 'Atestado para Carta de Condução',   price: 4500 },
   'baixa-medica':               { name: 'Emissão de Baixa Médica',           price: 5500 },
-  'renovacao-medicamentos':     { name: 'Renovação de Medicamentos',         price: 4000 },
+  'renovacao-medicamentos':     { name: 'Consulta',         price: 4000 },
   'renovacao-piula':            { name: 'Renovação de Pílula Anticoncecional', price: 4000 },
   'consulta-infecao-urinaria':  { name: 'Consulta de Infeção Urinária',      price: 4000 },
   'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 4000 },
