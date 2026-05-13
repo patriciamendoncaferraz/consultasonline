@@ -1528,10 +1528,10 @@ app.post('/lead-ebook', async (req, res) => {
     try {
       await Lead.findOneAndUpdate(
         { email },
-        { nome: name, email, fonte: 'ebook-7-sintomas', marketing: req.body.marketing || false, criadoEm: new Date() }
+        { nome: name, email, fonte: 'ebook-saude-em-dia', marketing: req.body.marketing || false, criadoEm: new Date() },
         { upsert: true, new: true }
-        
       );
+        
     } catch (err) {
       console.warn('Erro ao guardar lead:', err.message);
     }
@@ -1672,11 +1672,10 @@ app.post('/lead-magnet', async (req, res) => {
 
   if (MONGO_URI) {
     try {
-      await Lead.findOneAndUpdate(
+     await Lead.findOneAndUpdate(
         { email },
-        { nome: name, email, fonte: 'ebook-7-sintomas', marketing: req.body.marketing || false, criadoEm: new Date() }
+        { nome: name, email, fonte: 'ebook-saude-em-dia', marketing: req.body.marketing || false, criadoEm: new Date() },
         { upsert: true, new: true }
-       
       );
     } catch (err) { console.warn('Erro lead magnet:', err.message); }
   }
@@ -1732,9 +1731,9 @@ app.post('/lead-sintomas', async (req, res) => {
 
   if (MONGO_URI) {
     try {
-      await Lead.findOneAndUpdate(
+     await Lead.findOneAndUpdate(
         { email },
-        { nome: name, email, fonte: 'ebook-7-sintomas', marketing: req.body.marketing || false, criadoEm: new Date() }
+        { nome: name, email, fonte: 'ebook-saude-em-dia', marketing: req.body.marketing || false, criadoEm: new Date() },
         { upsert: true, new: true }
       );
     } catch (err) { console.warn('Erro lead sintomas:', err.message); }
