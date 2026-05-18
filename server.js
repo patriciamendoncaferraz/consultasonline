@@ -934,9 +934,18 @@ app.post('/webhook', async (req, res) => {
         console.warn('Fatura ignorada: nome ou email em falta', { customerName, customerEmail });
       }
 
-      // 5. Enviar email ao utente
+     // 5. Enviar email ao utente
       if (customerEmail) {
-        await sendConfirmationEmail({ to: customerEmail, name: customerName || 'Utente', serviceName, date, time, amountEur, meetLink, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
+        try {
+          console.log('SendGrid a enviar email para:', customerEmail);
+          console.log('SendGrid FROM_EMAIL:', process.env.FROM_EMAIL);
+          console.log('SendGrid API KEY (primeiros 10):', process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.substring(0,10) : 'NAO DEFINIDA');
+          await sendConfirmationEmail({ to: customerEmail, name: customerName || 'Utente', serviceName, date, time, amountEur, meetLink, invoiceUrl: invoiceData && invoiceData.url, invoiceNum: invoiceData && invoiceData.invoiceNumber });
+          console.log('SendGrid email confirmacao enviado com sucesso para:', customerEmail);
+        } catch (sgErr) {
+          console.error('SendGrid ERRO ao enviar confirmacao:', sgErr.message);
+          console.error('SendGrid ERRO detalhe:', JSON.stringify(sgErr.response && sgErr.response.body));
+        }
       } else {
         console.warn('Email ignorado: endereco em falta');
       }
@@ -945,6 +954,7 @@ app.post('/webhook', async (req, res) => {
       const notifyEmail = process.env.NOTIFY_EMAIL;
       if (notifyEmail) {
         try {
+          console.log('SendGrid a enviar notificacao para:', notifyEmail);
           await sgMail.send({
             to: notifyEmail,
             from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
@@ -967,8 +977,11 @@ app.post('/webhook', async (req, res) => {
               + '</div></div></body></html>',
             text: 'Nova consulta!\nServico: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nUtente: ' + (customerName||'-') + '\nEmail: ' + (customerEmail||'-') + '\nValor: ' + amountEur,
           });
-          console.log('Notificacao enviada para:', notifyEmail);
-        } catch(ne) { console.warn('Erro notificacao medica:', ne.message); }
+          console.log('Notificacao enviada com sucesso para:', notifyEmail);
+        } catch(ne) {
+          console.error('Erro notificacao medica:', ne.message);
+          console.error('Erro notificacao detalhe:', JSON.stringify(ne.response && ne.response.body));
+        }
       }
     } catch(e) { console.error('Erro email/fatura:', e.message); }
     return res.json({ received: true });
