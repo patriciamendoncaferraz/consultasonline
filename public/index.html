@@ -4300,15 +4300,6 @@ document.addEventListener("DOMContentLoaded", function() {
           <div class="field"><label>Email *</label><input type="email" id="bookEmail" placeholder="joao@email.pt"/></div>
           <div class="field"><label>Telemóvel</label><input type="tel" id="bookPhone" placeholder="+351 9XX XXX XXX"/></div>
           <div class="field"><label>Número de Utente SNS</label><input type="text" id="bookNumUtente" placeholder="000 000 000" maxlength="12"/></div>
-
-          <!-- CAMPOS EXTRA AMAMENTAÇÃO -->
-          <div id="extraAmamentacao" style="display:none">
-            <div class="field"><label>A sua data de nascimento *</label><input type="date" id="bookDobUtente"/></div>
-            <div class="field"><label>O seu número de Cartão de Cidadão *</label><input type="text" id="bookCC" placeholder="Ex: 12345678 9 ZZ0" maxlength="20"/></div>
-            <div class="field"><label>Nome do filho(a) *</label><input type="text" id="bookNomeFilho" placeholder="Nome completo do filho(a)"/></div>
-            <div class="field"><label>Data de nascimento do filho(a) *</label><input type="date" id="bookDobFilho"/></div>
-          </div>
-
           <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea id="bookObs" placeholder="Descreva brevemente o motivo da consulta..."></textarea></div>
 
         <!-- Upload section - shown for specific services -->
@@ -4530,12 +4521,9 @@ window.selectService = function(el, name, price, type, id) {
     if (ms) ms.classList.remove('show');
     if (mg) mg.style.display = 'none';
     showUploadSection(id);
-// Aviso Mounjaro
+    // Aviso Mounjaro
     var avisoBox = document.getElementById('monjarnoAviso');
     if (avisoBox) avisoBox.style.display = (id === 'consulta-obesidade') ? 'block' : 'none';
-    // Campos extra amamentação
-    var extraAmamentacao = document.getElementById('extraAmamentacao');
-    if (extraAmamentacao) extraAmamentacao.style.display = (id === 'atestado-amamentacao') ? 'block' : 'none';
     renderCalendar();
   }, 180);
 };
@@ -4746,18 +4734,6 @@ window.confirmBooking = function() {
   if (!name || !email) { alert('Por favor preencha o nome e email.'); return; }
   if (!selectedDay) { alert('Por favor selecione um dia no calendário.'); return; }
   if (!selSlot) { alert('Por favor selecione um horário disponível.'); return; }
-// Campos amamentação
-  var dobUtente = document.getElementById('bookDobUtente') ? document.getElementById('bookDobUtente').value : '';
-  var cc        = document.getElementById('bookCC')        ? document.getElementById('bookCC').value.trim() : '';
-  var nomeFilho = document.getElementById('bookNomeFilho') ? document.getElementById('bookNomeFilho').value.trim() : '';
-  var dobFilho  = document.getElementById('bookDobFilho')  ? document.getElementById('bookDobFilho').value : '';
-  // Validação campos amamentação
-  if (currentService && currentService.id === 'atestado-amamentacao') {
-    if (!dobUtente || !cc || !nomeFilho || !dobFilho) {
-      alert('Por favor preencha todos os campos obrigatórios: data de nascimento, Cartão de Cidadão, nome e data de nascimento do filho(a).');
-      return;
-    }
-  }
 
   var y = currentDate.getFullYear(), m = currentDate.getMonth();
   var dateStr = String(selectedDay).padStart(2,'0') + '/' + String(m+1).padStart(2,'0') + '/' + y;
@@ -4767,12 +4743,6 @@ window.confirmBooking = function() {
   var nif = (invChecked && invChecked.checked && nifEl) ? nifEl.value : '';
 
   setConfirmBtn(true, 'A redirecionar para pagamento…');
-
- // Campos extra amamentação
-  var dobUtente = document.getElementById('bookDobUtente') ? document.getElementById('bookDobUtente').value : '';
-  var cc        = document.getElementById('bookCC')        ? document.getElementById('bookCC').value.trim() : '';
-  var nomeFilho = document.getElementById('bookNomeFilho') ? document.getElementById('bookNomeFilho').value.trim() : '';
-  var dobFilho  = document.getElementById('bookDobFilho')  ? document.getElementById('bookDobFilho').value : '';
 
   filesToBase64().then(function(filesB64) {
     // Step 1: send files to server (if any)
@@ -4789,10 +4759,6 @@ window.confirmBooking = function() {
           serviceName:   currentService.name,
           date:          dateStr,
           time:          timeStr,
-          dobUtente:     dobUtente,
-          cc:            cc,
-          nomeFilho:     nomeFilho,
-          dobFilho:      dobFilho,
           ficheiros:     filesB64,
         })
       }).then(function(r){ return r.json(); })
@@ -4816,11 +4782,8 @@ window.confirmBooking = function() {
           telefone:      phone     || undefined,
           numeroUtente:  numUtente || undefined,
           observacoes:   obs       || undefined,
-          dobUtente:     dobUtente || undefined,
-          cc:            cc        || undefined,
-          nomeFilho:     nomeFilho || undefined,
-          dobFilho:      dobFilho  || undefined,
           temAnexos:     filesB64.length > 0 ? true : undefined,
+          numAnexos:     filesB64.length > 0 ? filesB64.length : undefined,
         })
       });
     });
