@@ -4300,6 +4300,15 @@ document.addEventListener("DOMContentLoaded", function() {
           <div class="field"><label>Email *</label><input type="email" id="bookEmail" placeholder="joao@email.pt"/></div>
           <div class="field"><label>Telemóvel</label><input type="tel" id="bookPhone" placeholder="+351 9XX XXX XXX"/></div>
           <div class="field"><label>Número de Utente SNS</label><input type="text" id="bookNumUtente" placeholder="000 000 000" maxlength="12"/></div>
+
+          <!-- CAMPOS EXTRA AMAMENTAÇÃO -->
+          <div id="extraAmamentacao" style="display:none">
+            <div class="field"><label>A sua data de nascimento *</label><input type="date" id="bookDobUtente"/></div>
+            <div class="field"><label>O seu número de Cartão de Cidadão *</label><input type="text" id="bookCC" placeholder="Ex: 12345678 9 ZZ0" maxlength="20"/></div>
+            <div class="field"><label>Nome do filho(a) *</label><input type="text" id="bookNomeFilho" placeholder="Nome completo do filho(a)"/></div>
+            <div class="field"><label>Data de nascimento do filho(a) *</label><input type="date" id="bookDobFilho"/></div>
+          </div>
+
           <div class="field"><label>Descrição / Sintomas (opcional)</label><textarea id="bookObs" placeholder="Descreva brevemente o motivo da consulta..."></textarea></div>
 
         <!-- Upload section - shown for specific services -->
