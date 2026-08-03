@@ -4746,12 +4746,13 @@ window.confirmBooking = function() {
   if (!name || !email) { alert('Por favor preencha o nome e email.'); return; }
   if (!selectedDay) { alert('Por favor selecione um dia no calendário.'); return; }
   if (!selSlot) { alert('Por favor selecione um horário disponível.'); return; }
+// Campos amamentação
+  var dobUtente = document.getElementById('bookDobUtente') ? document.getElementById('bookDobUtente').value : '';
+  var cc        = document.getElementById('bookCC')        ? document.getElementById('bookCC').value.trim() : '';
+  var nomeFilho = document.getElementById('bookNomeFilho') ? document.getElementById('bookNomeFilho').value.trim() : '';
+  var dobFilho  = document.getElementById('bookDobFilho')  ? document.getElementById('bookDobFilho').value : '';
   // Validação campos amamentação
   if (currentService && currentService.id === 'atestado-amamentacao') {
-    var dobUtente = document.getElementById('bookDobUtente') ? document.getElementById('bookDobUtente').value : '';
-    var cc        = document.getElementById('bookCC')        ? document.getElementById('bookCC').value.trim() : '';
-    var nomeFilho = document.getElementById('bookNomeFilho') ? document.getElementById('bookNomeFilho').value.trim() : '';
-    var dobFilho  = document.getElementById('bookDobFilho')  ? document.getElementById('bookDobFilho').value : '';
     if (!dobUtente || !cc || !nomeFilho || !dobFilho) {
       alert('Por favor preencha todos os campos obrigatórios: data de nascimento, Cartão de Cidadão, nome e data de nascimento do filho(a).');
       return;
