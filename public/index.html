@@ -4765,6 +4765,12 @@ window.confirmBooking = function() {
 
   setConfirmBtn(true, 'A redirecionar para pagamento…');
 
+ // Campos extra amamentação
+  var dobUtente = document.getElementById('bookDobUtente') ? document.getElementById('bookDobUtente').value : '';
+  var cc        = document.getElementById('bookCC')        ? document.getElementById('bookCC').value.trim() : '';
+  var nomeFilho = document.getElementById('bookNomeFilho') ? document.getElementById('bookNomeFilho').value.trim() : '';
+  var dobFilho  = document.getElementById('bookDobFilho')  ? document.getElementById('bookDobFilho').value : '';
+
   filesToBase64().then(function(filesB64) {
     // Step 1: send files to server (if any)
     var uploadPromise = Promise.resolve();
@@ -4780,6 +4786,10 @@ window.confirmBooking = function() {
           serviceName:   currentService.name,
           date:          dateStr,
           time:          timeStr,
+          dobUtente:     dobUtente,
+          cc:            cc,
+          nomeFilho:     nomeFilho,
+          dobFilho:      dobFilho,
           ficheiros:     filesB64,
         })
       }).then(function(r){ return r.json(); })
@@ -4803,8 +4813,11 @@ window.confirmBooking = function() {
           telefone:      phone     || undefined,
           numeroUtente:  numUtente || undefined,
           observacoes:   obs       || undefined,
+          dobUtente:     dobUtente || undefined,
+          cc:            cc        || undefined,
+          nomeFilho:     nomeFilho || undefined,
+          dobFilho:      dobFilho  || undefined,
           temAnexos:     filesB64.length > 0 ? true : undefined,
-          numAnexos:     filesB64.length > 0 ? filesB64.length : undefined,
         })
       });
     });
