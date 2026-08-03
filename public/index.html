@@ -4530,12 +4530,13 @@ window.selectService = function(el, name, price, type, id) {
     if (ms) ms.classList.remove('show');
     if (mg) mg.style.display = 'none';
     showUploadSection(id);
-    // Aviso Mounjaro
+// Aviso Mounjaro
     var avisoBox = document.getElementById('monjarnoAviso');
     if (avisoBox) avisoBox.style.display = (id === 'consulta-obesidade') ? 'block' : 'none';
+    // Campos extra amamentação
+    var extraAmamentacao = document.getElementById('extraAmamentacao');
+    if (extraAmamentacao) extraAmamentacao.style.display = (id === 'atestado-amamentacao') ? 'block' : 'none';
     renderCalendar();
-  }, 180);
-};
 
 window.goBackToServices = function() {
   var s1 = document.getElementById('step1');
