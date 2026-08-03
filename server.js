@@ -84,10 +84,10 @@ leadSchema.index({ email: 1 }, { unique: true });
 const Lead = mongoose.models.Lead || mongoose.model('Lead', leadSchema);
 
 // Guardar/atualizar utente e adicionar consulta
-async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor, temAnexos, numAnexos }) {
+async function upsertUtente({ nomeCompleto, email, telefone, numeroUtente, nif, morada, observacoes, dataConsulta, hora, servico, stripeSession, valor, temAnexos, numAnexos, dobUtente, cc, nomeFilho, dobFilho }) {
   if (!MONGO_URI || !email) return null;
   try {
-    const novaConsulta = { data: new Date(), dataConsulta, hora, servico, observacoes, stripeSession, valor, temAnexos: !!temAnexos, numAnexos: numAnexos || 0 };
+    const novaConsulta = { data: new Date(), dataConsulta, hora, servico, observacoes, stripeSession, valor, temAnexos: !!temAnexos, numAnexos: numAnexos || 0, ...(dobUtente && { dobUtente }), ...(cc && { cc }), ...(nomeFilho && { nomeFilho }), ...(dobFilho && { dobFilho }) };
     const utente = await Utente.findOneAndUpdate(
       { email },
       {
@@ -779,7 +779,7 @@ app.post('/upload-anexos', async (req, res) => {
 });
 
 app.post('/create-checkout-session', async (req, res) => {
-  const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes, temAnexos, numAnexos } = req.body;
+  const { serviceId, customerEmail, customerName, date, time, nif, telefone, numeroUtente, observacoes, temAnexos, numAnexos, dobUtente, cc, nomeFilho, dobFilho } = req.body;
 
   const service = SERVICES[serviceId];
   if (!service) return res.status(400).json({ error: 'Servico invalido.' });
@@ -816,6 +816,10 @@ app.post('/create-checkout-session', async (req, res) => {
         observacoes:  observacoes  || '',
         temAnexos:    temAnexos ? 'sim' : '',
         numAnexos:    numAnexos ? String(numAnexos) : '',
+        dobUtente:    dobUtente    || '',
+        cc:           cc           || '',
+        nomeFilho:    nomeFilho    || '',
+        dobFilho:     dobFilho     || '',
       },
       success_url: clientUrl + '/obrigado?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: clientUrl + '/?cancelado=1',
@@ -921,6 +925,10 @@ app.post('/webhook', async (req, res) => {
         valor: session.amount_total / 100,
         temAnexos: temAnexosMeta,
         numAnexos: numAnexosMeta,
+        dobUtente: session.metadata.dobUtente || '',
+        cc:        session.metadata.cc        || '',
+        nomeFilho: session.metadata.nomeFilho || '',
+        dobFilho:  session.metadata.dobFilho  || '',
       });
 
       // 3. Criar link Google Meet
