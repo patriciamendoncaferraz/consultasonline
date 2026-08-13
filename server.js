@@ -1071,8 +1071,27 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
               console.warn('InvoiceXpress aviso: nao foi possivel actualizar o nome:', updateErr.message);
             }
           } else {
-            console.error('InvoiceXpress: cliente nao encontrado na pesquisa por email');
-            return null;
+            // Cliente não encontrado na pesquisa — criar mesmo assim com nome diferente não é opção
+            // Tentar encontrar percorrendo mais páginas ou criar directamente
+            console.log('InvoiceXpress: cliente nao encontrado na pag 1, a tentar criar com codigo unico...');
+            try {
+              const retryRes = await axios.post(
+                'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey,
+                { client: {
+                  name: safeName,
+                  email: safeEmail,
+                  code: safeEmail.replace(/[^a-zA-Z0-9]/g, '_'),
+                  country: 'Portugal',
+                  ...(safeNif ? { fiscal_id: safeNif } : {})
+                }}
+              );
+              clientId = retryRes.data.client.id;
+              console.log('InvoiceXpress cliente criado na segunda tentativa:', clientId);
+            } catch (retryErr) {
+              console.error('InvoiceXpress segunda tentativa falhou:', retryErr.response && JSON.stringify(retryErr.response.data) || retryErr.message);
+              return null;
+            }
+          }
           }
         } catch (searchErr) {
           console.error('InvoiceXpress pesquisa erro:', searchErr.response && JSON.stringify(searchErr.response.data) || searchErr.message);
