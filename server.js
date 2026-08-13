@@ -927,7 +927,7 @@ app.post('/webhook', async (req, res) => {
       const meetLink = await createMeetLink({ customerName, customerEmail, serviceName, date, time });
 
       // 4. Emitir fatura (só se tiver nome)
-      let invoiceData = null;async function createInvoice
+      let invoiceData = null;
       if (customerName && customerEmail) {
         invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
       } else {
