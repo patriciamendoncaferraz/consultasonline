@@ -927,7 +927,7 @@ app.post('/webhook', async (req, res) => {
       const meetLink = await createMeetLink({ customerName, customerEmail, serviceName, date, time });
 
       // 4. Emitir fatura (só se tiver nome)
-      let invoiceData = null;
+      let invoiceData = null;async function createInvoice
       if (customerName && customerEmail) {
         invoiceData = await createInvoice({ customerName, customerEmail, nif, serviceName, amount: session.amount_total / 100, date: new Date().toISOString().split('T')[0] });
       } else {
@@ -1052,7 +1052,9 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
             'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_email=' + encodeURIComponent(safeEmail)
           );
           const clients = searchRes.data && searchRes.data.clients;
-          const matchedClient = clients && clients.find(c => c.email && c.email.toLowerCase() === safeEmail.toLowerCase());
+console.log('InvoiceXpress pesquisa por email resultado:', JSON.stringify(searchRes.data).substring(0, 1000));
+const matchedClient = clients && clients.find(c => c.email && c.email.toLowerCase() === safeEmail.toLowerCase());
+console.log('InvoiceXpress matchedClient:', matchedClient ? JSON.stringify(matchedClient) : 'nenhum');
           if (matchedClient) {
             clientId = matchedClient.id;
             console.log('InvoiceXpress cliente existente encontrado:', clientId);
