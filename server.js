@@ -1048,31 +1048,35 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
       console.log('InvoiceXpress cliente erro status:', status, JSON.stringify(errData));
 
       // Cliente já existe (422) — pesquisar pelo nome usando a API correcta
-      if (status === 422) {
+if (status === 422) {
         try {
           const searchRes = await axios.get(
-            'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_email=' + encodeURIComponent(safeEmail)
+            'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_name=' + encodeURIComponent(safeName)
           );
           const clients = searchRes.data && searchRes.data.clients;
-          console.log('InvoiceXpress pesquisa por email resultado:', JSON.stringify(searchRes.data).substring(0, 1000));
-          const matchedClient = clients && clients.find(c => c.email && c.email.toLowerCase() === safeEmail.toLowerCase());
-          console.log('InvoiceXpress matchedClient:', matchedClient ? JSON.stringify(matchedClient) : 'nenhum');
-
+          const matchedClient = clients && clients.find(c => c.name && c.name.toLowerCase() === safeName.toLowerCase());
           if (matchedClient) {
             clientId = matchedClient.id;
-            console.log('InvoiceXpress cliente existente encontrado:', clientId);
-            try {
-              await axios.put(
-                'https://' + account + '.app.invoicexpress.com/clients/' + clientId + '.json?api_key=' + apiKey,
-                { client: { name: safeName, email: safeEmail } }
-              );
-              console.log('InvoiceXpress nome do cliente actualizado:', safeName);
-            } catch (updateErr) {
-              console.warn('InvoiceXpress aviso: nao foi possivel actualizar o nome:', updateErr.message);
-            }
+            console.log('InvoiceXpress cliente existente encontrado por nome:', clientId);
           } else {
-            console.error('InvoiceXpress: cliente nao encontrado na pesquisa por email');
-            return null;
+            console.log('InvoiceXpress: nome nao encontrado, a criar cliente com codigo unico...');
+            try {
+              const retryRes = await axios.post(
+                'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey,
+                { client: {
+                    name: safeName,
+                    email: safeEmail,
+                    code: safeEmail.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50),
+                    country: 'Portugal',
+                    ...(safeNif ? { fiscal_id: safeNif } : {})
+                }}
+              );
+              clientId = retryRes.data.client.id;
+              console.log('InvoiceXpress cliente criado com codigo unico:', clientId);
+            } catch (retryErr) {
+              console.error('InvoiceXpress erro na segunda tentativa:', JSON.stringify(retryErr.response && retryErr.response.data));
+              return null;
+            }
           }
         } catch (searchErr) {
           console.error('InvoiceXpress pesquisa erro:', searchErr.response && JSON.stringify(searchErr.response.data) || searchErr.message);
