@@ -1049,14 +1049,24 @@ async function createInvoice({ customerName, customerEmail, nif, serviceName, am
       if (status === 422) {
         try {
           const searchRes = await axios.get(
-            'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_name=' + encodeURIComponent(safeName)
+            'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_email=' + encodeURIComponent(safeEmail)
           );
           const clients = searchRes.data && searchRes.data.clients;
-          if (clients && clients.length > 0) {
-            clientId = clients[0].id;
+          const matchedClient = clients && clients.find(c => c.email && c.email.toLowerCase() === safeEmail.toLowerCase());
+          if (matchedClient) {
+            clientId = matchedClient.id;
             console.log('InvoiceXpress cliente existente encontrado:', clientId);
+            try {
+              await axios.put(
+                'https://' + account + '.app.invoicexpress.com/clients/' + clientId + '.json?api_key=' + apiKey,
+                { client: { name: safeName, email: safeEmail } }
+              );
+              console.log('InvoiceXpress nome do cliente actualizado:', safeName);
+            } catch (updateErr) {
+              console.warn('InvoiceXpress aviso: nao foi possivel actualizar o nome:', updateErr.message);
+            }
           } else {
-            console.error('InvoiceXpress: cliente nao encontrado na pesquisa');
+            console.error('InvoiceXpress: cliente nao encontrado na pesquisa por email');
             return null;
           }
         } catch (searchErr) {
