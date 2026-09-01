@@ -656,20 +656,16 @@ app.get('/artigos/:slug', (req, res) => {
 // Página de sucesso após pagamento
 app.get('/obrigado', async (req, res) => {
   const sessionId = req.query.session_id || '';
-
   // Ir buscar o valor real pago ao Stripe, para enviar à Meta
   let purchaseValue = null;
   if (sessionId) {
     try {
       const session = await stripe.checkout.sessions.retrieve(sessionId);
-      if (session.payment_status === 'paid') {
-        purchaseValue = (session.amount_total / 100).toFixed(2);
-      }
+      purchaseValue = (session.amount_total / 100).toFixed(2);
     } catch (err) {
       console.error('Erro ao obter sessão Stripe para o Pixel:', err.message);
     }
   }
-
   res.send(`<!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -680,7 +676,6 @@ app.get('/obrigado', async (req, res) => {
 <meta name="robots" content="noindex, nofollow"/>
 <link rel="canonical" href="https://www.consultas-online.pt/"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -693,12 +688,11 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '2595831900877757');
 fbq('track', 'PageView');
-fbq('track', 'Purchase', {value: ${purchaseValue || '0.00'}, currency: 'EUR'});
+fbq('track', 'Purchase', {value: '${purchaseValue !== null ? purchaseValue : '0.00'}', currency: 'EUR'});
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=2595831900877757&ev=PageView&noscript=1"/></noscript>
 <!-- End Meta Pixel Code -->
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#f4f7fb;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -745,7 +739,6 @@ p{font-size:15px;color:#64748b;line-height:1.7;margin-bottom:8px}
 </body>
 </html>`);
 });
-
 // Get booked slots for a specific date
 app.get('/booked-slots/:dateKey', async (req, res) => {
   if (!MONGO_URI) return res.json([]);
