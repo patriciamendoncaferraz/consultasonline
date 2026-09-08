@@ -319,9 +319,9 @@ const ARTICLES_CONTENT = {
 },
 
 'ozempic-glp1': {
-  title: 'Ozempic, Mounjaro e Wegovy: Guia Completo GLP-1 | ConsultasOnline',
-  description: 'Semaglutido, tirzepatido — eficácia, segurança e quem pode tomar. O guia médico completo sobre os medicamentos GLP-1.',
-  keywords: 'ozempic portugal, wegovy portugal, mounjaro portugal, semaglutido tirzepatido guia, glp-1 obesidade portugal',
+  title: 'Como Atuam os Medicamentos Injetáveis para o Tratamento da Obesidade? | ConsultasOnline',
+  description: 'Saiba como atuam os medicamentos injetáveis para o tratamento da obesidade, quais os efeitos, indicações e cuidados necessários.',
+  keywords: 'medicamentos injetaveis obesidade portugal, glp-1 obesidade, agonistas glp-1, tratamento obesidade injetavel, semaglutido tirzepatido portugal',
   content: `<div class="cta-top"><p>💉 Quer saber se é candidato a Mounjaro ou Ozempic? Consulta médica de obesidade por videoconsulta. <a href="/">Marcar consulta — 55€ →</a></p></div>
     <h2>A Revolução dos Agonistas GLP-1</h2>
     <p>O semaglutido (Ozempic/Wegovy) e o tirzepatido (Mounjaro) representam a maior evolução no tratamento farmacológico da obesidade em décadas.</p>
