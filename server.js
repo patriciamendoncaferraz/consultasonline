@@ -322,21 +322,146 @@ const ARTICLES_CONTENT = {
   title: 'Como Atuam os Medicamentos Injetáveis para o Tratamento da Obesidade? | ConsultasOnline',
   description: 'Saiba como atuam os medicamentos injetáveis para o tratamento da obesidade, quais os efeitos, indicações e cuidados necessários.',
   keywords: 'medicamentos injetaveis obesidade portugal, glp-1 obesidade, agonistas glp-1, tratamento obesidade injetavel, semaglutido tirzepatido portugal',
-  content: `<div class="cta-top"><p>💉 Quer saber se é candidato a Mounjaro ou Ozempic? Consulta médica de obesidade por videoconsulta. <a href="/">Marcar consulta — 55€ →</a></p></div>
-    <h2>A Revolução dos Agonistas GLP-1</h2>
-    <p>O semaglutido (Ozempic/Wegovy) e o tirzepatido (Mounjaro) representam a maior evolução no tratamento farmacológico da obesidade em décadas.</p>
-    <h2>Ozempic vs Wegovy</h2>
-    <ul><li><strong>Ozempic</strong> — aprovado para diabetes tipo 2; usado off-label para perda de peso</li><li><strong>Wegovy</strong> — aprovado especificamente para obesidade (IMC ≥30)</li></ul>
-    <div class="info"><strong>📊 Estudo STEP 1 (NEJM, 2021)</strong><p>O semaglutido 2,4mg causou redução média de 14,9% do peso corporal vs. 2,4% no placebo.</p></div>
-    <h2>Mounjaro — Dupla Acção GLP-1/GIP</h2>
-    <p>No estudo SURMOUNT-1, o tirzepatido 15mg atingiu reduções de até 22,5% do peso corporal em 72 semanas.</p>
-    <div class="warn"><strong>⚠️ Contraindicações</strong><p>Gravidez, aleitamento, história de carcinoma medular da tiróide. Exige sempre prescrição médica.</p></div>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>Posso obter Mounjaro por videoconsulta?</h4><p>Sim. A médica avalia o seu caso e, se indicado, emite a receita por email.</p></div>
-    <div class="faq"><h4>Quanto custa o Mounjaro em Portugal?</h4><p>Sem comparticipação do SNS para obesidade. O preço varia entre 180€ e 280€ por mês.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Wilding JPH, et al. Once-Weekly Semaglutide in Obesity. N Engl J Med. 2021.</li><li>Jastreboff AM, et al. Tirzepatide for Obesity. N Engl J Med. 2022.</li></ol></div>`
-},
+    content: `<div class="cta-top"><p>💉 Quer saber se é candidato a este tratamento? Consulta médica de obesidade por videoconsulta. <a href="/">Marcar consulta — 55€ →</a></p></div>
 
+    <p>A obesidade é uma doença crónica, complexa e multifatorial, reconhecida pela Organização Mundial de Saúde como uma das maiores emergências de saúde pública do século XXI. Em Portugal, dados do Inquérito Nacional de Saúde de 2019 indicam que cerca de 16,9% dos adultos apresentam obesidade e 36,6% têm excesso de peso, colocando o país entre os mais afetados da Europa Ocidental (<a href="https://www.ine.pt/xportal/xmain?xpid=INE&xpgid=ine_destaques&DESTAQUESdest_boui=414434213&DESTAQUEStema=00&DESTAQUESmodo=2" target="_blank" style="color:#0d7377">Instituto Nacional de Saúde Doutor Ricardo Jorge, 2020</a>). Este facto faz com que haja elevado interesse nos novos medicamentos injetáveis para o tratamento da obesidade.</p>
+
+    <h2>Uma nova era no tratamento farmacológico da obesidade</h2>
+    <p>Durante décadas, o arsenal farmacológico disponível para o tratamento da obesidade foi limitado, com eficácia modesta e perfis de segurança frequentemente problemáticos. A aprovação de uma nova classe de medicamentos injetáveis, os agonistas do recetor do péptido-1 semelhante ao glucagon (GLP-1) e os agonistas duplos GLP-1/GIP, representa a maior revolução no tratamento farmacológico da obesidade em mais de vinte anos.</p>
+    <p>Estes medicamentos não são uma solução definitiva nem uma alternativa ao estilo de vida saudável. São ferramentas clínicas com indicações precisas, contraindicações relevantes e um perfil de efeitos adversos que exige acompanhamento médico estruturado.</p>
+
+    <h2>O que é a obesidade?</h2>
+    <p>A obesidade é definida clinicamente como uma acumulação excessiva ou anormal de gordura corporal que representa um risco para a saúde. O índice de massa corporal (IMC) é o instrumento de triagem mais utilizado na prática clínica.</p>
+    <h3>Classificação do IMC (<a href="https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html" target="_blank" style="color:#0d7377">CDC</a>)</h3>
+    <ul>
+      <li><strong>IMC 18,5 a 24,9 kg/m²</strong> — peso normal, considerado saudável</li>
+      <li><strong>IMC 25,0 a 29,9 kg/m²</strong> — excesso de peso (pré-obesidade)</li>
+      <li><strong>IMC 30,0 a 34,9 kg/m²</strong> — obesidade grau I</li>
+      <li><strong>IMC 35,0 a 39,9 kg/m²</strong> — obesidade grau II</li>
+      <li><strong>IMC igual ou superior a 40,0 kg/m²</strong> — obesidade grau III (obesidade grave)</li>
+    </ul>
+    <p>O IMC tem limitações: não distingue massa gorda de massa muscular e não avalia a distribuição da gordura corporal. A avaliação clínica completa inclui a medição do perímetro abdominal (risco aumentado a partir de ≥94 cm nos homens e ≥80 cm nas mulheres), análises laboratoriais e avaliação de comorbilidades.</p>
+    <p>As comorbilidades mais frequentemente associadas à obesidade incluem: diabetes mellitus tipo 2, hipertensão arterial, dislipidemia, doença cardiovascular, síndrome de apneia obstrutiva do sono, doença hepática esteatótica (MASLD), osteoartrite, determinados tipos de cancro e perturbações de saúde mental.</p>
+
+    <h2>Fisiologia da saciedade e regulação do peso corporal</h2>
+    <p>O trato gastrointestinal é o maior órgão endócrino do corpo humano, produzindo mais de 20 hormonas que comunicam com o cérebro para regular o comportamento alimentar. As principais hormonas envolvidas incluem:</p>
+    <ul>
+      <li><strong>Grelina:</strong> produzida pelo estômago, estimula o apetite antes das refeições.</li>
+      <li><strong>Leptina:</strong> produzida pelo tecido adiposo, sinaliza ao hipotálamo a energia armazenada. Em indivíduos obesos desenvolve-se frequentemente resistência à leptina.</li>
+      <li><strong>GLP-1:</strong> produzido pelas células L do intestino delgado, promove a saciedade, retarda o esvaziamento gástrico e estimula a secreção de insulina de forma dependente da glicose.</li>
+      <li><strong>GIP:</strong> produzido pelas células K do intestino delgado, estimula a secreção de insulina e tem efeitos sobre o metabolismo lipídico.</li>
+    </ul>
+    <p>O hipotálamo é o principal centro de regulação do balanço energético. Em indivíduos com obesidade, este sistema encontra-se frequentemente comprometido, com resistência a múltiplos sinais de saciedade e tendência para defender um peso corporal elevado mesmo perante restrição calórica.</p>
+
+    <h2>Como atuam os agonistas do recetor GLP-1</h2>
+    <p>Os agonistas do recetor GLP-1 (arGLP-1) são moléculas sintéticas que mimetizam a ação do GLP-1 endógeno, com semivida muito mais longa, permitindo administração semanal.</p>
+    <ul>
+      <li>Estimulação da secreção de insulina dependente da glicose — risco de hipoglicemia geralmente baixo quando usados isoladamente.</li>
+      <li>Supressão da secreção de glucagon, diminuindo a produção hepática de glicose.</li>
+      <li>Supressão central do apetite através dos recetores GLP-1 no hipotálamo e área postrema.</li>
+      <li>Atraso do esvaziamento gástrico, prolongando a saciedade após as refeições.</li>
+    </ul>
+    <p>Os arGLP-1 demonstraram efeitos cardioprotetores significativos. O ensaio LEADER demonstrou uma redução de 13% nos eventos cardiovasculares major com o liraglutido <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1603827" target="_blank" style="color:#0d7377">(Marso et al., 2016)</a>. No ensaio SELECT, o semaglutido demonstrou uma redução de 20% nos eventos cardiovasculares major em indivíduos obesos sem diabetes <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2307563" target="_blank" style="color:#0d7377">(Lincoff et al., 2023)</a>.</p>
+
+    <h2>Agonistas duplos GLP-1/GIP: a evolução terapêutica</h2>
+    <p>A segunda geração de medicamentos injetáveis inclui moléculas que agonizam simultaneamente o recetor GLP-1 e o recetor GIP, conferindo eficácia superior na redução do peso corporal.</p>
+    <p>No ensaio <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2206038" target="_blank" style="color:#0d7377">SURMOUNT-1</a> (<a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2206038" target="_blank" style="color:#0d7377">Jastreboff et al., 2022</a>), com 2.539 participantes sem diabetes, o tirzepatido atingiu reduções médias de 20,9% (15 mg) e 19,5% (10 mg) às 72 semanas, vs. 3,1% no placebo. Cerca de 57% dos participantes atingiram uma redução superior a 20%.</p>
+
+    <h2>O que dizem os estudos</h2>
+    <h3>Programa STEP</h3>
+    <ul>
+      <li><strong>STEP 1</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/33567185/" target="_blank" style="color:#0d7377">Wilding et al., 2021</a>): redução média de 14,9% com semaglutido vs. 2,4% com placebo às 68 semanas.</li>
+      <li><strong>STEP 2</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/33667417/" target="_blank" style="color:#0d7377">Davies et al., 2021</a>): redução média de 9,6% em adultos com diabetes tipo 2 e obesidade.</li>
+      <li><strong>STEP 3</strong> (<a href="https://jamanetwork.com/journals/jama/fullarticle/2777025" target="_blank" style="color:#0d7377">Wadden et al., 2021</a>): combinação com intervenção comportamental — redução média de 16%.</li>
+      <li><strong>STEP 4</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/33755728/" target="_blank" style="color:#0d7377">Rubino et al., 2021</a>): interrupção do tratamento resulta na recuperação de dois terços do peso perdido.</li>
+      <li><strong>STEP 5</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/36216945/" target="_blank" style="color:#0d7377">Garvey et al., 2022</a>): a 104 semanas, manutenção da perda de peso de 15,2%.</li>
+    </ul>
+    <h3>Comparação da eficácia entre classes</h3>
+    <p>Uma metaanálise publicada na <a href="https://pubmed.ncbi.nlm.nih.gov/38582569/" target="_blank" style="color:#0d7377">The Lancet</a> (<a href="https://pubmed.ncbi.nlm.nih.gov/38582569/" target="_blank" style="color:#0d7377">Shi et al., 2022</a>), com 143 ensaios e mais de 49.000 participantes:</p>
+    <ul>
+      <li><strong>Agonistas duplos GLP-1/GIP:</strong> reduções de peso entre 15% e 21%.</li>
+      <li><strong>Agonistas GLP-1 (semaglutido 2,4 mg):</strong> reduções de 10% a 15%.</li>
+      <li><strong>Medicamentos mais antigos:</strong> eficácia de 3% a 8%.</li>
+    </ul>
+
+    <h2>Quem pode utilizar os medicamentos injetáveis para perder peso?</h2>
+    <ul>
+      <li>IMC igual ou superior a 30 kg/m² (obesidade), independentemente da presença de comorbilidades.</li>
+      <li>IMC igual ou superior a 27 kg/m² com pelo menos uma comorbilidade relacionada com o peso (diabetes tipo 2, hipertensão, dislipidemia, apneia do sono, doença cardiovascular ou esteatose hepática).</li>
+      <li>Tentativa prévia de perda de peso por modificações do estilo de vida sem sucesso adequado.</li>
+      <li>Ausência de contraindicações conhecidas ao tratamento.</li>
+    </ul>
+
+    <h2>Contraindicações e precauções</h2>
+    <h3>Contraindicações absolutas</h3>
+    <ul>
+      <li>História pessoal ou familiar de carcinoma medular da tiróide.</li>
+      <li>Síndrome de neoplasia endócrina múltipla tipo 2 (NEM2).</li>
+      <li>Hipersensibilidade ao princípio ativo ou a qualquer excipiente.</li>
+      <li>Gravidez (interromper pelo menos dois meses antes de gravidez planeada) e aleitamento materno.</li>
+    </ul>
+    <h3>Precauções</h3>
+    <ul>
+      <li>História de pancreatite aguda ou crónica.</li>
+      <li>Doenças gastrointestinais graves (gastroparesia, doença inflamatória intestinal ativa).</li>
+      <li>Doença renal crónica avançada.</li>
+      <li>Uso concomitante de sulfonilureias e insulina (ajuste de dose).</li>
+      <li>Retinopatia diabética (avaliação oftalmológica prévia).</li>
+    </ul>
+
+    <h2>Efeitos adversos</h2>
+    <h3>Efeitos gastrointestinais</h3>
+    <ul>
+      <li>Náuseas: 40% a 50% dos doentes, especialmente no início.</li>
+      <li>Vómitos: 15% a 25% dos doentes.</li>
+      <li>Diarreia: 20% a 30% dos doentes.</li>
+      <li>Obstipação: particularmente com o tirzepatido.</li>
+      <li>Dor abdominal e dispepsia: frequentes no início do tratamento.</li>
+    </ul>
+    <p>Estes efeitos são transitórios na maioria dos doentes e diminuem progressivamente. O aumento gradual da dose é a principal estratégia para minimizá-los.</p>
+    <h3>Outros efeitos adversos</h3>
+    <ul>
+      <li>Perda de massa muscular — treino de resistência e ingestão proteica adequada são fundamentais.</li>
+      <li>Litíase biliar — a perda de peso rápida aumenta o risco de cálculos biliares.</li>
+      <li>Taquicardia — pequenos aumentos na frequência cardíaca (2 a 4 bpm).</li>
+      <li>Reações no local de injeção — dor, eritema e prurido, geralmente ligeiros.</li>
+    </ul>
+
+    <h2>Monitorização e acompanhamento médico</h2>
+    <p>Antes do início: avaliação clínica completa, IMC e perímetro abdominal, análises laboratoriais (hemograma, glicemia, HbA1c, perfil lipídico, função renal, hepática e tiroideia) e avaliação cardiovascular.</p>
+    <p>Durante o tratamento: monitorização do peso, pressão arterial e frequência cardíaca; análises de 3 em 3 a 6 meses; suporte nutricional e de atividade física.</p>
+
+    <h2>Contexto em Portugal</h2>
+    <p>Os medicamentos injetáveis para a obesidade aprovados pela EMA estão disponíveis em Portugal. Para a indicação de diabetes tipo 2, alguns têm comparticipação do SNS sujeita a critérios específicos. Para obesidade sem diabetes, não existe comparticipação pelo SNS. O custo mensal varia tipicamente entre 150 e 300 euros. A prescrição exige avaliação médica prévia, que pode ser realizada por videoconsulta.</p>
+
+    <h2>O futuro: próximas gerações</h2>
+    <ul>
+      <li>Agonistas triplos GLP-1/GIP/glucagon (retratutido): dados preliminares com reduções superiores a 24%.</li>
+      <li>Agonistas GLP-1/amilina: combinação sobre a saciedade central e o controlo glicémico periférico.</li>
+      <li>Formulações orais de arGLP-1: para doentes com relutância à autoadministração de injeções.</li>
+    </ul>
+
+    <h2>Perguntas frequentes</h2>
+    <div class="faq"><h4>Como atuam os medicamentos injetáveis para a obesidade?</h4><p>Atuam sobre mecanismos envolvidos na regulação do apetite, da saciedade e do metabolismo. Os agonistas GLP-1 reproduzem efeitos desta hormona intestinal, aumentando a saciedade, reduzindo o apetite e atrasando o esvaziamento gástrico. Existem também medicamentos que atuam simultaneamente nos recetores GLP-1 e GIP.</p></div>
+    <div class="faq"><h4>Quem pode fazer tratamento com medicamentos injetáveis para a obesidade?</h4><p>A indicação deve ser avaliada individualmente por um médico. Podem ser considerados em adultos com IMC igual ou superior a 30 kg/m² ou com IMC igual ou superior a 27 kg/m² quando existe pelo menos uma condição relacionada com o excesso de peso.</p></div>
+    <div class="faq"><h4>Quais são os efeitos adversos mais frequentes?</h4><p>Os efeitos adversos mais frequentes são gastrointestinais: náuseas, vómitos, diarreia, obstipação e dor abdominal. Surgem sobretudo no início do tratamento e tendem a diminuir progressivamente.</p></div>
+    <div class="faq"><h4>Estes medicamentos causam dependência?</h4><p>Não. Não há evidência de dependência física ou psicológica. Ao interromper o tratamento, os mecanismos de regulação do apetite voltam a ser ativos, levando à recuperação do peso.</p></div>
+    <div class="faq"><h4>É necessário acompanhamento médico durante o tratamento?</h4><p>Sim. O acompanhamento médico é essencial antes e durante o tratamento, com avaliação clínica, análises laboratoriais, monitorização cardiovascular e suporte nutricional.</p></div>
+
+    <div class="refs"><h3>Referências Bibliográficas</h3><ol>
+      <li>Aronne, L. J., et al. (2024). SURMOUNT-4. JAMA, 331(1), 38-48. https://doi.org/10.1001/jama.2023.24945</li>
+      <li>Davies, M., et al. (2021). STEP 2. The Lancet, 397(10278), 971-984. https://doi.org/10.1016/S0140-6736(21)00213-0</li>
+      <li>Garvey, W. T., et al. (2022). STEP 5. Nature Medicine, 28(10), 2083-2091. https://doi.org/10.1038/s41591-022-02026-4</li>
+      <li>Instituto Nacional de Saúde Doutor Ricardo Jorge. (2020). Inquérito Nacional de Saúde 2019. INSA.</li>
+      <li>Jastreboff, A. M., et al. (2022). SURMOUNT-1. NEJM, 387(3), 205-216. https://doi.org/10.1056/NEJMoa2206038</li>
+      <li>Lincoff, A. M., et al. (2023). SELECT. NEJM, 389(24), 2221-2232. https://doi.org/10.1056/NEJMoa2307563</li>
+      <li>Marso, S. P., et al. (2016). LEADER. NEJM, 375(4), 311-322. https://doi.org/10.1056/NEJMoa1603827</li>
+      <li>Rubino, D., et al. (2021). STEP 4. JAMA, 325(14), 1414-1425. https://doi.org/10.1001/jama.2021.3224</li>
+      <li>Shi, Q., et al. (2022). The Lancet, 399(10321), 259-269. https://doi.org/10.1016/S0140-6736(21)01640-8</li>
+      <li>Wadden, T. A., et al. (2021). STEP 3. JAMA, 325(14), 1403-1413. https://doi.org/10.1001/jama.2021.1831</li>
+      <li>Wilding, J. P. H., et al. (2021). STEP 1. NEJM, 384(11), 989-1002. https://doi.org/10.1056/NEJMoa2032183</li>
+      <li>World Health Organization. (2024). Obesity and overweight. https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight</li>
+    </ol></div>`
 'doencas-sexualmente-transmissiveis': {
   title: 'Doenças Sexualmente Transmissíveis: Rastreio Online | ConsultasOnline',
   description: 'Rastreio de DST/IST de forma discreta e confidencial. VIH, sífilis, gonorreia, clamídia — pedido de análises online. 40€.',
