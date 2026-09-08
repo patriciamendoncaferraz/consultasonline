@@ -462,6 +462,7 @@ const ARTICLES_CONTENT = {
       <li>Wilding, J. P. H., et al. (2021). STEP 1. NEJM, 384(11), 989-1002. https://doi.org/10.1056/NEJMoa2032183</li>
       <li>World Health Organization. (2024). Obesity and overweight. https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight</li>
     </ol></div>`
+  },
 'doencas-sexualmente-transmissiveis': {
   title: 'Doenças Sexualmente Transmissíveis: Rastreio Online | ConsultasOnline',
   description: 'Rastreio de DST/IST de forma discreta e confidencial. VIH, sífilis, gonorreia, clamídia — pedido de análises online. 40€.',
