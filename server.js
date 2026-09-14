@@ -464,9 +464,9 @@ const ARTICLES_CONTENT = {
     </ol></div>`
   },
 'doencas-sexualmente-transmissiveis': {
-  title: 'Doenças Sexualmente Transmissíveis: Rastreio Online | ConsultasOnline',
-  description: 'Rastreio de DST/IST de forma discreta e confidencial. VIH, sífilis, gonorreia, clamídia — pedido de análises online. 40€.',
-  keywords: 'rastreio DST online portugal, teste IST online discreto, consulta DST IST online confidencial, VIH rastreio online',
+  title: 'Infeções Sexualmente Transmissíveis (IST): rastreio, prevenção e tratamento | ConsultasOnline',
+  description: 'Saiba tudo sobre as infeções sexualmente transmissíveis (IST): sintomas, transmissão, testes, prevenção e tratamento. Leia agora!',
+  keywords:'infeções sexualmente transmissíveis, IST, clamídia, gonorreia, sífilis, VIH, HPV, herpes genital, hepatite B, hepatite C, rastreio IST Portugal',
   content: `<div class="cta-top"><p>🔬 Quer fazer rastreio de IST de forma discreta? Consulta confidencial por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>
     <h2>As IST Mais Frequentes</h2>
     <h3>VIH</h3><p>A PrEP reduz o risco de transmissão em mais de 99%. Rastreio recomendado a todos os adultos sexualmente activos.</p>
