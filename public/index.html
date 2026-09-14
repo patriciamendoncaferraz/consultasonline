@@ -2250,32 +2250,600 @@ document.addEventListener("DOMContentLoaded", function() {
 </div></div>
 </div>
 
-<!-- DST -->
-<div class="article-view" id="article-dst">
+<!-- IST -->
+<div class="article-view" id="article-doencas-sexualmente-transmissiveis">
 <div class="art-hero"><div class="art-hero-inner">
   <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
-  <div class="art-cat">🔬 Saúde Sexual</div>
-  <h1 class="art-title">Doenças Sexualmente Transmissíveis: Guia Completo</h1>
-  <div class="art-meta"><div class="art-meta-item">📅 <span>2026</span></div><div class="art-meta-item">⏱ <span>9 min</span></div></div>
+  <div class="art-cat">🧬 Saúde Sexual</div>
+  <h1 class="art-title">Infeções Sexualmente Transmissíveis (IST): rastreio, prevenção e tratamento</h1>
+  <div class="art-meta"><div class="art-meta-item">⏱ <span>25 min</span></div><div class="art-meta-item">🔬 <span>Atualizado 2026</span></div></div>
 </div></div>
 <div class="art-body-wrap"><div class="art-body">
-  <h2>Contexto Europeu</h2>
-  <p>Segundo o ECDC, em 2022 registaram-se aumentos de 48% na gonorreia e 34% na sífilis na UE.</p>
-  <h2>As IST Mais Frequentes</h2>
-  <h3>VIH</h3>
-  <p>A <strong>PrEP</strong> reduz o risco de transmissão em mais de 99%. Rastreio recomendado a todos os adultos sexualmente activos.</p>
-  <h3>Gonorreia</h3>
-  <p>Tratamento: <strong>ceftriaxona 500mg IM dose única</strong>. Frequentemente assintomática na mulher.</p>
-  <h3>Sífilis</h3>
-  <p>Tratamento: <strong>penicilina G benzatínica</strong> — altamente eficaz.</p>
-  <h3>Clamídia</h3>
-  <p>IST bacteriana mais prevalente. Tratamento: <strong>azitromicina 1g dose única</strong>.</p>
-  <div class="ibox"><div class="ibox-title">🛡️ Prevenção</div><p>O preservativo, usado correctamente, reduz significativamente o risco de transmissão.</p></div>
-  <div class="art-cta"><h3>Quer fazer rastreio de forma discreta?</h3><p>Consulta confidencial. Pedido de análises enviado por email.</p><button class="art-cta-btn" onclick="openServiceSelector()">Consulta DST — 40€</button></div>
-  <div class="refs"><h3>Referências</h3><ol class="ref-list">
-    <li>ECDC. <em>STI in Europe, 2022.</em> 2023.</li>
-    <li>IUSTI. <em>European Guidelines on Common STIs.</em> 2023.</li>
+
+  <p>As infeções sexualmente transmissíveis (IST) são infeções transmitidas sobretudo através do contacto sexual vaginal, anal ou oral. Algumas também podem ser transmitidas através do sangue ou da mãe para o bebé durante a gravidez, o parto ou, em determinadas infeções, o aleitamento.</p>
+  <p>Muitas IST não provocam sintomas. Uma pessoa pode, por isso, ter uma infeção e transmiti-la sem saber.</p>
+  <p>Entre as IST mais conhecidas encontram-se a clamidíase, gonorreia, sífilis, <a href="#gl-hiv" style="color:var(--teal)">VIH</a>, herpes genital, <a href="#gl-hpv" style="color:var(--teal)">HPV</a>, hepatite B, hepatite C e tricomoníase.</p>
+  <p>O diagnóstico depende da infeção e pode exigir análises ao sangue, urina ou colheitas por <a href="#gl-zaragatoa" style="color:var(--teal)">zaragatoa</a>. O rastreio permite identificar infeções <a href="#gl-assintomatico" style="color:var(--teal)">assintomáticas</a> e iniciar a orientação adequada mais cedo.</p>
+  <p>Neste artigo encontra informação sobre os principais sintomas, formas de transmissão, prevenção, rastreio, diagnóstico e tratamento das infeções sexualmente transmissíveis.</p>
+
+  <h2>O que são as infeções sexualmente transmissíveis?</h2>
+  <p>As infeções sexualmente transmissíveis são causadas por bactérias, vírus ou parasitas que podem ser transmitidos durante o contacto sexual.</p>
+  <p><a href="https://www.ecdc.europa.eu/en/news-events/sti-cases-rise-across-europe" target="_blank" style="color:var(--teal)">De acordo com o ECDC, as IST bacterianas continuam a aumentar na Europa. Os dados referentes a 2024 mostram níveis particularmente elevados de gonorreia e sífilis, enquanto a clamidíase continua a ser a IST mais frequentemente notificada.</a></p>
+  <p>Um dos principais desafios é a ausência de sintomas. Ter uma IST não significa necessariamente apresentar corrimento, dor, feridas ou outras alterações visíveis.</p>
+  <p>Por esse motivo, o risco individual e a história sexual são importantes para decidir quando deve ser feito um rastreio.</p>
+
+  <h3>Quais são as principais infeções sexualmente transmissíveis?</h3>
+  <p>As IST podem ser classificadas de acordo com o agente etiológico:</p>
+  <ul>
+    <li>IST <a href="#gl-bacteriana" style="color:var(--teal)">bacterianas</a>: clamidíase, gonorreia, sífilis, cancro mole (<em>Haemophilus ducreyi</em>), <a href="#gl-lgv" style="color:var(--teal)">linfogranuloma venéreo (LGV)</a>, granuloma inguinal (donovanose)</li>
+    <li>IST <a href="#gl-viral" style="color:var(--teal)">virais</a>: <a href="#gl-hiv" style="color:var(--teal)">VIH</a>/<a href="#gl-sida" style="color:var(--teal)">SIDA</a>, herpes genital (<a href="#gl-hsv" style="color:var(--teal)">HSV-1 e HSV-2</a>), verrugas genitais e cancro do colo do útero associados ao <a href="#gl-hpv" style="color:var(--teal)">HPV</a>, hepatite B, hepatite C, molluscum contagiosum</li>
+    <li>IST parasitárias: tricomonas (<em>Trichomonas vaginalis</em>), piolho púbico (<em>Phthirus pubis</em>), sarna (<em>Sarcoptes scabiei</em>)</li>
+    <li>IST fúngicas: candidose (<em>Candida albicans</em>), embora esta não seja classificada classicamente como IST, pode ser facilitada pelo contacto sexual</li>
+  </ul>
+
+  <h2>Como se transmitem as IST?</h2>
+  <p>A maioria das infeções sexualmente transmissíveis transmite-se por contacto sexual direto, incluindo:</p>
+  <ul>
+    <li>Contacto génito-genital: via mais comum para a maioria das IST</li>
+    <li>Contacto oral-genital: relevante para herpes, gonorreia, sífilis e <a href="#gl-hpv" style="color:var(--teal)">HPV</a></li>
+    <li>Contacto anal: associado a maior risco de transmissão de <a href="#gl-hiv" style="color:var(--teal)">VIH</a>, gonorreia, sífilis, <a href="#gl-lgv" style="color:var(--teal)">LGV</a> e hepatites virais</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a> (mãe para filho): durante a gravidez, o parto ou o aleitamento, relevante para VIH, sífilis, herpes e hepatite B</li>
+    <li><a href="#gl-parenteral" style="color:var(--teal)">Via sanguínea</a>: VIH e hepatite C em utilizadores de drogas injetadas, transfusões e acidentes com materiais cortantes</li>
+  </ul>
+
+  <h3>Grupos com maior risco de transmissão de infeções sexualmente transmissíveis</h3>
+  <p>Embora qualquer pessoa sexualmente ativa possa contrair uma IST, determinados grupos apresentam risco epidemiológico superior:</p>
+  <ul>
+    <li>Pessoas com múltiplos parceiros sexuais e sem uso consistente de preservativo</li>
+    <li>Utilizadores de drogas injetadas</li>
+    <li>Pessoas com IST prévia, que são fator de risco independente para nova IST</li>
+    <li>Pessoas em regiões com alta prevalência, incluindo determinadas áreas urbanas e países com sistemas de saúde mais debilitados</li>
+  </ul>
+
+  <h2>Como prevenir as infeções sexualmente transmissíveis?</h2>
+  <p>A prevenção das IST assenta em múltiplas estratégias complementares:</p>
+
+  <h3>Preservativo masculino e feminino</h3>
+  <p>O uso correto e consistente do preservativo masculino reduz significativamente o risco de transmissão da maioria das IST. A eficácia é particularmente elevada para <a href="#gl-hiv" style="color:var(--teal)">VIH</a>, gonorreia e clamidíase. Para as infeções sexualmente transmissíveis que se transmitem por contacto com lesões cutâneas (herpes, sífilis, <a href="#gl-hpv" style="color:var(--teal)">HPV</a>), o preservativo confere proteção parcial, dependendo da localização das lesões.</p>
+
+  <h3>Vacinação</h3>
+  <p>Existem vacinas eficazes para duas IST de origem viral: a hepatite B (vacina altamente eficaz, incluída no <a href="https://www.sns24.gov.pt/pt/tema/vacinas/programa-nacional-de-vacinacao" target="_blank" style="color:var(--teal)">Programa Nacional de Vacinação em Portugal</a>) e o <a href="#gl-hpv" style="color:var(--teal)">HPV</a> (vacinas bivalente, tetravalente e nonavalente, disponíveis e recomendadas a rapazes e raparigas no <a href="https://www.sns24.gov.pt/pt/tema/vacinas/programa-nacional-de-vacinacao" target="_blank" style="color:var(--teal)">Programa Nacional de Vacinação</a>).</p>
+
+  <h3>Profilaxia Pré-Exposição ao VIH (PrEP)</h3>
+  <p><a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1011205" target="_blank" style="color:var(--teal)">A <a href="#gl-prep" style="color:var(--teal)">PrEP</a> com tenofovir/emtricitabina é um medicamento antirretroviral tomado por pessoas VIH-negativas com risco elevado de infeção, com eficácia superior a 99% na prevenção da transmissão do VIH por via sexual, quando tomado corretamente (Grant et al., 2010).</a> Está disponível no SNS português para pessoas com indicação clínica.</p>
+
+  <h3>Profilaxia Pós-Exposição ao VIH (PEP)</h3>
+  <p>A <a href="#gl-pep" style="color:var(--teal)">PEP</a> consiste na toma de antirretrovirais nas primeiras 72 horas após uma exposição de risco ao <a href="#gl-hiv" style="color:var(--teal)">VIH</a> (sexo desprotegido, acidente com agulha, violência sexual). A eficácia diminui com o tempo decorrido e é nula após 72 horas.</p>
+
+  <h3>Rastreio regular e tratamento de parceiros</h3>
+  <p>O rastreio regular permite detetar IST <a href="#gl-assintomatico" style="color:var(--teal)">assintomáticas</a> e tratar atempadamente, interrompendo a cadeia de transmissão. A <a href="#gl-notificacao" style="color:var(--teal)">notificação</a> e tratamento dos parceiros sexuais é fundamental para evitar a reinfeção.</p>
+
+  <h2>Quando deve fazer um rastreio de IST?</h2>
+  <p>As diretrizes internacionais (<a href="https://iusti.org/treatment-guidelines/" target="_blank" style="color:var(--teal)">IUSTI</a>, <a href="https://www.cdc.gov/sti/testing/index.html" target="_blank" style="color:var(--teal)">CDC</a>, <a href="https://www.ecdc.europa.eu/en/sexually-transmitted-infections" target="_blank" style="color:var(--teal)">ECDC</a>) recomendam rastreio regular nas seguintes situações:</p>
+  <ul>
+    <li>Adultos sexualmente ativos com novos ou múltiplos parceiros: rastreio anual de clamidíase, gonorreia, sífilis e <a href="#gl-hiv" style="color:var(--teal)">VIH</a></li>
+    <li>Após relação sexual desprotegida com parceiro desconhecido</li>
+    <li>Após noção de contacto com pessoa infetada</li>
+    <li>No início de uma nova relação, antes de abandonar o uso do preservativo</li>
+    <li>Em mulheres grávidas: rastreio de sífilis, VIH, hepatite B e clamidíase na primeira consulta pré-natal</li>
+    <li>Em pessoas com sintomas sugestivos: corrimento genital, ardor urinário, úlceras ou lesões genitais, dor pélvica, <a href="#gl-linfadenopatia" style="color:var(--teal)">linfadenopatia</a> inguinal</li>
+  </ul>
+
+  <h2>Como é feito o diagnóstico de uma IST?</h2>
+  <p>O diagnóstico das infeções sexualmente transmissíveis recorre a diferentes métodos conforme a infeção suspeita:</p>
+  <ul>
+    <li>Análises ao sangue: sífilis (VDRL, TPHA, FTA-ABS), <a href="#gl-hiv" style="color:var(--teal)">VIH</a> (Ag/Ac 4ª geração), hepatite B (HBsAg, anti-HBs, anti-HBc), hepatite C (anti-VHC, <a href="#gl-carga-viral" style="color:var(--teal)">carga viral</a>)</li>
+    <li><a href="#gl-zaragatoa" style="color:var(--teal)">Zaragatoas</a> uretrais, vaginais, endocervicais, anais ou faríngeas: <a href="#gl-pcr" style="color:var(--teal)">PCR</a> ou cultura para clamidíase, gonorreia, herpes e <a href="#gl-lgv" style="color:var(--teal)">LGV</a></li>
+    <li>Exame de urina (<a href="#gl-pcr" style="color:var(--teal)">PCR em urina</a>): alternativa não invasiva para deteção de clamidíase e gonorreia uretral</li>
+    <li>Exame microscópico e cultura de corrimento: tricomonas, candidose</li>
+    <li>Biópsia ou colheita de lesões: herpes, sífilis primária, <a href="#gl-hpv" style="color:var(--teal)">HPV</a></li>
+  </ul>
+  <p>A consulta de rastreio por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> permite ao médico avaliar o risco, prescrever as análises adequadas e interpretar os resultados, tudo sem deslocação física.</p>
+
+  <h2>Clamidíase: transmissão, sintomas, diagnóstico e tratamento</h2>
+
+  <h3>O que é a clamidíase?</h3>
+  <p>A clamidíase é causada pela bactéria <em>Chlamydia trachomatis</em>, um parasita <a href="#gl-intracelular" style="color:var(--teal)">intracelular obrigatório</a>. É a infeção sexualmente transmissível bacteriana mais prevalente na Europa e em Portugal. <a href="https://www.ecdc.europa.eu/en/news-events/bacterial-stis-reach-record-highs-europe-congenital-syphilis-cases-nearly-double" target="_blank" style="color:var(--teal)">O ECDC reportou mais de 213.443 casos notificados na Europa em 2024, sendo a maioria em jovens adultos, especialmente mulheres entre os 20 e os 24 anos (ECDC, 2024).</a> A <a href="#gl-subnotificacao" style="color:var(--teal)">subnotificação</a> é significativa dado o elevado número de casos <a href="#gl-assintomatico" style="color:var(--teal)">assintomáticos</a>.</p>
+
+  <h3>Como se transmite a clamidíase?</h3>
+  <ul>
+    <li>Contacto sexual vaginal, anal e oral desprotegido</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a> da mãe para o recém-nascido durante o parto, podendo causar conjuntivite e pneumonia neonatal</li>
+  </ul>
+  <p>Não se transmite por contacto casual, piscinas, toalhas ou superfícies.</p>
+
+  <h3>Quais são os sintomas da infeção por clamídia?</h3>
+  <p>A clamidíase é <a href="#gl-assintomatico" style="color:var(--teal)">assintomática</a> em 50% a 75% dos casos, o que é simultaneamente a maior dificuldade e o principal argumento para o rastreio periódico. Quando presentes, os sintomas surgem tipicamente 1 a 3 semanas após a exposição.</p>
+  <h4>Clamídia na mulher:</h4>
+  <ul>
+    <li>Corrimento vaginal alterado (aumento, odor ou cor diferentes do habitual)</li>
+    <li>Ardor ou dor ao urinar (<a href="#gl-disuria" style="color:var(--teal)">disúria</a>)</li>
+    <li>Dor pélvica, especialmente durante ou após as relações sexuais</li>
+    <li>Hemorragia intermenstrual ou após as relações sexuais</li>
+    <li><a href="#gl-cervicite" style="color:var(--teal)">Cervicite</a></li>
+  </ul>
+  <h4>Clamídia no homem:</h4>
+  <ul>
+    <li>Corrimento uretral transparente ou esbranquiçado</li>
+    <li>Ardor ao urinar</li>
+    <li>Dor ou inchaço testicular (<a href="#gl-epididimite" style="color:var(--teal)">epididimite</a>, menos frequente)</li>
+  </ul>
+  <h4>Clamídia em ambos os sexos (infeção retal e faríngea):</h4>
+  <ul>
+    <li>Infeção anal: <a href="#gl-proctite" style="color:var(--teal)">proctite</a>, corrimento retal, dor retal (frequentemente <a href="#gl-assintomatico" style="color:var(--teal)">assintomática</a>)</li>
+    <li>Infeção faríngea: habitualmente assintomática, ocasionalmente faringite ligeira</li>
+  </ul>
+
+  <h3>Que complicações pode causar a clamidíase?</h3>
+  <ul>
+    <li><a href="#gl-dip" style="color:var(--teal)">Doença inflamatória pélvica (DIP)</a> na mulher: infeção ascendente que envolve útero, trompas e ovários</li>
+    <li>Infertilidade: por lesão tubária irreversível</li>
+    <li>Gravidez ectópica: por obstrução tubária</li>
+    <li><a href="#gl-epididimite" style="color:var(--teal)">Epididimite</a> e, raramente, infertilidade masculina</li>
+    <li>Artrite reativa (síndrome de Reiter): artrite, conjuntivite e uretrite, mais comum no sexo masculino</li>
+    <li><a href="#gl-lgv" style="color:var(--teal)">Linfogranuloma venéreo (LGV)</a>: causado por serotipos L1, L2 e L3 de <em>C. trachomatis</em>, manifesta-se por úlceras genitais e linfonodos inguinais volumosos</li>
+  </ul>
+
+  <h3>Como é diagnosticada a clamidíase?</h3>
+  <p>O método de referência é a técnica de amplificação de ácidos nucleicos (<a href="#gl-pcr" style="color:var(--teal)">TAAN/PCR</a>):</p>
+  <ul>
+    <li>Mulheres: <a href="#gl-zaragatoa" style="color:var(--teal)">zaragatoa</a> endocervical, vaginal (autocolheita aceite) ou amostra de urina</li>
+    <li>Homens: amostra de urina (primeiro jato) ou zaragatoa uretral</li>
+    <li>Rastreio anal e faríngeo: zaragatoa anal e faríngea</li>
+  </ul>
+
+  <h3>Como é tratada a clamidíase?</h3>
+  <ul>
+    <li>Dose única: azitromicina 1g por via oral</li>
+    <li>Alternativa: doxiciclina 100 mg duas vezes por dia durante 7 dias (preferida pelas guidelines europeias, especialmente para infeção retal)</li>
+    <li>Grávidas: azitromicina 1g (dose única) ou amoxicilina 500 mg três vezes por dia durante 7 dias</li>
+  </ul>
+  <p>Os parceiros sexuais dos últimos 60 dias devem ser notificados e tratados, mesmo sem sintomas.</p>
+
+  <h2>Gonorreia: transmissão, sintomas, diagnóstico e tratamento</h2>
+
+  <h3>O que é a gonorreia?</h3>
+  <p>A gonorreia é causada por <em>Neisseria gonorrhoeae</em>, uma bactéria <a href="#gl-gram" style="color:var(--teal)">gram-negativa</a> <a href="#gl-diplococo" style="color:var(--teal)">diplococácea</a>. <a href="https://www.ecdc.europa.eu/en/news-events/bacterial-stis-reach-record-highs-europe-congenital-syphilis-cases-nearly-double" target="_blank" style="color:var(--teal)">É a segunda infeção sexualmente transmissível bacteriana mais notificada na Europa. O ECDC registou mais de 106.331 casos confirmados na Europa em 2024 (ECDC, 2024).</a> A resistência aos antibióticos é uma preocupação crescente, com o <a href="https://www.ecdc.europa.eu/en/news-events/drug-resistant-gonorrhoea-rise-europe-ecdc-warns" target="_blank" style="color:var(--teal)">ECDC a alertar para gonorreia resistente a antibióticos na Europa</a>.</p>
+
+  <h3>Como se transmite a gonorreia?</h3>
+  <ul>
+    <li>Contacto sexual vaginal, anal e oral desprotegido</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a> durante o parto, podendo causar oftalmia neonatal grave</li>
+  </ul>
+
+  <h3>Quais são os sintomas da gonorreia?</h3>
+  <p>O período de incubação é de 1 a 14 dias.</p>
+  <h4>Gonorreia no homem (sintomática em 90% dos casos):</h4>
+  <ul>
+    <li>Corrimento uretral amarelo-esverdeado, abundante e purulento</li>
+    <li><a href="#gl-disuria" style="color:var(--teal)">Disúria</a> intensa</li>
+    <li><a href="#gl-polaquiuria" style="color:var(--teal)">Polaquiúria</a></li>
+  </ul>
+  <h4>Gonorreia na mulher (assintomática em 50% dos casos):</h4>
+  <ul>
+    <li>Corrimento vaginal aumentado ou de aspeto anormal</li>
+    <li><a href="#gl-disuria" style="color:var(--teal)">Disúria</a></li>
+    <li>Dor pélvica (sugere <a href="#gl-dip" style="color:var(--teal)">DIP</a>)</li>
+    <li>Hemorragia intermenstrual ou pós-coital</li>
+  </ul>
+  <h4>Gonorreia faríngea:</h4>
+  <ul>
+    <li>Habitualmente <a href="#gl-assintomatico" style="color:var(--teal)">assintomática</a></li>
+    <li>Pode causar faringite, exsudado amigdalino e <a href="#gl-linfadenopatia" style="color:var(--teal)">linfadenopatia</a> cervical</li>
+  </ul>
+  <h4>Gonorreia retal:</h4>
+  <ul>
+    <li>Frequentemente <a href="#gl-assintomatico" style="color:var(--teal)">assintomática</a></li>
+    <li><a href="#gl-proctite" style="color:var(--teal)">Proctite</a>: corrimento retal, dor, tenesmo e hemorragia</li>
+  </ul>
+
+  <h3>Que complicações pode causar a gonorreia?</h3>
+  <ul>
+    <li><a href="#gl-dip" style="color:var(--teal)">Doença inflamatória pélvica (DIP)</a> na mulher, com risco de infertilidade e gravidez ectópica</li>
+    <li><a href="#gl-epididimite" style="color:var(--teal)">Epididimite</a> e orquite no homem</li>
+    <li>Gonorreia disseminada: artrite séptica, dermatite, endocardite, meningite (raro, mas grave)</li>
+    <li>Estenose uretral por infeção repetida</li>
+  </ul>
+
+  <h3>Como é diagnosticada a gonorreia?</h3>
+  <ul>
+    <li><a href="#gl-pcr" style="color:var(--teal)">PCR/TAAN</a>: método de referência, de elevada sensibilidade e especificidade</li>
+    <li>Cultura: essencial para testes de sensibilidade aos antibióticos e vigilância da resistência</li>
+    <li>Microscopia de esfregaço corado pelo <a href="#gl-gram" style="color:var(--teal)">Gram</a>: útil no corrimento uretral masculino</li>
+  </ul>
+
+  <h3>Como é tratada a gonorreia?</h3>
+  <p>O tratamento de primeira linha de acordo com as guidelines europeias (<a href="https://iusti.org/wp-content/uploads/2020/10/IUSTI-Gonorrhoea-2020.pdf" target="_blank" style="color:var(--teal)">IUSTI</a>/ECDC) é:</p>
+  <ul>
+    <li>Ceftriaxona 500 mg intramuscular em dose única</li>
+    <li>Em alergia à penicilina: espectinomicina 2g IM ou gentamicina 240 mg IM + azitromicina 2g oral</li>
+  </ul>
+
+  <h2>Sífilis: sintomas, fases, diagnóstico e tratamento</h2>
+
+  <h3>O que é a sífilis?</h3>
+  <p>A sífilis é causada pela <a href="#gl-espiroqueta" style="color:var(--teal)">espiroqueta</a> <em>Treponema pallidum</em>. <a href="https://www.ecdc.europa.eu/en/news-events/bacterial-stis-reach-record-highs-europe-congenital-syphilis-cases-nearly-double" target="_blank" style="color:var(--teal)">O ECDC reportou mais de 45.577 casos em 2024 (ECDC, 2024).</a> A sífilis <a href="#gl-congenita" style="color:var(--teal)">congénita</a>, reflexo da sífilis não tratada na grávida, apresenta igualmente uma tendência crescente preocupante na Europa.</p>
+
+  <h3>Como se transmite a sífilis?</h3>
+  <ul>
+    <li>Contacto sexual direto com lesões infeciosas (cancro, condilomas planos)</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a>: sífilis <a href="#gl-congenita" style="color:var(--teal)">congénita</a>, com consequências graves para o feto (aborto, natimorto, malformações)</li>
+    <li><a href="#gl-parenteral" style="color:var(--teal)">Via sanguínea</a>: transfusões ou partilha de material de injeção (raro)</li>
+  </ul>
+
+  <h3>Quais são as fases e sintomas da sífilis?</h3>
+  <h4>Sífilis primária (2 a 12 semanas após exposição):</h4>
+  <ul>
+    <li>Cancro sifilítico: úlcera única, indolor, de bordos bem definidos e base indurada, no local de entrada do <em><a href="#gl-treponema" style="color:var(--teal)">Treponema</a></em> (genitais, ânus, boca)</li>
+    <li><a href="#gl-linfadenopatia" style="color:var(--teal)">Linfadenopatia</a> regional indolor ipsilateral</li>
+    <li>O cancro cura espontaneamente em 3 a 6 semanas, mesmo sem tratamento</li>
+  </ul>
+  <h4>Sífilis secundária (6 semanas a 6 meses após o cancro):</h4>
+  <ul>
+    <li><a href="#gl-exantema" style="color:var(--teal)">Exantema</a> maculopapular generalizado, classicamente nas palmas das mãos e plantas dos pés</li>
+    <li>Condilomas planos (placas mucosas nas áreas genitais e perianais, muito infeciosas)</li>
+    <li><a href="#gl-linfadenopatia" style="color:var(--teal)">Linfadenopatia</a> generalizada</li>
+    <li>Sintomas constitucionais: febre, cefaleias, mialgia, perda de peso</li>
+    <li>Alopécia em "traça"</li>
+  </ul>
+  <h4>Sífilis latente:</h4>
+  <p>Período <a href="#gl-assintomatico" style="color:var(--teal)">assintomático</a> após sífilis secundária. Divide-se em latente recente (menos de 1 ano de evolução) e latente tardia (mais de 1 ano).</p>
+  <h4>Sífilis terciária (anos a décadas sem tratamento):</h4>
+  <ul>
+    <li>Goma sifilítica: lesões granulomatosas destrutivas na pele, osso ou órgãos</li>
+    <li>Neurosífilis: meningite crónica, demência, <em>tabes dorsalis</em>, paralisia geral progressiva</li>
+    <li>Sífilis cardiovascular: aortite, aneurisma aórtico</li>
+  </ul>
+
+  <h3>Como é diagnosticada a sífilis?</h3>
+  <p>O diagnóstico <a href="#gl-serologia" style="color:var(--teal)">serológico</a> recorre a dois tipos de testes:</p>
+  <ul>
+    <li>Testes treponémicos (TPHA, FTA-ABS, CLIA): detetam anticorpos específicos anti-<a href="#gl-treponema" style="color:var(--teal)">Treponema</a></li>
+    <li>Testes não treponémicos (VDRL, RPR): titulados quantitativamente, permitem monitorizar a resposta ao tratamento</li>
+    <li><a href="#gl-pcr" style="color:var(--teal)">PCR</a> em lesões: útil no diagnóstico de sífilis primária quando a serologia pode ainda ser negativa</li>
+  </ul>
+
+  <h3>Como é tratada a sífilis?</h3>
+  <ul>
+    <li>Sífilis primária, secundária e latente recente: penicilina G benzatina 2,4 milhões de UI intramuscular, dose única</li>
+    <li>Sífilis latente tardia: penicilina G benzatina 2,4 milhões de UI IM, 3 doses semanais</li>
+    <li>Em alergia à penicilina (não grávidas): doxiciclina 100 mg 2x/dia durante 14 a 28 dias</li>
+    <li>Grávidas com alergia à penicilina: dessensibilização e tratamento com penicilina</li>
+  </ul>
+
+  <h2>VIH e SIDA: sintomas, transmissão, teste e tratamento</h2>
+
+  <h3>O que é o VIH e qual é a diferença entre VIH e SIDA?</h3>
+  <p>O <a href="#gl-hiv" style="color:var(--teal)">VIH</a> é o vírus responsável pela infeção. A <a href="#gl-sida" style="color:var(--teal)">SIDA</a> corresponde à fase avançada da infeção por VIH, associada a uma deterioração importante do sistema imunitário e/ou ao aparecimento de determinadas <a href="#gl-oportunista" style="color:var(--teal)">infeções oportunistas</a> ou outras doenças.</p>
+  <p>Com o diagnóstico e tratamento atuais, muitas pessoas com VIH mantêm a infeção controlada e não chegam a desenvolver SIDA.</p>
+  <p><a href="https://www.insa.min-saude.pt/relatorio-infecao-por-vih-em-portugal-2024/" target="_blank" style="color:var(--teal)">Em Portugal, o relatório do INSA de 2024 estima cerca de 49.700 pessoas a viver com VIH e registou 924 novos diagnósticos em 2023.</a></p>
+
+  <h3>Como se transmite o VIH?</h3>
+  <ul>
+    <li>Via sexual: sexo anal recetivo (maior risco), sexo anal, sexo vaginal, sexo oral (risco muito baixo)</li>
+    <li><a href="#gl-parenteral" style="color:var(--teal)">Via parenteral</a>: partilha de seringas e agulhas, transfusões de sangue, acidentes com agulhas</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a>: durante a gravidez, o parto ou o aleitamento materno. Com terapia antirretroviral adequada, o risco de transmissão vertical é inferior a 1%.</li>
+  </ul>
+
+  <h3>Quais são os sintomas do VIH e como evolui a infeção?</h3>
+  <h4>Infeção VIH aguda (2 a 4 semanas após exposição):</h4>
+  <p>Síndrome retroviral aguda: febre, <a href="#gl-linfadenopatia" style="color:var(--teal)">linfadenopatia</a>, faringite, <a href="#gl-exantema" style="color:var(--teal)">exantema</a>, mialgia, cefaleias. Estes sintomas são autolimitados e frequentemente confundidos com uma gripe ou <a href="#gl-mononucleose" style="color:var(--teal)">mononucleose</a>.</p>
+  <h4>Fase crónica assintomática (anos a décadas):</h4>
+  <p>A replicação viral continua, com destruição progressiva dos <a href="#gl-cd4" style="color:var(--teal)">linfócitos CD4</a>. Sem tratamento, a mediana de progressão para SIDA é de cerca de 10 anos.</p>
+  <h4>SIDA:</h4>
+  <p>É a fase avançada da infeção por <a href="#gl-hiv" style="color:var(--teal)">VIH</a> e pode estar associada a <a href="#gl-oportunista" style="color:var(--teal)">infeções oportunistas</a>, determinadas neoplasias e outras complicações resultantes da fragilização do sistema imunitário.</p>
+
+  <h3>Como é feito o teste e o diagnóstico do VIH?</h3>
+  <ul>
+    <li>Teste combinado Ag/Ac de 4ª geração: deteta simultaneamente o antigénio p24 e anticorpos anti-VIH, com janela diagnóstica de 18 a 45 dias após a exposição</li>
+    <li>Western blot ou <a href="#gl-pcr" style="color:var(--teal)">PCR</a>: para confirmação de resultados positivos</li>
+    <li><a href="#gl-carga-viral" style="color:var(--teal)">Carga viral</a> (PCR-VIH): quantifica o número de cópias virais no sangue</li>
+    <li>Contagem de <a href="#gl-cd4" style="color:var(--teal)">CD4</a>: avalia o estado imunitário</li>
+    <li>Teste rápido em sangue capilar: resultado em 15 a 20 minutos, disponível em checkpoints e centros de rastreio comunitário</li>
+  </ul>
+
+  <h3>O VIH tem tratamento? O que significa Indetetável = Intransmissível?</h3>
+  <p>O tratamento da infeção por VIH é feito com terapia antirretroviral combinada (cART). Os objetivos são a supressão da <a href="#gl-carga-viral" style="color:var(--teal)">carga viral</a> para níveis indetetáveis (inferior a 50 cópias/mL), a preservação do sistema imunitário e a prevenção da transmissão.</p>
+  <p><a href="https://pubmed.ncbi.nlm.nih.gov/31056293/" target="_blank" style="color:var(--teal)">O princípio Indetetável = Intransmissível (I=I)</a>, validado pelo <a href="https://pubmed.ncbi.nlm.nih.gov/21091279/" target="_blank" style="color:var(--teal)">estudo PARTNER 2 (Rodger et al., 2019)</a> e outros, demonstra que uma pessoa em tratamento com carga viral indetetável não transmite o VIH por via sexual.</p>
+  <p>Com tratamento adequado, a esperança de vida de uma pessoa diagnosticada precocemente com VIH aproxima-se da população geral.</p>
+
+  <h3>Como prevenir o VIH? Preservativo, PrEP e PEP</h3>
+  <ul>
+    <li>Preservativo: eficácia elevada quando usado corretamente e consistentemente</li>
+    <li><a href="#gl-prep" style="color:var(--teal)">PrEP</a> (profilaxia pré-exposição): tenofovir/emtricitabina 1 comprimido/dia, eficácia superior a 99%, <a href="https://www.sns24.gov.pt/pt/tema/prevencao-e-cuidados-de-saude/prevencao-da-infecao-por-vih/" target="_blank" style="color:var(--teal)">disponível gratuitamente no SNS português</a></li>
+    <li><a href="#gl-pep" style="color:var(--teal)">PEP</a> (profilaxia pós-exposição): iniciar o mais rapidamente possível e sempre antes das 72 horas após exposição de risco</li>
+    <li>I=I: tratar as pessoas seropositivas é em si uma medida de prevenção coletiva</li>
+  </ul>
+
+  <h2>Herpes genital: sintomas, transmissão e tratamento</h2>
+
+  <h3>O que é o herpes genital?</h3>
+  <p>O herpes genital é causado pelo vírus herpes <em>simplex</em> tipo 2 (<a href="#gl-hsv" style="color:var(--teal)">HSV-2</a>), responsável pela maioria dos casos de herpes genital recorrente, e pelo HSV-1. <a href="https://www.who.int/news-room/fact-sheets/detail/herpes-simplex-virus" target="_blank" style="color:var(--teal)">A OMS estima que cerca de 520 milhões de pessoas no mundo tenham infeção por HSV-2 (WHO, 2025).</a></p>
+
+  <h3>Como se transmite o herpes genital?</h3>
+  <ul>
+    <li>Contacto sexual (vaginal, anal, oral) com lesões ativas ou por excreção viral <a href="#gl-assintomatico" style="color:var(--teal)">assintomática</a> (<a href="#gl-shedding" style="color:var(--teal)">shedding</a>)</li>
+    <li>Transmissão assintomática: responsável pela maioria das novas infeções</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a>: herpes neonatal, potencialmente grave, por contacto com secreções genitais infetadas durante o parto</li>
+  </ul>
+
+  <h3>Quais são os sintomas do herpes genital?</h3>
+  <h4>Episódio primário (habitualmente o mais grave):</h4>
+  <ul>
+    <li>Aparecimento de vesículas dolorosas nos genitais, períneo, nádegas ou ânus, que evoluem para úlceras superficiais</li>
+    <li>Dor, comichão e ardor locais</li>
+    <li>Sintomas constitucionais: febre, mialgia, cefaleias, <a href="#gl-linfadenopatia" style="color:var(--teal)">linfadenopatia</a> inguinal</li>
+    <li><a href="#gl-disuria" style="color:var(--teal)">Disúria</a> intensa, por vezes requerendo algaliação temporária</li>
+  </ul>
+  <h4>Reativações (recorrências):</h4>
+  <p>O <a href="#gl-hsv" style="color:var(--teal)">HSV</a> permanece latente nos gânglios sensitivos e pode reativar periodicamente. As recorrências são geralmente mais ligeiras, frequentemente precedidas de <a href="#gl-prodromo" style="color:var(--teal)">pródromos</a> (formigueiro, ardor, dor local).</p>
+
+  <h3>Como é diagnosticada a infeção por vírus herpes simplex?</h3>
+  <ul>
+    <li><a href="#gl-pcr" style="color:var(--teal)">PCR</a> em lesões: método de referência, diferencia HSV-1 de HSV-2</li>
+    <li>Cultura viral: menos sensível, útil para testes de sensibilidade antiviral</li>
+    <li><a href="#gl-serologia" style="color:var(--teal)">Serologia</a> (anticorpos anti-HSV tipo-específicos): pode confirmar infeção prévia mesmo na ausência de lesões</li>
+  </ul>
+
+  <h3>Como é tratado o herpes genital?</h3>
+  <ul>
+    <li>Episódio primário: aciclovir 400 mg 3x/dia durante 5 a 10 dias; alternativa valaciclovir 1g 2x/dia durante 10 dias</li>
+    <li>Recorrências: tratamento episódico iniciado no <a href="#gl-prodromo" style="color:var(--teal)">pródromo</a> ou terapia supressiva diária para pessoas com mais de 6 recorrências por ano</li>
+    <li>Terapia supressiva reduz o <a href="#gl-shedding" style="color:var(--teal)">shedding</a> viral assintomático em mais de 90%</li>
+  </ul>
+
+  <h2>HPV e verrugas genitais: transmissão, prevenção e vacinação</h2>
+
+  <h3>O que é o HPV?</h3>
+  <p>O <a href="#gl-hpv" style="color:var(--teal)">papilomavírus humano (HPV)</a> é o vírus de transmissão sexual mais prevalente. Existem mais de 200 <a href="#gl-genotipagem" style="color:var(--teal)">genótipos</a> de HPV, classificados em:</p>
+  <ul>
+    <li>Tipos de baixo risco oncogénico (HPV 6, 11): causam verrugas genitais (condilomas acuminados)</li>
+    <li>Tipos de alto risco oncogénico (HPV 16, 18, 31, 33, 45, entre outros): associados ao cancro do colo do útero, ânus, vulva, vagina, pénis, orofaringe</li>
+  </ul>
+
+  <h3>Como se transmite o HPV?</h3>
+  <ul>
+    <li>Contacto sexual direto, génito-genital, oral-genital ou anal</li>
+    <li>Transmissão possível mesmo sem penetração, por contacto cutâneo com regiões infetadas</li>
+    <li>O preservativo confere proteção parcial, não total</li>
+  </ul>
+
+  <h3>Quais são os sintomas de infeção por papilomavírus?</h3>
+  <p>A maioria das infeções por <a href="#gl-hpv" style="color:var(--teal)">HPV</a> é transitória e resolve espontaneamente em 1 a 2 anos. Nas situações em que a infeção persiste:</p>
+  <ul>
+    <li>Verrugas genitais (condilomas acuminados): lesões únicas ou múltiplas, nos genitais, períneo e ânus</li>
+    <li>Lesões intraepiteliais: alterações celulares que podem evoluir para cancro, detetadas pelo rastreio citológico</li>
+  </ul>
+
+  <h3>Como é feito o diagnóstico de HPV?</h3>
+  <ul>
+    <li>Diagnóstico clínico das verrugas genitais: habitualmente feito por inspeção visual</li>
+    <li><a href="#gl-genotipagem" style="color:var(--teal)">Genotipagem</a> de HPV: identifica os genótipos presentes</li>
+    <li><a href="#gl-colposcopia" style="color:var(--teal)">Colposcopia</a>: exame do colo do útero com ampliação ótica, recomendado após citologia alterada</li>
+    <li>Rastreio do cancro do colo do útero: citologia (Papanicolau) e/ou teste de HPV, recomendado em mulheres a partir dos 25 anos em Portugal</li>
+  </ul>
+
+  <h3>Como funciona a vacinação contra o HPV?</h3>
+  <p><a href="https://pubmed.ncbi.nlm.nih.gov/28886907/" target="_blank" style="color:var(--teal)">Vacina nonavalente (Gardasil 9): protege contra os genótipos 6, 11, 16, 18, 31, 33, 45, 52 e 58, com eficácia superior a 97% na prevenção de lesões intraepiteliais de alto grau (Huh et al., 2017).</a></p>
+  <ul>
+    <li>Em Portugal, incluída no <a href="https://www.sns24.gov.pt/pt/tema/vacinas/programa-nacional-de-vacinacao" target="_blank" style="color:var(--teal)">Programa Nacional de Vacinação</a> para raparigas e rapazes no 2º ano de escolaridade</li>
+    <li>A vacinação é recomendada até aos 26 anos; pode ser considerada entre os 27 e os 45 anos após discussão clínica</li>
+    <li>Mais eficaz antes do início da atividade sexual, mas confere proteção também em pessoas já sexualmente ativas</li>
+  </ul>
+
+  <h2>Hepatite B: transmissão, sintomas e prevenção</h2>
+
+  <h3>O que é a hepatite B?</h3>
+  <p>A hepatite B é causada pelo vírus da hepatite B (<a href="#gl-vhb" style="color:var(--teal)">VHB</a>), um <a href="#gl-hepadnavirus" style="color:var(--teal)">hepadnavírus</a> de transmissão sexual e parenteral. <a href="https://www.who.int/news-room/fact-sheets/detail/hepatitis-b" target="_blank" style="color:var(--teal)">A OMS estima que 240 milhões de pessoas viviam com infeção crónica por VHB no mundo em 2024 (WHO, 2026).</a></p>
+
+  <h3>Como se transmite a hepatite B?</h3>
+  <ul>
+    <li>Via sexual: o VHB é 100 vezes mais transmissível por via sexual do que o VIH</li>
+    <li><a href="#gl-parenteral" style="color:var(--teal)">Via parenteral</a>: partilha de agulhas, seringas ou outros materiais de injeção</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a>: da mãe para o filho durante o parto</li>
+    <li>Contacto com sangue ou outros fluidos corporais infetados</li>
+  </ul>
+
+  <h3>Quais são os sintomas da hepatite B?</h3>
+  <p>A hepatite B aguda é <a href="#gl-assintomatico" style="color:var(--teal)">assintomática</a> em mais de 50% dos casos. Quando sintomática, pode causar icterícia, fadiga, náuseas, dor abdominal direita e colestase. A infeção crónica pode progredir para cirrose e <a href="#gl-hepatocelular" style="color:var(--teal)">carcinoma hepatocelular</a>.</p>
+
+  <h3>Como é feito o diagnóstico da hepatite B?</h3>
+  <ul>
+    <li>HBsAg (antigénio de superfície do VHB): marcador de infeção ativa</li>
+    <li>Anti-HBs: anticorpos protetores após vacinação ou infeção resolvida</li>
+    <li>Anti-HBc total: marcador de contacto prévio com o vírus</li>
+    <li><a href="#gl-carga-viral" style="color:var(--teal)">Carga viral</a> (ADN-VHB): quantifica a replicação viral</li>
+  </ul>
+
+  <h3>Qual é o tratamento e a forma de prevenção da hepatite B?</h3>
+  <ul>
+    <li>Vacinação: 3 doses, altamente eficaz (mais de 95%), incluída no <a href="https://www.sns24.gov.pt/pt/tema/vacinas/programa-nacional-de-vacinacao" target="_blank" style="color:var(--teal)">Programa Nacional de Vacinação</a> em Portugal</li>
+    <li>Profilaxia pós-exposição: imunoglobulina anti-hepatite B (HBIG) e início de vacinação nas primeiras 24 a 48 horas</li>
+    <li>Tratamento da hepatite B crónica: análogos dos nucleotídeos (tenofovir, entecavir), que suprimem a replicação viral</li>
+  </ul>
+
+  <h2>Hepatite C: transmissão, diagnóstico e tratamento</h2>
+
+  <h3>O que é a hepatite C?</h3>
+  <p>A hepatite C é causada pelo vírus da hepatite C (<a href="#gl-vhc" style="color:var(--teal)">VHC</a>), um flavivírus com elevada variabilidade genética. <a href="https://www.who.int/news-room/fact-sheets/detail/hepatitis-c" target="_blank" style="color:var(--teal)">A OMS estima 47 milhões de pessoas com infeção crónica (WHO, 2026).</a></p>
+
+  <h3>Como se transmite a hepatite C?</h3>
+  <ul>
+    <li><a href="#gl-parenteral" style="color:var(--teal)">Via parenteral</a>: principal via de transmissão (partilha de agulhas e seringas, tatuagens e piercings em ambientes não esterilizados)</li>
+    <li>Via sexual: especialmente com práticas associadas a traumatismo mucoso e <a href="#gl-coinfeção" style="color:var(--teal)">coinfeção</a> por VIH</li>
+    <li><a href="#gl-vertical" style="color:var(--teal)">Transmissão vertical</a>: risco de 5% a 8%</li>
+  </ul>
+
+  <h3>Quais são os sintomas da hepatite C?</h3>
+  <p>A hepatite C aguda é <a href="#gl-assintomatico" style="color:var(--teal)">assintomática</a> em 80% dos casos. Os restantes 55% a 85% desenvolvem infeção crónica, com risco de progressão para cirrose (15% a 30% ao fim de 20 anos) e <a href="#gl-hepatocelular" style="color:var(--teal)">carcinoma hepatocelular</a>.</p>
+
+  <h3>Como é feito o diagnóstico da hepatite C?</h3>
+  <ul>
+    <li>Anti-VHC: anticorpos que positivam 8 a 11 semanas após a infeção</li>
+    <li>ARN-VHC (<a href="#gl-carga-viral" style="color:var(--teal)">carga viral</a>): confirma infeção ativa e monitoriza o tratamento</li>
+    <li><a href="#gl-genotipagem" style="color:var(--teal)">Genotipagem</a>: orienta a escolha do tratamento</li>
+  </ul>
+
+  <h3>Como é tratada a hepatite C?</h3>
+  <p>A hepatite C é atualmente curável em mais de 95% dos casos com antivirais de ação direta (AAD) de segunda geração, tomados durante 8 a 12 semanas. A cura virológica (<a href="#gl-rvs" style="color:var(--teal)">RVS</a>) é definida como RNA-VHC indetetável 12 semanas após o fim do tratamento. A cura não confere imunidade a reinfeções.</p>
+
+  <h2>Tricomoníase: sintomas, diagnóstico e tratamento</h2>
+
+  <h3>O que é a tricomoníase?</h3>
+  <p>A tricomoníase é causada por <em>Trichomonas vaginalis</em>, um <a href="#gl-protozoario" style="color:var(--teal)">protozoário</a> <a href="#gl-flagelado" style="color:var(--teal)">flagelado</a>. <a href="https://www.who.int/news-room/fact-sheets/detail/trichomoniasis" target="_blank" style="color:var(--teal)">É a infeção sexualmente transmissível não viral mais prevalente no mundo, com a OMS a estimar 156 milhões de novos casos por ano (WHO, 2025).</a></p>
+
+  <h3>Como se transmite a tricomoníase?</h3>
+  <ul>
+    <li>Contacto sexual génito-genital, principalmente vaginal</li>
+    <li>Raramente por partilha de toalhas ou material de higiene íntima</li>
+  </ul>
+
+  <h3>Quais são os sintomas da tricomoníase?</h3>
+  <p><a href="#gl-assintomatico" style="color:var(--teal)">Assintomática</a> em 70% das mulheres e em mais de 80% dos homens.</p>
+  <h4>Tricomonas na mulher (quando sintomática):</h4>
+  <ul>
+    <li>Corrimento vaginal abundante, amarelo-esverdeado, espumoso e malcheiroso</li>
+    <li>Prurido, ardor e edema vulvovaginal</li>
+    <li><a href="#gl-disuria" style="color:var(--teal)">Disúria</a> e <a href="#gl-polaquiuria" style="color:var(--teal)">polaquiúria</a></li>
+    <li>Colo do útero com aspeto "em morango" (eritema pontilhado) à <a href="#gl-colposcopia" style="color:var(--teal)">colposcopia</a></li>
+  </ul>
+  <h4>Tricomonas no homem (quando sintomático):</h4>
+  <ul>
+    <li>Corrimento uretral ligeiro</li>
+    <li><a href="#gl-disuria" style="color:var(--teal)">Disúria</a></li>
+    <li>Inflamação da glande (balanite)</li>
+  </ul>
+
+  <h3>Como é feito o diagnóstico da tricomoníase?</h3>
+  <ul>
+    <li><a href="#gl-pcr" style="color:var(--teal)">PCR/TAAN</a>: método mais sensível</li>
+    <li>Exame a fresco do corrimento: visualização direta do <a href="#gl-protozoario" style="color:var(--teal)">protozoário</a> em movimento</li>
+    <li>Cultura: elevada especificidade</li>
+  </ul>
+
+  <h3>Como é tratada a tricomoníase?</h3>
+  <ul>
+    <li>Metronidazol 2g por via oral em dose única (preferida pela OMS)</li>
+    <li>Alternativa: metronidazol 400-500 mg 2x/dia durante 5 a 7 dias</li>
+    <li>Os parceiros sexuais devem ser tratados simultaneamente, mesmo sem sintomas</li>
+    <li>Evitar álcool durante e até 48 horas após o tratamento com metronidazol</li>
+  </ul>
+
+  <h2>Rastreio de IST por videoconsulta: como funciona?</h2>
+  <p>O rastreio de IST por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> permite obter, na mesma consulta, a avaliação do risco individual, a prescrição das análises adequadas ao perfil de risco, a interpretação dos resultados e o tratamento quando indicado, tudo sem necessidade de deslocação física.</p>
+  <p>Na ConsultasOnline, o rastreio de infeções sexualmente transmissíveis está disponível de segunda a domingo, das 9h às 21h, com fatura AT automática. O médico avalia o perfil de risco, prescreve o painel de análises adequado e acompanha na interpretação dos resultados.</p>
+  <p>Em conclusão, as infeções sexualmente transmissíveis nem sempre provocam sintomas. Prevenção, vacinação quando disponível, utilização de preservativo e rastreio adequado ao risco continuam a ser ferramentas essenciais para proteger a saúde sexual.</p>
+
+  <div class="art-cta"><h3>Teve uma exposição de risco ou quer fazer rastreio de IST?</h3><p>Avaliação médica por videoconsulta, sem deslocação. Prescrição de análises e interpretação de resultados.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Rastreio de IST →</button></div>
+
+  <h2>Perguntas frequentes sobre infeções sexualmente transmissíveis</h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso ter uma IST mesmo sem sintomas? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim. Várias infeções sexualmente transmissíveis podem permanecer assintomáticas. Por isso, a ausência de sintomas não exclui uma infeção.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quanto tempo depois de uma relação devo fazer testes de IST? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Depende da infeção e do teste utilizado. Algumas infeções podem ser identificadas mais cedo do que outras. Um profissional de saúde pode indicar o momento adequado em função da exposição.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Um teste de sangue deteta todas as IST? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Não. Algumas infeções sexualmente transmissíveis são pesquisadas através do sangue, enquanto outras podem exigir urina, zaragatoas ou colheita de lesões.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O preservativo protege contra todas as infeções sexualmente transmissíveis? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Reduz significativamente o risco de muitas IST, mas não oferece proteção total contra infeções transmitidas por contacto com pele ou lesões fora da zona coberta.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">É possível ter mais do que uma IST ao mesmo tempo? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim. A presença de uma infeção sexualmente transmissível não impede a existência simultânea de outra. Em determinadas situações, o médico pode recomendar o rastreio de várias infeções.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Uma pessoa com VIH e carga viral indetetável transmite o vírus sexualmente? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Uma pessoa que mantém carga viral indetetável através de tratamento eficaz não transmite o VIH por via sexual. Este princípio é conhecido como Indetetável = Intransmissível (I=I).</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O HPV pode desaparecer sem tratamento? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Muitas infeções por HPV tornam-se indetetáveis espontaneamente. Algumas infeções persistem e podem estar associadas a verrugas ou alterações celulares que exigem acompanhamento.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A hepatite C tem cura? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Atualmente existem tratamentos antivirais capazes de curar a grande maioria das infeções por hepatite C.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quando devo procurar avaliação médica com urgência? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Procure avaliação adequada perante sintomas intensos, agravamento rápido, febre associada a dor pélvica ou testicular, gravidez com suspeita de IST, exposição recente ao VIH que possa justificar PEP ou outras situações que suscitem preocupação clínica.</div>
+  </div>
+
+  <!-- GLOSSÁRIO -->
+  <div id="glossario-ist" style="background:rgba(13,115,119,.06);border:1px solid rgba(13,115,119,.2);border-radius:12px;padding:18px 20px;margin:32px 0 24px">
+    <h3 style="font-size:15px;font-weight:700;color:var(--teal);margin-bottom:12px">📖 Glossário — termos médicos explicados</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;font-size:13px">
+      <div id="gl-assintomatico"><strong>Assintomático:</strong> sem sintomas visíveis ou percetíveis.</div>
+      <div id="gl-bacteriana"><strong>Bactéria / bacteriana:</strong> microorganismo unicelular que pode causar infeções tratáveis com antibióticos.</div>
+      <div id="gl-carga-viral"><strong>Carga viral:</strong> quantidade de vírus presente no sangue, medida em análise laboratorial.</div>
+      <div id="gl-cd4"><strong>CD4 (linfócitos CD4):</strong> células do sistema imunitário que o VIH destrói progressivamente.</div>
+      <div id="gl-cervicite"><strong>Cervicite:</strong> inflamação do colo do útero.</div>
+      <div id="gl-coinfeção"><strong>Coinfeção:</strong> presença simultânea de duas ou mais infeções.</div>
+      <div id="gl-colposcopia"><strong>Colposcopia:</strong> exame que examina o colo do útero com lupa de ampliação.</div>
+      <div id="gl-congenita"><strong>Congénita:</strong> presente desde o nascimento, transmitida da mãe para o bebé.</div>
+      <div id="gl-dip"><strong>DIP (Doença Inflamatória Pélvica):</strong> infeção que sobe ao útero, trompas e ovários; pode causar infertilidade.</div>
+      <div id="gl-diplococo"><strong>Diplococácea:</strong> bactéria que aparece em pares ao microscópio.</div>
+      <div id="gl-disuria"><strong>Disúria:</strong> dor ou ardor ao urinar.</div>
+      <div id="gl-ecdc"><strong>ECDC:</strong> Centro Europeu de Prevenção e Controlo das Doenças.</div>
+      <div id="gl-epididimite"><strong>Epididimite:</strong> inflamação do epidídimo, estrutura atrás do testículo; causa dor testicular.</div>
+      <div id="gl-espiroqueta"><strong>Espiroqueta:</strong> bactéria em forma de espiral, como o Treponema pallidum (sífilis).</div>
+      <div id="gl-exantema"><strong>Exantema:</strong> erupção cutânea generalizada na pele.</div>
+      <div id="gl-flagelado"><strong>Flagelado:</strong> organismo com flagelo (filamento) que usa para se mover.</div>
+      <div id="gl-genotipagem"><strong>Genotipagem:</strong> teste que identifica o tipo específico de vírus presente.</div>
+      <div id="gl-gram"><strong>Gram-negativa:</strong> classificação bacteriana baseada numa técnica de coloração laboratorial.</div>
+      <div id="gl-hepadnavirus"><strong>Hepadnavírus:</strong> família de vírus que infeta principalmente o fígado; inclui o vírus da hepatite B.</div>
+      <div id="gl-hepatocelular"><strong>Carcinoma hepatocelular:</strong> cancro do fígado.</div>
+      <div id="gl-hiv"><strong>VIH:</strong> vírus da imunodeficiência humana, que ataca o sistema imunitário.</div>
+      <div id="gl-hpv"><strong>HPV:</strong> papilomavírus humano, vírus de transmissão sexual muito comum; alguns tipos causam cancro.</div>
+      <div id="gl-hsv"><strong>HSV (vírus herpes simplex):</strong> vírus que causa herpes labial (HSV-1) e herpes genital (HSV-2).</div>
+      <div id="gl-imunocompetente"><strong>Imunocompetente:</strong> pessoa com sistema imunitário a funcionar normalmente.</div>
+      <div id="gl-intracelular"><strong>Intracelular obrigatório:</strong> microorganismo que só consegue sobreviver e reproduzir-se dentro de células.</div>
+      <div id="gl-lgv"><strong>LGV (linfogranuloma venéreo):</strong> IST bacteriana que causa úlceras e gânglios inflamados na virilha.</div>
+      <div id="gl-linfadenopatia"><strong>Linfadenopatia:</strong> gânglios linfáticos aumentados de tamanho ("nódulos" palpáveis).</div>
+      <div id="gl-mononucleose"><strong>Mononucleose:</strong> doença viral conhecida por "doença do beijo", com febre, dor de garganta e gânglios.</div>
+      <div id="gl-notificacao"><strong>Notificação (de caso):</strong> comunicação obrigatória de certos diagnósticos às autoridades de saúde pública.</div>
+      <div id="gl-oportunista"><strong>Infeção oportunista:</strong> infeção que aproveita um sistema imunitário debilitado para se instalar.</div>
+      <div id="gl-parenteral"><strong>Via parenteral:</strong> transmissão através do sangue (agulhas, transfusões).</div>
+      <div id="gl-pcr"><strong>PCR / TAAN:</strong> técnica laboratorial muito sensível que deteta o material genético de um microorganismo.</div>
+      <div id="gl-pep"><strong>PEP:</strong> profilaxia pós-exposição ao VIH; medicamento tomado até 72h após exposição de risco.</div>
+      <div id="gl-polaquiuria"><strong>Polaquiúria:</strong> necessidade frequente de urinar.</div>
+      <div id="gl-prep"><strong>PrEP:</strong> profilaxia pré-exposição ao VIH; medicamento preventivo para pessoas em risco.</div>
+      <div id="gl-proctite"><strong>Proctite:</strong> inflamação do reto, causando dor e corrimento retal.</div>
+      <div id="gl-prodromo"><strong>Pródromo:</strong> sintomas que antecedem uma doença ou recorrência (ex: formigueiro antes de herpes).</div>
+      <div id="gl-protozoario"><strong>Protozoário:</strong> organismo unicelular mais complexo que uma bactéria; alguns causam infeções.</div>
+      <div id="gl-rvs"><strong>RVS (resposta virológica sustentada):</strong> ausência de vírus detetável 12 semanas após tratamento; equivale a cura na hepatite C.</div>
+      <div id="gl-serologia"><strong>Serologia:</strong> análise ao sangue que pesquisa anticorpos contra uma infeção.</div>
+      <div id="gl-shedding"><strong>Shedding viral:</strong> excreção de vírus mesmo sem lesões visíveis, podendo transmitir a infeção.</div>
+      <div id="gl-sida"><strong>SIDA:</strong> fase avançada da infeção por VIH, com sistema imunitário muito debilitado.</div>
+      <div id="gl-subnotificacao"><strong>Subnotificação:</strong> quando o número real de casos é maior do que o registado oficialmente.</div>
+      <div id="gl-treponema"><strong>Treponema pallidum:</strong> bactéria que causa a sífilis.</div>
+      <div id="gl-vertical"><strong>Transmissão vertical:</strong> transmissão da mãe para o bebé durante a gravidez, parto ou amamentação.</div>
+      <div id="gl-vhb"><strong>VHB:</strong> vírus da hepatite B.</div>
+      <div id="gl-vhc"><strong>VHC:</strong> vírus da hepatite C.</div>
+      <div id="gl-viral"><strong>Viral:</strong> causado por um vírus (não tratável com antibióticos).</div>
+      <div id="gl-zaragatoa"><strong>Zaragatoa:</strong> cotonete esterilizado usado para colher amostras (uretra, vagina, ânus, garganta).</div>
+    </div>
+  </div>
+
+  <div class="refs"><h3>Referências Bibliográficas</h3><ol class="ref-list">
+    <li>Centers for Disease Control and Prevention. (2021). Sexually transmitted infections treatment guidelines, 2021. <em>MMWR Recommendations and Reports, 70</em>(4), 1-187. https://doi.org/10.15585/mmwr.rr7004a1</li>
+    <li>European Centre for Disease Prevention and Control. (2024). Bacterial STIs reach record highs in Europe. ECDC. https://www.ecdc.europa.eu/en/news-events/bacterial-stis-reach-record-highs-europe-congenital-syphilis-cases-nearly-double</li>
+    <li>Grant, R. M., et al. (2010). Preexposure chemoprophylaxis for HIV prevention in men who have sex with men. <em>The New England Journal of Medicine, 363</em>(27), 2587-2599. https://doi.org/10.1056/NEJMoa1011205</li>
+    <li>Huh, W. K., et al. (2017). Final efficacy, immunogenicity, and safety analyses of a nine-valent human papillomavirus vaccine in women aged 16-26 years. <em>Lancet, 390</em>(10108), 2143-2159. https://doi.org/10.1016/S0140-6736(17)31821-4</li>
+    <li>International Union against Sexually Transmitted Infections (IUSTI). (2022). European guideline for the management of gonorrhoea in adults. IUSTI. https://iusti.org/treatment-guidelines/</li>
+    <li>Rodger, A. J., et al. (2019). Risk of HIV transmission through condomless sex in serodifferent gay couples (PARTNER). <em>Lancet, 393</em>(10189), 2428-2438. https://doi.org/10.1016/S0140-6736(19)30418-0</li>
+    <li>World Health Organization. (2025). Herpes simplex virus. <em>WHO Fact Sheet.</em> https://www.who.int/news-room/fact-sheets/detail/herpes-simplex-virus</li>
+    <li>World Health Organization. (2025). Trichomoniasis. <em>WHO Fact Sheet.</em> https://www.who.int/news-room/fact-sheets/detail/trichomoniasis</li>
+    <li>World Health Organization. (2026). Hepatitis B. <em>WHO Fact Sheet.</em> https://www.who.int/news-room/fact-sheets/detail/hepatitis-b</li>
+    <li>World Health Organization. (2026). Hepatitis C. <em>WHO Fact Sheet.</em> https://www.who.int/news-room/fact-sheets/detail/hepatitis-c</li>
   </ol></div>
+
 </div></div>
 </div>
 
