@@ -1959,29 +1959,197 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </div></div>
 </div>
+Vou primeiro extrair o texto e os comentários do documento.Tenho tudo. Procura no `index.html` o bloco `<!-- FALTAS ESCOLA -->` e substitui tudo até ao `</div></div></div>` por isto:
+
+```html
 <!-- FALTAS ESCOLA -->
 <div class="article-view" id="article-faltas-escola">
 <div class="art-hero"><div class="art-hero-inner">
   <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
-  <div class="art-cat">🎓 Escola &amp; Família</div>
-  <h1 class="art-title">Faltas à Escola por Doença: Como Justificar</h1>
-  <div class="art-meta"><div class="art-meta-item">📅 <span>2026</span></div><div class="art-meta-item">⏱ <span>5 min</span></div></div>
+  <div class="art-cat">🏫 Escola &amp; Família</div>
+  <h1 class="art-title">Falta à Escola por Doença: Guia Completo para Pais e Encarregados de Educação</h1>
+  <div class="art-meta"><div class="art-meta-item">⏱ <span>12 min</span></div><div class="art-meta-item">🔬 <span>Atualizado 2026</span></div></div>
 </div></div>
 <div class="art-body-wrap"><div class="art-body">
-  <h2>O que diz a Lei</h2>
-  <p>As faltas escolares por doença são reguladas pelo <strong>Estatuto do Aluno e Ética Escolar (Lei n.º 51/2012)</strong>.</p>
-  <h2>Documentos Aceites</h2>
-  <ul><li><strong>Declaração médica</strong> — indica o período de incapacidade sem revelar o diagnóstico.</li><li><strong>Declaração dos encarregados de educação</strong> — válida até <strong>3 dias por período letivo</strong> no ensino básico.</li></ul>
-  <div class="ibox"><div class="ibox-title">📋 Prazo</div><p>A justificação deve ser entregue ao Diretor de Turma nos <strong>3 dias úteis</strong> seguintes ao regresso.</p></div>
-  <h2>Limites de Faltas</h2>
-  <p>No ensino secundário, o limite é <strong>10% da carga horária</strong> de cada disciplina.</p>
-  <div class="art-cta"><h3>O seu filho está doente?</h3><p>Declaração médica emitida por videoconsulta, no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Atestado para Escola — 35€</button></div>
-  <div class="refs"><h3>Referências</h3><ol class="ref-list">
-    <li>Lei n.º 51/2012. <em>Estatuto do Aluno e Ética Escolar.</em></li>
-    <li>DGE. <em>Orientações sobre faltismo escolar.</em> 2023.</li>
+
+  <p>As faltas à escola por motivo de doença são uma realidade inevitável na vida escolar de qualquer criança ou jovem. No entanto, a forma como são justificadas tem implicações legais, académicas e administrativas que muitos encarregados de educação desconhecem. Este guia completo explica o que diz a lei portuguesa, quais os documentos aceites pelas escolas, quais os limites de faltas por nível de ensino, e como obter uma declaração médica de forma rápida e legal.</p>
+
+  <h2>O que diz a lei sobre faltas escolares por doença em Portugal</h2>
+  <p>O regime jurídico das faltas escolares em Portugal está estabelecido no Estatuto do Aluno e Ética Escolar, aprovado pela <a href="https://diariodarepublica.pt/dr/detalhe/lei/51-2012-174840" target="_blank" style="color:var(--teal)">Lei n.º 51/2012, de 5 de setembro</a>. Este diploma legal regula as obrigações de frequência, os direitos dos alunos e as regras aplicadas às faltas, à sua justificação e às respetivas consequências.</p>
+  <p>O artigo 16.º do Estatuto do Aluno define como falta justificada, entre outras situações, a doença do aluno, devidamente comprovada por declaração médica quando a ausência for superior a três dias úteis, ou por justificação escrita do encarregado de educação ou pelo aluno quando for maior de idade nos restantes casos. A lei portuguesa estabelece, assim, uma distinção clara entre faltas justificadas e faltas injustificadas, com consequências muito distintas para cada uma destas categorias.</p>
+
+  <h3>Faltas à escola justificadas por doença: fundamento legal</h3>
+  <p>São consideradas faltas justificadas por motivo de doença as ausências motivadas por:</p>
+  <ul>
+    <li>Doença aguda do próprio aluno, devidamente comprovada por declaração médica</li>
+    <li>Doença crónica ou condição de saúde permanente que justifique ausência recorrente</li>
+    <li>Consulta médica ou exame clínico que não possa ser marcado fora do horário letivo</li>
+    <li>Acidente ou intervenção cirúrgica que requeira período de recuperação</li>
+    <li>Internamento hospitalar</li>
+  </ul>
+  <p>A justificação da falta deve ser apresentada previamente, sendo o motivo previsível, ou, nos restantes casos, até ao 3.º dia útil subsequente à verificação da mesma.</p>
+
+  <h3>O que é uma falta escolar injustificada e quais as consequências</h3>
+  <p>Uma falta escolar é considerada injustificada quando o encarregado de educação não apresenta qualquer justificação, quando a justificação apresentada não é aceite pela escola, a marcação da falta resulte da aplicação da ordem de saída da sala de aula ou de medida disciplinar sancionatória ou, ainda, quando os prazos de justificação não são cumpridos. As faltas injustificadas têm implicações disciplinares e académicas significativas, podendo levar à retenção do aluno caso ultrapassem os limites legalmente previstos.</p>
+
+  <h2>Documentos a entregar nas escolas para justificar faltas por doença</h2>
+  <p>A lei portuguesa prevê dois tipos principais de documentos para justificar faltas escolares por motivo de doença, com regras diferentes consoante a duração da ausência e o nível de ensino frequentado.</p>
+
+  <h3>Declaração escrita do encarregado de educação</h3>
+  <p>No ensino básico, o encarregado de educação pode justificar por escrito as faltas do seu educando, sem necessidade de declaração médica, até um máximo de três dias por período letivo.</p>
+  <p>No ensino secundário, a justificação escrita do encarregado de educação também é aceite, mas cada escola pode estabelecer nos seus regulamentos internos limitações adicionais ao número de justificações aceites por período sem apoio documental médico.</p>
+
+  <h3>Declaração médica</h3>
+  <p>A declaração médica é o documento mais sólido para justificar faltas escolares por doença. Pode ser emitida por qualquer médico inscrito na Ordem dos Médicos, seja do Serviço Nacional de Saúde (SNS) ou de entidades privadas, incluindo através de consulta médica online por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>.</p>
+  <p>A declaração médica deve conter:</p>
+  <ul>
+    <li>Identificação do aluno (nome e data de nascimento)</li>
+    <li>Período de incapacidade para a frequência escolar (data de início e de fim previsto)</li>
+    <li>Indicação de que o aluno esteve incapaz de frequentar a escola por motivo de saúde</li>
+    <li>Identificação e assinatura do médico (nome e cédula profissional)</li>
+    <li>Data de emissão</li>
+  </ul>
+  <p>Importa notar que a declaração médica para fins escolares não obriga à divulgação do diagnóstico. O médico atesta a incapacidade para frequência escolar sem que a escola tenha direito a conhecer a doença concreta que motivou a ausência, em respeito pelo sigilo médico e pela proteção de dados de saúde ao abrigo do <a href="https://eur-lex.europa.eu/PT/legal-content/summary/general-data-protection-regulation-gdpr.html" target="_blank" style="color:var(--teal)">Regime Geral de Proteção de Dados</a>.</p>
+
+  <h3>Outros documentos aceites</h3>
+  <ul>
+    <li>Comprovativo de internamento hospitalar</li>
+    <li>Declaração de presença em consulta médica (para faltas de um dia por motivo de consulta)</li>
+    <li>Certidão do tribunal tutelar de menores (em situações específicas)</li>
+  </ul>
+
+  <h2>Limites de faltas por nível de ensino: o que diz a lei</h2>
+  <p>O Estatuto do Aluno estabelece limites máximos de faltas que, se ultrapassados, podem ter consequências académicas graves, incluindo a retenção do aluno no mesmo ano letivo. Estes limites aplicam-se sobretudo às faltas injustificadas, mas o excesso de faltas justificadas pode também ter implicações em determinados níveis de ensino.</p>
+
+  <h3>Faltas escolares no Ensino Básico (1.º, 2.º e 3.º ciclo)</h3>
+  <p>No ensino básico, as faltas justificadas por doença não têm, em regra, consequências académicas diretas. No entanto, quando o número de faltas justificadas é elevado, o diretor de turma deve informar o encarregado de educação e, em casos de absentismo crónico, pode ser acionado o mecanismo de sinalização à <a href="https://www.cndcj.gov.pt/cpcj" target="_blank" style="color:var(--teal)">Comissão de Proteção de Crianças e Jovens</a>.</p>
+  <p>Quanto às faltas injustificadas, os limites previstos no artigo 18.º, n.º 1, da Lei n.º 51/2012 são diferentes consoante o ciclo:</p>
+  <p>No <strong>1.º ciclo do ensino básico</strong>, o limite é de <strong>10 dias de faltas injustificadas</strong>, seguidos ou interpolados.</p>
+  <p>No <strong>2.º e 3.º ciclo do ensino básico</strong>, o limite é o <strong>dobro do número de tempos letivos semanais por disciplina</strong>. Por exemplo, numa disciplina com 3 tempos semanais, o limite de faltas injustificadas é de 6 tempos. Ultrapassado este limite, o conselho de turma delibera sobre as medidas a adotar, que podem incluir atividades de recuperação ou, em casos extremos, a retenção.</p>
+
+  <h3>Faltas escolares no Ensino Secundário (10.º, 11.º e 12.º ano) e cursos profissionais</h3>
+  <p>No ensino secundário aplica-se a mesma regra do 2.º e 3.º ciclo: o limite é o dobro do número de tempos letivos semanais por disciplina (artigo 18.º, n.º 1, al. b), da Lei n.º 51/2012). Numa disciplina com 3 tempos semanais, o limite é de 6 faltas.</p>
+  <p>No entanto, para as ofertas formativas profissionalmente qualificantes, como os cursos profissionais, o artigo 18.º, n.º 2, prevê regras próprias que incluem tanto faltas justificadas como injustificadas, nos termos definidos na regulamentação específica de cada oferta ou no regulamento interno da escola.</p>
+  <p>Existem mecanismos de proteção previstos na lei para situações de doença prolongada ou crónica, incluindo regimes especiais para alunos com condições de saúde devidamente comprovadas.</p>
+
+  <h3>Cálculo prático do limite de faltas</h3>
+  <p>O limite de faltas injustificadas é calculado com base no dobro dos tempos letivos semanais de cada disciplina, e não com base numa percentagem da carga horária anual.</p>
+  <p><strong>Exemplos práticos de cálculo do número de faltas:</strong></p>
+  <ul>
+    <li>Disciplina com 2 tempos semanais: limite de 4 faltas injustificadas</li>
+    <li>Disciplina com 3 tempos semanais: limite de 6 faltas injustificadas</li>
+    <li>Disciplina com 5 tempos semanais: limite de 10 faltas injustificadas</li>
+  </ul>
+  <p>Quando as aulas decorrem em tempos consecutivos, são registadas tantas faltas quantos os tempos em que o aluno esteve ausente, nos termos do artigo 14.º, n.º 2, da Lei n.º 51/2012. Quando metade do limite é atingida, o diretor de turma tem obrigação legal de convocar o encarregado de educação, nos termos do artigo 18.º, n.º 3, da Lei n.º 51/2012.</p>
+
+  <h2>Prazo para apresentar a justificação de falta à escola</h2>
+  <p>O prazo legal para apresentar a justificação de falta à escola é de três dias úteis a partir da verificação da falta, conforme o artigo 17.º, n.º 3, da Lei n.º 51/2012.</p>
+  <p>Na prática, alguns regulamentos internos de escola podem prever procedimentos específicos, como a entrega da justificação diretamente ao diretor de turma, através da caderneta do aluno ou de plataforma digital escolar. É importante verificar o regulamento interno da escola específica.</p>
+  <p>A não apresentação da justificação dentro do prazo legal resulta na classificação das faltas como injustificadas, independentemente do motivo real da ausência.</p>
+
+  <h2>Absentismo escolar crónico por doença: regimes especiais</h2>
+  <p>A lei portuguesa prevê regimes especiais para alunos com doença crónica ou condições de saúde que impliquem faltas recorrentes. Estes mecanismos são frequentemente desconhecidos, mas podem ser determinantes para o percurso académico de alunos com doença crónica.</p>
+
+  <h3>Regime Educativo Especial de faltas à escola por motivo de saúde</h3>
+  <p>O <a href="https://diariodarepublica.pt/dr/detalhe/decreto-lei/54-2018-115652961" target="_blank" style="color:var(--teal)">Decreto-Lei n.º 54/2018</a>, de 6 de julho, que estabelece o regime jurídico da educação inclusiva, prevê a possibilidade de adaptações ao processo de ensino e avaliação para alunos com necessidades de saúde especiais. Estas adaptações podem incluir horário escolar adaptado, dispensa de determinadas atividades físicas, avaliação em datas alternativas e, em casos mais graves, ensino doméstico.</p>
+
+  <h3>Faltas por internamento hospitalar ou doença de longa duração</h3>
+  <p>A Lei n.º 51/2012 não prevê um regime especial específico para faltas por doença prolongada. O que existe são mecanismos complementares previstos noutros diplomas:</p>
+  <p>Para crianças com doença oncológica, a <a href="https://diariodarepublica.pt/dr/detalhe/lei/71-2009-494015" target="_blank" style="color:var(--teal)">Lei n.º 71/2009, de 6 de agosto</a>, e a <a href="https://diariodarepublica.pt/dr/detalhe/portaria/350-a-2017-114203983" target="_blank" style="color:var(--teal)">Portaria n.º 350-A/2017, de 14 de novembro</a>, preveem medidas educativas especiais, incluindo condições especiais de avaliação e frequência escolar, apoio educativo individual e no domicílio, e adaptação curricular.</p>
+  <p>Para situações em que a doença impede definitivamente a frequência escolar, o <a href="https://diariodarepublica.pt/dr/detalhe/decreto-lei/70-2021-168903099" target="_blank" style="color:var(--teal)">Decreto-Lei n.º 70/2021</a> regula o ensino individual, modalidade em que um professor se desloca ao domicílio, permitindo ao aluno manter o percurso escolar sem presença física na escola.</p>
+
+  <h2>Como obter uma declaração médica para falta à escola</h2>
+  <p>Para obter uma declaração médica para justificar a falta escolar do filho, o encarregado de educação tem várias opções, com vantagens e desvantagens diferentes em termos de rapidez, custo e conveniência.</p>
+
+  <h3>Centro de Saúde ou médico de família (SNS)</h3>
+  <p>A opção gratuita é recorrer ao centro de saúde ou ao médico de família do SNS. No entanto, obter consulta no próprio dia em que a criança adoece pode ser difícil. Os tempos de espera para consulta com médico de família no SNS são frequentemente de vários dias, o que pode inviabilizar a obtenção da declaração dentro do prazo legal de três dias úteis.</p>
+
+  <h3>Urgência hospitalar ou pediátrica</h3>
+  <p>Em situações de doença mais grave, a urgência hospitalar pode emitir declaração de presença ou nota de alta que serve de justificação escolar. No entanto, o recurso à urgência hospitalar deve ser reservado para situações que genuinamente o justifiquem.</p>
+
+  <h3>Consulta médica privada presencial</h3>
+  <p>Uma clínica privada ou médico privado pode emitir a declaração no próprio dia, mas implica deslocação física e um custo que varia consoante a especialidade e a clínica.</p>
+
+  <h3>Consulta médica online por videoconsulta</h3>
+  <p>A <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> é atualmente a opção mais rápida e conveniente para obter uma declaração médica para falta escolar. Permite obter a declaração no próprio dia, sem deslocação, o que é especialmente vantajoso quando a criança está com febre ou indisposta e não tem condições para sair de casa.</p>
+  <p>A declaração emitida por videoconsulta tem exatamente o mesmo valor legal que a emitida em consulta presencial, desde que o médico esteja devidamente inscrito na Ordem dos Médicos. A ConsultasOnline disponibiliza este serviço de segunda a domingo, das 9h às 21h, com emissão de fatura AT automática e envio da declaração por email no próprio dia.</p>
+
+  <h2>O que deve conter a declaração médica para falta escolar</h2>
+  <p>Para garantir que a declaração médica é aceite pela escola sem problemas, deve incluir os seguintes elementos:</p>
+  <ul>
+    <li>Nome completo do aluno e data de nascimento</li>
+    <li>Período de incapacidade: datas de início e de fim da impossibilidade de frequência escolar</li>
+    <li>Indicação explícita de que o aluno estava impossibilitado de frequentar o estabelecimento de ensino por motivo de saúde</li>
+    <li>Identificação do médico: nome completo, especialidade, número de cédula profissional e assinatura</li>
+    <li>Data de emissão do documento</li>
+    <li>Carimbo do médico ou da instituição (quando aplicável)</li>
+  </ul>
+  <p>O diagnóstico não deve constar da declaração, em respeito pelo sigilo médico. A escola não tem direito a exigir o conhecimento da doença que motivou a ausência.</p>
+
+  <h2>A declaração médica online é aceite pelas escolas?</h2>
+  <p>Sim. A declaração médica emitida na sequência de uma <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> tem plena validade legal junto de escolas públicas e privadas em Portugal, desde que cumpra os requisitos legais aplicados a qualquer declaração médica. A lei portuguesa não distingue entre declaração emitida em consulta presencial e declaração emitida em consulta online.</p>
+
+  <h2>Conselhos práticos para encarregados de educação</h2>
+  <ul>
+    <li>Guarde sempre uma cópia da declaração médica entregue à escola.</li>
+    <li>Entregue a justificação dentro do prazo de três dias úteis após a verificação da falta.</li>
+    <li>Verifique o regulamento interno da escola quanto aos procedimentos específicos de justificação de faltas.</li>
+    <li>Acompanhe o número de faltas acumuladas, especialmente no ensino secundário, para evitar situações de exclusão de avaliação.</li>
+    <li>Em caso de dúvida sobre o limite de faltas, contacte o diretor de turma antes de atingir o limite.</li>
+    <li>Para doenças de longa duração, informe-se sobre o direito a ensino hospitalar ou doméstico.</li>
+  </ul>
+
+  <div class="art-cta"><h3>Precisa de declaração médica para falta escolar hoje?</h3><p>Emissão no próprio dia por videoconsulta, enviada por email com validade legal. Disponível de segunda a domingo, das 9h às 21h.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Consulta Online — 35€ →</button></div>
+
+  <h2>Perguntas frequentes</h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O que acontece se o meu filho ultrapassar o limite de faltas? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">No ensino básico, o excesso de faltas justificadas não tem consequências académicas diretas, mas pode ser sinalizado. No ensino secundário, pode implicar a impossibilidade de realizar os testes sumativos e, portanto, de obter classificação final em determinada disciplina. O conselho de turma deve deliberar sobre a situação e informar o encarregado de educação.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quantas faltas justificadas são permitidas no ensino secundário? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">O limite é o dobro do número de tempos letivos semanais por disciplina (artigo 18.º, n.º 1, al. b), da Lei n.º 51/2012). Numa disciplina com 3 tempos semanais, o limite é de 6 faltas. Para os cursos profissionais, o artigo 18.º, n.º 2, prevê regras próprias que incluem tanto faltas justificadas como injustificadas.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">No ensino básico, quantas faltas pode o encarregado de educação justificar por escrito? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">No ensino básico, o encarregado de educação pode justificar até três dias de falta por período letivo por escrito, sem necessidade de declaração médica. Para ausências superiores, a declaração médica é necessária.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Qual é o prazo para justificar uma falta escolar por doença? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">O prazo legal é de três dias úteis após a verificação da falta. A justificação deve ser entregue ao diretor de turma ou ao professor titular de turma dentro deste prazo, sob pena de as faltas serem classificadas como injustificadas.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A escola pode exigir saber o diagnóstico da doença? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Não. A declaração médica para fins escolares não deve incluir o diagnóstico. A escola apenas tem direito a saber que o aluno esteve impossibilitado de frequentar as aulas por motivo de saúde e o período de incapacidade. O diagnóstico é informação clínica protegida pelo sigilo médico e pelo RGPD.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A declaração médica serve para justificar faltas retroativamente? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Em regra, a declaração médica deve ser emitida durante ou imediatamente após o período de doença. A emissão retroativa pode ser questionada pela escola. Se o prazo de três dias úteis foi ultrapassado, o encarregado de educação deve contactar o diretor de turma e explicar a situação, apresentando a declaração e solicitando que seja apreciada. A decisão final cabe ao diretor de turma e ao conselho de turma.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A declaração médica online é aceite pelas escolas portuguesas? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim. A declaração médica emitida por um médico inscrito na Ordem dos Médicos, seja em consulta presencial ou online, tem plena validade legal junto de escolas públicas e privadas em Portugal. A lei não faz qualquer distinção entre os dois formatos.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quanto custa obter uma declaração médica online para falta escolar? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Na ConsultasOnline, o atestado médico para falta escolar custa 35 euros, com fatura AT automática e envio da declaração por email no próprio dia. O serviço está disponível de segunda a domingo, das 9h às 21h.</div>
+  </div>
+
+  <div class="refs"><h3>Referências Bibliográficas</h3><ol class="ref-list">
+    <li>Assembleia da República. (2012). Lei n.º 51/2012, de 5 de setembro. Estatuto do Aluno e Ética Escolar. <em>Diário da República, 1.ª série, n.º 172.</em> https://diariodarepublica.pt/dr/detalhe/lei/51-2012-174840</li>
+    <li>Assembleia da República. (2012). Declaração de Retificação n.º 46/2012. Retificação à Lei n.º 51/2012, de 5 de setembro. <em>Diário da República, 1.ª série.</em></li>
+    <li>Governo de Portugal. (2018). Decreto-Lei n.º 54/2018, de 6 de julho. Regime jurídico da educação inclusiva. <em>Diário da República, 1.ª série, n.º 129.</em> https://diariodarepublica.pt/dr/detalhe/decreto-lei/54-2018-115652961</li>
+    <li>Assembleia da República. (2009). Lei n.º 71/2009, de 6 de agosto. Regime especial de proteção de crianças e jovens com doença oncológica. <em>Diário da República, 1.ª série, n.º 151.</em> https://diariodarepublica.pt/dr/detalhe/lei/71-2009-494015</li>
+    <li>Ministério da Educação. (2017). Portaria n.º 350-A/2017, de 14 de novembro. Medidas educativas especiais para crianças e jovens com doença oncológica. <em>Diário da República, 1.ª série, n.º 219.</em> https://diariodarepublica.pt/dr/detalhe/portaria/350-a-2017-114203983</li>
+    <li>Governo de Portugal. (2021). Decreto-Lei n.º 70/2021, de 3 de agosto. Regime jurídico do ensino individual e do ensino doméstico. <em>Diário da República, 1.ª série.</em> https://diariodarepublica.pt/dr/detalhe/decreto-lei/70-2021-168903099</li>
   </ol></div>
+
+  <p style="font-size:12px;color:var(--muted);margin-top:16px;font-style:italic">Artigo revisto por médico inscrito na Ordem dos Médicos. Para uso informativo. Não substitui aconselhamento jurídico ou médico individualizado.</p>
+
 </div></div>
 </div>
+
 
 <!-- GARGANTA -->
 <div class="article-view" id="article-garganta">
