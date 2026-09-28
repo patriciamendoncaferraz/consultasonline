@@ -179,25 +179,182 @@ const ARTICLES = {
 // Conteúdo SSR completo de cada artigo
 const ARTICLES_CONTENT = {
 
-'infecao-urinaria': {
-  title: 'Infeção Urinária: Causas, Sintomas, Diagnóstico e Tratamento | ConsultasOnline',
-  description: 'Guia médico completo sobre infeção urinária: sintomas, antibióticos recomendados em Portugal, prevenção e quando ir às urgências. Consulta online disponível.',
-  keywords: 'infeção urinária sintomas tratamento, antibiótico infeção urinária Portugal, cistite tratamento, infeção urinária recorrente, consulta infeção urinária online',
-  content: `<div class="cta-top"><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>
-    <h2>O que é uma Infeção do Trato Urinário?</h2>
-    <p>A infeção do trato urinário (ITU) é uma das infeções bacterianas mais comuns em ambulatório. A cistite aguda não complicada é a forma mais prevalente em mulheres adultas saudáveis. A <em>Escherichia coli</em> é responsável por 80–85% das ITU não complicadas.</p>
-    <h2>Sintomas</h2>
-    <ul><li><strong>Disúria</strong> — ardor ou dor ao urinar</li><li><strong>Polaquiúria</strong> — urinar frequentemente em pequenas quantidades</li><li><strong>Hematúria</strong> — urina com sangue (~30% dos casos)</li><li><strong>Dor suprapúbica</strong> — zona inferior do abdómen</li></ul>
-    <div class="warn"><strong>⚠️ Quando ir às urgências</strong><p>Febre superior a 38,5°C, dores lombares intensas ou vómitos requerem avaliação urgente presencial.</p></div>
-    <h2>Diagnóstico</h2>
-    <p>O diagnóstico de cistite não complicada é essencialmente clínico. A presença de disúria e polaquiúria sem corrimento vaginal tem um valor preditivo positivo de 90% para ITU.</p>
-    <h2>Tratamento</h2>
-    <p>As guidelines DGS e EAU recomendam antibioterapia de curta duração para cistite não complicada. Os antibióticos de primeira linha em Portugal incluem nitrofurantoína, fosfomicina e pivmecilinam.</p>
-    <h2>Prevenção</h2>
-    <ul><li>Ingestão adequada de líquidos (1,5–2L por dia)</li><li>Micção pós-coital</li><li>Evitar produtos de higiene íntima agressivos</li></ul>
-    <div class="refs"><h3>Referências</h3><ol><li>EAU Guidelines on Urological Infections. 2023.</li><li>DGS. Infeções do Trato Urinário — Norma de Orientação Clínica. 2021.</li></ol></div>`
-},
+<!-- INFEÇÃO URINÁRIA -->
+<div class="article-view" id="article-itu">
+<div class="art-hero"><div class="art-hero-inner">
+  <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+  <div class="art-cat">💧 Infeções</div>
+  <h1 class="art-title">Infeção Urinária: Causas, Sintomas, Diagnóstico e Tratamento</h1>
+  <div class="art-meta"><div class="art-meta-item">⏱ <span>15 min</span></div><div class="art-meta-item">🔬 <span>Atualizado 2026</span></div></div>
+</div></div>
+<div class="art-body-wrap"><div class="art-body">
+<div class="art-author">✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
 
+  <p>A infeção do trato urinário é uma das doenças infeciosas mais frequentes em Portugal e no mundo. Afeta sobretudo mulheres, e muitas delas conhecem bem a sensação: aquela urgência de ir à casa de banho de cinco em cinco minutos, o ardor ao urinar, o desconforto que não passa. Apesar de ser uma infeção muito comum, há aspetos do diagnóstico, do tratamento e sobretudo da prevenção que valem a pena conhecer bem, sobretudo para quem tem infeções repetidas.</p>
+  <p>Este artigo explica o que é a infeção urinária, porque acontece, como se diagnostica, quais os antibióticos recomendados em Portugal e o que fazer para evitar que volte.</p>
+
+  <h2>O que é a infeção do trato urinário?</h2>
+  <p>A infeção do trato urinário (ITU) é uma infeção causada por bactérias que colonizam e se multiplicam no aparelho urinário, que inclui os rins, os ureteres, a bexiga e a uretra. Consoante a localização da infeção, fala-se em cistite (infeção da bexiga, a mais comum), pielonefrite (infeção dos rins, mais grave) e uretrite (infeção da uretra).</p>
+  <p>Em Portugal, <a href="https://revista.spmi.pt/index.php/rpmi/article/download/1016/667/2654" target="_blank" style="color:var(--teal)">a infeção urinária é a segunda doença infeciosa mais frequente na comunidade</a>, a seguir às infeções respiratórias (Rocha et al., 2014). Num estudo realizado em Lisboa com 8.869 culturas de urina, foi encontrada uma prevalência de ITU de 18% na população estudada (Guerreiro, 2010).</p>
+  <p>A bactéria responsável pela grande maioria dos casos é a <em>Escherichia coli</em>, que habita naturalmente o intestino e que, por razões anatómicas, chega com facilidade à uretra feminina. Num estudo de ambulatório no distrito de Coimbra com mais de 7.000 uroculturas positivas, <a href="https://actamedicaportuguesa.com/revista/index.php/amp/article/download/10862/5752/47754" target="_blank" style="color:var(--teal)"><em>E. coli</em> foi o microrganismo mais frequente</a>, correspondendo à maioria dos casos de ITU na comunidade (Curto et al., 2019).</p>
+
+  <h2>Porque é que a infeção urinária é muito mais frequente nas mulheres?</h2>
+  <p>A anatomia feminina é o principal fator. A uretra das mulheres tem apenas 3 a 4 cm de comprimento, ao contrário dos 15 a 20 cm da uretra masculina, e está muito próxima do ânus e da vagina, o que facilita a entrada de bactérias na bexiga. Esta diferença anatómica explica porque cerca de 40% das mulheres terão pelo menos uma infeção urinária ao longo da vida, e porque 20 a 30% das mulheres têm infeções recorrentes (três ou mais episódios por ano, ou dois ou mais em seis meses), segundo as guidelines da Associação Europeia de Urologia (Bonkat et al., 2024).</p>
+  <p>Outros fatores que aumentam o risco incluem:</p>
+  <ul>
+    <li>Actividade sexual: o risco de ITU após relação sexual é cerca de 30 vezes superior ao de outros momentos; a chamada "cistite da lua de mel" é bem conhecida clinicamente</li>
+    <li>Menopausa: a queda de estrogénio altera a flora vaginal e o pH urinário, tornando o trato urinário mais vulnerável</li>
+    <li>Gravidez: as alterações hormonais e anatómicas aumentam o risco, e uma ITU na gravidez tem de ser sempre tratada mesmo sem sintomas</li>
+    <li>Diabetes: o excesso de glicose na urina cria um ambiente favorável ao crescimento bacteriano</li>
+    <li>Anomalias estruturais do trato urinário: refluxo vesicoureteral, cálculos renais ou obstrução urinária</li>
+    <li>Uso de cateter urinário</li>
+    <li>Histórico de ITU prévia: ser o fator de risco independente mais forte para episódios futuros</li>
+  </ul>
+
+  <h2>Quais são os sintomas da infeção urinária?</h2>
+  <p>Os sintomas da cistite aguda não complicada são geralmente muito característicos e permitem o diagnóstico clínico com elevada probabilidade. De acordo com as guidelines da EAU, a presença simultânea de disúria e polaquiúria sem corrimento vaginal tem um valor preditivo positivo superior a 90% para ITU (Bonkat et al., 2024).</p>
+
+  <h3>Sintomas de cistite (infeção da bexiga)</h3>
+  <ul>
+    <li>Disúria: dor, ardor ou picada ao urinar, o sintoma mais típico</li>
+    <li>Polaquiúria: necessidade frequente de urinar em pequenas quantidades</li>
+    <li>Urgência miccional: sensação de necessidade imperiosa de urinar que não dá tempo de esperar</li>
+    <li>Hematúria: urina com sangue, visível ou microscópica, presente em cerca de 30% dos casos</li>
+    <li>Dor ou pressão na zona suprapúbica (região inferior do abdómen)</li>
+    <li>Urina turva ou com cheiro diferente do habitual</li>
+  </ul>
+  <p>A cistite não complicada não costuma causar febre. A presença de febre, especialmente acima de 38ºC, sugere que a infeção subiu até aos rins.</p>
+
+  <h3>Sintomas de pielonefrite (infeção dos rins)</h3>
+  <p>A pielonefrite é uma forma mais grave de ITU que exige avaliação médica urgente. Os sintomas incluem:</p>
+  <ul>
+    <li>Febre alta (frequentemente acima de 38,5ºC), com calafrios</li>
+    <li>Dor lombar intensa, geralmente unilateral (dor nas costas, na zona dos rins)</li>
+    <li>Náuseas e vómitos</li>
+    <li>Mal-estar geral e prostração</li>
+    <li>Sintomas de cistite que podem ou não estar presentes</li>
+  </ul>
+  <div class="ibox warn"><div class="ibox-title">⚠️ Quando ir às urgências</div><p>Se tiver febre acima de 38,5ºC, dores lombares intensas, vómitos ou se for grávida, a avaliação deve ser presencial e urgente. A pielonefrite pode evoluir para sépsis se não for tratada atempadamente. Uma videoconsulta é adequada para a cistite não complicada, mas não substitui a urgência nestes casos.</p></div>
+
+  <h2>Como se diagnostica a infeção urinária?</h2>
+  <p>Na mulher com sintomas típicos de cistite não complicada, o diagnóstico é essencialmente clínico. Não é necessário fazer urocultura de rotina antes de iniciar o tratamento numa mulher jovem, saudável, não grávida, com os sintomas clássicos (Bonkat et al., 2024).</p>
+
+  <h3>Tira de urina (uroanálise)</h3>
+  <p>A tira de urina é um teste rápido que pode ser feito em casa ou na farmácia e que pesquisa a presença de nitritos (produzidos pelas bactérias) e leucócitos (glóbulos brancos, indicadores de inflamação). Um resultado positivo para nitritos tem alta especificidade para ITU bacteriana. Um resultado negativo, contudo, não exclui completamente a infeção, especialmente em infeções por bactérias que não produzem nitritos.</p>
+
+  <h3>Urocultura</h3>
+  <p>A urocultura é o exame que identifica exatamente qual a bactéria responsável pela infeção e quais os antibióticos a que é sensível (antibiograma). É obrigatória nas seguintes situações:</p>
+  <ul>
+    <li>Grávidas (qualquer suspeita de ITU na gravidez deve ser confirmada e tratada com base em urocultura)</li>
+    <li>Pielonefrite</li>
+    <li>ITU em homens (sempre considerada complicada)</li>
+    <li>Infeções recorrentes (para identificar padrões de resistência)</li>
+    <li>Falência do tratamento após 48 a 72 horas</li>
+    <li>Pessoas imunodeprimidas, diabéticas ou com anomalias estruturais do trato urinário</li>
+  </ul>
+  <p>A urocultura deve ser feita com amostra de urina do jato médio, recolhida após higiene cuidadosa dos genitais, preferencialmente a primeira urina da manhã ou após pelo menos 4 horas sem urinar.</p>
+
+  <h3>Diagnóstico por videoconsulta</h3>
+  <p>Na cistite não complicada numa mulher jovem e saudável, o diagnóstico pode ser feito por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> com base na história clínica e nos sintomas. O médico avalia os sintomas, exclui situações de maior gravidade e, quando clinicamente adequado, prescreve o antibiótico recomendado pelas guidelines nacionais. Se for necessário fazer urocultura, o médico prescreve a análise para o laboratório à escolha da pessoa.</p>
+
+  <h2>Tratamento da infeção urinária: quais os antibióticos recomendados em Portugal</h2>
+  <p>O tratamento da cistite aguda não complicada em Portugal segue as orientações da Direção-Geral da Saúde e as guidelines da EAU, adaptadas ao padrão local de resistências bacterianas. A resistência crescente de <em>E. coli</em> a vários antibióticos, incluindo as fluoroquinolonas (como a ciprofloxacina) e a amoxicilina com ácido clavulânico, torna fundamental que a escolha do antibiótico seja feita por um médico com base no quadro clínico e nos dados de resistência locais (Curto et al., 2019).</p>
+
+  <h3>Antibióticos de primeira linha para cistite não complicada</h3>
+  <p>De acordo com as guidelines da EAU de 2024 e as orientações da DGS, os antibióticos de primeira linha preferidos em Portugal são (Bonkat et al., 2024):</p>
+  <ul>
+    <li><strong>Nitrofurantoína 100 mg (libertação modificada) duas vezes por dia durante 5 dias:</strong> excelente atividade contra <em>E. coli</em> com baixas taxas de resistência em Portugal. Não deve ser usada em pielonefrite nem em insuficiência renal moderada a grave.</li>
+    <li><strong>Fosfomicina trometamol 3g em dose única:</strong> muito conveniente pela toma única, boa atividade, incluindo contra estirpes produtoras de ESBL. Uma das melhores opções para situações em que a aderência pode ser um problema.</li>
+    <li><strong>Pivmecilinam 400 mg três vezes por dia durante 3 a 7 dias:</strong> recomendado pelas guidelines europeias, com menor impacto na flora intestinal. Disponível em Portugal.</li>
+  </ul>
+
+  <h3>Antibióticos a evitar em primeira linha</h3>
+  <ul>
+    <li><strong>Fluoroquinolonas (ciprofloxacina, norfloxacina, levofloxacina):</strong> apesar de eficazes, as guidelines da EAU e a DGS recomendam reservá-las para situações em que outros antibióticos não podem ser usados, devido ao aumento de resistências e aos efeitos adversos graves associados (nomeadamente tendinopatia e neuropatia)</li>
+    <li><strong>Amoxicilina com ácido clavulânico:</strong> as taxas de resistência de <em>E. coli</em> a este antibiótico em Portugal são elevadas, tornando-o inadequado como opção empírica de primeira linha</li>
+    <li><strong>Trimetoprim/sulfametoxazol:</strong> as taxas de resistência locais superiores a 20% desaconselham o seu uso empírico sem urocultura prévia</li>
+  </ul>
+
+  <h3>Tratamento da pielonefrite</h3>
+  <p>A pielonefrite exige antibioticoterapia durante 7 a 14 dias, com escolha do antibiótico idealmente baseada em urocultura. Os casos moderados a graves, com vómitos que impedem a toma de medicação oral ou sinais de sépsis, requerem internamento e antibioticoterapia endovenosa.</p>
+
+  <h3>ITU na gravidez</h3>
+  <p>Qualquer ITU na gravidez, incluindo a bacteriúria assintomática (bactérias na urina sem sintomas), deve ser tratada com antibiótico. As opções mais seguras durante a gravidez são a nitrofurantoína (evitar no 3.º trimestre), a cefalexina e a amoxicilina com ácido clavulânico quando a sensibilidade estiver confirmada. O tratamento deve ser baseado no resultado da urocultura.</p>
+
+  <h3>ITU no homem</h3>
+  <p>A ITU no homem é sempre considerada complicada pelas guidelines da EAU, porque pode envolver a próstata. Requer urocultura obrigatória, investigação de causa subjacente e antibioticoterapia mais prolongada (habitualmente 7 a 14 dias com fluoroquinolona ou trimetoprim, dependendo da sensibilidade).</p>
+
+  <h2>Infeção urinária recorrente: o que fazer</h2>
+  <p>A ITU recorrente, definida como três ou mais episódios por ano ou dois ou mais em seis meses, afeta uma percentagem significativa das mulheres e representa um problema real no dia a dia. Existem várias estratégias de prevenção com evidência científica.</p>
+
+  <h3>Medidas não farmacológicas</h3>
+  <ul>
+    <li><strong>Ingestão adequada de líquidos:</strong> beber 1,5 a 2 litros de água por dia dilui a urina e favorece o "flush" bacteriano. A EAU recomenda aumentar a ingestão de água como medida preventiva (Bonkat et al., 2024)</li>
+    <li><strong>Micção pós-coital:</strong> urinar após as relações sexuais reduz significativamente o risco de cistite pós-coito, eliminando as bactérias que possam ter entrado na uretra durante a relação</li>
+    <li><strong>Higiene correta:</strong> limpar da frente para trás após usar a casa de banho, para evitar a transferência de bactérias do ânus para a uretra</li>
+    <li><strong>Evitar produtos de higiene íntima agressivos:</strong> sabonetes, géis e desodorizantes íntimos podem alterar o pH vaginal e a flora local, facilitando as infeções. A água morna é suficiente para a higiene íntima diária</li>
+    <li><strong>Arando (Vaccinium macrocarpon):</strong> os estudos mostram uma redução modesta mas consistente do risco de ITU recorrente com o consumo regular de arando, provavelmente por inibir a adesão de <em>E. coli</em> às células uroteliais. As guidelines da EAU reconhecem este benefício como modesto mas real (Bonkat et al., 2024)</li>
+    <li><strong>Probióticos com Lactobacillus:</strong> a administração intravaginal de lactobacilos pode ajudar a restaurar a flora vaginal protetora, especialmente em mulheres pós-menopáusicas</li>
+  </ul>
+
+  <h3>Medidas farmacológicas preventivas</h3>
+  <ul>
+    <li><strong>Profilaxia antibiótica contínua de baixa dose:</strong> em mulheres com ITU muito frequentes, o médico pode prescrever um antibiótico em dose baixa diária (habitualmente nitrofurantoína ou trimetoprim) durante 3 a 6 meses. A eficácia é elevada, mas aumenta o risco de resistências</li>
+    <li><strong>Profilaxia pós-coital:</strong> uma dose única de antibiótico após a relação sexual, preferida quando as infeções estão claramente relacionadas com a atividade sexual</li>
+    <li><strong>Terapia auto-iniciada:</strong> em mulheres com história bem documentada e capacidade de reconhecer os sintomas, o médico pode prescrever um antibiótico para ser iniciado pela própria quando surgem sintomas. Requer acompanhamento médico próximo</li>
+    <li><strong>Estrogénio tópico vaginal:</strong> nas mulheres pós-menopáusicas, a aplicação local de estrogénio restaura o pH vaginal e a flora de Lactobacillus, reduzindo significativamente a frequência de ITU</li>
+    <li><strong>Imunoestimulação com Uro-Vaxom:</strong> vacina bacteriana oral com lisado de <em>E. coli</em>, com evidência de redução da frequência de ITU recorrente. Reconhecida pelas guidelines da EAU como opção válida</li>
+  </ul>
+
+  <div class="art-cta"><h3>Tem sintomas de infeção urinária?</h3><p>Diagnóstico e prescrição de antibiótico por videoconsulta no próprio dia. Disponível de segunda a domingo, das 9h às 21h.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Consulta — 40€ →</button></div>
+
+  <h2>Perguntas frequentes sobre infeção urinária</h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso tratar a infeção urinária sem ir ao médico? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Os antibióticos são necessários para tratar a infeção urinária e exigem prescrição médica. Tomar antibióticos sem prescrição ou partilhar os de um episódio anterior contribui para o aumento de resistências e pode não resolver a infeção se a bactéria causadora for resistente ao antibiótico em questão. Numa cistite não complicada, a consulta por videoconsulta é uma solução rápida e sem necessidade de sair de casa.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A infeção urinária pode passar sozinha sem antibiótico? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Alguns estudos mostram que uma minoria dos casos de cistite ligeira pode resolver espontaneamente, mas o risco de progressão para pielonefrite justifica o tratamento antibiótico. As guidelines da EAU recomendam tratamento em todos os casos sintomáticos. Aguardar sem tratar não é aconselhável.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quanto tempo demora a infeção urinária a melhorar com antibiótico? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Na cistite tratada com o antibiótico adequado, a melhoria dos sintomas ocorre habitualmente em 24 a 48 horas. Se não houver melhoria ao fim de 48 a 72 horas, é necessário reavaliação médica, urocultura e eventual mudança de antibiótico.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Preciso de fazer urocultura antes de tomar o antibiótico? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Na cistite não complicada numa mulher jovem e saudável com sintomas típicos, não é necessário fazer urocultura antes de iniciar o tratamento. A urocultura é obrigatória nas grávidas, em caso de pielonefrite, ITU no homem, infeções recorrentes ou falência do tratamento.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O arando realmente ajuda a prevenir a infeção urinária? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Há evidência de um benefício modesto mas real na prevenção de ITU recorrente, especialmente quando se toma regularmente e em quantidade suficiente. As guidelines da EAU reconhecem esta evidência. O sumo de arando tem menos evidência do que os extratos concentrados em cápsulas.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A infeção urinária é contagiosa? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">A infeção urinária em si não é contagiosa. A bactéria que a causa, geralmente <em>E. coli</em>, faz parte da flora intestinal normal e não se transmite de pessoa para pessoa por contacto casual. Durante a relação sexual, pode haver migração de bactérias para a uretra, mas não é considerada uma infeção sexualmente transmissível.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso fazer a consulta de infeção urinária por videoconsulta? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim, na cistite não complicada. O médico avalia os sintomas por videoconsulta, exclui sinais de alarme e, quando adequado, prescreve o antibiótico de primeira linha. Se forem necessárias análises, prescreve a urocultura para fazer num laboratório próximo. Em caso de febre alta, dores lombares intensas ou vómitos, a avaliação deve ser presencial e urgente.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Tenho infeções urinárias repetidas. O que posso fazer? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Existem várias estratégias preventivas com evidência científica: beber mais água, urinar após as relações sexuais, arando em extrato concentrado, probióticos com Lactobacillus, estrogénio vaginal tópico nas mulheres pós-menopáusicas, profilaxia antibiótica de baixa dose ou pós-coital, e imunoestimulação com Uro-Vaxom. A escolha da estratégia depende do perfil individual e deve ser decidida com o médico.</div>
+  </div>
+
+  <div class="refs"><h3>Referências Bibliográficas</h3><ol class="ref-list">
+    <li>Bonkat, G., Bartoletti, R., Bruyère, F., Cai, T., Geerlings, S. E., Köves, B., Kranz, J., Schubert, S., Pilatz, A., Veeratterapillay, R., & Wagenlehner, F. (2024). EAU Guidelines on Urological Infections. <em>European Association of Urology.</em> https://uroweb.org/guidelines/urological-infections</li>
+    <li>Curto, C., Rosendo, I., & Santiago, L. M. (2019). Perfil de sensibilidade aos antibióticos na infeção urinária em ambulatório no distrito de Coimbra: um estudo transversal. <em>Acta Médica Portuguesa, 32</em>(9), 568-575. https://doi.org/10.20344/amp.10862</li>
+    <li>Guerreiro, A. (2010). <em>Prevalência e resistências da infeção do trato urinário na comunidade.</em> Dissertação de mestrado. Faculdade de Farmácia, Universidade de Lisboa.</li>
+    <li>Kranz, J., et al. (2025). European Association of Urology Guidelines on Urological Infections: Summary of the 2024 Guidelines. <em>European Urology, 86</em>(1), 27-41. https://doi.org/10.1016/j.eururo.2024.03.035</li>
+    <li>Rocha, C., Marques, L., Simões, A., Rodrigues, A., Neno, M., Mulji, R., & Sargento, D. (2014). Infecções urinárias: a realidade de um serviço de Medicina Interna. <em>Medicina Interna — Revista da Sociedade Portuguesa de Medicina Interna.</em></li>
+    <li>Direção-Geral da Saúde. (2021). <em>Norma de Orientação Clínica: Infeções do Trato Urinário.</em> DGS. https://www.dgs.pt</li>
+  </ol></div>
+
+</div></div>
+</div>
+  
 'baixa-medica': {
   title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
   description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
