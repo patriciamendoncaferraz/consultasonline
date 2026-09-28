@@ -180,9 +180,9 @@ const ARTICLES = {
 const ARTICLES_CONTENT = {
 
 'infecao-urinaria': {
-  title: 'Infeção Urinária: Causas, Sintomas e Tratamento | ConsultasOnline',
-  description: 'Saiba como identificar e tratar a infeção urinária. Consulta online com diagnóstico e receita de antibiótico em 30 minutos. A partir de 40€.',
-  keywords: 'infeção urinária sintomas tratamento, consulta infeção urinária online, antibiótico infeção urinária portugal, cistite online',
+  title: 'Infeção Urinária: Causas, Sintomas, Diagnóstico e Tratamento | ConsultasOnline',
+  description: 'Guia médico completo sobre infeção urinária: sintomas, antibióticos recomendados em Portugal, prevenção e quando ir às urgências. Consulta online disponível.',
+  keywords: 'infeção urinária sintomas tratamento, antibiótico infeção urinária Portugal, cistite tratamento, infeção urinária recorrente, consulta infeção urinária online',
   content: `<div class="cta-top"><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>
     <h2>O que é uma Infeção do Trato Urinário?</h2>
     <p>A infeção do trato urinário (ITU) é uma das infeções bacterianas mais comuns em ambulatório. A cistite aguda não complicada é a forma mais prevalente em mulheres adultas saudáveis. A <em>Escherichia coli</em> é responsável por 80–85% das ITU não complicadas.</p>
