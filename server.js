@@ -184,7 +184,7 @@ const ARTICLES_CONTENT = {
   title: 'Infeção Urinária: Causas, Sintomas, Diagnóstico e Tratamento | ConsultasOnline',
   description: 'Guia médico completo sobre infeção urinária: sintomas, antibióticos recomendados em Portugal, prevenção e quando ir às urgências.',
   keywords: 'infeção urinária sintomas tratamento, antibiótico infeção urinária Portugal, cistite tratamento, infeção urinária recorrente',
-  content:   content: `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href='/'>Marcar consulta — 40€ →</a></p></div>
+  content: `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href='/'>Marcar consulta — 40€ →</a></p></div>
 
     <p>A infeção do trato urinário é uma das doenças infeciosas mais frequentes em Portugal e no mundo. Afeta sobretudo mulheres, e muitas delas conhecem bem a sensação: aquela urgência de ir à casa de banho de cinco em cinco minutos, o ardor ao urinar, o desconforto que não passa.</p>
 
