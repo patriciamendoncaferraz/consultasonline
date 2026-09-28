@@ -180,66 +180,12 @@ const ARTICLES = {
 
 const ARTICLES_CONTENT = {
 
-'infecao-urinaria': `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href='/'>Marcar consulta — 40€ →</a></p></div>
-
-    <p>A infeção do trato urinário é uma das doenças infeciosas mais frequentes em Portugal e no mundo. Afeta sobretudo mulheres, e muitas delas conhecem bem a sensação: aquela urgência de ir à casa de banho de cinco em cinco minutos, o ardor ao urinar, o desconforto que não passa.</p>
-
-    <h2>O que é a infeção do trato urinário?</h2>
-    <p>A infeção do trato urinário (ITU) é uma infeção causada por bactérias que colonizam e se multiplicam no aparelho urinário. Consoante a localização, fala-se em cistite (infeção da bexiga, a mais comum), pielonefrite (infeção dos rins, mais grave) e uretrite (infeção da uretra). Em Portugal, a infeção urinária é a segunda doença infeciosa mais frequente na comunidade, a seguir às infeções respiratórias (Rocha et al., 2014). A bactéria responsável pela grande maioria dos casos é a <em>Escherichia coli</em>, correspondendo à maioria dos casos de ITU na comunidade (Curto et al., 2019).</p>
-
-    <h2>Porque é que a infeção urinária é muito mais frequente nas mulheres?</h2>
-    <p>A anatomia feminina é o principal fator. A uretra das mulheres tem apenas 3 a 4 cm de comprimento e está muito próxima do ânus e da vagina, o que facilita a entrada de bactérias na bexiga. Cerca de 40% das mulheres terão pelo menos uma infeção urinária ao longo da vida, e 20 a 30% têm infeções recorrentes (Bonkat et al., 2024). Outros fatores de risco incluem atividade sexual, menopausa, gravidez, diabetes, anomalias estruturais do trato urinário e histórico de ITU prévia.</p>
-
-    <h2>Sintomas da infeção urinária</h2>
-    <h3>Cistite (infeção da bexiga)</h3>
-    <ul>
-      <li><strong>Disúria:</strong> dor, ardor ou picada ao urinar</li>
-      <li><strong>Polaquiúria:</strong> necessidade frequente de urinar em pequenas quantidades</li>
-      <li><strong>Urgência miccional:</strong> sensação imperiosa de urinar</li>
-      <li><strong>Hematúria:</strong> urina com sangue, presente em cerca de 30% dos casos</li>
-      <li><strong>Dor suprapúbica:</strong> pressão na zona inferior do abdómen</li>
-      <li>Urina turva ou com cheiro diferente do habitual</li>
-    </ul>
-    <p>A cistite não complicada não costuma causar febre. A presença de febre sugere que a infeção subiu até aos rins.</p>
-
-    <h3>Pielonefrite (infeção dos rins)</h3>
-    <ul>
-      <li>Febre alta (frequentemente acima de 38,5ºC), com calafrios</li>
-      <li>Dor lombar intensa, geralmente unilateral</li>
-      <li>Náuseas e vómitos</li>
-      <li>Mal-estar geral e prostração</li>
-    </ul>
-    <div class='ibox warn'><div class='ibox-title'>⚠️ Quando ir às urgências</div><p>Se tiver febre acima de 38,5ºC, dores lombares intensas, vómitos ou se for grávida, a avaliação deve ser presencial e urgente. A pielonefrite pode evoluir para sépsis se não for tratada atempadamente.</p></div>
-
-    <h2>Diagnóstico</h2>
-    <p>Na mulher com sintomas típicos de cistite não complicada, o diagnóstico é essencialmente clínico. A presença simultânea de disúria e polaquiúria sem corrimento vaginal tem um valor preditivo positivo superior a 90% para ITU (Bonkat et al., 2024). A urocultura é obrigatória nas grávidas, em caso de pielonefrite, ITU no homem, infeções recorrentes ou falência do tratamento.</p>
-
-    <h2>Tratamento: antibióticos recomendados em Portugal</h2>
-    <ul>
-      <li><strong>Nitrofurantoína 100 mg duas vezes por dia durante 5 dias:</strong> excelente atividade contra <em>E. coli</em> com baixas taxas de resistência em Portugal.</li>
-      <li><strong>Fosfomicina trometamol 3g em dose única:</strong> muito conveniente, boa atividade, incluindo contra estirpes resistentes (ESBL).</li>
-      <li><strong>Pivmecilinam 400 mg três vezes por dia durante 3 a 7 dias:</strong> menor impacto na flora intestinal.</li>
-    </ul>
-    <p>As fluoroquinolonas e a amoxicilina com ácido clavulânico devem ser evitadas em primeira linha pelo aumento de resistências em Portugal (Curto et al., 2019; Bonkat et al., 2024).</p>
-
-    <h2>Prevenção da infeção urinária recorrente</h2>
-    <ul>
-      <li>Beber 1,5 a 2 litros de água por dia</li>
-      <li>Urinar após as relações sexuais</li>
-      <li>Higiene correta: limpar da frente para trás</li>
-      <li>Evitar produtos de higiene íntima agressivos</li>
-      <li>Arando em extrato concentrado: redução modesta mas real do risco</li>
-      <li>Probióticos com Lactobacillus, especialmente nas mulheres pós-menopáusicas</li>
-      <li>Estrogénio vaginal tópico nas mulheres pós-menopáusicas</li>
-    </ul>
-
-    <div class='refs'><h3>Referências Bibliográficas</h3><ol>
-      <li>Bonkat, G., et al. (2024). EAU Guidelines on Urological Infections. European Association of Urology. https://uroweb.org/guidelines/urological-infections</li>
-      <li>Curto, C., Rosendo, I., & Santiago, L. M. (2019). Perfil de sensibilidade aos antibióticos na infeção urinária em ambulatório no distrito de Coimbra. Acta Médica Portuguesa, 32(9), 568-575.</li>
-      <li>Kranz, J., et al. (2025). EAU Guidelines on Urological Infections: Summary of the 2024 Guidelines. European Urology, 86(1), 27-41.</li>
-      <li>Rocha, C., et al. (2014). Infecções urinárias: a realidade de um serviço de Medicina Interna. Medicina Interna.</li>
-      <li>Direção-Geral da Saúde. (2021). Norma de Orientação Clínica: Infeções do Trato Urinário. DGS.</li>
-    </ol></div>`,
+'infecao-urinaria': {
+  title: 'Infeção Urinária: Causas, Sintomas, Diagnóstico e Tratamento | ConsultasOnline',
+  description: 'Guia médico completo sobre infeção urinária: sintomas, antibióticos recomendados em Portugal, prevenção e quando ir às urgências.',
+  keywords: 'infeção urinária sintomas tratamento, antibiótico infeção urinária Portugal, cistite tratamento, infeção urinária recorrente',
+  content: `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? ...resto do conteúdo...`
+},
   
 'baixa-medica': {
   title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
