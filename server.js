@@ -173,6 +173,7 @@ const ARTICLES = {
   'baixa-medica-freelancer':             { id: 'baixa-medica-freelancer',   category: 'Freelancers' },
   'sem-medico-familia-freelancer':       { id: 'sem-medico-familia-freelancer', category: 'Freelancers' },
   'dia-saude-2026':                      { id: 'dia-saude-2026',            category: 'Saúde Global' },
+  'clamidia':                            { id: 'clamidia',                  category: 'Saúde Sexual' },
 };
 
 // Conteúdo SSR completo de cada artigo
@@ -231,6 +232,12 @@ const ARTICLES_CONTENT = {
     <h2>A receita tem comparticipação do SNS?</h2>
     <p>Sim. A Receita Sem Papel emitida por videoconsulta tem o mesmo valor legal que uma receita presencial. A comparticipação é aplicada automaticamente na farmácia.</p>
     <div class="refs"><h3>Referências</h3><ol><li>INFARMED. Normas de Prescrição Eletrónica de Medicamentos. 2023.</li><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li></ol></div>`
+},
+
+  'clamidia': {
+  title: 'Clamídia: Sintomas, Transmissão, Diagnóstico e Tratamento | ConsultasOnline',
+  description: 'Saiba tudo sobre a clamídia: sintomas, como se transmite, como é diagnosticada e como se trata. Guia médico completo atualizado 2026.',
+  keywords: 'clamídia, Chlamydia trachomatis, sintomas clamídia, tratamento clamídia, rastreio clamídia Portugal, IST bacteriana',
 },
 
 'atestado-amamentacao': {
