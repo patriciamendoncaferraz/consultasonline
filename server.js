@@ -1255,21 +1255,32 @@ if (status === 422) {
           if (matchedClient) {
             clientId = matchedClient.id;
             console.log('InvoiceXpress cliente existente encontrado por nome:', clientId);
-          } else {
-            console.log('InvoiceXpress: nome nao encontrado, a criar cliente com codigo unico...');
+                   } else {
+            console.log('InvoiceXpress: nome nao encontrado por email, a pesquisar por nome...');
             try {
-              const retryRes = await axios.post(
-                'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey,
-                { client: {
-                    name: safeName,
-                    email: safeEmail,
-                    code: safeEmail.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50),
-                    country: 'Portugal',
-                    ...(safeNif ? { fiscal_id: safeNif } : {})
-                }}
+              const searchByName = await axios.get(
+                'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey + '&client_name=' + encodeURIComponent(safeName)
               );
-              clientId = retryRes.data.client.id;
-              console.log('InvoiceXpress cliente criado com codigo unico:', clientId);
+              const clientsByName = searchByName.data && searchByName.data.clients;
+              const matchedByName = clientsByName && clientsByName.find(c => c.name && c.name.toLowerCase() === safeName.toLowerCase());
+              if (matchedByName) {
+                clientId = matchedByName.id;
+                console.log('InvoiceXpress cliente encontrado por nome:', clientId);
+              } else {
+                const uniqueCode = safeEmail.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40) + '_' + Date.now().toString().slice(-6);
+                const retryRes = await axios.post(
+                  'https://' + account + '.app.invoicexpress.com/clients.json?api_key=' + apiKey,
+                  { client: {
+                      name: safeName,
+                      email: safeEmail,
+                      code: uniqueCode,
+                      country: 'Portugal',
+                      ...(safeNif ? { fiscal_id: safeNif } : {})
+                  }}
+                );
+                clientId = retryRes.data.client.id;
+                console.log('InvoiceXpress cliente criado com codigo unico:', clientId);
+              }
             } catch (retryErr) {
               console.error('InvoiceXpress erro na segunda tentativa:', JSON.stringify(retryErr.response && retryErr.response.data));
               return null;
