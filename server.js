@@ -569,7 +569,6 @@ const ARTICLES_CONTENT = {
   title: 'Como Parar de Fumar: Guia Médico Completo | ConsultasOnline',
   description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 40€.',
   keywords: 'cessação tabágica online portugal, consulta parar fumar online, vareniclina prescrição online, champix online portugal',
-  content: ```javascript
   content: `<div class='cta-top'><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por <a href='/artigos/consulta-online'>videoconsulta</a>. <a href='/'>Marcar consulta — 40€ →</a></p></div>
 
     <div class='art-author'>✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
