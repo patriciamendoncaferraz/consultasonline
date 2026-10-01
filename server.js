@@ -358,19 +358,60 @@ const ARTICLES_CONTENT = {
   title: 'Dor de Garganta e Amigdalite: Quando Tomar Antibiótico | ConsultasOnline',
   description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
   keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal, amigdalite bacteriana viral',
-  content: `<div class="cta-top"><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por videoconsulta em 30 minutos. <a href="/">Marcar consulta — 40€ →</a></p></div>
-    <h2>Vírica ou Bacteriana?</h2>
-    <p>Até <strong>80% das faringoamigdalites são de origem viral</strong> e não beneficiam de antibiótico. Distinguir a causa é fundamental para evitar o uso desnecessário de antibióticos.</p>
-    <h2>Critérios de Centor</h2>
-    <ul><li>Exsudado amigdalino — <strong>+1 ponto</strong></li><li>Adenopatias cervicais dolorosas — <strong>+1 ponto</strong></li><li>Ausência de tosse — <strong>+1 ponto</strong></li><li>Febre ≥38°C — <strong>+1 ponto</strong></li></ul>
-    <p>Score ≥3: considerar antibiótico. Score ≤1: causa viral provável — antibiótico não indicado.</p>
-    <div class="warn"><strong>🚨 Abcesso Periamigdalino — Urgência</strong><p>Trismo, voz "engrolada" e desvio da úvula são sinais de emergência cirúrgica urgente. Dirija-se imediatamente às urgências.</p></div>
-    <h2>Tratamento da Amigdalite Bacteriana</h2>
-    <p>Amoxicilina 500mg 3×/dia, 10 dias — primeira linha (DGS). Em caso de alergia à penicilina, azitromicina é a alternativa.</p>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>Posso obter antibiótico por videoconsulta?</h4><p>Sim, se o diagnóstico clínico indicar origem bacteriana.</p></div>
-    <div class="faq"><h4>Este serviço é apenas para adultos?</h4><p>Sim. Para crianças, recomendamos consulta presencial de pediatria.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>DGS. Norma 007/2012: Faringoamigdalite. (atualizada 2022).</li></ol></div>`
+  content:   content: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>
+
+    <p>A dor de garganta é um dos motivos de consulta mais frequentes nos cuidados de saúde primários e nas urgências em Portugal. Na maioria das vezes, a causa é viral e resolve sozinha em poucos dias, sem necessidade de antibiótico. Mas há situações em que a infeção é bacteriana, e aí o antibiótico correto, prescrito a tempo, previne complicações que podem ser sérias.</p>
+
+    <h2>Amigdalite viral ou bacteriana?</h2>
+    <p>A grande maioria das faringoamigdalites agudas é de origem viral. Em adultos, a etiologia viral representa cerca de 90% dos casos. A causa bacteriana mais importante é o <em>Streptococcus pyogenes</em> (estreptococo do grupo A), a única que justifica antibiótico de forma rotineira.</p>
+    <h3>Sinais que sugerem causa viral</h3>
+    <ul>
+      <li>Rinorreia e congestão nasal</li>
+      <li>Tosse presente</li>
+      <li>Rouquidão ou disfonia</li>
+      <li>Úlceras na mucosa oral</li>
+      <li>Conjuntivite associada</li>
+    </ul>
+    <h3>Sinais que sugerem causa bacteriana</h3>
+    <ul>
+      <li>Início súbito de dor de garganta intensa</li>
+      <li>Febre elevada acima de 38ºC</li>
+      <li>Exsudado purulento nas amígdalas (placas brancas ou amareladas)</li>
+      <li>Gânglios cervicais anteriores dolorosos</li>
+      <li>Ausência de tosse e de sintomas nasais</li>
+    </ul>
+
+    <h2>Critérios de Centor-McIsaac</h2>
+    <p>A escala de Centor, adaptada por McIsaac, é a ferramenta de predição clínica mais utilizada para estimar a probabilidade de amigdalite estreptocócica. Cada critério presente vale um ponto: febre superior a 38ºC, ausência de tosse, exsudado amigdalino, gânglios cervicais anteriores dolorosos, e idade entre 3 e 14 anos.</p>
+    <ul>
+      <li><strong>0 a 1 ponto:</strong> causa viral muito provável. Antibiótico não indicado.</li>
+      <li><strong>2 a 3 pontos:</strong> probabilidade intermédia. O teste de diagnóstico rápido (TDR) pode ajudar.</li>
+      <li><strong>4 ou mais pontos:</strong> probabilidade elevada de causa estreptocócica.</li>
+    </ul>
+
+    <h2>Quando é necessário antibiótico?</h2>
+    <p>O antibiótico está indicado quando existe forte suspeita ou confirmação de causa estreptocócica: TDR positivo, pontuação de Centor-McIsaac elevada com quadro clínico sugestivo, ou ausência de melhoria após 48 a 72 horas com tratamento sintomático.</p>
+    <p>O antibiótico de primeira linha recomendado pela DGS é a amoxicilina 500 mg três vezes por dia durante 10 dias. Em caso de alergia às penicilinas, a azitromicina durante 5 dias é a alternativa mais utilizada.</p>
+    <div class='ibox warn'><div class='ibox-title'>⚠️ Amoxicilina com ácido clavulânico não é indicada</div><p>A amoxicilina com ácido clavulânico não é o antibiótico de escolha para a amigdalite estreptocócica. O estreptococo do grupo A é sensível à amoxicilina simples e o ácido clavulânico é desnecessário.</p></div>
+
+    <h2>Sinais de alarme: quando ir às urgências</h2>
+    <p>Alguns sinais indicam complicações que exigem avaliação presencial urgente:</p>
+    <ul>
+      <li><strong>Abcesso periamigdalino:</strong> trismo (dificuldade em abrir a boca), voz engrolada, desvio da úvula, assimetria marcada das amígdalas. Dirija-se imediatamente às urgências.</li>
+      <li><strong>Dificuldade em engolir líquidos</strong></li>
+      <li><strong>Prostração intensa ou febre muito alta que não cede</strong></li>
+      <li><strong>Erupção cutânea após tomar amoxicilina:</strong> pode indicar mononucleose infeciosa. Interrompa o antibiótico e contacte o médico.</li>
+    </ul>
+
+    <h2>Posso fazer a consulta de garganta por videoconsulta?</h2>
+    <p>Sim, na grande maioria dos casos em adultos. Por <a href='/artigos/consulta-online'>videoconsulta</a>, o médico avalia os critérios de Centor-McIsaac, pode observar a garganta em câmara, orientar para TDR se necessário e prescrever o tratamento adequado. Não é adequada quando existem sinais de abcesso periamigdalino ou dificuldade em engolir líquidos.</p>
+
+    <div class='refs'><h3>Referências Bibliográficas</h3><ol>
+      <li>Centor, R. M., et al. (1981). The diagnosis of strep throat in adults in the emergency room. Medical Decision Making, 1(3), 239-246.</li>
+      <li>McIsaac, W. J., et al. (1998). A clinical score to reduce unnecessary antibiotic use in patients with sore throat. CMAJ, 158(1), 75-83.</li>
+      <li>Direção-Geral da Saúde. (2012, atualizada 2022). Norma n.º 007/2012. DGS. https://www.dgs.pt</li>
+      <li>BMJ Best Practice. (2024). Amigdalite: resumo, diagnóstico e tratamento. https://bestpractice.bmj.com/topics/pt-br/598</li>
+    </ol></div>`
 },
 
 'ozempic-glp1': {
