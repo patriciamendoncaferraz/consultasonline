@@ -358,7 +358,7 @@ const ARTICLES_CONTENT = {
   title: 'Dor de Garganta e Amigdalite: Quando Tomar Antibiótico | ConsultasOnline',
   description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
   keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal, amigdalite bacteriana viral',
-  content:   content: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>
+  content: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>
 
     <p>A dor de garganta é um dos motivos de consulta mais frequentes nos cuidados de saúde primários e nas urgências em Portugal. Na maioria das vezes, a causa é viral e resolve sozinha em poucos dias, sem necessidade de antibiótico. Mas há situações em que a infeção é bacteriana, e aí o antibiótico correto, prescrito a tempo, previne complicações que podem ser sérias.</p>
 
