@@ -569,16 +569,99 @@ const ARTICLES_CONTENT = {
   title: 'Como Parar de Fumar: Guia Médico Completo | ConsultasOnline',
   description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 40€.',
   keywords: 'cessação tabágica online portugal, consulta parar fumar online, vareniclina prescrição online, champix online portugal',
-  content: `<div class="cta-top"><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>
+  content: ```javascript
+  content: `<div class='cta-top'><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por <a href='/artigos/consulta-online'>videoconsulta</a>. <a href='/'>Marcar consulta — 40€ →</a></p></div>
+
+    <div class='art-author'>✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
+
+    <p>Parar de fumar é a decisão com maior impacto positivo na saúde que um fumador pode tomar, independentemente da idade, dos anos de consumo ou do número de cigarros por dia. Mas saber disso não chega. A dependência do tabaco é uma doença crónica com componentes físicos, psicológicos e comportamentais, e a tentativa de parar sem apoio médico tem taxas de sucesso muito baixas. Com o tratamento adequado, as probabilidades de sucesso aumentam de forma significativa.</p>
+    <p>Este artigo explica porque é tão difícil parar de fumar, quais os medicamentos disponíveis em Portugal e a sua eficácia, o que é a síndrome de abstinência, como planear uma tentativa de cessação e como a consulta médica pode ser feita por <a href='/artigos/consulta-online'>videoconsulta</a>.</p>
+
+    <h2>O tabagismo em Portugal: um problema de saúde pública</h2>
+    <p>De acordo com o Inquérito Nacional de Saúde de 2019 e os dados do <a href='https://www.dgs.pt/programa-nacional-para-a-prevencao-e-controlo-do-tabagismo.aspx' target='_blank'>Programa Nacional para a Prevenção e Controlo do Tabagismo da DGS</a>, cerca de 17% da população portuguesa com 15 ou mais anos era fumadora, correspondendo a mais de 1,5 milhões de pessoas. O relatório do programa estima que, em 2019, <a href='https://www.noticiasaominuto.com/pais/2332174/santos-silva-recorda-promocao-da-saude-publica-em-dia-mundial-sem-tabaco' target='_blank'>mais de 13.500 pessoas morreram em Portugal por doenças atribuíveis ao tabaco</a>.</p>
+    <p>O tabaco é a principal causa de morte evitável em Portugal e na Europa. As doenças diretamente relacionadas incluem o cancro do pulmão, a doença pulmonar obstrutiva crónica (DPOC), o enfarte do miocárdio, o acidente vascular cerebral, o cancro da bexiga, o cancro da laringe, o cancro do esófago e várias outras neoplasias. Não há dose segura de tabaco.</p>
+
     <h2>Porque é tão difícil parar de fumar?</h2>
-    <p>A dependência do tabaco é uma doença crónica. Sem apoio médico, apenas 3 a 5% dos fumadores conseguem parar de forma sustentada ao fim de um ano.</p>
-    <h2>Tratamentos com Maior Evidência</h2>
-    <h3>1. Vareniclina (Champix)</h3><p>Primeira linha com maior taxa de sucesso. Em meta-análise Cochrane, duplica a probabilidade de cessação vs. placebo. Duração: 12 semanas.</p>
-    <h3>2. Bupropiona</h3><p>Alternativa eficaz, especialmente com depressão associada. Contraindicado em epilepsia.</p>
-    <h3>3. Terapêutica de Substituição Nicotínica</h3><p>Adesivos, pastilhas e inalador. A combinação de adesivo com pastilha de resgate é mais eficaz.</p>
-    <h2>Benefícios de Parar de Fumar</h2>
-    <ul><li><strong>1 ano</strong> — risco cardíaco reduzido a metade</li><li><strong>5 anos</strong> — risco de AVC igual ao de não fumador</li><li><strong>10 anos</strong> — risco de cancro do pulmão reduzido a metade</li></ul>
-    <div class="refs"><h3>Referências</h3><ol><li>Cahill K, et al. Pharmacological interventions for smoking cessation. Cochrane. 2013.</li><li>DGS. Programa Nacional para a Prevenção e Controlo do Tabagismo. 2022.</li></ol></div>`
+    <p>A dificuldade em parar de fumar não é falta de vontade. É o resultado de uma dependência real, com componentes neurobiológicos bem estudados. A nicotina atua nos recetores nicotínicos do sistema nervoso central, estimulando a libertação de dopamina no núcleo accumbens, o centro de recompensa do cérebro. Este mecanismo é idêntico ao de outras substâncias com potencial aditivo elevado.</p>
+    <p>Com o consumo regular, o cérebro adapta-se ao aporte contínuo de nicotina, reduzindo a sensibilidade dos seus próprios recetores. Quando o fumador tenta parar, a ausência de nicotina provoca a síndrome de abstinência, que torna a tentativa de cessação muito desconfortável.</p>
+
+    <h3>Síndrome de abstinência nicotínica: o que esperar</h3>
+    <p>Os sintomas de abstinência surgem nas primeiras horas após o último cigarro, atingem o pico nas primeiras 24 a 72 horas e diminuem progressivamente ao longo de 2 a 4 semanas. Incluem:</p>
+    <ul>
+      <li>Desejo intenso de fumar (craving)</li>
+      <li>Irritabilidade, ansiedade e nervosismo</li>
+      <li>Dificuldade de concentração</li>
+      <li>Insónia ou sonos perturbados</li>
+      <li>Aumento do apetite e ganho de peso</li>
+      <li>Humor depressivo</li>
+      <li>Cefaleias e tonturas</li>
+      <li>Tosse transitória (mobilização de muco acumulado)</li>
+    </ul>
+    <p>Estes sintomas são temporários e diminuem progressivamente. Os medicamentos de cessação tabágica atuam precisamente sobre estes mecanismos, tornando os primeiros dias e semanas mais suportáveis.</p>
+
+    <h2>Tratamentos para parar de fumar com evidência científica</h2>
+    <p>Existe um conjunto de intervenções com evidência científica robusta para a cessação tabágica. A combinação de tratamento farmacológico com apoio comportamental é a estratégia com maior taxa de sucesso.</p>
+
+    <h3>1. Vareniclina (Champix)</h3>
+    <p>A vareniclina é o medicamento com maior eficácia comprovada para a cessação tabágica. Atua como agonista parcial dos recetores nicotínicos alfa-4-beta-2, com dois efeitos simultâneos: reduz o desejo de fumar e atenua o prazer associado ao cigarro, tornando o tabaco menos satisfatório mesmo que o fumador ceda à tentação.</p>
+    <p>A <a href='https://cochranelibrary.com/cdsr/doi/10.1002/14651858.CD006103.pub7/pt' target='_blank'>revisão Cochrane de 2023</a>, que incluiu 75 ensaios clínicos aleatorizados com mais de 45.000 participantes, concluiu que a vareniclina aumenta em duas a três vezes as probabilidades de cessação tabágica a longo prazo em comparação com tentativas sem medicação, sendo superior à bupropiona e à terapêutica de substituição nicotínica em monoterapia.</p>
+    <p>O esquema terapêutico padrão tem a duração de 12 semanas, com possibilidade de extensão por mais 12 semanas para consolidar a abstinência. O tratamento começa uma semana antes da data escolhida para parar de fumar, com aumento gradual da dose. O principal efeito adverso são as náuseas, que diminuem com a toma após as refeições. Contraindicada na gravidez.</p>
+
+    <h3>2. Terapêutica de Substituição Nicotínica (TSN)</h3>
+    <p>A terapêutica de substituição nicotínica fornece nicotina ao organismo de forma controlada e sem os outros produtos tóxicos do tabaco, atenuando os sintomas de abstinência enquanto o fumador trabalha na componente comportamental da dependência. Está disponível em várias formas:</p>
+    <ul>
+      <li><strong>Adesivos transdérmicos:</strong> libertação lenta e contínua de nicotina ao longo de 16 ou 24 horas. Adequados para fumadores com dependência física significativa. Existem em diferentes doses (7, 14 e 21 mg) que devem ser ajustadas ao grau de consumo.</li>
+      <li><strong>Pastilhas elásticas e pastilhas sublinguais:</strong> libertação rápida de nicotina para alívio de craving pontual.</li>
+      <li><strong>Inalador de nicotina:</strong> mimetiza o gesto de fumar, útil para fumadores com forte componente comportamental.</li>
+      <li><strong>Spray nasal:</strong> libertação muito rápida de nicotina.</li>
+    </ul>
+    <p>A <a href='https://www.cochrane.org/pt/node/9632' target='_blank'>combinação de adesivo com pastilha ou inalador de resgate é mais eficaz do que qualquer forma isolada de TSN</a>, de acordo com a Cochrane. Esta combinação pode ser tão eficaz quanto a vareniclina em alguns estudos. Disponível sem receita médica em farmácias portuguesas.</p>
+
+    <h3>3. Bupropiona</h3>
+    <p>A bupropiona é um antidepressivo que atua sobre os mecanismos dopaminérgicos e noradrenérgicos do sistema nervoso central, reduzindo o desejo de fumar e os sintomas de abstinência. Não contém nicotina. A sua eficácia é inferior à da vareniclina mas superior ao placebo. Pode ser particularmente útil em fumadores com depressão associada. Contraindicada em epilepsia, história de convulsões, anorexia nervosa ou bulimia. Exige receita médica.</p>
+
+    <h3>4. Citisina</h3>
+    <p>A citisina é um alcaloide natural extraído da planta <em>Cytisus laburnum</em>, que atua de forma semelhante à vareniclina nos recetores nicotínicos. <a href='https://www.cochrane.org/pt/node/9632' target='_blank'>A revisão Cochrane de 2023 concluiu que a citisina pode ser tão eficaz quanto a vareniclina</a>, com um perfil de segurança favorável. Em Portugal, a sua disponibilidade pode ser limitada.</p>
+
+    <h3>5. O que não funciona</h3>
+    <ul>
+      <li><strong>Cigarros eletrónicos:</strong> não estão aprovados como método de cessação tabágica pelas autoridades regulatórias europeias. A evidência sobre a sua eficácia é inconsistente e a segurança a longo prazo não está estabelecida.</li>
+      <li><strong>Acupuntura e hipnose:</strong> não há evidência científica robusta que suporte a sua eficácia como métodos de cessação tabágica.</li>
+      <li><strong>Redução gradual sem data definida:</strong> parar de forma abrupta numa data definida, com apoio farmacológico, tende a ser mais eficaz.</li>
+    </ul>
+
+    <h2>Como planear uma tentativa de cessação tabágica</h2>
+    <ul>
+      <li><strong>Escolher uma data para parar:</strong> idealmente dentro de 1 a 2 semanas, com tempo suficiente para iniciar o medicamento.</li>
+      <li><strong>Identificar os gatilhos:</strong> os momentos do dia, situações ou emoções associados ao cigarro, e planear alternativas para esses momentos.</li>
+      <li><strong>Remover o tabaco de casa e do carro</strong> e eliminar isqueiros e cinzeiros.</li>
+      <li><strong>Ter apoio social:</strong> comunicar a decisão à família e amigos.</li>
+      <li><strong>Planear a gestão do ganho de peso:</strong> é normal ganhar 2 a 4 kg nas primeiras semanas. A atividade física ajuda a mitigar este efeito.</li>
+      <li><strong>Não desistir após uma recaída:</strong> a maioria dos fumadores necessita de várias tentativas antes de conseguir a abstinência prolongada. Uma recaída não é um fracasso definitivo.</li>
+    </ul>
+
+    <h2>Benefícios de parar de fumar ao longo do tempo</h2>
+    <ul>
+      <li><strong>20 minutos:</strong> a pressão arterial e a frequência cardíaca normalizam</li>
+      <li><strong>24 horas:</strong> o risco de enfarte do miocárdio começa a diminuir</li>
+      <li><strong>48 horas:</strong> o olfato e o paladar começam a recuperar</li>
+      <li><strong>2 semanas a 3 meses:</strong> a função pulmonar melhora e a circulação sanguínea recupera</li>
+      <li><strong>1 ano:</strong> o risco de doença coronária é reduzido para metade</li>
+      <li><strong>5 anos:</strong> o risco de acidente vascular cerebral aproxima-se ao de não fumador</li>
+      <li><strong>10 anos:</strong> o risco de cancro do pulmão é reduzido para cerca de metade</li>
+      <li><strong>15 anos:</strong> o risco cardiovascular é semelhante ao de quem nunca fumou</li>
+    </ul>
+
+    <h2>Consulta de cessação tabágica por videoconsulta</h2>
+    <p>A consulta de cessação tabágica pode ser feita por <a href='/artigos/consulta-online'>videoconsulta</a>. O médico avalia o grau de dependência nicotínica com a escala de Fagerström, discute o historial de tentativas anteriores, avalia contraindicações para cada tratamento e prescreve o medicamento mais adequado ao perfil de cada pessoa. As consultas de seguimento, também possíveis por <a href='/artigos/consulta-online'>videoconsulta</a>, monitorizam a adesão ao tratamento e ajustam a estratégia quando necessário.</p>
+
+    <div class='refs'><h3>Referências Bibliográficas</h3><ol>
+      <li>Cochrane Library. (2023). Agonistas parciais do receptor de nicotina para cessação do tabagismo. Cochrane Database of Systematic Reviews. https://cochranelibrary.com/cdsr/doi/10.1002/14651858.CD006103.pub7/pt</li>
+      <li>Cochrane. (2023). Resumo em português. https://www.cochrane.org/pt/node/9632</li>
+      <li>Direção-Geral da Saúde. (2022). Programa Nacional para a Prevenção e Controlo do Tabagismo. DGS. https://www.dgs.pt/programa-nacional-para-a-prevencao-e-controlo-do-tabagismo.aspx</li>
+      <li>Instituto Nacional de Saúde Doutor Ricardo Jorge. (2020). Inquérito Nacional de Saúde 2019. INSA. https://www.insa.min-saude.pt</li>
+      <li>Thomas, K. H., et al. Comparative clinical effectiveness and safety of tobacco cessation pharmacotherapies and electronic cigarettes. University of Bath Research Portal. https://researchportal.bath.ac.uk/en/publications/comparative-clinical-effectiveness-and-safety-of-tobacco-cessatio</li>
+    </ol></div>`
 },
 
 'consulta-online': {
