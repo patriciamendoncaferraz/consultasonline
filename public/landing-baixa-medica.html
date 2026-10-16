@@ -3,59 +3,25 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500&display=swap">
 
 <style>
-/* Layout: full-width dark hero → white content sections → dark CTA footer */
+/* Layout: hero azul-médio claro → secções brancas/cinza suave → CTA final */
 :root {
-  --bg: #ffffff;
-  --fg: #0B1D35;
-  --fg-soft: #4A5568;
-  --fg-muted: #718096;
-  --hero: #0B1D35;
-  --accent: #0D7377;
-  --accent-light: #E8F5F5;
-  --accent-2: #14CDAB;
-  --warn-bg: #FFFBEB;
-  --warn-fg: #92400E;
-  --border: #E2E8F0;
-  --card-bg: #F7FAFC;
-  --price-bg: #0B1D35;
+  --bg: #F8FAFC;
+  --bg-alt: #EEF4F7;
   --surface: #ffffff;
+  --fg: #1A2E3B;
+  --fg-soft: #4A6072;
+  --fg-muted: #7A95A8;
+  --hero-bg: #1C6E7D;
+  --hero-bg2: #155F6D;
+  --accent: #1A8C9E;
+  --accent-dark: #156A7A;
+  --accent-light: #D6EEF2;
+  --accent-2: #0FC4A7;
+  --warn-bg: #FFF8E6;
+  --warn-fg: #8A5C00;
+  --border: #D6E4EC;
+  --name-color: #0F5A68;
   color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0A1628;
-    --fg: #E8EFF8;
-    --fg-soft: #94A3B8;
-    --fg-muted: #64748B;
-    --hero: #060E1C;
-    --accent: #14B8A6;
-    --accent-light: #0D2A2A;
-    --accent-2: #14CDAB;
-    --warn-bg: #1A1200;
-    --warn-fg: #FCD34D;
-    --border: #1E3354;
-    --card-bg: #0F2035;
-    --price-bg: #060E1C;
-    --surface: #0F2035;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0A1628;
-  --fg: #E8EFF8;
-  --fg-soft: #94A3B8;
-  --fg-muted: #64748B;
-  --hero: #060E1C;
-  --accent: #14B8A6;
-  --accent-light: #0D2A2A;
-  --accent-2: #14CDAB;
-  --warn-bg: #1A1200;
-  --warn-fg: #FCD34D;
-  --border: #1E3354;
-  --card-bg: #0F2035;
-  --price-bg: #060E1C;
-  --surface: #0F2035;
-  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; }
@@ -64,78 +30,104 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--bg);
   color: var(--fg);
-  line-height: 1.6;
+  line-height: 1.65;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 0;
 }
 
-/* ── BAND HELPER ── */
 .band {
   width: 100vw;
   margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.inner { max-width: 860px; margin: 0 auto; }
+.inner { max-width: 880px; margin: 0 auto; }
 
 /* ── HERO ── */
 .hero {
-  background: var(--hero);
-  padding-block: 64px 52px;
+  background: linear-gradient(135deg, var(--hero-bg) 0%, var(--hero-bg2) 100%);
+  padding-block: 60px 52px;
   text-align: center;
 }
 .hero-eyebrow {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-2);
-  margin-bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  margin-bottom: 24px;
 }
 .hero h1 {
   font-family: 'Sora', sans-serif;
-  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-size: clamp(2rem, 5.5vw, 3rem);
   font-weight: 700;
   color: #ffffff;
   line-height: 1.15;
   text-wrap: balance;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .hero-sub {
   font-size: 1.05rem;
-  color: #94A3B8;
+  color: rgba(255,255,255,0.82);
   text-wrap: balance;
-  margin-bottom: 10px;
+  margin-bottom: 28px;
 }
-.hero-creds {
-  font-size: 0.8rem;
-  color: #64748B;
-  margin-bottom: 36px;
+
+/* Nome bem visível no hero */
+.hero-name-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin-bottom: 28px;
 }
+.hero-name-badge .name {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ffffff;
+}
+.hero-name-badge .cedula {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.78);
+  border-left: 1px solid rgba(255,255,255,0.35);
+  padding-left: 10px;
+}
+
 .hero-cta {
   display: inline-block;
-  background: var(--accent);
-  color: #ffffff;
+  background: var(--accent-2);
+  color: #0A3D36;
   font-family: 'Sora', sans-serif;
   font-weight: 700;
   font-size: 1.05rem;
-  padding: 16px 36px;
-  border-radius: 4px;
+  padding: 16px 40px;
+  border-radius: 6px;
   text-decoration: none;
   letter-spacing: 0.01em;
-  transition: background 0.15s;
+  transition: opacity 0.15s;
+  box-shadow: 0 4px 16px rgba(15,196,167,0.35);
 }
-.hero-cta:hover { background: #0a5d61; }
-.hero-url { font-size: 0.82rem; color: var(--accent-2); margin-top: 14px; }
+.hero-cta:hover { opacity: 0.88; }
+.hero-url { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-top: 12px; }
 
-/* ── SECTION ── */
+/* ── SECTIONS ── */
 section { padding-block: 56px; }
 section + section { border-top: 1px solid var(--border); }
+
 h2 {
   font-family: 'Sora', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 700;
   color: var(--fg);
   margin-bottom: 28px;
@@ -144,31 +136,32 @@ h2 {
 h2 .accent { color: var(--accent); }
 
 /* ── BENEFITS ── */
-.benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
 .benefit {
   background: var(--accent-light);
-  border-radius: 6px;
-  padding: 20px;
+  border: 1px solid #B8DCE4;
+  border-radius: 8px;
+  padding: 18px 20px;
   display: flex;
   gap: 14px;
   align-items: flex-start;
 }
-.benefit-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
-.benefit-title { font-weight: 600; font-size: 0.95rem; color: var(--fg); margin-bottom: 3px; }
-.benefit-desc { font-size: 0.85rem; color: var(--fg-soft); }
+.benefit-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.benefit-title { font-weight: 600; font-size: 0.93rem; color: var(--fg); margin-bottom: 3px; }
+.benefit-desc { font-size: 0.84rem; color: var(--fg-soft); }
 
 /* ── STEPS ── */
-.steps { display: flex; flex-direction: column; gap: 0; }
+.steps { display: flex; flex-direction: column; }
 .step {
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  padding: 20px 0;
+  padding: 22px 0;
   border-bottom: 1px solid var(--border);
 }
 .step:last-child { border-bottom: none; }
 .step-num {
-  width: 40px; height: 40px;
+  width: 42px; height: 42px;
   background: var(--accent);
   color: #fff;
   font-family: 'Sora', sans-serif;
@@ -179,7 +172,7 @@ h2 .accent { color: var(--accent); }
   flex-shrink: 0;
 }
 .step-text { min-width: 0; padding-top: 8px; font-size: 0.95rem; color: var(--fg-soft); }
-.step-text strong { color: var(--fg); display: block; margin-bottom: 3px; }
+.step-text strong { color: var(--fg); display: block; margin-bottom: 4px; font-size: 1rem; }
 
 /* ── QUEM ── */
 .who-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
@@ -188,20 +181,20 @@ h2 .accent { color: var(--accent); }
 .warn {
   background: var(--warn-bg);
   color: var(--warn-fg);
-  border-left: 3px solid currentColor;
+  border-left: 3px solid #D4A017;
   padding: 12px 16px;
   font-size: 0.85rem;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 6px 6px 0;
 }
 
 /* ── PRICE ── */
 .price-box {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0;
   border: 2px solid var(--accent);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(26,140,158,0.12);
 }
 .price-left {
   background: var(--accent);
@@ -220,127 +213,157 @@ h2 .accent { color: var(--accent); }
   font-weight: 700;
   line-height: 1;
 }
-.price-label { font-size: 0.78rem; opacity: 0.85; margin-top: 6px; text-wrap: balance; line-height: 1.3; }
+.price-label { font-size: 0.78rem; opacity: 0.9; margin-top: 6px; line-height: 1.3; text-wrap: balance; }
 .price-right { padding: 24px 28px; background: var(--surface); }
-.price-right ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.price-right li { font-size: 0.93rem; color: var(--fg-soft); display: flex; gap: 8px; }
+.price-right ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.price-right li { font-size: 0.93rem; color: var(--fg-soft); display: flex; gap: 8px; align-items: baseline; }
 .price-right li::before { content: "✅"; flex-shrink: 0; }
 @media (max-width: 480px) {
   .price-box { grid-template-columns: 1fr; }
-  .price-left { padding: 24px; }
+  .price-left { padding: 22px; }
 }
 
 /* ── TRUST ── */
-.trust-badges { display: flex; gap: 16px; flex-wrap: wrap; }
+.trust-badges { display: flex; gap: 14px; flex-wrap: wrap; }
 .badge {
-  flex: 1 1 160px;
-  background: var(--card-bg);
+  flex: 1 1 150px;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 20px 16px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-.badge-icon { font-size: 1.8rem; margin-bottom: 8px; }
-.badge-title { font-weight: 600; font-size: 0.9rem; color: var(--fg); margin-bottom: 3px; }
-.badge-sub { font-size: 0.78rem; color: var(--fg-muted); }
+.badge-icon { font-size: 1.7rem; margin-bottom: 8px; }
+.badge-title { font-weight: 600; font-size: 0.88rem; color: var(--fg); margin-bottom: 3px; }
+.badge-sub { font-size: 0.76rem; color: var(--fg-muted); }
 
 /* ── FAQ ── */
-.faq { display: flex; flex-direction: column; gap: 0; }
+.faq-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 32px 0 6px;
+}
+.faq { display: flex; flex-direction: column; }
 .faq-item { border-bottom: 1px solid var(--border); }
 .faq-item:first-child { border-top: 1px solid var(--border); }
 .faq-q {
   width: 100%; text-align: left;
   background: none; border: none; cursor: pointer;
-  padding: 18px 0;
+  padding: 17px 0;
   font-family: 'Inter', sans-serif;
-  font-size: 0.97rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--fg);
   display: flex; justify-content: space-between; align-items: center; gap: 12px;
 }
-.faq-q .chevron { color: var(--accent); font-size: 1rem; transition: transform 0.2s; flex-shrink: 0; }
+.faq-q .chevron { color: var(--accent); font-size: 0.85rem; transition: transform 0.2s; flex-shrink: 0; }
 .faq-item.open .chevron { transform: rotate(180deg); }
-.faq-a { display: none; padding: 0 0 18px; font-size: 0.9rem; color: var(--fg-soft); line-height: 1.7; }
+.faq-a { display: none; padding: 0 0 17px; font-size: 0.9rem; color: var(--fg-soft); line-height: 1.75; }
 .faq-item.open .faq-a { display: block; }
-.faq-section-title {
-  font-family: 'Sora', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin: 32px 0 4px;
-  font-size: 0.78rem;
-}
 
-/* ── FINAL CTA ── */
+/* ── CTA FINAL ── */
 .cta-final {
-  background: var(--hero);
+  background: linear-gradient(135deg, var(--hero-bg) 0%, var(--hero-bg2) 100%);
   text-align: center;
   padding-block: 64px;
 }
-.cta-final h2 { color: #fff; margin-bottom: 10px; }
-.cta-final p { color: #94A3B8; font-size: 0.9rem; margin-bottom: 32px; }
+.cta-final h2 { color: #ffffff; margin-bottom: 8px; }
+.cta-final p { color: rgba(255,255,255,0.72); font-size: 0.92rem; margin-bottom: 32px; }
 .cta-final-btn {
   display: inline-block;
   background: var(--accent-2);
-  color: #0B1D35;
+  color: #0A3D36;
   font-family: 'Sora', sans-serif;
   font-weight: 700;
   font-size: 1.05rem;
   padding: 16px 40px;
-  border-radius: 4px;
+  border-radius: 6px;
   text-decoration: none;
+  box-shadow: 0 4px 16px rgba(15,196,167,0.35);
   transition: opacity 0.15s;
 }
 .cta-final-btn:hover { opacity: 0.88; }
-.cta-url { font-size: 0.88rem; color: var(--accent-2); margin-top: 14px; }
+.cta-url { font-size: 0.88rem; color: rgba(255,255,255,0.55); margin-top: 12px; }
+
+/* Nome visível no CTA final */
+.cta-name {
+  margin-top: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.14);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+.cta-name .name {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+.cta-name .cedula {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.72);
+  border-left: 1px solid rgba(255,255,255,0.3);
+  padding-left: 10px;
+}
 
 /* ── FOOTER ── */
-footer {
-  background: #060E1C;
+.footer-band {
+  background: #0F3D47;
   text-align: center;
-  padding-block: 20px;
+  padding-block: 18px;
   font-size: 0.78rem;
-  color: #4A6080;
+  color: rgba(255,255,255,0.45);
 }
-footer a { color: #4A6080; text-decoration: none; }
 </style>
 
 <!-- HERO -->
 <div class="band hero">
   <div class="inner">
-    <p class="hero-eyebrow">Médica inscrita na Ordem dos Médicos · Portugal</p>
+    <div class="hero-eyebrow">🩺 Médica inscrita na Ordem dos Médicos · Portugal</div>
     <h1>Baixa Médica Online<br>no Próprio Dia</h1>
     <p class="hero-sub">Videoconsulta em 15 minutos. Sem sair de casa. Sem esperar semanas.</p>
-    <p class="hero-creds">Patrícia M. Ferraz · Cédula n.º 57713 · Fatura AT automática · Seg–Dom, 9h–21h</p>
-    <a class="hero-cta" href="https://consultas-online.pt">Marcar Consulta — 55€</a>
-    <p class="hero-url">consultas-online.pt</p>
+    <div style="margin-bottom:28px;">
+      <div class="hero-name-badge">
+        <span class="name">Patrícia M. Ferraz</span>
+        <span class="cedula">Cédula n.º 57713 · Ordem dos Médicos</span>
+      </div>
+    </div>
+    <div>
+      <a class="hero-cta" href="https://www.consultas-online.pt">Marcar Consulta — 55€</a>
+    </div>
+    <p class="hero-url">www.consultas-online.pt · Seg–Dom, 9h–21h · Fatura AT automática</p>
   </div>
 </div>
 
 <!-- BENEFÍCIOS -->
-<div class="band" style="background: var(--bg);">
+<div class="band" style="background:var(--bg);">
   <div class="inner">
     <section>
       <h2>O que inclui a consulta de <span class="accent">baixa médica online</span></h2>
       <div class="benefits">
         <div class="benefit"><div class="benefit-icon">🩺</div><div><div class="benefit-title">Avaliação médica completa</div><div class="benefit-desc">A médica avalia os seus sintomas e confirma a incapacidade temporária para o trabalho.</div></div></div>
         <div class="benefit"><div class="benefit-icon">📄</div><div><div class="benefit-title">Emissão da baixa no próprio dia</div><div class="benefit-desc">A declaração de incapacidade é emitida e enviada por email no final da consulta.</div></div></div>
-        <div class="benefit"><div class="benefit-icon">🏛️</div><div><div class="benefit-title">Envio direto à Segurança Social</div><div class="benefit-desc">O certificado de incapacidade temporária é enviado eletronicamente.</div></div></div>
+        <div class="benefit"><div class="benefit-icon">🏛️</div><div><div class="benefit-title">Envio direto à Segurança Social</div><div class="benefit-desc">O certificado é enviado eletronicamente, da mesma forma que numa consulta presencial.</div></div></div>
         <div class="benefit"><div class="benefit-icon">🧾</div><div><div class="benefit-title">Fatura AT automática</div><div class="benefit-desc">Com validade fiscal, para reembolso no IRS como despesa de saúde.</div></div></div>
         <div class="benefit"><div class="benefit-icon">📱</div><div><div class="benefit-title">Sem deslocação</div><div class="benefit-desc">Tudo por videochamada. Especialmente útil quando está doente.</div></div></div>
-        <div class="benefit"><div class="benefit-icon">📅</div><div><div class="benefit-title">7 dias por semana</div><div class="benefit-desc">Segunda a domingo, das 9h às 21h. Incluindo feriados.</div></div></div>
+        <div class="benefit"><div class="benefit-icon">📅</div><div><div class="benefit-title">7 dias por semana</div><div class="benefit-desc">Segunda a domingo, das 9h às 21h. Incluindo fins de semana e feriados.</div></div></div>
       </div>
     </section>
   </div>
 </div>
 
 <!-- COMO FUNCIONA -->
-<div class="band" style="background: var(--card-bg);">
+<div class="band" style="background:var(--bg-alt);">
   <div class="inner">
     <section>
-      <h2>Como funciona em <span class="accent">3 passos</span></h2>
+      <h2>Como funciona em <span class="accent">3 passos simples</span></h2>
       <div class="steps">
         <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Marque a consulta em consultas-online.pt</strong>Escolha o dia e a hora que preferir. Pagamento seguro online.</div></div>
         <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Faça a videoconsulta com a médica</strong>Descreva os seus sintomas. A consulta dura cerca de 15 minutos.</div></div>
@@ -351,11 +374,11 @@ footer a { color: #4A6080; text-decoration: none; }
 </div>
 
 <!-- PARA QUEM -->
-<div class="band" style="background: var(--bg);">
+<div class="band" style="background:var(--bg);">
   <div class="inner">
     <section>
       <h2>Quem pode pedir <span class="accent">baixa médica online</span>?</h2>
-      <p style="margin-bottom:20px;color:var(--fg-soft);font-size:.95rem;">Adequada para trabalhadores por conta de outrem ou independentes com incapacidade temporária por motivo de:</p>
+      <p style="margin-bottom:18px;color:var(--fg-soft);font-size:.95rem;">Adequada para trabalhadores por conta de outrem ou independentes com incapacidade temporária por motivo de:</p>
       <ul class="who-list">
         <li>Gripe, constipação, febre ou infeção respiratória</li>
         <li>Infeção urinária ou gastroenterite</li>
@@ -370,7 +393,7 @@ footer a { color: #4A6080; text-decoration: none; }
 </div>
 
 <!-- PREÇO -->
-<div class="band" style="background: var(--card-bg);">
+<div class="band" style="background:var(--bg-alt);">
   <div class="inner">
     <section>
       <h2>Preço transparente, <span class="accent">sem surpresas</span></h2>
@@ -395,7 +418,7 @@ footer a { color: #4A6080; text-decoration: none; }
 </div>
 
 <!-- CONFIANÇA -->
-<div class="band" style="background: var(--bg);">
+<div class="band" style="background:var(--bg);">
   <div class="inner">
     <section>
       <h2>Médica certificada. <span class="accent">Documentos com validade legal.</span></h2>
@@ -411,12 +434,12 @@ footer a { color: #4A6080; text-decoration: none; }
 </div>
 
 <!-- FAQ -->
-<div class="band" style="background: var(--card-bg);">
+<div class="band" style="background:var(--bg-alt);">
   <div class="inner">
     <section>
       <h2>Perguntas <span class="accent">frequentes</span></h2>
 
-      <p class="faq-section-title">Geral</p>
+      <p class="faq-section-label">Geral</p>
       <div class="faq">
         <div class="faq-item">
           <button class="faq-q">A baixa médica online é aceite pela Segurança Social? <span class="chevron">▼</span></button>
@@ -440,7 +463,7 @@ footer a { color: #4A6080; text-decoration: none; }
         </div>
       </div>
 
-      <p class="faq-section-title">Trabalhadores independentes</p>
+      <p class="faq-section-label">Trabalhadores independentes</p>
       <div class="faq">
         <div class="faq-item">
           <button class="faq-q">Um trabalhador independente tem direito a baixa médica? <span class="chevron">▼</span></button>
@@ -448,7 +471,7 @@ footer a { color: #4A6080; text-decoration: none; }
         </div>
         <div class="faq-item">
           <button class="faq-q">Quantos meses de descontos são necessários para receber o subsídio de doença? <span class="chevron">▼</span></button>
-          <div class="faq-a">É necessário ter pelo menos seis meses de contribuições para a Segurança Social, seguidos ou interpolados, antes do início da incapacidade. Além disso, as contribuições devem estar regularizadas até ao final do terceiro mês anterior ao início da baixa.</div>
+          <div class="faq-a">É necessário ter pelo menos seis meses de contribuições para a Segurança Social, seguidos ou interpolados, antes do início da incapacidade. As contribuições devem estar regularizadas até ao final do terceiro mês anterior ao início da baixa.</div>
         </div>
         <div class="faq-item">
           <button class="faq-q">Quanto tempo tenho de esperar para receber o subsídio de doença sendo trabalhador independente? <span class="chevron">▼</span></button>
@@ -488,17 +511,22 @@ footer a { color: #4A6080; text-decoration: none; }
   <div class="inner">
     <h2>Pronto para resolver a sua baixa médica hoje?</h2>
     <p>Consulta disponível agora · Segunda a domingo · Das 9h às 21h</p>
-    <a class="cta-final-btn" href="https://consultas-online.pt">Marcar Consulta de Baixa Médica — 55€</a>
-    <p class="cta-url">consultas-online.pt</p>
+    <a class="cta-final-btn" href="https://www.consultas-online.pt">Marcar Consulta de Baixa Médica — 55€</a>
+    <p class="cta-url">www.consultas-online.pt</p>
+    <div style="margin-top:24px;">
+      <div class="cta-name">
+        <span class="name">Patrícia M. Ferraz</span>
+        <span class="cedula">Cédula n.º 57713 · Ordem dos Médicos</span>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- FOOTER -->
-<div class="band" style="background:#060E1C;">
-  <footer class="inner">
-    <p>Médica: Patrícia M. Ferraz · Cédula n.º 57713 · Ordem dos Médicos</p>
-    <p style="margin-top:6px;">geral@consultas-online.pt · Segunda a domingo, 9h–21h</p>
-  </footer>
+<div class="band footer-band">
+  <div class="inner">
+    <p>Patrícia M. Ferraz · Cédula n.º 57713 · Ordem dos Médicos · geral@consultas-online.pt · Seg–Dom, 9h–21h</p>
+  </div>
 </div>
 
 <script>
@@ -506,7 +534,6 @@ document.querySelectorAll('.faq-q').forEach(btn => {
   btn.addEventListener('click', () => {
     const item = btn.closest('.faq-item');
     const isOpen = item.classList.contains('open');
-    // close all in same faq group
     btn.closest('.faq').querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
     if (!isOpen) item.classList.add('open');
   });
