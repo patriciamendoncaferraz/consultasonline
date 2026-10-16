@@ -1,0 +1,514 @@
+<title>Baixa Médica Online</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500&display=swap">
+
+<style>
+/* Layout: full-width dark hero → white content sections → dark CTA footer */
+:root {
+  --bg: #ffffff;
+  --fg: #0B1D35;
+  --fg-soft: #4A5568;
+  --fg-muted: #718096;
+  --hero: #0B1D35;
+  --accent: #0D7377;
+  --accent-light: #E8F5F5;
+  --accent-2: #14CDAB;
+  --warn-bg: #FFFBEB;
+  --warn-fg: #92400E;
+  --border: #E2E8F0;
+  --card-bg: #F7FAFC;
+  --price-bg: #0B1D35;
+  --surface: #ffffff;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1628;
+    --fg: #E8EFF8;
+    --fg-soft: #94A3B8;
+    --fg-muted: #64748B;
+    --hero: #060E1C;
+    --accent: #14B8A6;
+    --accent-light: #0D2A2A;
+    --accent-2: #14CDAB;
+    --warn-bg: #1A1200;
+    --warn-fg: #FCD34D;
+    --border: #1E3354;
+    --card-bg: #0F2035;
+    --price-bg: #060E1C;
+    --surface: #0F2035;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1628;
+  --fg: #E8EFF8;
+  --fg-soft: #94A3B8;
+  --fg-muted: #64748B;
+  --hero: #060E1C;
+  --accent: #14B8A6;
+  --accent-light: #0D2A2A;
+  --accent-2: #14CDAB;
+  --warn-bg: #1A1200;
+  --warn-fg: #FCD34D;
+  --border: #1E3354;
+  --card-bg: #0F2035;
+  --price-bg: #060E1C;
+  --surface: #0F2035;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* ── BAND HELPER ── */
+.band {
+  width: 100vw;
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.inner { max-width: 860px; margin: 0 auto; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--hero);
+  padding-block: 64px 52px;
+  text-align: center;
+}
+.hero-eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.15;
+  text-wrap: balance;
+  margin-bottom: 14px;
+}
+.hero-sub {
+  font-size: 1.05rem;
+  color: #94A3B8;
+  text-wrap: balance;
+  margin-bottom: 10px;
+}
+.hero-creds {
+  font-size: 0.8rem;
+  color: #64748B;
+  margin-bottom: 36px;
+}
+.hero-cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 16px 36px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.15s;
+}
+.hero-cta:hover { background: #0a5d61; }
+.hero-url { font-size: 0.82rem; color: var(--accent-2); margin-top: 14px; }
+
+/* ── SECTION ── */
+section { padding-block: 56px; }
+section + section { border-top: 1px solid var(--border); }
+h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 28px;
+  text-wrap: balance;
+}
+h2 .accent { color: var(--accent); }
+
+/* ── BENEFITS ── */
+.benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.benefit {
+  background: var(--accent-light);
+  border-radius: 6px;
+  padding: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.benefit-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.benefit-title { font-weight: 600; font-size: 0.95rem; color: var(--fg); margin-bottom: 3px; }
+.benefit-desc { font-size: 0.85rem; color: var(--fg-soft); }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 40px; height: 40px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-text { min-width: 0; padding-top: 8px; font-size: 0.95rem; color: var(--fg-soft); }
+.step-text strong { color: var(--fg); display: block; margin-bottom: 3px; }
+
+/* ── QUEM ── */
+.who-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.who-list li { display: flex; gap: 10px; font-size: 0.95rem; color: var(--fg-soft); }
+.who-list li::before { content: "→"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+.warn {
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+  border-left: 3px solid currentColor;
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── PRICE ── */
+.price-box {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.price-left {
+  background: var(--accent);
+  color: #fff;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 140px;
+}
+.price-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.price-label { font-size: 0.78rem; opacity: 0.85; margin-top: 6px; text-wrap: balance; line-height: 1.3; }
+.price-right { padding: 24px 28px; background: var(--surface); }
+.price-right ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.price-right li { font-size: 0.93rem; color: var(--fg-soft); display: flex; gap: 8px; }
+.price-right li::before { content: "✅"; flex-shrink: 0; }
+@media (max-width: 480px) {
+  .price-box { grid-template-columns: 1fr; }
+  .price-left { padding: 24px; }
+}
+
+/* ── TRUST ── */
+.trust-badges { display: flex; gap: 16px; flex-wrap: wrap; }
+.badge {
+  flex: 1 1 160px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+.badge-icon { font-size: 1.8rem; margin-bottom: 8px; }
+.badge-title { font-weight: 600; font-size: 0.9rem; color: var(--fg); margin-bottom: 3px; }
+.badge-sub { font-size: 0.78rem; color: var(--fg-muted); }
+
+/* ── FAQ ── */
+.faq { display: flex; flex-direction: column; gap: 0; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:first-child { border-top: 1px solid var(--border); }
+.faq-q {
+  width: 100%; text-align: left;
+  background: none; border: none; cursor: pointer;
+  padding: 18px 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--fg);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+}
+.faq-q .chevron { color: var(--accent); font-size: 1rem; transition: transform 0.2s; flex-shrink: 0; }
+.faq-item.open .chevron { transform: rotate(180deg); }
+.faq-a { display: none; padding: 0 0 18px; font-size: 0.9rem; color: var(--fg-soft); line-height: 1.7; }
+.faq-item.open .faq-a { display: block; }
+.faq-section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 32px 0 4px;
+  font-size: 0.78rem;
+}
+
+/* ── FINAL CTA ── */
+.cta-final {
+  background: var(--hero);
+  text-align: center;
+  padding-block: 64px;
+}
+.cta-final h2 { color: #fff; margin-bottom: 10px; }
+.cta-final p { color: #94A3B8; font-size: 0.9rem; margin-bottom: 32px; }
+.cta-final-btn {
+  display: inline-block;
+  background: var(--accent-2);
+  color: #0B1D35;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 16px 40px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.cta-final-btn:hover { opacity: 0.88; }
+.cta-url { font-size: 0.88rem; color: var(--accent-2); margin-top: 14px; }
+
+/* ── FOOTER ── */
+footer {
+  background: #060E1C;
+  text-align: center;
+  padding-block: 20px;
+  font-size: 0.78rem;
+  color: #4A6080;
+}
+footer a { color: #4A6080; text-decoration: none; }
+</style>
+
+<!-- HERO -->
+<div class="band hero">
+  <div class="inner">
+    <p class="hero-eyebrow">Médica inscrita na Ordem dos Médicos · Portugal</p>
+    <h1>Baixa Médica Online<br>no Próprio Dia</h1>
+    <p class="hero-sub">Videoconsulta em 15 minutos. Sem sair de casa. Sem esperar semanas.</p>
+    <p class="hero-creds">Patrícia M. Ferraz · Cédula n.º 57713 · Fatura AT automática · Seg–Dom, 9h–21h</p>
+    <a class="hero-cta" href="https://consultas-online.pt">Marcar Consulta — 55€</a>
+    <p class="hero-url">consultas-online.pt</p>
+  </div>
+</div>
+
+<!-- BENEFÍCIOS -->
+<div class="band" style="background: var(--bg);">
+  <div class="inner">
+    <section>
+      <h2>O que inclui a consulta de <span class="accent">baixa médica online</span></h2>
+      <div class="benefits">
+        <div class="benefit"><div class="benefit-icon">🩺</div><div><div class="benefit-title">Avaliação médica completa</div><div class="benefit-desc">A médica avalia os seus sintomas e confirma a incapacidade temporária para o trabalho.</div></div></div>
+        <div class="benefit"><div class="benefit-icon">📄</div><div><div class="benefit-title">Emissão da baixa no próprio dia</div><div class="benefit-desc">A declaração de incapacidade é emitida e enviada por email no final da consulta.</div></div></div>
+        <div class="benefit"><div class="benefit-icon">🏛️</div><div><div class="benefit-title">Envio direto à Segurança Social</div><div class="benefit-desc">O certificado de incapacidade temporária é enviado eletronicamente.</div></div></div>
+        <div class="benefit"><div class="benefit-icon">🧾</div><div><div class="benefit-title">Fatura AT automática</div><div class="benefit-desc">Com validade fiscal, para reembolso no IRS como despesa de saúde.</div></div></div>
+        <div class="benefit"><div class="benefit-icon">📱</div><div><div class="benefit-title">Sem deslocação</div><div class="benefit-desc">Tudo por videochamada. Especialmente útil quando está doente.</div></div></div>
+        <div class="benefit"><div class="benefit-icon">📅</div><div><div class="benefit-title">7 dias por semana</div><div class="benefit-desc">Segunda a domingo, das 9h às 21h. Incluindo feriados.</div></div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- COMO FUNCIONA -->
+<div class="band" style="background: var(--card-bg);">
+  <div class="inner">
+    <section>
+      <h2>Como funciona em <span class="accent">3 passos</span></h2>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Marque a consulta em consultas-online.pt</strong>Escolha o dia e a hora que preferir. Pagamento seguro online.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Faça a videoconsulta com a médica</strong>Descreva os seus sintomas. A consulta dura cerca de 15 minutos.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Receba a baixa médica por email no próprio dia</strong>O certificado é enviado automaticamente à Segurança Social.</div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- PARA QUEM -->
+<div class="band" style="background: var(--bg);">
+  <div class="inner">
+    <section>
+      <h2>Quem pode pedir <span class="accent">baixa médica online</span>?</h2>
+      <p style="margin-bottom:20px;color:var(--fg-soft);font-size:.95rem;">Adequada para trabalhadores por conta de outrem ou independentes com incapacidade temporária por motivo de:</p>
+      <ul class="who-list">
+        <li>Gripe, constipação, febre ou infeção respiratória</li>
+        <li>Infeção urinária ou gastroenterite</li>
+        <li>Dor aguda (lombalgia, cervicalgia, enxaqueca intensa)</li>
+        <li>Pós-operatório ou recuperação de procedimento médico</li>
+        <li>Exacerbação de doença crónica (asma, diabetes, hipertensão)</li>
+        <li>Outras situações de incapacidade temporária avaliadas pela médica</li>
+      </ul>
+      <div class="warn">⚠️ Situações com febre muito alta, dificuldade respiratória intensa ou dor no peito devem recorrer à urgência hospitalar.</div>
+    </section>
+  </div>
+</div>
+
+<!-- PREÇO -->
+<div class="band" style="background: var(--card-bg);">
+  <div class="inner">
+    <section>
+      <h2>Preço transparente, <span class="accent">sem surpresas</span></h2>
+      <div class="price-box">
+        <div class="price-left">
+          <div class="price-num">55€</div>
+          <div class="price-label">Consulta de baixa médica online</div>
+        </div>
+        <div class="price-right">
+          <ul>
+            <li>Avaliação médica completa</li>
+            <li>Emissão do certificado de incapacidade</li>
+            <li>Envio à Segurança Social incluído</li>
+            <li>Fatura AT incluída (dedutível no IRS)</li>
+            <li>Receitas adicionais se necessário</li>
+            <li>Sem taxa de urgência, sem estacionamento</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- CONFIANÇA -->
+<div class="band" style="background: var(--bg);">
+  <div class="inner">
+    <section>
+      <h2>Médica certificada. <span class="accent">Documentos com validade legal.</span></h2>
+      <p style="margin-bottom:28px;color:var(--fg-soft);font-size:.93rem;">A baixa médica emitida por videoconsulta tem exatamente a mesma validade legal que a emitida em consulta presencial, ao abrigo da legislação portuguesa sobre telemedicina e do Regulamento da Ordem dos Médicos.</p>
+      <div class="trust-badges">
+        <div class="badge"><div class="badge-icon">🩺</div><div class="badge-title">Médicos inscritos na OM</div><div class="badge-sub">Ordem dos Médicos de Portugal</div></div>
+        <div class="badge"><div class="badge-icon">🔒</div><div class="badge-title">Dados seguros</div><div class="badge-sub">RGPD · Ligação SSL</div></div>
+        <div class="badge"><div class="badge-icon">🧾</div><div class="badge-title">Fatura AT automática</div><div class="badge-sub">Emitida e comunicada à AT</div></div>
+        <div class="badge"><div class="badge-icon">⚡</div><div class="badge-title">Resposta no próprio dia</div><div class="badge-sub">Sem tempo de espera</div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="band" style="background: var(--card-bg);">
+  <div class="inner">
+    <section>
+      <h2>Perguntas <span class="accent">frequentes</span></h2>
+
+      <p class="faq-section-title">Geral</p>
+      <div class="faq">
+        <div class="faq-item">
+          <button class="faq-q">A baixa médica online é aceite pela Segurança Social? <span class="chevron">▼</span></button>
+          <div class="faq-a">Sim. O certificado de incapacidade temporária emitido por videoconsulta é enviado eletronicamente à Segurança Social pela médica, da mesma forma que numa consulta presencial. Tem plena validade legal em Portugal.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Posso pedir baixa médica retroativa? <span class="chevron">▼</span></button>
+          <div class="faq-a">Em regra, a baixa deve ser pedida no próprio dia ou no dia seguinte à incapacidade. A emissão retroativa depende da avaliação médica e das circunstâncias clínicas. Se já passou mais de um dia, contacte-nos e a médica avaliará a situação.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Quanto tempo demora a consulta? <span class="chevron">▼</span></button>
+          <div class="faq-a">A videoconsulta dura habitualmente entre 10 e 20 minutos. Após a consulta, a médica emite o certificado e envia-o por email e à Segurança Social no próprio dia.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Preciso de ter médico de família? <span class="chevron">▼</span></button>
+          <div class="faq-a">Não. Qualquer pessoa pode solicitar a consulta, independentemente de ter ou não médico de família atribuído no SNS. O serviço está disponível para todos os residentes em Portugal.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">O que preciso para a consulta? <span class="chevron">▼</span></button>
+          <div class="faq-a">Apenas um telemóvel, tablet ou computador com câmara e microfone, e uma ligação à internet. Não é necessário instalar nenhuma aplicação.</div>
+        </div>
+      </div>
+
+      <p class="faq-section-title">Trabalhadores independentes</p>
+      <div class="faq">
+        <div class="faq-item">
+          <button class="faq-q">Um trabalhador independente tem direito a baixa médica? <span class="chevron">▼</span></button>
+          <div class="faq-a">Sim. Os trabalhadores independentes inscritos na Segurança Social podem beneficiar do subsídio de doença, desde que cumpram os requisitos legais: possuir um Certificado de Incapacidade Temporária (CIT), cumprir o prazo de garantia e ter a situação contributiva regularizada.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Quantos meses de descontos são necessários para receber o subsídio de doença? <span class="chevron">▼</span></button>
+          <div class="faq-a">É necessário ter pelo menos seis meses de contribuições para a Segurança Social, seguidos ou interpolados, antes do início da incapacidade. Além disso, as contribuições devem estar regularizadas até ao final do terceiro mês anterior ao início da baixa.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Quanto tempo tenho de esperar para receber o subsídio de doença sendo trabalhador independente? <span class="chevron">▼</span></button>
+          <div class="faq-a">O subsídio de doença só é pago a partir do 11.º dia de incapacidade, o que corresponde a um período de espera de dez dias sem qualquer apoio da Segurança Social, salvo situações especiais como tuberculose ou hospitalização.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">O que acontece se eu estiver isento de contribuições para a Segurança Social? <span class="chevron">▼</span></button>
+          <div class="faq-a">Se estiver isento de contribuições, não tem direito ao subsídio de doença enquanto durar a isenção. Ainda assim, pode pedir a emissão do CIT para justificar a ausência de atividade perante clientes.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Preciso de entregar algum requerimento para pedir o subsídio de doença? <span class="chevron">▼</span></button>
+          <div class="faq-a">Não, na maioria dos casos. O CIT é enviado eletronicamente pela médica à Segurança Social, que verifica automaticamente os requisitos e efetua o pagamento diretamente no IBAN do trabalhador, sem necessidade de requerimento manual.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">O que acontece se a baixa se prolongar por muito tempo? <span class="chevron">▼</span></button>
+          <div class="faq-a">Em baixas prolongadas, geralmente a partir dos 30 dias, a Segurança Social pode convocar o trabalhador para uma avaliação no Sistema de Verificação de Incapacidades (junta médica), para confirmar a persistência da incapacidade.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Durante a baixa médica posso continuar a trabalhar ou emitir recibos verdes? <span class="chevron">▼</span></button>
+          <div class="faq-a">O Certificado de Incapacidade Temporária pressupõe que existe incapacidade para exercer a atividade profissional. Continuar a trabalhar ou prestar serviços durante esse período pode ser incompatível com a finalidade da baixa médica e ter implicações legais e no direito ao subsídio.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Posso deduzir a consulta médica online no IRS? <span class="chevron">▼</span></button>
+          <div class="faq-a">Sim. É considerada uma despesa de saúde dedutível no IRS, desde que a fatura seja emitida com o número de contribuinte e comunicada automaticamente à Autoridade Tributária, o que é feito de forma automática.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">O que é a Segurança Social Direta e para que serve neste processo? <span class="chevron">▼</span></button>
+          <div class="faq-a">É o portal online da Segurança Social onde o trabalhador pode consultar o estado do pedido de subsídio de doença, confirmar o IBAN de pagamento e submeter documentação adicional, quando aplicável. Acessível em segurancasocial.pt/ssd.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<div class="band cta-final">
+  <div class="inner">
+    <h2>Pronto para resolver a sua baixa médica hoje?</h2>
+    <p>Consulta disponível agora · Segunda a domingo · Das 9h às 21h</p>
+    <a class="cta-final-btn" href="https://consultas-online.pt">Marcar Consulta de Baixa Médica — 55€</a>
+    <p class="cta-url">consultas-online.pt</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="band" style="background:#060E1C;">
+  <footer class="inner">
+    <p>Médica: Patrícia M. Ferraz · Cédula n.º 57713 · Ordem dos Médicos</p>
+    <p style="margin-top:6px;">geral@consultas-online.pt · Segunda a domingo, 9h–21h</p>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // close all in same faq group
+    btn.closest('.faq').querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+</script>
