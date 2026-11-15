@@ -492,7 +492,7 @@ footer a{color:rgba(255,255,255,.6);text-decoration:none;margin:0 8px}
   <a href="/" class="nav-btn">Marcar Consulta</a>
 </nav>
 <div class="wrap">
-  <div class="breadcrumb"><a href="/">Início</a> › <a href="/artigos">Artigos de Saúde</a> › ${data.title.split('|')[0].trim()}</div>
+  <div class="breadcrumb"><a href="/">Início</a> › <a href="/artigos">Artigos de Saúde</a> › ${data.h1 || data.title.split('|')[0].trim()}</div>
   <div class="cat">${ARTICLES[slug] ? ARTICLES[slug].category : 'Saúde'}</div>
   <h1>${data.h1 || data.title.split('|')[0].trim()}</h1>
   ${data.content}
