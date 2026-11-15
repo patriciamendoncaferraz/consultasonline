@@ -324,11 +324,13 @@ const ARTICLES_CONTENT = {
 
 // ─────────────────────────────────────────────────────────────────
 // FONTE ÚNICA DOS ARTIGOS: o texto de cada artigo vive APENAS em
-// public/index.html (<div class="article-view" id="article-ID">).
-// Ao arrancar, o servidor lê esse ficheiro e gera a versão SSR
-// (/artigos/<slug>) a partir dele. Para editar um artigo, edite só
-// o index.html. Aqui ficam apenas title/description/keywords e a
-// faixa "cta" do topo de cada artigo.
+// content/artigos/<id>.html (<div class="article-view" id="article-ID">).
+// Ao arrancar, o servidor lê esses ficheiros e:
+//  - gera a versão SSR (/artigos/<slug>) a partir deles;
+//  - serve o ficheiro tal como está em /fragmentos/artigo/<id>, que a
+//    página inicial carrega quando alguém abre um artigo.
+// Para editar um artigo, edite só o ficheiro em content/artigos/.
+// Aqui ficam apenas title/description/keywords e a faixa "cta" do topo.
 // ─────────────────────────────────────────────────────────────────
 function extractArticleFromIndex(html, id) {
   const start = html.indexOf('id="article-' + id + '"');
@@ -364,15 +366,10 @@ function articleBodyToSSR(body, idToSlug) {
     .trim();
 }
 
+const ARTICLE_FRAGMENTS = {};
 function loadArticlesFromIndex() {
   const fsArt = require('fs');
-  let html;
-  try {
-    html = fsArt.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
-  } catch (err) {
-    console.error('Artigos: não foi possível ler public/index.html:', err.message);
-    return;
-  }
+  const dir = path.join(__dirname, 'content', 'artigos');
   const lastmods = {};
   try {
     const sm = fsArt.readFileSync(path.join(__dirname, 'public', 'sitemap.xml'), 'utf8');
@@ -385,8 +382,12 @@ function loadArticlesFromIndex() {
   Object.entries(ARTICLES).forEach(([slug, a]) => {
     const data = ARTICLES_CONTENT[slug];
     if (!data) return;
+    let html;
+    try { html = fsArt.readFileSync(path.join(dir, a.id + '.html'), 'utf8'); }
+    catch (err) { console.error('Artigos: falta o ficheiro content/artigos/' + a.id + '.html'); return; }
     const art = extractArticleFromIndex(html, a.id);
-    if (!art) { console.error('Artigos: artigo "' + a.id + '" não encontrado em index.html'); return; }
+    if (!art) { console.error('Artigos: content/artigos/' + a.id + '.html não tem o bloco article-' + a.id); return; }
+    ARTICLE_FRAGMENTS[a.id] = html;
     const body = articleBodyToSSR(art.body, idToSlug);
     data.h1 = art.h1 || data.h1;
     data.lastmod = lastmods[slug] || data.lastmod;
@@ -394,6 +395,16 @@ function loadArticlesFromIndex() {
   });
 }
 loadArticlesFromIndex();
+
+// Fragmento HTML de cada artigo, carregado pela página inicial ao abrir um artigo
+app.get('/fragmentos/artigo/:id', (req, res) => {
+  const html = ARTICLE_FRAGMENTS[req.params.id];
+  if (!html) return res.status(404).send('');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('X-Robots-Tag', 'noindex');
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.send(html);
+});
 
 // Função que gera a página HTML completa de cada artigo para SSR
 // Dados estruturados (schema.org) de cada artigo: página médica + autora +
@@ -418,6 +429,7 @@ function articleJsonLd(slug, data, canonical) {
       name: 'Patrícia Ferraz',
       jobTitle: 'Médica',
       identifier: 'Cédula profissional n.º 57713',
+      url: 'https://www.consultas-online.pt/sobre-a-medica',
       worksFor: { '@type': 'MedicalBusiness', name: 'ConsultasOnline' }
     };
   }
@@ -434,14 +446,47 @@ function articleJsonLd(slug, data, canonical) {
     JSON.stringify(b).replace(/</g, '\\u003c') + '<\/script>').join('\n');
 }
 
+// Artigos relacionados escolhidos por tema (os primeiros desta lista que existirem;
+// se faltarem, completa com artigos da mesma categoria).
+const RELATED_ARTICLES = {
+  'infecao-urinaria':                      ['dor-de-garganta-amigdalite', 'clamidia', 'consulta-online', 'medico-online'],
+  'baixa-medica':                          ['faltas-trabalho', 'baixa-medica-freelancer', 'sem-medico-familia-freelancer', 'consulta-online'],
+  'renovacao-medicamentos':                ['medico-online', 'consulta-online', 'renovar-pilula-anticoncecional-online', 'sem-medico-familia-freelancer'],
+  'atestado-amamentacao':                  ['faltas-trabalho', 'baixa-medica', 'faltas-escola', 'consulta-online'],
+  'atestado-carta-conducao':               ['atestado-rastreio-saude', 'consulta-online', 'medico-online', 'telemedicina'],
+  'faltas-trabalho':                       ['baixa-medica', 'baixa-medica-freelancer', 'faltas-escola', 'atestado-amamentacao'],
+  'faltas-escola':                         ['faltas-trabalho', 'atestado-amamentacao', 'baixa-medica', 'consulta-online'],
+  'dor-de-garganta-amigdalite':            ['infecao-urinaria', 'consulta-online', 'medico-online', 'telemedicina'],
+  'ozempic-glp1':                          ['cessacao-tabagica', 'atestado-rastreio-saude', 'renovacao-medicamentos', 'medico-online'],
+  'doencas-sexualmente-transmissiveis':    ['clamidia', 'atestado-rastreio-saude', 'renovar-pilula-anticoncecional-online', 'infecao-urinaria'],
+  'clamidia':                              ['doencas-sexualmente-transmissiveis', 'atestado-rastreio-saude', 'infecao-urinaria', 'renovar-pilula-anticoncecional-online'],
+  'cessacao-tabagica':                     ['ozempic-glp1', 'atestado-rastreio-saude', 'renovacao-medicamentos', 'medico-online'],
+  'consulta-online':                       ['medico-online', 'telemedicina', 'sem-medico-familia-freelancer', 'baixa-medica'],
+  'medico-online':                         ['consulta-online', 'telemedicina', 'sem-medico-familia-freelancer', 'renovacao-medicamentos'],
+  'telemedicina':                          ['consulta-online', 'medico-online', 'dia-saude-2026', 'sem-medico-familia-freelancer'],
+  'atestado-rastreio-saude':               ['doencas-sexualmente-transmissiveis', 'cessacao-tabagica', 'ozempic-glp1', 'clamidia'],
+  'renovar-pilula-anticoncecional-online': ['doencas-sexualmente-transmissiveis', 'clamidia', 'renovacao-medicamentos', 'medico-online'],
+  'baixa-medica-freelancer':               ['sem-medico-familia-freelancer', 'baixa-medica', 'faltas-trabalho', 'consulta-online'],
+  'sem-medico-familia-freelancer':         ['baixa-medica-freelancer', 'medico-online', 'consulta-online', 'renovacao-medicamentos'],
+  'dia-saude-2026':                        ['telemedicina', 'atestado-rastreio-saude', 'consulta-online', 'medico-online']
+};
+function relatedSlugs(slug) {
+  const ok = s => s !== slug && ARTICLES_CONTENT[s] && ARTICLES_CONTENT[s].content;
+  const list = (RELATED_ARTICLES[slug] || []).filter(ok);
+  const cat = ARTICLES[slug] && ARTICLES[slug].category;
+  Object.keys(ARTICLES).forEach(s => {
+    if (list.length < 4 && ok(s) && !list.includes(s) && ARTICLES[s].category === cat) list.push(s);
+  });
+  Object.keys(ARTICLES).forEach(s => { if (list.length < 4 && ok(s) && !list.includes(s)) list.push(s); });
+  return list.slice(0, 4);
+}
+
 function buildArticleSSR(slug, data) {
   const canonical = 'https://www.consultas-online.pt/artigos/' + slug;
-  const related = Object.entries(ARTICLES)
-    .filter(([s]) => s !== slug)
-    .slice(0, 4)
-    .map(([s, a]) => {
+  const related = relatedSlugs(slug)
+    .map(s => {
       const c = ARTICLES_CONTENT[s];
-      return c ? '<li><a href="/artigos/' + s + '">' + c.title.split('|')[0].trim() + '</a></li>' : '';
+      return c ? '<li><a href="/artigos/' + s + '">' + (c.h1 || c.title.split('|')[0].trim()) + '</a></li>' : '';
     }).join('');
 
   return `<!DOCTYPE html>
@@ -546,6 +591,7 @@ footer a{color:rgba(255,255,255,.6);text-decoration:none;margin:0 8px}
   <a href="/artigos">Artigos de Saúde</a>
   <a href="/artigos/consulta-online">Consulta Online</a>
   <a href="/artigos/baixa-medica">Baixa Médica</a>
+  <a href="/sobre-a-medica">Sobre a Médica</a>
   <br/><br/>© 2026 ConsultasOnline · geral@consultas-online.pt
 </footer>
 <script>
@@ -557,6 +603,107 @@ if (typeof sessionStorage !== 'undefined') {
 </body>
 </html>`;
 }
+
+// ─────────────────────────────────────────────────────────────────
+// SOBRE A MÉDICA — o texto vem da secção de biografia de public/index.html
+// (entre <!-- SECÇÃO BIOGRAFIA --> e <!-- FIM SECÇÃO BIOGRAFIA -->).
+// Para alterar a biografia, edite só o index.html.
+// ─────────────────────────────────────────────────────────────────
+let ABOUT_HTML = null;
+function loadAboutFromIndex() {
+  try {
+    const html = require('fs').readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
+    const a = html.indexOf('<!-- SECÇÃO BIOGRAFIA -->');
+    const b = html.indexOf('<!-- FIM SECÇÃO BIOGRAFIA -->');
+    if (a < 0 || b < 0) { console.error('Sobre a médica: secção de biografia não encontrada em index.html'); return; }
+    let bio = html.slice(a + '<!-- SECÇÃO BIOGRAFIA -->'.length, b)
+      .replace(/<button([^>]*?)\s*onclick="openServiceSelector\(\)"([^>]*)>([\s\S]*?)<\/button>/g,
+        (m, a1, a2, txt) => '<a href="/"' + (a1 + a2).replace(/border:none;/, '') + '>' + txt + '</a>')
+      .replace(/\s+onclick="[^"]*"/g, '')
+      .replace(/ loading="lazy"/, '')
+      .replace('<h2 style="', '<h1 style="').replace(/(<h1 style="[^"]*">[\s\S]*?)<\/h2>/, '$1</h1>');
+    const plain = bio.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    const firstP = (/<p[^>]*>([\s\S]*?)<\/p>/.exec(bio) || [, ''])[1].replace(/<[^>]+>/g, '').trim();
+    const person = {
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      url: 'https://www.consultas-online.pt/sobre-a-medica',
+      inLanguage: 'pt-PT',
+      mainEntity: {
+        '@type': 'Person',
+        name: 'Patrícia Ferraz',
+        honorificPrefix: 'Dra.',
+        jobTitle: 'Médica',
+        description: firstP,
+        image: 'https://www.consultas-online.pt/foto-patricia.webp',
+        url: 'https://www.consultas-online.pt/sobre-a-medica',
+        identifier: 'Cédula profissional n.º 57713',
+        alumniOf: plain.includes('Universidade de Coimbra')
+          ? { '@type': 'CollegeOrUniversity', name: 'Faculdade de Medicina da Universidade de Coimbra' } : undefined,
+        worksFor: { '@type': 'MedicalBusiness', name: 'ConsultasOnline', url: 'https://www.consultas-online.pt' }
+      }
+    };
+    const desc = 'Conheça a Dra. Patrícia Ferraz, médica (cédula n.º 57713) formada pela Universidade de Coimbra, responsável pelas consultas online da ConsultasOnline.';
+    ABOUT_HTML = `<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sobre a Médica: Dra. Patrícia Ferraz | ConsultasOnline</title>
+<meta name="description" content="${desc}"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://www.consultas-online.pt/sobre-a-medica"/>
+<meta property="og:type" content="profile"/>
+<meta property="og:url" content="https://www.consultas-online.pt/sobre-a-medica"/>
+<meta property="og:title" content="Sobre a Médica: Dra. Patrícia Ferraz | ConsultasOnline"/>
+<meta property="og:description" content="${desc}"/>
+<meta property="og:image" content="https://www.consultas-online.pt/foto-patricia.webp"/>
+<meta property="og:locale" content="pt_PT"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script type="application/ld+json">${JSON.stringify(person).replace(/</g, '\\u003c')}<\/script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Arial,Helvetica,sans-serif;color:#334155;background:#fff;line-height:1.7}
+nav{background:#0b1d35;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+nav .logo{color:#fff;text-decoration:none;font-size:18px;font-weight:700}
+nav .logo span{color:#17c4a8}
+nav .nav-btn{background:#0d7377;color:#fff;text-decoration:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600}
+.breadcrumb{max-width:900px;margin:0 auto;padding:24px 20px 0;font-size:13px;color:#8a9bb0}
+.breadcrumb a{color:#0d7377;text-decoration:none}
+section a[href="/"]{display:inline-block;text-decoration:none}
+.more{max-width:900px;margin:0 auto;padding:0 20px 60px;font-size:15px}
+.more a{color:#0d7377}
+footer{background:#0b1d35;padding:28px 24px;text-align:center;font-size:13px;color:rgba(255,255,255,.45)}
+footer a{color:rgba(255,255,255,.6);text-decoration:none;margin:0 8px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">Consultas<span>Online</span></a>
+  <a href="/" class="nav-btn">Marcar Consulta</a>
+</nav>
+<div class="breadcrumb"><a href="/">Início</a> › Sobre a Médica</div>
+${bio}
+<div class="more"><p>Leia os <a href="/artigos">artigos de saúde</a> escritos pela Dra. Patrícia Ferraz.</p></div>
+<footer>
+  <a href="/">ConsultasOnline</a>
+  <a href="/artigos">Artigos de Saúde</a>
+  <a href="/sobre-a-medica">Sobre a Médica</a>
+  <br/><br/>© 2026 ConsultasOnline · geral@consultas-online.pt
+</footer>
+</body>
+</html>`;
+  } catch (err) {
+    console.error('Sobre a médica: erro ao ler index.html:', err.message);
+  }
+}
+loadAboutFromIndex();
+
+app.get('/sobre-a-medica', (req, res) => {
+  if (!ABOUT_HTML) return res.redirect(302, '/');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(ABOUT_HTML);
+});
 
 // Rota de listagem
 app.get('/artigos', (req, res) => {
@@ -1815,6 +1962,31 @@ app.post('/lead-sintomas', async (req, res) => {
 // PÁGINAS DE SERVIÇO — SSR com meta tags próprias
 // ─────────────────────────────────────────────
 
+// Artigos de saúde relacionados com cada página de serviço (ligação serviço -> artigo)
+const SERVICE_ARTICLES = {
+  'baixa-medica':               ['baixa-medica', 'faltas-trabalho', 'baixa-medica-freelancer'],
+  'atestado-amamentacao':       ['atestado-amamentacao'],
+  'renovacao-piula':            ['renovar-pilula-anticoncecional-online'],
+  'atestado-conducao':          ['atestado-carta-conducao'],
+  'consulta-infecao-urinaria':  ['infecao-urinaria'],
+  'renovacao-medicamentos':     ['renovacao-medicamentos'],
+  'atestado-escola':            ['faltas-escola'],
+  'consulta-amigdalite':        ['dor-de-garganta-amigdalite'],
+  'consulta-cessacao-tabagica': ['cessacao-tabagica'],
+  'consulta-dst':               ['doencas-sexualmente-transmissiveis', 'clamidia'],
+  'consulta-obesidade':         ['ozempic-glp1']
+};
+function serviceArticlesHTML(serviceId) {
+  const items = (SERVICE_ARTICLES[serviceId] || [])
+    .filter(slug => ARTICLES_CONTENT[slug] && ARTICLES_CONTENT[slug].content)
+    .map(slug => {
+      const a = ARTICLES_CONTENT[slug];
+      return '<li><a href="/artigos/' + slug + '" style="color:#0d7377;font-weight:600">' + (a.h1 || a.title.split('|')[0].trim()) + '</a></li>';
+    }).join('');
+  if (!items) return '';
+  return '<div style="max-width:780px;margin:0 auto;padding:0 24px 48px"><div class="box"><p><strong>📚 Saiba mais nos nossos artigos de saúde</strong></p><ul style="margin:8px 0 0 20px;line-height:1.9">' + items + '</ul></div></div>';
+}
+
 function servicePageHTML(opts) {
   return `<!DOCTYPE html>
 <html lang="pt">
@@ -1890,6 +2062,7 @@ function servicePageHTML(opts) {
   <a class="nav-btn" href="/#marcar">Marcar Agora</a>
 </nav>
 ${opts.body}
+${serviceArticlesHTML(opts.serviceId)}
 <script>
   // Redireciona para a SPA e abre o modal do serviço correcto
   document.querySelectorAll('a[href="/#marcar"]').forEach(function(el){
