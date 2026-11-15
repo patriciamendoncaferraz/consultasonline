@@ -332,36 +332,67 @@ const ARTICLES_CONTENT = {
   title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
   description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
   keywords: 'baixa médica online portugal, renovar baixa médica online, CIT online, consulta baixa médica, certificado incapacidade temporária',
+  h1: 'Renovação de Baixa Médica: Tudo o que Precisa de Saber',
   content: `<div class="cta-top"><p>📋 Precisa de baixa médica? CIT emitido por videoconsulta e submetido à Segurança Social no próprio dia. <a href="/">Marcar consulta — 55€ →</a></p></div>
-    <h2>O Sistema CIT em Portugal</h2>
-    <p>A baixa médica é formalizada pelo <strong>Certificado de Incapacidade Temporária (CIT)</strong>, enviado eletronicamente pelo médico directamente para a Segurança Social.</p>
-    <h2>Posso fazer baixa médica online em Portugal?</h2>
-    <p>Sim. A Portaria n.º 115/2021 permite a emissão do CIT após videoconsulta. O processo tem exactamente a mesma validade legal que uma consulta presencial.</p>
-    <div class="info"><strong>✅ Validade legal total</strong><p>O CIT emitido por videoconsulta tem o mesmo valor legal que o emitido presencialmente.</p></div>
-    <h2>Quem pode pedir baixa médica online?</h2>
-    <ul><li>Trabalhadores por conta de outrem com número de utente SNS válido</li><li>Trabalhadores independentes inscritos na Segurança Social</li><li>Trabalhadores com ou sem médico de família atribuído</li></ul>
-    <h2>Subsídio de Doença</h2>
-    <ul><li>Até 30 dias: <strong>55%</strong> da remuneração de referência</li><li>31–90 dias: <strong>60%</strong></li><li>91–365 dias: <strong>70%</strong></li><li>Mais de 365 dias: <strong>75%</strong></li></ul>
-    <div class="warn"><strong>⚠️ Prazo legal</strong><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade.</p></div>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>Posso fazer baixa médica sem médico de família?</h4><p>Sim. Qualquer médico registado na Ordem dos Médicos pode emitir o CIT.</p></div>
-    <div class="faq"><h4>Posso renovar a baixa por videoconsulta?</h4><p>Sim. A renovação do CIT pode ser feita por videoconsulta nas mesmas condições.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Decreto-Lei n.º 28/2004. Proteção na eventualidade de doença.</li><li>Portaria n.º 115/2021. Certificado de Incapacidade Temporária por teleconsulta.</li></ol></div>`
+
+<h2>O Sistema CIT em Portugal</h2>
+  <p>A baixa médica é formalizada pelo <strong>Certificado de Incapacidade Temporária (CIT)</strong>, enviado eletronicamente pelo médico directamente para a Segurança Social.</p>
+  <div class="ibox"><div class="ibox-title">📱 Renovação por Videoconsulta</div><p>Os CIT podem ser emitidos após videoconsulta. É possível renovar a baixa médica sem sair de casa.</p></div>
+  <h2>Posso fazer baixa médica online em Portugal?</h2>
+  <p>Sim, o Decreto-Lei n.º 2/2024, de 5 de janeiro permite a emissão do CIT após videoconsulta. O custo é <strong>55€</strong>.</p>
+  <div class="ibox"><div class="ibox-title">✅ Validade legal total</div><p>O CIT emitido por videoconsulta tem o mesmo valor legal que o emitido presencialmente.</p></div>
+  <h2>Quem pode pedir baixa médica online?</h2>
+  <ul>
+    <li>Trabalhadores por conta de outrem com número de utente SNS válido</li>
+    <li>Trabalhadores independentes inscritos na Segurança Social</li>
+    <li>Trabalhadores com ou sem médico de família atribuído</li>
+  </ul>
+  <h2>Subsídio de Doença</h2>
+  <ul>
+    <li>Até 30 dias: <strong>55%</strong> da remuneração de referência</li>
+    <li>31–90 dias: <strong>60%</strong></li>
+    <li>91–365 dias: <strong>70%</strong></li>
+    <li>Mais de 365 dias: <strong>75%</strong></li>
+  </ul>
+  <div class="ibox warn"><div class="ibox-title">⚠️ Prazo legal</div><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade.</p></div>
+  <div class="ibox warn"><div class="ibox-title">⚠️ Verificações da Segurança Social</div><p>A SS pode verificar a incapacidade presencialmente. O trabalhador deve estar em condições compatíveis com o diagnóstico.</p></div>
+  <div class="art-cta"><h3>Precisa de renovar a baixa?</h3><p>CIT emitido eletronicamente no próprio dia.</p><a href="/">Renovar Baixa — 55€</a></div>
+  <h2>Perguntas Frequentes</h2>
+  <div class="faq"><h4>Posso fazer baixa médica sem médico de família?</h4><p>Sim. Qualquer médico registado na Ordem dos Médicos pode emitir o CIT.</p></div>
+  <div class="faq"><h4>Posso renovar a baixa por videoconsulta?</h4><p>Sim. A renovação do CIT pode ser feita por videoconsulta nas mesmas condições.</p></div>
+  <div class="refs"><h3>Referências</h3><ol class="ref-list">
+    <li>Decreto-Lei n.º 28/2004. <em>Proteção na eventualidade de doença.</em></li>
+    <li>Decreto-Lei n.º 2/2024, de 5 de janeiro. <em>Certificado de Incapacidade Temporária.</em></li>
+  </ol></div>
+  `
 },
 
 'renovacao-medicamentos': {
   title: 'Renovação de Medicamentos Online em Portugal | ConsultasOnline',
   description: 'Renove a sua receita médica por videoconsulta. Receita electrónica enviada por SMS e email no próprio dia. A partir de 40€.',
   keywords: 'renovar receita médica online, renovação medicamentos online portugal, receita médica online, consulta acompanhamento crónico',
+  h1: 'Renovação de Medicamentos Online em Portugal',
   content: `<div class="cta-top"><p>💊 Precisa de renovar medicação crónica? Consulta de acompanhamento por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>
-    <h2>Para que serve esta consulta?</h2>
-    <p>A consulta de acompanhamento crónico online destina-se a doentes com doenças crónicas controladas que precisam de renovar a medicação habitual sem necessidade de consulta presencial.</p>
-    <h2>Doenças crónicas abrangidas</h2>
-    <ul><li>Hipertensão arterial controlada</li><li>Diabetes tipo 2 controlada</li><li>Dislipidemia (colesterol)</li><li>Hipotiroidismo controlado</li><li>Outras doenças crónicas estáveis</li></ul>
-    <div class="info"><strong>💡 O que preparar para a consulta</strong><p>Tenha consigo a lista de medicação actual, as últimas análises disponíveis e os valores de tensão arterial recentes.</p></div>
-    <h2>A receita tem comparticipação do SNS?</h2>
-    <p>Sim. A Receita Sem Papel emitida por videoconsulta tem o mesmo valor legal que uma receita presencial. A comparticipação é aplicada automaticamente na farmácia.</p>
-    <div class="refs"><h3>Referências</h3><ol><li>INFARMED. Normas de Prescrição Eletrónica de Medicamentos. 2023.</li><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li></ol></div>`
+
+<h2>Para que serve esta consulta?</h2>
+  <p>A consulta de acompanhamento crónico online destina-se a doentes com doenças crónicas controladas que precisam de renovar a medicação habitual sem necessidade de consulta presencial.</p>
+  <h2>Doenças crónicas abrangidas</h2>
+  <ul>
+    <li>Hipertensão arterial controlada</li>
+    <li>Diabetes tipo 2 controlada</li>
+    <li>Dislipidemia (colesterol)</li>
+    <li>Hipotiroidismo controlado</li>
+    <li>Outras doenças crónicas estáveis</li>
+  </ul>
+  <div class="ibox"><div class="ibox-title">💡 O que preparar para a consulta</div><p>Tenha consigo a lista de medicação actual, as últimas análises disponíveis e os valores de tensão arterial recentes.</p></div>
+  <h2>A receita tem comparticipação do SNS?</h2>
+  <p>Sim. A Receita Sem Papel emitida por videoconsulta tem o mesmo valor legal que uma receita presencial. A comparticipação é aplicada automaticamente na farmácia.</p>
+  <div class="art-cta"><h3>Precisa de renovar a sua medicação?</h3><p>Consulta de acompanhamento por videoconsulta, receita enviada no próprio dia.</p><a href="/">Marcar Consulta — 40€ →</a></div>
+  <div class="refs"><h3>Referências</h3><ol class="ref-list">
+    <li>INFARMED. <em>Normas de Prescrição Eletrónica de Medicamentos.</em> 2023.</li>
+    <li>Ordem dos Médicos. <em>Regulamento de Telemedicina.</em> 2020.</li>
+  </ol></div>
+  `
 },
 
   'clamidia': {
@@ -504,23 +535,36 @@ const ARTICLES_CONTENT = {
   title: 'Atestado de Amamentação Online em Portugal | ConsultasOnline',
   description: 'Obtenha o atestado de amamentação por videoconsulta. Direitos laborais, renovação. Emitido no próprio dia. 35€.',
   keywords: 'atestado amamentação online, atestado amamentação portugal, renovar atestado amamentação, direitos laborais amamentação',
+  h1: 'Atestado de Amamentação: Para que Serve e Como Obter',
   content: `<div class="cta-top"><p>🤱 Precisa do atestado de amamentação? Emitido por videoconsulta e enviado por email no próprio dia. <a href="/">Marcar consulta — 35€ →</a></p></div>
-    <h2>O que é o atestado de amamentação?</h2>
-    <p>O atestado de amamentação certifica que uma mãe está a amamentar o seu filho. É fundamental para exercer os direitos laborais de dispensa de trabalho para aleitamento previstos no Código do Trabalho (artigo 47.º).</p>
-    <h2>Direitos Laborais</h2>
-    <ul><li><strong>Até o filho completar 1 ano:</strong> dois períodos de 30 minutos ou 1 hora por dia</li><li><strong>Do 1.º ao 2.º ano:</strong> um período de 30 minutos por dia</li><li>Dispensa de trabalho nocturno e horas extraordinárias</li></ul>
-    <div class="warn"><strong>⚠️ Renovação obrigatória</strong><p>O atestado tem validade de 3 a 6 meses. A renovação pode ser feita por videoconsulta.</p></div>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>O atestado online tem validade legal?</h4><p>Sim. O documento emitido por videoconsulta tem plena validade legal junto do empregador.</p></div>
-    <div class="faq"><h4>Com que frequência preciso de renovar?</h4><p>O atestado tem validade de 3 a 6 meses consoante o que o médico indicar.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Lei n.º 7/2009. Código do Trabalho Português. Artigos 47.º e 58.º</li><li>ACT. Guia sobre Parentalidade e Trabalho. 2023.</li></ol></div>`
+
+<h2>O que é o atestado de amamentação?</h2>
+  <p>O <strong>atestado de amamentação</strong> certifica que uma mãe está a amamentar o seu filho. É fundamental para exercer os direitos laborais de dispensa de trabalho para aleitamento previstos no Código do Trabalho (artigo 47.º).</p>
+  <h2>Direitos Laborais (Código do Trabalho, art. 47.º)</h2>
+  <ul>
+    <li><strong>Até o filho completar 1 ano:</strong> dois períodos de 30 minutos ou 1 hora por dia</li>
+    <li><strong>Do 1.º ao 2.º ano:</strong> um período de 30 minutos por dia</li>
+    <li>Dispensa de trabalho nocturno e horas extraordinárias</li>
+  </ul>
+  <div class="ibox warn"><div class="ibox-title">⚠️ Renovação</div><p>O atestado tem validade de 3 a 6 meses. Quando expirar deve ser renovado. A consulta online permite renovar sem deslocação.</p></div>
+  <h2>Posso obter o atestado online?</h2>
+  <p>Sim. A videoconsulta é suficiente. O médico emite o documento em PDF com validade legal, enviado por email no próprio dia.</p>
+  <div class="art-cta"><h3>Precisa de atestado de amamentação?</h3><p>Emitido por videoconsulta, enviado por email no próprio dia.</p><a href="/">Atestado de Amamentação — 35€</a></div>
+  <h2>Perguntas Frequentes</h2>
+  <div class="faq"><h4>O atestado online tem validade legal?</h4><p>Sim. O documento emitido por videoconsulta tem plena validade legal junto do empregador.</p></div>
+  <div class="faq"><h4>Com que frequência preciso de renovar?</h4><p>O atestado tem validade de 3 a 6 meses consoante o que o médico indicar.</p></div>
+  <div class="refs"><h3>Referências</h3><ol class="ref-list">
+    <li>Lei n.º 7/2009. <em>Código do Trabalho Português.</em> Artigos 47.º e 58.º</li>
+    <li>ACT. <em>Guia sobre Parentalidade e Trabalho.</em> 2023.</li>
+  </ol></div>
+  `
 },
 
 'atestado-carta-conducao': {
   title: 'Atestado Médico para Carta de Condução: Tudo o que Precisa de Saber',
   description: 'Saiba quando é obrigatório, o que é avaliado, os requisitos por categoria, a validade e como obter o atestado médico para carta de condução por videoconsulta.',
   keywords: 'atestado médico carta de condução, renovação carta de condução, aptidão física condução, IMT atestado médico, videoconsulta carta de condução',
-  content: `<div class=\"cta-top\"><p>🚗 Precisa de atestado médico para a carta de condução? Emissão por <a href=\"/artigos/consulta-online\">videoconsulta</a>. <a href=\"/\">Marcar consulta — 40€ →</a></p></div>
+  content: `<div class=\"cta-top\"><p>🚗 Precisa de atestado médico para a carta de condução? Emissão por <a href=\"/artigos/consulta-online\">videoconsulta</a>. <a href=\"/\">Marcar consulta — 45€ →</a></p></div>
 
 <div class=\"art-author\">✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
 
