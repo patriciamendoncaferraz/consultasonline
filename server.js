@@ -184,778 +184,209 @@ const ARTICLES_CONTENT = {
   title: 'Infeção Urinária: Causas, Sintomas, Diagnóstico e Tratamento | ConsultasOnline',
   description: 'Guia médico completo sobre infeção urinária: sintomas, antibióticos recomendados em Portugal, prevenção e quando ir às urgências.',
   keywords: 'infeção urinária sintomas tratamento, antibiótico infeção urinária Portugal, cistite tratamento, infeção urinária recorrente',
-  content: `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href='/'>Marcar consulta — 40€ →</a></p></div>
-
-    <p>A infeção do trato urinário é uma das doenças infeciosas mais frequentes em Portugal e no mundo. Afeta sobretudo mulheres, e muitas delas conhecem bem a sensação: aquela urgência de ir à casa de banho de cinco em cinco minutos, o ardor ao urinar, o desconforto que não passa.</p>
-
-    <h2>O que é a infeção do trato urinário?</h2>
-    <p>A infeção do trato urinário (ITU) é uma infeção causada por bactérias que colonizam e se multiplicam no aparelho urinário. Consoante a localização, fala-se em cistite (infeção da bexiga, a mais comum), pielonefrite (infeção dos rins, mais grave) e uretrite (infeção da uretra). Em Portugal, a infeção urinária é a segunda doença infeciosa mais frequente na comunidade, a seguir às infeções respiratórias (Rocha et al., 2014). A bactéria responsável pela grande maioria dos casos é a <em>Escherichia coli</em>, correspondendo à maioria dos casos de ITU na comunidade (Curto et al., 2019).</p>
-
-    <h2>Porque é que a infeção urinária é muito mais frequente nas mulheres?</h2>
-    <p>A anatomia feminina é o principal fator. A uretra das mulheres tem apenas 3 a 4 cm de comprimento e está muito próxima do ânus e da vagina, o que facilita a entrada de bactérias na bexiga. Cerca de 40% das mulheres terão pelo menos uma infeção urinária ao longo da vida, e 20 a 30% têm infeções recorrentes (Bonkat et al., 2024). Outros fatores de risco incluem atividade sexual, menopausa, gravidez, diabetes, anomalias estruturais do trato urinário e histórico de ITU prévia.</p>
-
-    <h2>Sintomas da infeção urinária</h2>
-    <h3>Cistite (infeção da bexiga)</h3>
-    <ul>
-      <li><strong>Disúria:</strong> dor, ardor ou picada ao urinar</li>
-      <li><strong>Polaquiúria:</strong> necessidade frequente de urinar em pequenas quantidades</li>
-      <li><strong>Urgência miccional:</strong> sensação imperiosa de urinar</li>
-      <li><strong>Hematúria:</strong> urina com sangue, presente em cerca de 30% dos casos</li>
-      <li><strong>Dor suprapúbica:</strong> pressão na zona inferior do abdómen</li>
-      <li>Urina turva ou com cheiro diferente do habitual</li>
-    </ul>
-    <p>A cistite não complicada não costuma causar febre. A presença de febre sugere que a infeção subiu até aos rins.</p>
-
-    <h3>Pielonefrite (infeção dos rins)</h3>
-    <ul>
-      <li>Febre alta (frequentemente acima de 38,5ºC), com calafrios</li>
-      <li>Dor lombar intensa, geralmente unilateral</li>
-      <li>Náuseas e vómitos</li>
-      <li>Mal-estar geral e prostração</li>
-    </ul>
-    <div class='ibox warn'><div class='ibox-title'>⚠️ Quando ir às urgências</div><p>Se tiver febre acima de 38,5ºC, dores lombares intensas, vómitos ou se for grávida, a avaliação deve ser presencial e urgente. A pielonefrite pode evoluir para sépsis se não for tratada atempadamente.</p></div>
-
-    <h2>Diagnóstico</h2>
-    <p>Na mulher com sintomas típicos de cistite não complicada, o diagnóstico é essencialmente clínico. A presença simultânea de disúria e polaquiúria sem corrimento vaginal tem um valor preditivo positivo superior a 90% para ITU (Bonkat et al., 2024). A urocultura é obrigatória nas grávidas, em caso de pielonefrite, ITU no homem, infeções recorrentes ou falência do tratamento.</p>
-
-    <h2>Tratamento: antibióticos recomendados em Portugal</h2>
-    <ul>
-      <li><strong>Nitrofurantoína 100 mg duas vezes por dia durante 5 dias:</strong> excelente atividade contra <em>E. coli</em> com baixas taxas de resistência em Portugal.</li>
-      <li><strong>Fosfomicina trometamol 3g em dose único:</strong> muito conveniente, boa atividade, incluindo contra estirpes resistentes (ESBL).</li>
-      <li><strong>Pivmecilinam 400 mg três vezes por dia durante 3 a 7 dias:</strong> menor impacto na flora intestinal.</li>
-    </ul>
-    <p>As fluoroquinolonas e a amoxicilina com ácido clavulânico devem ser evitadas em primeira linha pelo aumento de resistências em Portugal (Curto et al., 2019; Bonkat et al., 2024).</p>
-
-    <h2>Prevenção da infeção urinária recorrente</h2>
-    <ul>
-      <li>Beber 1,5 a 2 litros de água por dia</li>
-      <li>Urinar após as relações sexuais</li>
-      <li>Higiene correta: limpar da frente para trás</li>
-      <li>Evitar produtos de higiene íntima agressivos</li>
-      <li>Arando em extrato concentrado: redução modesta mas real do risco</li>
-      <li>Probióticos com Lactobacillus, especialmente nas mulheres pós-menopáusicas</li>
-      <li>Estrogénio vaginal tópico nas mulheres pós-menopáusicas</li>
-    </ul>
-
-    <div class='refs'><h3>Referências Bibliográficas</h3><ol>
-      <li>Bonkat, G., et al. (2024). EAU Guidelines on Urological Infections. European Association of Urology. https://uroweb.org/guidelines/urological-infections</li>
-      <li>Curto, C., Rosendo, I., & Santiago, L. M. (2019). Perfil de sensibilidade aos antibióticos na infeção urinária em ambulatório no distrito de Coimbra. Acta Médica Portuguesa, 32(9), 568-575.</li>
-      <li>Kranz, J., et al. (2025). EAU Guidelines on Urological Infections: Summary of the 2024 Guidelines. European Urology, 86(1), 27-41.</li>
-      <li>Rocha, C., et al. (2014). Infecções urinárias: a realidade de um serviço de Medicina Interna. Medicina Interna.</li>
-      <li>Direção-Geral da Saúde. (2021). Norma de Orientação Clínica: Infeções do Trato Urinário. DGS.</li>
-    </ol></div>`
+  cta: `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
 },
   
 'baixa-medica': {
   title: 'Baixa Médica Online em Portugal: Como Funciona | ConsultasOnline',
   description: 'Como funciona o CIT em Portugal, prazos e como renovar a baixa médica online sem sair de casa. Consulta a partir de 55€.',
   keywords: 'baixa médica online portugal, renovar baixa médica online, CIT online, consulta baixa médica, certificado incapacidade temporária',
-  content: `<div class="cta-top"><p>📋 Precisa de baixa médica? CIT emitido por videoconsulta e submetido à Segurança Social no próprio dia. <a href="/">Marcar consulta — 55€ →</a></p></div>
-    <h2>O Sistema CIT em Portugal</h2>
-    <p>A baixa médica é formalizada pelo <strong>Certificado de Incapacidade Temporária (CIT)</strong>, enviado eletronicamente pelo médico directamente para a Segurança Social.</p>
-    <h2>Posso fazer baixa médica online em Portugal?</h2>
-    <p>Sim. A Portaria n.º 115/2021 permite a emissão do CIT após videoconsulta. O processo tem exactamente a mesma validade legal que uma consulta presencial.</p>
-    <div class="info"><strong>✅ Validade legal total</strong><p>O CIT emitido por videoconsulta tem o mesmo valor legal que o emitido presencialmente.</p></div>
-    <h2>Quem pode pedir baixa médica online?</h2>
-    <ul><li>Trabalhadores por conta de outrem com número de utente SNS válido</li><li>Trabalhadores independentes inscritos na Segurança Social</li><li>Trabalhadores com ou sem médico de família atribuído</li></ul>
-    <h2>Subsídio de Doença</h2>
-    <ul><li>Até 30 dias: <strong>55%</strong> da remuneração de referência</li><li>31–90 dias: <strong>60%</strong></li><li>91–365 dias: <strong>70%</strong></li><li>Mais de 365 dias: <strong>75%</strong></li></ul>
-    <div class="warn"><strong>⚠️ Prazo legal</strong><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade.</p></div>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>Posso fazer baixa médica sem médico de família?</h4><p>Sim. Qualquer médico registado na Ordem dos Médicos pode emitir o CIT.</p></div>
-    <div class="faq"><h4>Posso renovar a baixa por videoconsulta?</h4><p>Sim. A renovação do CIT pode ser feita por videoconsulta nas mesmas condições.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Decreto-Lei n.º 28/2004. Proteção na eventualidade de doença.</li><li>Portaria n.º 115/2021. Certificado de Incapacidade Temporária por teleconsulta.</li></ol></div>`
+  cta: `<div class="cta-top"><p>📋 Precisa de baixa médica? CIT emitido por videoconsulta e submetido à Segurança Social no próprio dia. <a href="/">Marcar consulta — 55€ →</a></p></div>`
 },
 
 'renovacao-medicamentos': {
   title: 'Renovação de Medicamentos Online em Portugal | ConsultasOnline',
   description: 'Renove a sua receita médica por videoconsulta. Receita electrónica enviada por SMS e email no próprio dia. A partir de 40€.',
   keywords: 'renovar receita médica online, renovação medicamentos online portugal, receita médica online, consulta acompanhamento crónico',
-  content: `<div class="cta-top"><p>💊 Precisa de renovar medicação crónica? Consulta de acompanhamento por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>
-    <h2>Para que serve esta consulta?</h2>
-    <p>A consulta de acompanhamento crónico online destina-se a doentes com doenças crónicas controladas que precisam de renovar a medicação habitual sem necessidade de consulta presencial.</p>
-    <h2>Doenças crónicas abrangidas</h2>
-    <ul><li>Hipertensão arterial controlada</li><li>Diabetes tipo 2 controlada</li><li>Dislipidemia (colesterol)</li><li>Hipotiroidismo controlado</li><li>Outras doenças crónicas estáveis</li></ul>
-    <div class="info"><strong>💡 O que preparar para a consulta</strong><p>Tenha consigo a lista de medicação actual, as últimas análises disponíveis e os valores de tensão arterial recentes.</p></div>
-    <h2>A receita tem comparticipação do SNS?</h2>
-    <p>Sim. A Receita Sem Papel emitida por videoconsulta tem o mesmo valor legal que uma receita presencial. A comparticipação é aplicada automaticamente na farmácia.</p>
-    <div class="refs"><h3>Referências</h3><ol><li>INFARMED. Normas de Prescrição Eletrónica de Medicamentos. 2023.</li><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li></ol></div>`
+  cta: `<div class="cta-top"><p>💊 Precisa de renovar medicação crónica? Consulta de acompanhamento por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>`
 },
 
   'clamidia': {
   title: 'Clamídia: Sintomas, Transmissão, Diagnóstico e Tratamento | ConsultasOnline',
   description: 'Saiba tudo sobre a clamídia: sintomas, como se transmite, como é diagnosticada e como se trata. Guia médico completo atualizado 2026.',
   keywords: 'clamídia, Chlamydia trachomatis, sintomas clamídia, tratamento clamídia, rastreio clamídia Portugal, IST bacteriana',
+  cta: ``
 },
 
 'atestado-amamentacao': {
   title: 'Atestado de Amamentação Online em Portugal | ConsultasOnline',
   description: 'Obtenha o atestado de amamentação por videoconsulta. Direitos laborais, renovação. Emitido no próprio dia. 35€.',
   keywords: 'atestado amamentação online, atestado amamentação portugal, renovar atestado amamentação, direitos laborais amamentação',
-  content: `<div class="cta-top"><p>🤱 Precisa do atestado de amamentação? Emitido por videoconsulta e enviado por email no próprio dia. <a href="/">Marcar consulta — 35€ →</a></p></div>
-    <h2>O que é o atestado de amamentação?</h2>
-    <p>O atestado de amamentação certifica que uma mãe está a amamentar o seu filho. É fundamental para exercer os direitos laborais de dispensa de trabalho para aleitamento previstos no Código do Trabalho (artigo 47.º).</p>
-    <h2>Direitos Laborais</h2>
-    <ul><li><strong>Até o filho completar 1 ano:</strong> dois períodos de 30 minutos ou 1 hora por dia</li><li><strong>Do 1.º ao 2.º ano:</strong> um período de 30 minutos por dia</li><li>Dispensa de trabalho nocturno e horas extraordinárias</li></ul>
-    <div class="warn"><strong>⚠️ Renovação obrigatória</strong><p>O atestado tem validade de 3 a 6 meses. A renovação pode ser feita por videoconsulta.</p></div>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>O atestado online tem validade legal?</h4><p>Sim. O documento emitido por videoconsulta tem plena validade legal junto do empregador.</p></div>
-    <div class="faq"><h4>Com que frequência preciso de renovar?</h4><p>O atestado tem validade de 3 a 6 meses consoante o que o médico indicar.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Lei n.º 7/2009. Código do Trabalho Português. Artigos 47.º e 58.º</li><li>ACT. Guia sobre Parentalidade e Trabalho. 2023.</li></ol></div>`
+  cta: `<div class="cta-top"><p>🤱 Precisa do atestado de amamentação? Emitido por videoconsulta e enviado por email no próprio dia. <a href="/">Marcar consulta — 35€ →</a></p></div>`
 },
 
 'atestado-carta-conducao': {
   title: 'Atestado Médico para Carta de Condução: Tudo o que Precisa de Saber',
   description: 'Saiba quando é obrigatório, o que é avaliado, os requisitos por categoria, a validade e como obter o atestado médico para carta de condução por videoconsulta.',
   keywords: 'atestado médico carta de condução, renovação carta de condução, aptidão física condução, IMT atestado médico, videoconsulta carta de condução',
-  content: `<div class=\"cta-top\"><p>🚗 Precisa de atestado médico para a carta de condução? Emissão por <a href=\"/artigos/consulta-online\">videoconsulta</a>. <a href=\"/\">Marcar consulta — 40€ →</a></p></div>
-
-<div class=\"art-author\">✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
-
-<p><em>Atualizado 2026</em></p>
-
-<p>Em Portugal, qualquer pessoa que queira obter ou renovar a carta de condução tem de apresentar um atestado médico de aptidão física emitido por um médico inscrito na Ordem dos Médicos. Este documento certifica que o candidato ou o condutor reúne as condições de saúde exigidas por lei para conduzir com segurança. O atestado é enviado diretamente pelo médico ao Instituto da Mobilidade e dos Transportes (IMT) através de plataforma eletrónica, sem necessidade de qualquer deslocação adicional por parte do requerente.</p>
-
-<p>Neste artigo explicamos quando é obrigatório, o que é avaliado, quais os requisitos por categoria de carta, qual a validade do atestado, como é possível fazê-lo <a href=\"/artigos/consulta-online\">por videoconsulta</a> e o que levar para a consulta.</p>
-
-<h2>1. Enquadramento legal: quem pode emitir o atestado médico para carta de condução</h2>
-
-<p>O Regulamento da Habilitação Legal para Conduzir, aprovado pelo <a href=\"https://diariodarepublica.pt/dr/detalhe/decreto-lei/138-2012-178550\" target=\"_blank\" rel=\"noopener\">Decreto-Lei n.º 138/2012, de 5 de julho</a>, com as alterações introduzidas pelo <a href=\"https://diariodarepublica.pt/dr/detalhe/decreto-lei/40-2016-75060359\" target=\"_blank\" rel=\"noopener\">Decreto-Lei n.º 40/2016, de 29 de julho</a>, estabelece os requisitos de aptidão física e mental exigidos para a obtenção e renovação da carta de condução em Portugal.</p>
-
-<p>O atestado médico para carta de condução pode ser emitido por qualquer médico no exercício das suas funções, incluindo <a href=\"https://www.imt-ip.pt/condutores/informacoes-gerais/quero-ser-condutor/\" target=\"_blank\" rel=\"noopener\">médicos que exerçam atividade na sociedade médica privada</a>, e não apenas pelos serviços públicos de saúde. O médico tem de ter acesso à plataforma eletrónica do Ministério da Saúde (gerida pela SPMS), que permite o envio direto do atestado ao IMT no final da consulta.</p>
-
-<p>Isto significa que o atestado pode ser feito por videoconsulta, desde que o candidato traga consigo os resultados dos exames exigidos por lei para a sua categoria de carta. O médico faz a avaliação clínica com base na informação fornecida, preenche o atestado na plataforma e envia-o diretamente ao IMT.</p>
-
-<h2>2. Quando é obrigatório fazer o atestado médico para carta de condução</h2>
-
-<p>O atestado médico de aptidão física é obrigatório nas seguintes situações:</p>
-<ul>
-<li>Obtenção da carta de condução pela primeira vez, em qualquer categoria</li>
-<li>Renovação da carta de condução, nos prazos previstos por lei consoante a categoria e a idade do condutor</li>
-<li>Troca de carta de condução estrangeira por carta portuguesa, quando proveniente de países fora da União Europeia</li>
-<li>Revalidação da carta após suspensão ou cessação, quando exigido pelo tribunal ou pelo IMT</li>
-<li>Emissão de nova carta por alteração de categoria, quando a nova categoria exija atestado específico</li>
-</ul>
-
-<h2>3. Tipos de atestado: tipo 1 e tipo 2</h2>
-
-<h3>Atestado tipo 1 (categorias AM, A1, A2, A, B1, B e BE)</h3>
-<p>Destina-se aos condutores de veículos ligeiros, motociclos e ciclomotores. É o atestado mais comum, pode ser emitido por qualquer médico inscrito na Ordem dos Médicos com acesso à plataforma eletrónica, e é o que pode ser obtido <a href=\"/artigos/consulta-online\">por videoconsulta</a> quando o candidato apresenta os resultados do exame de visão atualizado.</p>
-
-<h3>Atestado tipo 2 (categorias C1, C1E, C, CE, D1, D1E, D e DE)</h3>
-<p>Destina-se a condutores de veículos pesados de mercadorias e de passageiros. Exige uma avaliação mais exigente e critérios de aptidão mais restritivos, dado o maior risco associado à condução profissional. Também pode ser emitido por qualquer médico habilitado, embora em algumas situações seja necessário parecer de especialidade.</p>
-
-<h2>4. Requisitos médicos por categoria de carta de condução</h2>
-
-<h3>4.1 Visão</h3>
-<p>A visão é o requisito mais frequentemente avaliado e o principal motivo de reprovação. Convém esclarecer o conceito de visão monocular: considera-se monovisual todo o indivíduo que tenha uma perda funcional de um dos olhos ou que possua uma acuidade visual num dos olhos inferior a 0,2. Após a perda de visão num dos olhos, deve existir um período de adaptação adequado, no mínimo de seis meses, durante o qual é proibida a condução de veículos. Findo este período, só pode ser autorizada a prática da condução após obtenção de parecer favorável de oftalmologista e aprovação em prova prática.</p>
-
-<p>Os <a href=\"https://ordemdosmedicos.pt/files/pdfs/ZtW7-Tabela_comparativa___cartas_conducao.pdf\" target=\"_blank\" rel=\"noopener\">critérios</a> variam consoante a categoria:</p>
-
-<h4>Categorias do grupo 1 (AM, A1, A2, A, B1, B, BE):</h4>
-<ul>
-<li>Acuidade visual binocular mínima de 0,5 (com ou sem correção ótica). A acuidade visual mínima no \"pior olho\", com correção ótica se necessário, não pode ser inferior a 0,2.</li>
-<li>Visão monocular: a acuidade visual com ou sem correção não pode ser inferior a 0,5, devendo obter parecer favorável de oftalmologista certificando que esta situação se verifica há pelo menos seis meses, que o condutor está perfeitamente adaptado, que o campo visual e a visão crepuscular são normais e que a perceção de profundidade é compatível com a condução.</li>
-<li>Campo visual horizontal mínimo de 120 graus, com pelo menos 50 graus para cada lado e sem defeitos nos 20 graus centrais.</li>
-<li>Diplopia (visão dupla): apenas são permitidas, a título excecional, as formas congénitas ou infantis que não se manifestem nos 20° centrais do campo visual nem causem qualquer outra sintomatologia.</li>
-<li>Visão das cores: é aceite qualquer tipo de daltonismo exceto a acromatopsia.</li>
-<li>Visão noturna: se houver dificuldades significativas, o condutor pode ser declarado apto apenas para conduzir durante o dia.</li>
-<li>Doenças oftalmológicas progressivas: título de condução só pode ser emitido ou revalidado sob reserva de exame periódico anual por oftalmologista.</li>
-</ul>
-
-<h4>Categorias do grupo 2 (C1, C1E, C, CE, D1, D1E, D, DE):</h4>
-<ul>
-<li>Acuidade visual binocular mínima de 0,8 no \"melhor olho\" e de 0,5 no \"pior olho\". Se estes valores forem atingidos com correção ótica, é necessário que a visão não corrigida atinja pelo menos 0,05 em cada um dos olhos. A potência das lentes não pode exceder mais ou menos quatro dioptrias.</li>
-<li>Visão monocular: o título de condução não é emitido nem revalidado a candidatos ou condutores do grupo 2 monovisuais.</li>
-<li>Campo visual horizontal mínimo de 160 graus, com pelo menos 70 graus para cada lado e sem defeitos nos 30 graus centrais.</li>
-<li>Ausência de diplopia.</li>
-<li>Visão das cores: além da acromatopsia, também a protanopia (incapacidade de ver o vermelho) é causa de inaptidão.</li>
-<li>Visão noturna: qualquer dificuldade significativa em condições de pouca luminosidade é causa de inaptidão.</li>
-<li>Doenças oftalmológicas progressivas: são causa de inaptidão.</li>
-</ul>
-
-<p>O exame de visão tem de ser realizado numa ótica ou por um oftalmologista antes da consulta médica.</p>
-
-<h3>4.2 Audição</h3>
-<p><strong>Grupo 1:</strong> É emitido ou revalidado o título de condução a quem sofra de défice auditivo, devendo atender-se à possibilidade de compensação. A surdez profunda deve ser compensada, sempre que possível, por prótese ou implante coclear, sendo a aptidão condicionada a parecer favorável de médico otorrinolaringologista.</p>
-<p><strong>Grupo 2:</strong> Pode ser emitido ou revalidado o título de condução ao candidato que sofra de défice auditivo, condicionado à possibilidade de compensação e a parecer favorável de médico otorrinolaringologista.</p>
-
-<h3>4.3 Sistema cardiovascular</h3>
-<p><strong>Grupo 1:</strong></p>
-<ul>
-<li>Hipertensão arterial controlada com medicação é compatível com a condução.</li>
-<li>Enfarte agudo do miocárdio recente: a aptidão depende da avaliação cardiológica.</li>
-<li>Arritmias cardíacas: avaliadas caso a caso.</li>
-<li>Implantação de pacemaker ou desfibrilhador (CDI): inaptidão temporária durante o período de ajuste; após estabilização, pode ser aceite com condições.</li>
-<li>Insuficiência cardíaca: avaliada em função da classe funcional.</li>
-</ul>
-<p><strong>Grupo 2:</strong> A avaliação deve ser ponderada com base em parecer de cardiologista devidamente fundamentado em exames complementares.</p>
-
-<h3>4.4 Sistema neurológico</h3>
-<p>Epilepsia é uma das condições com maior impacto na aptidão para conduzir.</p>
-<ul>
-<li><strong>Grupo 1:</strong> Inaptidão temporária. Após pelo menos 1 ano sem crises em tratamento, e com avaliação neurológica favorável, pode ser reconhecida aptidão condicionada (renovação anual até cumprirem um período de pelo menos cinco anos sem crises).</li>
-<li><strong>Grupo 2:</strong> É emitido ou revalidado título de condução a quem sofra de epilepsia, desde que esteja há pelo menos dez anos livre de crises e sem terapêutica específica, se apoiado em parecer de neurologista que ateste não existir qualquer patologia cerebral relevante e que confirme não existir atividade epilética em exame eletroencefalográfico.</li>
-</ul>
-
-<h3>4.5 Diabetes mellitus</h3>
-<p><strong>Grupo 1:</strong> Diabetes tratada com insulina ou com antidiabéticos orais com risco de hipoglicemia: aptidão condicionada a controlo metabólico adequado, ausência de episódios de hipoglicemia grave e avaliação periódica.</p>
-<p><strong>Grupo 2:</strong> A emissão de atestado é permitida para condutores tratados com insulina, desde que não tenham tido episódios de hipoglicemia grave nos últimos 12 meses e apresentem relatório favorável de endocrinologia.</p>
-
-<h3>4.6 Perturbações do sono</h3>
-<p>A síndrome de apneia obstrutiva do sono (SAOS) é uma causa crescentemente reconhecida de inaptidão para conduzir, dado o risco de sonolência diurna e de adormecimento ao volante. É emitido ou revalidado o título de condução a quem sofra de perturbações do sono, mediante a submissão a exame médico da especialidade e com parecer favorável, mas apenas para o grupo 1.</p>
-
-<h3>4.7 Saúde mental</h3>
-<p>É inapto para conduzir o candidato ou condutor que sofra de perturbações mentais congénitas ou adquiridas que traduzam redução apreciável das capacidades mentais, incluindo atrasos mentais e perturbações graves do comportamento, da capacidade cognitiva ou da personalidade, suscetíveis de modificar a capacidade de julgamento ou que impliquem diminuição da eficiência ou segurança na condução.</p>
-
-<h3>4.8 Aparelho locomotor</h3>
-<p>Amputações, paralisias e outras limitações funcionais dos membros são avaliadas em função da capacidade de manobrar o veículo em segurança. Em muitos casos, a adaptação do veículo permite manter a aptidão.</p>
-
-<h2>5. Validade do atestado médico para carta de condução</h2>
-
-<p>O atestado médico tem uma validade determinada, após a qual o condutor tem de renovar tanto o atestado como a própria carta de condução. Os prazos são os seguintes, de acordo com o Regulamento da Habilitação Legal para Conduzir:</p>
-
-<table class=\"art-table\">
-<thead><tr><th>Categoria</th><th>Até aos 60 ou 70 anos</th><th>A partir dos 70 anos</th></tr></thead>
-<tbody>
-<tr><td>AM, A1, A2, A, B1, B, BE</td><td>15 em 15 anos até aos 60 anos. 5 em 5 anos entre 60 e os 70 anos</td><td>2 em 2 anos</td></tr>
-<tr><td>C1, C1E, C, CE</td><td>5 em 5 anos até aos 70 anos</td><td>2 em 2 anos</td></tr>
-<tr><td>D1, D1E, D, DE</td><td>5 em 5 anos até aos 67 anos</td><td>Não podem ser revalidadas após os 67 anos</td></tr>
-</tbody>
-</table>
-
-<p>Em condutores com determinadas condições de saúde (epilepsia controlada, diabetes insulinotratada, SAOS em tratamento, entre outras), o atestado pode ter uma validade inferior, com renovação anual ou bienal, independentemente da categoria ou da idade.</p>
-
-<p>O atestado médico emitido tem um prazo de validade próprio para ser apresentado ao IMT, geralmente de 3 meses a partir da data de emissão. Findo este prazo, é necessário obter novo atestado.</p>
-
-<h2>6. O que levar para a consulta (presencial ou por videoconsulta)</h2>
-
-<p>Para que o médico possa emitir o atestado, é necessário apresentar os seguintes elementos:</p>
-<ul>
-<li>Exame de visão atualizado, realizado numa ótica ou por um oftalmologista, com indicação da acuidade visual corrigida e não corrigida de cada olho, visão binocular, campo visual e ausência ou presença de diplopia.</li>
-<li>Documento de identificação com fotografia (cartão de cidadão ou passaporte).</li>
-<li>Lista de medicação atual, incluindo nome dos medicamentos, dosagem e indicação terapêutica.</li>
-<li>Relatórios médicos relevantes de especialistas, quando existam condições de saúde que possam afetar a aptidão para conduzir (cardiologia, neurologia, endocrinologia, pneumologia, oftalmologia).</li>
-<li>No caso de diabetes: resultados recentes de hemoglobina glicada (HbA1c) e glicemia em jejum.</li>
-<li>No caso de epilepsia: relatório neurológico com data e tipo da última crise.</li>
-<li>No caso de SAOS: relatório de follow-up de pneumologia com dados de adesão ao CPAP.</li>
-<li>No caso de doenças cardiovasculares: último relatório de cardiologia e resultados de ecocardiograma ou prova de esforço recentes.</li>
-</ul>
-
-<h2>7. Perguntas frequentes</h2>
-
-<h3>Posso fazer o atestado médico para a carta de condução por videoconsulta?</h3>
-<p>Sim. Desde que o candidato apresente o exame de visão atualizado e os relatórios médicos relevantes durante a videoconsulta, o médico pode emitir o atestado e enviá-lo diretamente ao IMT através da plataforma eletrónica do Ministério da Saúde.</p>
-
-<h3>O que preciso de levar para a consulta?</h3>
-<p>O mais importante é o exame de visão atualizado, realizado numa ótica ou por um oftalmologista antes da consulta. Para além disso, deve ter o documento de identificação, a lista de medicação atual e, se tiver alguma condição de saúde relevante, os relatórios médicos de acompanhamento de especialidade.</p>
-
-<h3>Posso fazer o atestado se usar óculos ou lentes de contacto?</h3>
-<p>Sim. Se com correção ótica atingir os valores mínimos exigidos para a sua categoria, o atestado é emitido com a restrição de uso obrigatório de óculos ou lentes durante a condução.</p>
-
-<h3>Tenho epilepsia controlada. Posso obter a carta de condução?</h3>
-<p>Para veículos ligeiros, depois de pelo menos 1 ano sem crises epiléticas em tratamento, e com relatório neurológico favorável, é possível obter aptidão condicionada. A renovação do atestado passa a ser anual até perfazer 5 anos sem crises. Para veículos pesados, as condições são mais restritivas. É fundamental apresentar relatório de neurologia atualizado na consulta.</p>
-
-<h3>Tenho diabetes e faço insulina. Posso ter carta de condução de pesados?</h3>
-<p>É permitida a emissão de atestado de aptidão para condutores de veículos pesados tratados com insulina, desde que não tenham tido episódios de hipoglicemia grave nos últimos 12 meses e apresentem relatório favorável de endocrinologia.</p>
-
-<h3>O atestado médico é enviado diretamente ao IMT?</h3>
-<p>Sim. O médico preenche o atestado na plataforma eletrónica do Ministério da Saúde e envia-o diretamente ao IMT no final da consulta. Não é necessário levar nenhum papel ao IMT.</p>
-
-<h3>Quanto tempo tenho para usar o atestado no IMT depois de o fazer?</h3>
-<p>O atestado emitido tem um prazo de validade para ser apresentado ao IMT, geralmente de 3 meses. Após esse prazo, é necessário obter um novo atestado.</p>
-
-<div class=\"refs\"><h3>Referências</h3><ol>
-<li>Governo de Portugal. (2012). <a href=\"https://diariodarepublica.pt/dr/detalhe/decreto-lei/138-2012-178550\" target=\"_blank\" rel=\"noopener\">Decreto-Lei n.º 138/2012, de 5 de julho. Regulamento da Habilitação Legal para Conduzir.</a></li>
-<li>Governo de Portugal. (2016). <a href=\"https://diariodarepublica.pt/dr/detalhe/decreto-lei/40-2016-75060359\" target=\"_blank\" rel=\"noopener\">Decreto-Lei n.º 40/2016, de 29 de julho. Alterações ao Regulamento da Habilitação Legal para Conduzir.</a></li>
-<li>Direção-Geral da Saúde &amp; Instituto da Mobilidade e dos Transportes. (2017). <a href=\"https://www.dgs.pt/saude-publica1/cartas-de-conducao.aspx\" target=\"_blank\" rel=\"noopener\">Despacho Conjunto de 3 de fevereiro de 2017. Modelos e conteúdos do Atestado Médico para Carta de Condução.</a></li>
-<li>Ordem dos Médicos. (2020). Regulamento de Telemedicina. Lisboa: Ordem dos Médicos.</li>
-<li>Parlamento Europeu e Conselho da União Europeia. (2006). Diretiva 2006/126/CE relativa à carta de condução. Jornal Oficial da União Europeia.</li>
-<li>Comissão Europeia. (2014). Diretiva 2014/85/UE da Comissão, de 1 de julho de 2014. Requisitos médicos de aptidão para condutores profissionais com diabetes. Jornal Oficial da União Europeia.</li>
-</ol>
-<p><em>Artigo revisto por médico inscrito na Ordem dos Médicos. Para uso informativo. Não substitui consulta médica.</em></p></div>`
+  cta: `<div class=\"cta-top\"><p>🚗 Precisa de atestado médico para a carta de condução? Emissão por <a href=\"/artigos/consulta-online\">videoconsulta</a>. <a href=\"/\">Marcar consulta — 45€ →</a></p></div>`
 },
 
 'faltas-trabalho': {
   title: 'Faltas ao Trabalho por Doença: Como Justificar | ConsultasOnline',
   description: 'Tudo sobre declarações médicas, baixas e os seus direitos como trabalhador. Declaração médica emitida online no próprio dia.',
   keywords: 'faltas trabalho doença justificar, declaração médica trabalho online, baixa médica trabalho portugal, direitos trabalhador doença',
-  content: `<div class="cta-top"><p>💼 Precisa de declaração médica para o trabalho? Emitida por videoconsulta no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>
-    <h2>Enquadramento Legal</h2>
-    <p>As faltas ao trabalho por doença são reguladas pelo <strong>Código do Trabalho (Lei n.º 7/2009)</strong>. O trabalhador tem direito a faltar por doença sem perda de emprego, desde que cumpra as obrigações de justificação.</p>
-    <h2>Documentos para Justificar Faltas</h2>
-    <ul><li><strong>Declaração médica</strong> — para faltas de 1 a 3 dias</li><li><strong>CIT (baixa médica)</strong> — obrigatório a partir do 4.º dia consecutivo</li></ul>
-    <div class="info"><strong>📋 Prazo legal</strong><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade.</p></div>
-    <h2>Subsídio de Doença</h2>
-    <ul><li>Até 30 dias: <strong>55%</strong></li><li>31–90 dias: <strong>60%</strong></li><li>91–365 dias: <strong>70%</strong></li><li>Mais de 365 dias: <strong>75%</strong></li></ul>
-    <div class="warn"><strong>⚠️ Protecção laboral</strong><p>Faltas justificadas por doença não podem constituir justa causa de despedimento (art. 351.º CT).</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Lei n.º 7/2009. Código do Trabalho Português.</li><li>ISS. Guia Prático — Subsídio de Doença. 2023.</li></ol></div>`
+  cta: `<div class="cta-top"><p>💼 Precisa de declaração médica para o trabalho? Emitida por videoconsulta no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>`
 },
 
 'faltas-escola': {
   title: 'Faltas à Escola por Doença: Como Justificar | ConsultasOnline',
   description: 'O que diz a lei, documentos necessários e como obter declaração médica online para justificar faltas escolares. 35€.',
   keywords: 'faltas escola doença justificar, atestado falta escolar online, declaração médica escola portugal, justificar falta escolar',
-  content: `<div class="cta-top"><p>🎓 Precisa de atestado para justificar falta escolar? Emitido por videoconsulta no próprio dia. <a href="/">Marcar consulta — 35€ →</a></p></div>
-    <h2>O que diz a Lei</h2>
-    <p>As faltas escolares por doença são reguladas pelo <strong>Estatuto do Aluno e Ética Escolar (Lei n.º 51/2012)</strong>. A justificação requer declaração médica que indique o período de incapacidade sem revelar o diagnóstico.</p>
-    <h2>Documentos Aceites</h2>
-    <ul><li><strong>Declaração médica</strong> — válida para qualquer número de dias</li><li><strong>Declaração dos encarregados de educação</strong> — válida até 3 dias por período letivo (ensino básico)</li></ul>
-    <div class="info"><strong>📋 Prazo</strong><p>A justificação deve ser entregue ao Diretor de Turma nos <strong>3 dias úteis</strong> seguintes ao regresso.</p></div>
-    <h2>Limites de Faltas</h2>
-    <ul><li><strong>Ensino básico</strong> — faltas justificadas não têm consequências directas</li><li><strong>Ensino secundário</strong> — limite de 10% da carga horária de cada disciplina</li></ul>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>A declaração médica online é aceite pelas escolas?</h4><p>Sim. Tem plena validade legal junto de escolas públicas e privadas em Portugal.</p></div>
-    <div class="faq"><h4>Posso obter a declaração para o meu filho sem o levar ao médico?</h4><p>Sim. O encarregado de educação pode fazer a videoconsulta em nome do filho menor.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Lei n.º 51/2012. Estatuto do Aluno e Ética Escolar.</li><li>DGE. Orientações sobre faltismo escolar. 2023.</li></ol></div>`
+  cta: `<div class="cta-top"><p>🎓 Precisa de atestado para justificar falta escolar? Emitido por videoconsulta no próprio dia. <a href="/">Marcar consulta — 35€ →</a></p></div>`
 },
 
 'dor-de-garganta-amigdalite': {
-  title: 'Dor de Garganta e Amigdalite: Quando Tomar Antibiótico | ConsultasOnline',
+  title: 'Dor de Garganta e Amigdalite: Quando é Preciso Antibiótico? | ConsultasOnline',
   description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
   keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal, amigdalite bacteriana viral',
-  content: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>
-
-    <p>A dor de garganta é um dos motivos de consulta mais frequentes nos cuidados de saúde primários e nas urgências em Portugal. Na maioria das vezes, a causa é viral e resolve sozinha em poucos dias, sem necessidade de antibiótico. Mas há situações em que a infeção é bacteriana, e aí o antibiótico correto, prescrito a tempo, previne complicações que podem ser sérias.</p>
-
-    <h2>Amigdalite viral ou bacteriana?</h2>
-    <p>A grande maioria das faringoamigdalites agudas é de origem viral. Em adultos, a etiologia viral representa cerca de 90% dos casos. A causa bacteriana mais importante é o <em>Streptococcus pyogenes</em> (estreptococo do grupo A), a única que justifica antibiótico de forma rotineira.</p>
-    <h3>Sinais que sugerem causa viral</h3>
-    <ul>
-      <li>Rinorreia e congestão nasal</li>
-      <li>Tosse presente</li>
-      <li>Rouquidão ou disfonia</li>
-      <li>Úlceras na mucosa oral</li>
-      <li>Conjuntivite associada</li>
-    </ul>
-    <h3>Sinais que sugerem causa bacteriana</h3>
-    <ul>
-      <li>Início súbito de dor de garganta intensa</li>
-      <li>Febre elevada acima de 38ºC</li>
-      <li>Exsudado purulento nas amígdalas (placas brancas ou amareladas)</li>
-      <li>Gânglios cervicais anteriores dolorosos</li>
-      <li>Ausência de tosse e de sintomas nasais</li>
-    </ul>
-
-    <h2>Critérios de Centor-McIsaac</h2>
-    <p>A escala de Centor, adaptada por McIsaac, é a ferramenta de predição clínica mais utilizada para estimar a probabilidade de amigdalite estreptocócica. Cada critério presente vale um ponto: febre superior a 38ºC, ausência de tosse, exsudado amigdalino, gânglios cervicais anteriores dolorosos, e idade entre 3 e 14 anos.</p>
-    <ul>
-      <li><strong>0 a 1 ponto:</strong> causa viral muito provável. Antibiótico não indicado.</li>
-      <li><strong>2 a 3 pontos:</strong> probabilidade intermédia. O teste de diagnóstico rápido (TDR) pode ajudar.</li>
-      <li><strong>4 ou mais pontos:</strong> probabilidade elevada de causa estreptocócica.</li>
-    </ul>
-
-    <h2>Quando é necessário antibiótico?</h2>
-    <p>O antibiótico está indicado quando existe forte suspeita ou confirmação de causa estreptocócica: TDR positivo, pontuação de Centor-McIsaac elevada com quadro clínico sugestivo, ou ausência de melhoria após 48 a 72 horas com tratamento sintomático.</p>
-    <p>O antibiótico de primeira linha recomendado pela DGS é a amoxicilina 500 mg três vezes por dia durante 10 dias. Em caso de alergia às penicilinas, a azitromicina durante 5 dias é a alternativa mais utilizada.</p>
-    <div class='ibox warn'><div class='ibox-title'>⚠️ Amoxicilina com ácido clavulânico não é indicada</div><p>A amoxicilina com ácido clavulânico não é o antibiótico de escolha para a amigdalite estreptocócica. O estreptococo do grupo A é sensível à amoxicilina simples e o ácido clavulânico é desnecessário.</p></div>
-
-    <h2>Sinais de alarme: quando ir às urgências</h2>
-    <p>Alguns sinais indicam complicações que exigem avaliação presencial urgente:</p>
-    <ul>
-      <li><strong>Abcesso periamigdalino:</strong> trismo (dificuldade em abrir a boca), voz engrolada, desvio da úvula, assimetria marcada das amígdalas. Dirija-se imediatamente às urgências.</li>
-      <li><strong>Dificuldade em engolir líquidos</strong></li>
-      <li><strong>Prostração intensa ou febre muito alta que não cede</strong></li>
-      <li><strong>Erupção cutânea após tomar amoxicilina:</strong> pode indicar mononucleose infeciosa. Interrompa o antibiótico e contacte o médico.</li>
-    </ul>
-
-    <h2>Posso fazer a consulta de garganta por videoconsulta?</h2>
-    <p>Sim, na grande maioria dos casos em adultos. Por <a href='/artigos/consulta-online'>videoconsulta</a>, o médico avalia os critérios de Centor-McIsaac, pode observar a garganta em câmara, orientar para TDR se necessário e prescrever o tratamento adequado. Não é adequada quando existem sinais de abcesso periamigdalino ou dificuldade em engolir líquidos.</p>
-
-    <div class='refs'><h3>Referências Bibliográficas</h3><ol>
-      <li>Centor, R. M., et al. (1981). The diagnosis of strep throat in adults in the emergency room. Medical Decision Making, 1(3), 239-246.</li>
-      <li>McIsaac, W. J., et al. (1998). A clinical score to reduce unnecessary antibiotic use in patients with sore throat. CMAJ, 158(1), 75-83.</li>
-      <li>Direção-Geral da Saúde. (2012, atualizada 2022). Norma n.º 007/2012. DGS. https://www.dgs.pt</li>
-      <li>BMJ Best Practice. (2024). Amigdalite: resumo, diagnóstico e tratamento. https://bestpractice.bmj.com/topics/pt-br/598</li>
-    </ol></div>`
+  cta: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
 },
 
 'ozempic-glp1': {
   title: 'Como Atuam os Medicamentos Injetáveis para o Tratamento da Obesidade? | ConsultasOnline',
   description: 'Saiba como atuam os medicamentos injetáveis para o tratamento da obesidade, quais os efeitos, indicações e cuidados necessários.',
   keywords: 'medicamentos injetaveis obesidade portugal, glp-1 obesidade, agonistas glp-1, tratamento obesidade injetavel, semaglutido tirzepatido portugal',
-    content: `<div class="cta-top"><p>💉 Quer saber se é candidato a este tratamento? Consulta médica de obesidade por videoconsulta. <a href="/">Marcar consulta — 55€ →</a></p></div>
-
-    <p>A obesidade é uma doença crónica, complexa e multifatorial, reconhecida pela Organização Mundial de Saúde como uma das maiores emergências de saúde pública do século XXI. Em Portugal, dados do Inquérito Nacional de Saúde de 2019 indicam que cerca de 16,9% dos adultos apresentam obesidade e 36,6% têm excesso de peso, colocando o país entre os mais afetados da Europa Ocidental (<a href="https://www.ine.pt/xportal/xmain?xpid=INE&xpgid=ine_destaques&DESTAQUESdest_boui=414434213&DESTAQUEStema=00&DESTAQUESmodo=2" target="_blank" style="color:#0d7377">Instituto Nacional de Saúde Doutor Ricardo Jorge, 2020</a>). Este facto faz com que haja elevado interesse nos novos medicamentos injetáveis para o tratamento da obesidade.</p>
-
-    <h2>Uma nova era no tratamento farmacológico da obesidade</h2>
-    <p>Durante décadas, o arsenal farmacológico disponível para o tratamento da obesidade foi limitado, com eficácia modesta e perfis de segurança frequentemente problemáticos. A aprovação de uma nova classe de medicamentos injetáveis, os agonistas do recetor do péptido-1 semelhante ao glucagon (GLP-1) e os agonistas duplos GLP-1/GIP, representa a maior revolução no tratamento farmacológico da obesidade em mais de vinte anos.</p>
-    <p>Estes medicamentos não são uma solução definitiva nem uma alternativa ao estilo de vida saudável. São ferramentas clínicas com indicações precisas, contraindicações relevantes e um perfil de efeitos adversos que exige acompanhamento médico estruturado.</p>
-
-    <h2>O que é a obesidade?</h2>
-    <p>A obesidade é definida clinicamente como uma acumulação excessiva ou anormal de gordura corporal que representa um risco para a saúde. O índice de massa corporal (IMC) é o instrumento de triagem mais utilizado na prática clínica.</p>
-    <h3>Classificação do IMC (<a href="https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html" target="_blank" style="color:#0d7377">CDC</a>)</h3>
-    <ul>
-      <li><strong>IMC 18,5 a 24,9 kg/m²</strong> — peso normal, considerado saudável</li>
-      <li><strong>IMC 25,0 a 29,9 kg/m²</strong> — excesso de peso (pré-obesidade)</li>
-      <li><strong>IMC 30,0 a 34,9 kg/m²</strong> — obesidade grau I</li>
-      <li><strong>IMC 35,0 a 39,9 kg/m²</strong> — obesidade grau II</li>
-      <li><strong>IMC igual ou superior a 40,0 kg/m²</strong> — obesidade grau III (obesidade grave)</li>
-    </ul>
-    <p>O IMC tem limitações: não distingue massa gorda de massa muscular e não avalia a distribuição da gordura corporal. A avaliação clínica completa inclui a medição do perímetro abdominal (risco aumentado a partir de ≥94 cm nos homens e ≥80 cm nas mulheres), análises laboratoriais e avaliação de comorbilidades.</p>
-    <p>As comorbilidades mais frequentemente associadas à obesidade incluem: diabetes mellitus tipo 2, hipertensão arterial, dislipidemia, doença cardiovascular, síndrome de apneia obstrutiva do sono, doença hepática esteatótica (MASLD), osteoartrite, determinados tipos de cancro e perturbações de saúde mental.</p>
-
-    <h2>Fisiologia da saciedade e regulação do peso corporal</h2>
-    <p>O trato gastrointestinal é o maior órgão endócrino do corpo humano, produzindo mais de 20 hormonas que comunicam com o cérebro para regular o comportamento alimentar. As principais hormonas envolvidas incluem:</p>
-    <ul>
-      <li><strong>Grelina:</strong> produzida pelo estômago, estimula o apetite antes das refeições.</li>
-      <li><strong>Leptina:</strong> produzida pelo tecido adiposo, sinaliza ao hipotálamo a energia armazenada. Em indivíduos obesos desenvolve-se frequentemente resistência à leptina.</li>
-      <li><strong>GLP-1:</strong> produzido pelas células L do intestino delgado, promove a saciedade, retarda o esvaziamento gástrico e estimula a secreção de insulina de forma dependente da glicose.</li>
-      <li><strong>GIP:</strong> produzido pelas células K do intestino delgado, estimula a secreção de insulina e tem efeitos sobre o metabolismo lipídico.</li>
-    </ul>
-    <p>O hipotálamo é o principal centro de regulação do balanço energético. Em indivíduos com obesidade, este sistema encontra-se frequentemente comprometido, com resistência a múltiplos sinais de saciedade e tendência para defender um peso corporal elevado mesmo perante restrição calórica.</p>
-
-    <h2>Como atuam os agonistas do recetor GLP-1</h2>
-    <p>Os agonistas do recetor GLP-1 (arGLP-1) são moléculas sintéticas que mimetizam a ação do GLP-1 endógeno, com semivida muito mais longa, permitindo administração semanal.</p>
-    <ul>
-      <li>Estimulação da secreção de insulina dependente da glicose — risco de hipoglicemia geralmente baixo quando usados isoladamente.</li>
-      <li>Supressão da secreção de glucagon, diminuindo a produção hepática de glicose.</li>
-      <li>Supressão central do apetite através dos recetores GLP-1 no hipotálamo e área postrema.</li>
-      <li>Atraso do esvaziamento gástrico, prolongando a saciedade após as refeições.</li>
-    </ul>
-    <p>Os arGLP-1 demonstraram efeitos cardioprotetores significativos. O ensaio LEADER demonstrou uma redução de 13% nos eventos cardiovasculares major com o liraglutido <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa1603827" target="_blank" style="color:#0d7377">(Marso et al., 2016)</a>. No ensaio SELECT, o semaglutido demonstrou uma redução de 20% nos eventos cardiovasculares major em indivíduos obesos sem diabetes <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2307563" target="_blank" style="color:#0d7377">(Lincoff et al., 2023)</a>.</p>
-
-    <h2>Agonistas duplos GLP-1/GIP: a evolução terapêutica</h2>
-    <p>A segunda geração de medicamentos injetáveis inclui moléculas que agonizam simultaneamente o recetor GLP-1 e o recetor GIP, conferindo eficácia superior na redução do peso corporal.</p>
-    <p>No ensaio <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2206038" target="_blank" style="color:#0d7377">SURMOUNT-1</a> (<a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2206038" target="_blank" style="color:#0d7377">Jastreboff et al., 2022</a>), com 2.539 participantes sem diabetes, o tirzepatido atingiu reduções médias de 20,9% (15 mg) e 19,5% (10 mg) às 72 semanas, vs. 3,1% no placebo. Cerca de 57% dos participantes atingiram uma redução superior a 20%.</p>
-
-    <h2>O que dizem os estudos</h2>
-    <h3>Programa STEP</h3>
-    <ul>
-      <li><strong>STEP 1</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/33567185/" target="_blank" style="color:#0d7377">Wilding et al., 2021</a>): redução média de 14,9% com semaglutido vs. 2,4% com placebo às 68 semanas.</li>
-      <li><strong>STEP 2</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/33667417/" target="_blank" style="color:#0d7377">Davies et al., 2021</a>): redução média de 9,6% em adultos com diabetes tipo 2 e obesidade.</li>
-      <li><strong>STEP 3</strong> (<a href="https://jamanetwork.com/journals/jama/fullarticle/2777025" target="_blank" style="color:#0d7377">Wadden et al., 2021</a>): combinação com intervenção comportamental — redução média de 16%.</li>
-      <li><strong>STEP 4</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/33755728/" target="_blank" style="color:#0d7377">Rubino et al., 2021</a>): interrupção do tratamento resulta na recuperação de dois terços do peso perdido.</li>
-      <li><strong>STEP 5</strong> (<a href="https://pubmed.ncbi.nlm.nih.gov/36216945/" target="_blank" style="color:#0d7377">Garvey et al., 2022</a>): a 104 semanas, manutenção da perda de peso de 15,2%.</li>
-    </ul>
-    <h3>Comparação da eficácia entre classes</h3>
-    <p>Uma metaanálise publicada na <a href="https://pubmed.ncbi.nlm.nih.gov/38582569/" target="_blank" style="color:#0d7377">The Lancet</a> (<a href="https://pubmed.ncbi.nlm.nih.gov/38582569/" target="_blank" style="color:#0d7377">Shi et al., 2022</a>), com 143 ensaios e mais de 49.000 participantes:</p>
-    <ul>
-      <li><strong>Agonistas duplos GLP-1/GIP:</strong> reduções de peso entre 15% e 21%.</li>
-      <li><strong>Agonistas GLP-1 (semaglutido 2,4 mg):</strong> reduções de 10% a 15%.</li>
-      <li><strong>Medicamentos mais antigos:</strong> eficácia de 3% a 8%.</li>
-    </ul>
-
-    <h2>Quem pode utilizar os medicamentos injetáveis para perder peso?</h2>
-    <ul>
-      <li>IMC igual ou superior a 30 kg/m² (obesidade), independentemente da presença de comorbilidades.</li>
-      <li>IMC igual ou superior a 27 kg/m² com pelo menos uma comorbilidade relacionada com o peso (diabetes tipo 2, hipertensão, dislipidemia, apneia do sono, doença cardiovascular ou esteatose hepática).</li>
-      <li>Tentativa prévia de perda de peso por modificações do estilo de vida sem sucesso adequado.</li>
-      <li>Ausência de contraindicações conhecidas ao tratamento.</li>
-    </ul>
-
-    <h2>Contraindicações e precauções</h2>
-    <h3>Contraindicações absolutas</h3>
-    <ul>
-      <li>História pessoal ou familiar de carcinoma medular da tiróide.</li>
-      <li>Síndrome de neoplasia endócrina múltipla tipo 2 (NEM2).</li>
-      <li>Hipersensibilidade ao princípio ativo ou a qualquer excipiente.</li>
-      <li>Gravidez (interromper pelo menos dois meses antes de gravidez planeada) e aleitamento materno.</li>
-    </ul>
-    <h3>Precauções</h3>
-    <ul>
-      <li>História de pancreatite aguda ou crónica.</li>
-      <li>Doenças gastrointestinais graves (gastroparesia, doença inflamatória intestinal ativa).</li>
-      <li>Doença renal crónica avançada.</li>
-      <li>Uso concomitante de sulfonilureias e insulina (ajuste de dose).</li>
-      <li>Retinopatia diabética (avaliação oftalmológica prévia).</li>
-    </ul>
-
-    <h2>Efeitos adversos</h2>
-    <h3>Efeitos gastrointestinais</h3>
-    <ul>
-      <li>Náuseas: 40% a 50% dos doentes, especialmente no início.</li>
-      <li>Vómitos: 15% a 25% dos doentes.</li>
-      <li>Diarreia: 20% a 30% dos doentes.</li>
-      <li>Obstipação: particularmente com o tirzepatido.</li>
-      <li>Dor abdominal e dispepsia: frequentes no início do tratamento.</li>
-    </ul>
-    <p>Estes efeitos são transitórios na maioria dos doentes e diminuem progressivamente. O aumento gradual da dose é a principal estratégia para minimizá-los.</p>
-    <h3>Outros efeitos adversos</h3>
-    <ul>
-      <li>Perda de massa muscular — treino de resistência e ingestão proteica adequada são fundamentais.</li>
-      <li>Litíase biliar — a perda de peso rápida aumenta o risco de cálculos biliares.</li>
-      <li>Taquicardia — pequenos aumentos na frequência cardíaca (2 a 4 bpm).</li>
-      <li>Reações no local de injeção — dor, eritema e prurido, geralmente ligeiros.</li>
-    </ul>
-
-    <h2>Monitorização e acompanhamento médico</h2>
-    <p>Antes do início: avaliação clínica completa, IMC e perímetro abdominal, análises laboratoriais (hemograma, glicemia, HbA1c, perfil lipídico, função renal, hepática e tiroideia) e avaliação cardiovascular.</p>
-    <p>Durante o tratamento: monitorização do peso, pressão arterial e frequência cardíaca; análises de 3 em 3 a 6 meses; suporte nutricional e de atividade física.</p>
-
-    <h2>Contexto em Portugal</h2>
-    <p>Os medicamentos injetáveis para a obesidade aprovados pela EMA estão disponíveis em Portugal. Para a indicação de diabetes tipo 2, alguns têm comparticipação do SNS sujeita a critérios específicos. Para obesidade sem diabetes, não existe comparticipação pelo SNS. O custo mensal varia tipicamente entre 150 e 300 euros. A prescrição exige avaliação médica prévia, que pode ser realizada por videoconsulta.</p>
-
-    <h2>O futuro: próximas gerações</h2>
-    <ul>
-      <li>Agonistas triplos GLP-1/GIP/glucagon (retratutido): dados preliminares com reduções superiores a 24%.</li>
-      <li>Agonistas GLP-1/amilina: combinação sobre a saciedade central e o controlo glicémico periférico.</li>
-      <li>Formulações orais de arGLP-1: para doentes com relutância à autoadministração de injeções.</li>
-    </ul>
-
-    <h2>Perguntas frequentes</h2>
-    <div class="faq"><h4>Como atuam os medicamentos injetáveis para a obesidade?</h4><p>Atuam sobre mecanismos envolvidos na regulação do apetite, da saciedade e do metabolismo. Os agonistas GLP-1 reproduzem efeitos desta hormona intestinal, aumentando a saciedade, reduzindo o apetite e atrasando o esvaziamento gástrico. Existem também medicamentos que atuam simultaneamente nos recetores GLP-1 e GIP.</p></div>
-    <div class="faq"><h4>Quem pode fazer tratamento com medicamentos injetáveis para a obesidade?</h4><p>A indicação deve ser avaliada individualmente por um médico. Podem ser considerados em adultos com IMC igual ou superior a 30 kg/m² ou com IMC igual ou superior a 27 kg/m² quando existe pelo menos uma condição relacionada com o excesso de peso.</p></div>
-    <div class="faq"><h4>Quais são os efeitos adversos mais frequentes?</h4><p>Os efeitos adversos mais frequentes são gastrointestinais: náuseas, vómitos, diarreia, obstipação e dor abdominal. Surgem sobretudo no início do tratamento e tendem a diminuir progressivamente.</p></div>
-    <div class="faq"><h4>Estes medicamentos causam dependência?</h4><p>Não. Não há evidência de dependência física ou psicológica. Ao interromper o tratamento, os mecanismos de regulação do apetite voltam a ser ativos, levando à recuperação do peso.</p></div>
-    <div class="faq"><h4>É necessário acompanhamento médico durante o tratamento?</h4><p>Sim. O acompanhamento médico é essencial antes e durante o tratamento, com avaliação clínica, análises laboratoriais, monitorização cardiovascular e suporte nutricional.</p></div>
-
-    <div class="refs"><h3>Referências Bibliográficas</h3><ol>
-      <li>Aronne, L. J., et al. (2024). SURMOUNT-4. JAMA, 331(1), 38-48. https://doi.org/10.1001/jama.2023.24945</li>
-      <li>Davies, M., et al. (2021). STEP 2. The Lancet, 397(10278), 971-984. https://doi.org/10.1016/S0140-6736(21)00213-0</li>
-      <li>Garvey, W. T., et al. (2022). STEP 5. Nature Medicine, 28(10), 2083-2091. https://doi.org/10.1038/s41591-022-02026-4</li>
-      <li>Instituto Nacional de Saúde Doutor Ricardo Jorge. (2020). Inquérito Nacional de Saúde 2019. INSA.</li>
-      <li>Jastreboff, A. M., et al. (2022). SURMOUNT-1. NEJM, 387(3), 205-216. https://doi.org/10.1056/NEJMoa2206038</li>
-      <li>Lincoff, A. M., et al. (2023). SELECT. NEJM, 389(24), 2221-2232. https://doi.org/10.1056/NEJMoa2307563</li>
-      <li>Marso, S. P., et al. (2016). LEADER. NEJM, 375(4), 311-322. https://doi.org/10.1056/NEJMoa1603827</li>
-      <li>Rubino, D., et al. (2021). STEP 4. JAMA, 325(14), 1414-1425. https://doi.org/10.1001/jama.2021.3224</li>
-      <li>Shi, Q., et al. (2022). The Lancet, 399(10321), 259-269. https://doi.org/10.1016/S0140-6736(21)01640-8</li>
-      <li>Wadden, T. A., et al. (2021). STEP 3. JAMA, 325(14), 1403-1413. https://doi.org/10.1001/jama.2021.1831</li>
-      <li>Wilding, J. P. H., et al. (2021). STEP 1. NEJM, 384(11), 989-1002. https://doi.org/10.1056/NEJMoa2032183</li>
-      <li>World Health Organization. (2024). Obesity and overweight. https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight</li>
-    </ol></div>`
+    h1: 'Como Atuam os Medicamentos Injetáveis para o Tratamento da Obesidade?',
+  cta: `<div class="cta-top"><p>💉 Quer saber se é candidato a este tratamento? Consulta médica de obesidade por videoconsulta. <a href="/">Marcar consulta — 55€ →</a></p></div>`
   },
 'doencas-sexualmente-transmissiveis': {
   title: 'Infeções Sexualmente Transmissíveis (IST): rastreio, prevenção e tratamento | ConsultasOnline',
   description: 'Saiba tudo sobre as infeções sexualmente transmissíveis (IST): sintomas, transmissão, testes, prevenção e tratamento. Leia agora!',
   keywords:'infeções sexualmente transmissíveis, IST, clamídia, gonorreia, sífilis, VIH, HPV, herpes genital, hepatite B, hepatite C, rastreio IST Portugal',
+  cta: ``
 },
 
 'cessacao-tabagica': {
   title: 'Como Parar de Fumar: Guia Médico Completo | ConsultasOnline',
   description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 40€.',
   keywords: 'cessação tabágica online portugal, consulta parar fumar online, vareniclina prescrição online, champix online portugal',
-  content: `<div class='cta-top'><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por <a href='/artigos/consulta-online'>videoconsulta</a>. <a href='/'>Marcar consulta — 40€ →</a></p></div>
-
-    <div class='art-author'>✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
-
-    <p>Parar de fumar é a decisão com maior impacto positivo na saúde que um fumador pode tomar, independentemente da idade, dos anos de consumo ou do número de cigarros por dia. Mas saber disso não chega. A dependência do tabaco é uma doença crónica com componentes físicos, psicológicos e comportamentais, e a tentativa de parar sem apoio médico tem taxas de sucesso muito baixas. Com o tratamento adequado, as probabilidades de sucesso aumentam de forma significativa.</p>
-    <p>Este artigo explica porque é tão difícil parar de fumar, quais os medicamentos disponíveis em Portugal e a sua eficácia, o que é a síndrome de abstinência, como planear uma tentativa de cessação e como a consulta médica pode ser feita por <a href='/artigos/consulta-online'>videoconsulta</a>.</p>
-
-    <h2>O tabagismo em Portugal: um problema de saúde pública</h2>
-    <p>De acordo com o Inquérito Nacional de Saúde de 2019 e os dados do <a href='https://www.dgs.pt/programa-nacional-para-a-prevencao-e-controlo-do-tabagismo.aspx' target='_blank'>Programa Nacional para a Prevenção e Controlo do Tabagismo da DGS</a>, cerca de 17% da população portuguesa com 15 ou mais anos era fumadora, correspondendo a mais de 1,5 milhões de pessoas. O relatório do programa estima que, em 2019, <a href='https://www.noticiasaominuto.com/pais/2332174/santos-silva-recorda-promocao-da-saude-publica-em-dia-mundial-sem-tabaco' target='_blank'>mais de 13.500 pessoas morreram em Portugal por doenças atribuíveis ao tabaco</a>.</p>
-    <p>O tabaco é a principal causa de morte evitável em Portugal e na Europa. As doenças diretamente relacionadas incluem o cancro do pulmão, a doença pulmonar obstrutiva crónica (DPOC), o enfarte do miocárdio, o acidente vascular cerebral, o cancro da bexiga, o cancro da laringe, o cancro do esófago e várias outras neoplasias. Não há dose segura de tabaco.</p>
-
-    <h2>Porque é tão difícil parar de fumar?</h2>
-    <p>A dificuldade em parar de fumar não é falta de vontade. É o resultado de uma dependência real, com componentes neurobiológicos bem estudados. A nicotina atua nos recetores nicotínicos do sistema nervoso central, estimulando a libertação de dopamina no núcleo accumbens, o centro de recompensa do cérebro. Este mecanismo é idêntico ao de outras substâncias com potencial aditivo elevado.</p>
-    <p>Com o consumo regular, o cérebro adapta-se ao aporte contínuo de nicotina, reduzindo a sensibilidade dos seus próprios recetores. Quando o fumador tenta parar, a ausência de nicotina provoca a síndrome de abstinência, que torna a tentativa de cessação muito desconfortável.</p>
-
-    <h3>Síndrome de abstinência nicotínica: o que esperar</h3>
-    <p>Os sintomas de abstinência surgem nas primeiras horas após o último cigarro, atingem o pico nas primeiras 24 a 72 horas e diminuem progressivamente ao longo de 2 a 4 semanas. Incluem:</p>
-    <ul>
-      <li>Desejo intenso de fumar (craving)</li>
-      <li>Irritabilidade, ansiedade e nervosismo</li>
-      <li>Dificuldade de concentração</li>
-      <li>Insónia ou sonos perturbados</li>
-      <li>Aumento do apetite e ganho de peso</li>
-      <li>Humor depressivo</li>
-      <li>Cefaleias e tonturas</li>
-      <li>Tosse transitória (mobilização de muco acumulado)</li>
-    </ul>
-    <p>Estes sintomas são temporários e diminuem progressivamente. Os medicamentos de cessação tabágica atuam precisamente sobre estes mecanismos, tornando os primeiros dias e semanas mais suportáveis.</p>
-
-    <h2>Tratamentos para parar de fumar com evidência científica</h2>
-    <p>Existe um conjunto de intervenções com evidência científica robusta para a cessação tabágica. A combinação de tratamento farmacológico com apoio comportamental é a estratégia com maior taxa de sucesso.</p>
-
-    <h3>1. Vareniclina (Champix)</h3>
-    <p>A vareniclina é o medicamento com maior eficácia comprovada para a cessação tabágica. Atua como agonista parcial dos recetores nicotínicos alfa-4-beta-2, com dois efeitos simultâneos: reduz o desejo de fumar e atenua o prazer associado ao cigarro, tornando o tabaco menos satisfatório mesmo que o fumador ceda à tentação.</p>
-    <p>A <a href='https://cochranelibrary.com/cdsr/doi/10.1002/14651858.CD006103.pub7/pt' target='_blank'>revisão Cochrane de 2023</a>, que incluiu 75 ensaios clínicos aleatorizados com mais de 45.000 participantes, concluiu que a vareniclina aumenta em duas a três vezes as probabilidades de cessação tabágica a longo prazo em comparação com tentativas sem medicação, sendo superior à bupropiona e à terapêutica de substituição nicotínica em monoterapia.</p>
-    <p>O esquema terapêutico padrão tem a duração de 12 semanas, com possibilidade de extensão por mais 12 semanas para consolidar a abstinência. O tratamento começa uma semana antes da data escolhida para parar de fumar, com aumento gradual da dose. O principal efeito adverso são as náuseas, que diminuem com a toma após as refeições. Contraindicada na gravidez.</p>
-
-    <h3>2. Terapêutica de Substituição Nicotínica (TSN)</h3>
-    <p>A terapêutica de substituição nicotínica fornece nicotina ao organismo de forma controlada e sem os outros produtos tóxicos do tabaco, atenuando os sintomas de abstinência enquanto o fumador trabalha na componente comportamental da dependência. Está disponível em várias formas:</p>
-    <ul>
-      <li><strong>Adesivos transdérmicos:</strong> libertação lenta e contínua de nicotina ao longo de 16 ou 24 horas. Adequados para fumadores com dependência física significativa. Existem em diferentes doses (7, 14 e 21 mg) que devem ser ajustadas ao grau de consumo.</li>
-      <li><strong>Pastilhas elásticas e pastilhas sublinguais:</strong> libertação rápida de nicotina para alívio de craving pontual.</li>
-      <li><strong>Inalador de nicotina:</strong> mimetiza o gesto de fumar, útil para fumadores com forte componente comportamental.</li>
-      <li><strong>Spray nasal:</strong> libertação muito rápida de nicotina.</li>
-    </ul>
-    <p>A <a href='https://www.cochrane.org/pt/node/9632' target='_blank'>combinação de adesivo com pastilha ou inalador de resgate é mais eficaz do que qualquer forma isolada de TSN</a>, de acordo com a Cochrane. Esta combinação pode ser tão eficaz quanto a vareniclina em alguns estudos. Disponível sem receita médica em farmácias portuguesas.</p>
-
-    <h3>3. Bupropiona</h3>
-    <p>A bupropiona é um antidepressivo que atua sobre os mecanismos dopaminérgicos e noradrenérgicos do sistema nervoso central, reduzindo o desejo de fumar e os sintomas de abstinência. Não contém nicotina. A sua eficácia é inferior à da vareniclina mas superior ao placebo. Pode ser particularmente útil em fumadores com depressão associada. Contraindicada em epilepsia, história de convulsões, anorexia nervosa ou bulimia. Exige receita médica.</p>
-
-    <h3>4. Citisina</h3>
-    <p>A citisina é um alcaloide natural extraído da planta <em>Cytisus laburnum</em>, que atua de forma semelhante à vareniclina nos recetores nicotínicos. <a href='https://www.cochrane.org/pt/node/9632' target='_blank'>A revisão Cochrane de 2023 concluiu que a citisina pode ser tão eficaz quanto a vareniclina</a>, com um perfil de segurança favorável. Em Portugal, a sua disponibilidade pode ser limitada.</p>
-
-    <h3>5. O que não funciona</h3>
-    <ul>
-      <li><strong>Cigarros eletrónicos:</strong> não estão aprovados como método de cessação tabágica pelas autoridades regulatórias europeias. A evidência sobre a sua eficácia é inconsistente e a segurança a longo prazo não está estabelecida.</li>
-      <li><strong>Acupuntura e hipnose:</strong> não há evidência científica robusta que suporte a sua eficácia como métodos de cessação tabágica.</li>
-      <li><strong>Redução gradual sem data definida:</strong> parar de forma abrupta numa data definida, com apoio farmacológico, tende a ser mais eficaz.</li>
-    </ul>
-
-    <h2>Como planear uma tentativa de cessação tabágica</h2>
-    <ul>
-      <li><strong>Escolher uma data para parar:</strong> idealmente dentro de 1 a 2 semanas, com tempo suficiente para iniciar o medicamento.</li>
-      <li><strong>Identificar os gatilhos:</strong> os momentos do dia, situações ou emoções associados ao cigarro, e planear alternativas para esses momentos.</li>
-      <li><strong>Remover o tabaco de casa e do carro</strong> e eliminar isqueiros e cinzeiros.</li>
-      <li><strong>Ter apoio social:</strong> comunicar a decisão à família e amigos.</li>
-      <li><strong>Planear a gestão do ganho de peso:</strong> é normal ganhar 2 a 4 kg nas primeiras semanas. A atividade física ajuda a mitigar este efeito.</li>
-      <li><strong>Não desistir após uma recaída:</strong> a maioria dos fumadores necessita de várias tentativas antes de conseguir a abstinência prolongada. Uma recaída não é um fracasso definitivo.</li>
-    </ul>
-
-    <h2>Benefícios de parar de fumar ao longo do tempo</h2>
-    <ul>
-      <li><strong>20 minutos:</strong> a pressão arterial e a frequência cardíaca normalizam</li>
-      <li><strong>24 horas:</strong> o risco de enfarte do miocárdio começa a diminuir</li>
-      <li><strong>48 horas:</strong> o olfato e o paladar começam a recuperar</li>
-      <li><strong>2 semanas a 3 meses:</strong> a função pulmonar melhora e a circulação sanguínea recupera</li>
-      <li><strong>1 ano:</strong> o risco de doença coronária é reduzido para metade</li>
-      <li><strong>5 anos:</strong> o risco de acidente vascular cerebral aproxima-se ao de não fumador</li>
-      <li><strong>10 anos:</strong> o risco de cancro do pulmão é reduzido para cerca de metade</li>
-      <li><strong>15 anos:</strong> o risco cardiovascular é semelhante ao de quem nunca fumou</li>
-    </ul>
-
-    <h2>Consulta de cessação tabágica por videoconsulta</h2>
-    <p>A consulta de cessação tabágica pode ser feita por <a href='/artigos/consulta-online'>videoconsulta</a>. O médico avalia o grau de dependência nicotínica com a escala de Fagerström, discute o historial de tentativas anteriores, avalia contraindicações para cada tratamento e prescreve o medicamento mais adequado ao perfil de cada pessoa. As consultas de seguimento, também possíveis por <a href='/artigos/consulta-online'>videoconsulta</a>, monitorizam a adesão ao tratamento e ajustam a estratégia quando necessário.</p>
-
-    <div class='refs'><h3>Referências Bibliográficas</h3><ol>
-      <li>Cochrane Library. (2023). Agonistas parciais do receptor de nicotina para cessação do tabagismo. Cochrane Database of Systematic Reviews. https://cochranelibrary.com/cdsr/doi/10.1002/14651858.CD006103.pub7/pt</li>
-      <li>Cochrane. (2023). Resumo em português. https://www.cochrane.org/pt/node/9632</li>
-      <li>Direção-Geral da Saúde. (2022). Programa Nacional para a Prevenção e Controlo do Tabagismo. DGS. https://www.dgs.pt/programa-nacional-para-a-prevencao-e-controlo-do-tabagismo.aspx</li>
-      <li>Instituto Nacional de Saúde Doutor Ricardo Jorge. (2020). Inquérito Nacional de Saúde 2019. INSA. https://www.insa.min-saude.pt</li>
-      <li>Thomas, K. H., et al. Comparative clinical effectiveness and safety of tobacco cessation pharmacotherapies and electronic cigarettes. University of Bath Research Portal. https://researchportal.bath.ac.uk/en/publications/comparative-clinical-effectiveness-and-safety-of-tobacco-cessatio</li>
-    </ol></div>`
+  cta: `<div class='cta-top'><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por <a href='/artigos/consulta-online'>videoconsulta</a>. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
 },
 
 'consulta-online': {
   title: 'Consulta Online em Portugal: O Guia Completo | ConsultasOnline',
   description: 'O que é, como funciona, quanto custa e o que pode tratar numa consulta médica online em Portugal.',
   keywords: 'consulta online portugal, como funciona consulta online, consulta médica online portugal guia, teleconsulta portugal',
-  content: `<div class="cta-top"><p>🩺 Precisa de consulta online hoje? Disponível de segunda a domingo, das 9h às 21h. <a href="/">Marcar consulta →</a></p></div>
-    <h2>O que é uma consulta online?</h2>
-    <p>Uma consulta online é uma consulta médica realizada por videochamada. O médico avalia os sintomas, faz o diagnóstico e emite tratamento, atestados ou certificados de baixa médica — tudo digitalmente, no próprio dia.</p>
-    <h2>O que se pode tratar?</h2>
-    <ul><li><strong>Baixa médica</strong> — emissão e renovação do CIT</li><li><strong>Acompanhamento crónico</strong> — renovação de tratamento</li><li><strong>Atestados</strong> — amamentação, falta escolar, carta de condução</li><li><strong>Infeção urinária</strong> — diagnóstico e tratamento</li><li><strong>Amigdalite</strong> — avaliação e tratamento</li><li><strong>Cessação tabágica</strong> — avaliação e prescrição</li><li><strong>Rastreio de DST</strong> — pedido de análises confidencial</li><li><strong>Obesidade</strong> — prescrição de Mounjaro se indicado</li></ul>
-    <h2>Quanto custa?</h2>
-    <ul><li><strong>Atestados</strong> — 35€ a 45€</li><li><strong>Consultas online</strong> — 40€ a 55€</li></ul>
-    <p>Todos os preços incluem fatura AT, isenta de IVA (art. 9.º CIVA).</p>
-    <div class="refs"><h3>Referências</h3><ol><li>Portaria n.º 115/2021. CIT por teleconsulta.</li><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li></ol></div>`
+  cta: `<div class="cta-top"><p>🩺 Precisa de consulta online hoje? Disponível de segunda a domingo, das 9h às 21h. <a href="/">Marcar consulta →</a></p></div>`
 },
 
 'medico-online': {
   title: 'Médico Online em Portugal: Como Funciona | ConsultasOnline',
   description: 'Vantagens do médico online, o que pode pedir, segurança e sigilo médico. Como escolher uma plataforma de confiança.',
   keywords: 'médico online portugal, médico online videoconsulta, médico online mbway portugal, teleconsulta médico portugal',
-  content: `<div class="cta-top"><p>👨‍⚕️ Precisa de médico online? Disponível de segunda a domingo, das 9h às 21h. <a href="/">Marcar consulta →</a></p></div>
-    <h2>O que é um médico online?</h2>
-    <p>Um médico online é um profissional de saúde devidamente habilitado e registado na Ordem dos Médicos que realiza consultas por videochamada, com as mesmas obrigações deontológicas que os médicos presenciais.</p>
-    <h2>Vantagens</h2>
-    <ul><li><strong>Sem filas</strong> — marcação imediata, consulta no mesmo dia</li><li><strong>Sem deslocação</strong> — consulta a partir de casa</li><li><strong>Documentos digitais</strong> — baixas e atestados por email</li><li><strong>Fatura automática</strong> — válida para reembolso em seguros de saúde</li></ul>
-    <div class="info"><strong>💡 Seguros de saúde</strong><p>A maioria dos seguros privados em Portugal (Médis, AdvanceCare, Multicare, Fidelidade) aceita faturas de teleconsulta para reembolso.</p></div>
-    <h2>Segurança e sigilo médico</h2>
-    <p>As consultas decorrem em salas virtuais privadas, não são gravadas. Toda a informação clínica está protegida pelo sigilo médico e pelo RGPD.</p>
-    <div class="refs"><h3>Referências</h3><ol><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li><li>Lei n.º 58/2019. RGPD — Proteção de dados pessoais.</li></ol></div>`
+  cta: `<div class="cta-top"><p>👨‍⚕️ Precisa de médico online? Disponível de segunda a domingo, das 9h às 21h. <a href="/">Marcar consulta →</a></p></div>`
 },
 
 'telemedicina': {
   title: 'Telemedicina em Portugal: O que É e Direitos do Utente | ConsultasOnline',
   description: 'Como funciona a telemedicina em Portugal, diferenças entre SNS e privado e os seus direitos como utente.',
   keywords: 'telemedicina portugal, telemedicina como funciona, teleconsulta portugal direitos utente, telemedicina SNS privado',
-  content: `<div class="cta-top"><p>💻 Quer experimentar uma teleconsulta? Videoconsulta no browser, sem instalar nada. <a href="/">Marcar consulta →</a></p></div>
-    <h2>O que é a telemedicina?</h2>
-    <p>A telemedicina é a prestação de cuidados de saúde à distância com recurso a tecnologias de comunicação. Em Portugal está regulamentada pela Ordem dos Médicos e pelo Ministério da Saúde.</p>
-    <h2>O que mudou com a telemedicina em Portugal</h2>
-    <ul><li><strong>Baixa médica por teleconsulta</strong> — Portaria n.º 115/2021</li><li><strong>Receita electrónica</strong> — emitida após teleconsulta, enviada por email</li><li><strong>Atestados digitais</strong> — validade legal total</li></ul>
-    <h2>SNS vs privada</h2>
-    <p><strong>SNS:</strong> teleconsultas gratuitas mas com tempos de espera elevados e dependência de médico de família.</p>
-    <p><strong>Privada:</strong> marcação imediata, horários alargados, emissão de documentos no próprio dia. Custo entre 35€ e 55€, parcialmente reembolsável por seguros de saúde.</p>
-    <h2>Direitos do utente</h2>
-    <ul><li>Sigilo médico total</li><li>Consentimento informado</li><li>Protecção de dados (RGPD)</li><li>Direito à fatura</li></ul>
-    <div class="warn"><strong>⚠️ Limitações</strong><p>A telemedicina não substitui a consulta presencial em situações de urgência. Em caso de dúvida, ligue 112 ou SNS 24 (808 24 24 24).</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Ordem dos Médicos. Regulamento de Telemedicina. 2020.</li><li>Portaria n.º 115/2021. Ministério da Saúde.</li></ol></div>`
+  cta: `<div class="cta-top"><p>💻 Quer experimentar uma teleconsulta? Videoconsulta no browser, sem instalar nada. <a href="/">Marcar consulta →</a></p></div>`
 },
 
 'atestado-rastreio-saude': {
   title: 'Rastreio de Saúde em Portugal: O Guia Completo | ConsultasOnline',
   description: 'Rastreios recomendados pela DGS por idade e sexo, vacinação do adulto e como fazer rastreio de IST de forma discreta.',
   keywords: 'rastreio saúde portugal, exames preventivos portugal, rastreio oncológico portugal, check-up médico online portugal',
-  content: `<div class="cta-top"><p>🩺 Quer fazer um rastreio de saúde? Consulta online com pedido de análises personalizado. <a href="/">Marcar consulta — 40€ →</a></p></div>
-    <h2>O que é o rastreio de saúde?</h2>
-    <p>O rastreio é a pesquisa de doenças em pessoas sem sintomas, com o objectivo de detectar precocemente condições que têm melhor prognóstico quando tratadas a tempo.</p>
-    <h2>Rastreios Recomendados</h2>
-    <h3>Para todos os adultos</h3>
-    <ul><li><strong>Tensão arterial</strong> — medição anual a partir dos 18 anos</li><li><strong>Glicemia</strong> — cada 3 anos a partir dos 45 anos</li><li><strong>Colesterol</strong> — cada 5 anos a partir dos 20 anos</li></ul>
-    <h3>Para mulheres</h3>
-    <ul><li><strong>Mamografia</strong> — dos 50 aos 69 anos, de 2 em 2 anos</li><li><strong>Citologia cervical</strong> — dos 25 aos 60 anos, de 3 em 3 anos</li></ul>
-    <h3>A partir dos 50 anos</h3>
-    <ul><li><strong>Cancro do cólon</strong> — pesquisa de sangue oculto nas fezes de 2 em 2 anos</li></ul>
-    <div class="info"><strong>💡 Rastreios oncológicos gratuitos</strong><p>Os rastreios oncológicos são gratuitos para a população-alvo. Responda sempre às convocatórias do SNS.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>DGS. Programa Nacional para as Doenças Oncológicas. 2022.</li><li>DGS. Programa Nacional de Vacinação 2024.</li></ol></div>`
+  cta: `<div class="cta-top"><p>🩺 Quer fazer um rastreio de saúde? Consulta online com pedido de análises personalizado. <a href="/">Marcar consulta — 40€ →</a></p></div>`
 },
 
 'renovar-pilula-anticoncecional-online': {
   title: 'Renovar a Pílula Anticoncecional Online em Portugal | ConsultasOnline',
   description: 'Saiba como renovar a receita da pílula por videoconsulta em Portugal. Legal, seguro, sem médico de família. Receita Sem Papel no próprio dia. 40€.',
   keywords: 'renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, videoconsulta pílula portugal',
-  content: `<div class="cta-top"><p>💊 Precisa de renovar a pílula? Receita no email no próprio dia, sem médico de família. <a href="/">Marcar consulta — 40€ →</a></p></div>
-    <h2>É legal renovar a pílula por videoconsulta?</h2>
-    <p>Sim. A prescrição por telemedicina está regulamentada em Portugal desde 2020. A médica emite a Receita Sem Papel directamente no sistema do SNS — válida em qualquer farmácia com a comparticipação do SNS.</p>
-    <h2>Quem pode renovar online?</h2>
-    <ul><li>Mulheres adultas que já tomam a mesma pílula há 6 meses ou mais</li><li>Tensão arterial normal</li><li>Sem sintomas novos nem alterações de saúde relevantes</li><li>Não fumadoras com mais de 35 anos</li></ul>
-    <h2>O que preparar</h2>
-    <ul><li>Nome comercial da pílula actual</li><li>Há quanto tempo toma esta pílula</li><li>Data da última menstruação</li><li>Lista de outros medicamentos</li></ul>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>Posso renovar sem médico de família?</h4><p>Sim. A consulta online funciona completamente independente do SNS.</p></div>
-    <div class="faq"><h4>Posso pedir receita para 6 meses?</h4><p>Sim. A médica pode emitir receita para até 6 embalagens numa só consulta.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>INFARMED. Normas de Prescrição Eletrónica. 2023.</li><li>DGS. Orientação n.º 004/2021 — Contraceção Hormonal Combinada.</li><li>FSRH Guideline: Combined Hormonal Contraception. 2023.</li></ol></div>`
+  cta: `<div class="cta-top"><p>💊 Precisa de renovar a pílula? Receita no email no próprio dia, sem médico de família. <a href="/">Marcar consulta — 40€ →</a></p></div>`
 },
 
 'baixa-medica-freelancer': {
   title: 'Baixa Médica para Trabalhadores Independentes: Guia Completo | ConsultasOnline',
   description: 'Tens direito a baixa médica sendo freelancer? Como funciona o CIT, o subsídio de doença e como resolver tudo por videoconsulta.',
   keywords: 'baixa médica freelancer portugal, baixa médica trabalhador independente, CIT recibos verdes, subsídio doença freelancer',
-  content: `<div class="cta-top"><p>💼 Trabalhas por conta própria e precisas de baixa médica? CIT emitido por videoconsulta em 20 minutos. <a href="/">Marcar consulta — 55€ →</a></p></div>
-    <h2>Tens direito a baixa médica sendo freelancer?</h2>
-    <p>Sim. Qualquer trabalhador independente inscrito na Segurança Social tem direito ao subsídio de doença, desde que cumpra os requisitos legais.</p>
-    <h2>Requisitos</h2>
-    <ul><li>Inscrito na Segurança Social como trabalhador independente</li><li>Pelo menos 6 meses de contribuições</li><li>CIT emitido por um médico</li><li>Não em regime de isenção de contribuições</li></ul>
-    <div class="warn"><strong>⚠️ Atenção</strong><p>Se estás isento de contribuições não tens direito ao subsídio. Ainda assim podes emitir o CIT para justificar a ausência junto de clientes.</p></div>
-    <h2>Quanto vale o subsídio?</h2>
-    <p><strong>55%</strong> da remuneração de referência (média dos últimos 6 meses). Nos primeiros 3 dias de doença não há subsídio.</p>
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq"><h4>Posso fazer baixa sem médico de família?</h4><p>Sim. Qualquer médico registado na Ordem dos Médicos pode emitir o CIT.</p></div>
-    <div class="faq"><h4>Posso deduzir a consulta no IRS?</h4><p>Sim. É uma despesa de saúde dedutível no IRS.</p></div>
-    <div class="refs"><h3>Referências</h3><ol><li>Segurança Social. Subsídio de Doença — Trabalhadores Independentes.</li><li>Portaria n.º 115/2021. CIT por teleconsulta.</li></ol></div>`
+  cta: `<div class="cta-top"><p>💼 Trabalhas por conta própria e precisas de baixa médica? CIT emitido por videoconsulta em 20 minutos. <a href="/">Marcar consulta — 55€ →</a></p></div>`
 },
 
 'sem-medico-familia-freelancer': {
   title: 'Sem Médico de Família: Guia Completo para Freelancers em Portugal | ConsultasOnline',
   description: 'O que podes e não podes fazer sem médico de família em Portugal. Soluções práticas para freelancers e trabalhadores remotos.',
   keywords: 'sem médico de família portugal, alternativas médico de família, lista espera médico família, médico online sem médico família freelancer',
-  content: `<div class="cta-top"><p>🏠 Não tens médico de família? A consulta online funciona independentemente do SNS. <a href="/">Marcar consulta →</a></p></div>
-    <h2>Porque os freelancers ficam sem médico de família</h2>
-    <p>Em Portugal, mais de 1 milhão de pessoas não têm médico de família atribuído. Entre freelancers, a percentagem é ainda mais elevada — mudanças de morada frequentes e listas de espera intermináveis.</p>
-    <h2>O que podes fazer sem médico de família</h2>
-    <ul><li><strong>Baixa médica (CIT)</strong> — por videoconsulta com qualquer médico da Ordem</li><li><strong>Renovação de medicação crónica</strong> — receita enviada por email</li><li><strong>Atestados médicos</strong> — amamentação, carta de condução, falta escolar</li><li><strong>Rastreio de saúde</strong> — pedido de análises por videoconsulta</li></ul>
-    <h2>O que NÃO podes fazer sem médico de família</h2>
-    <ul><li>Rastreios oncológicos gratuitos do SNS</li><li>Referenciação para especialidade pelo SNS</li><li>Prescrição de medicamentos de dispensa hospitalar</li></ul>
-    <h2>Custos e reembolsos</h2>
-    <p>Videoconsulta entre 35€ e 55€. Fatura AT dedutível no IRS e aceite pela maioria dos seguros de saúde privados.</p>
-    <div class="refs"><h3>Referências</h3><ol><li>SNS. Inscrição no Centro de Saúde. sns24.gov.pt.</li><li>Segurança Social. Trabalhadores Independentes — Prestações.</li></ol></div>`
+  cta: `<div class="cta-top"><p>🏠 Não tens médico de família? A consulta online funciona independentemente do SNS. <a href="/">Marcar consulta →</a></p></div>`
 },
 
 'dia-saude-2026': {
   title: 'Dia Mundial da Saúde 2026: Juntos pela Ciência | ConsultasOnline',
   description: '7 de Abril — o que significa este dia, qual o tema da OMS em 2026 e o que pode fazer hoje pela sua saúde em Portugal.',
   keywords: 'dia mundial saúde 2026, OMS saúde 2026, saúde portugal 2026, telemedicina ciência portugal',
-  content: `<div class="cta-top"><p>🌍 Cuide da sua saúde hoje. Consultas médicas online disponíveis de segunda a domingo. <a href="/">Marcar consulta →</a></p></div>
-    <h2>7 de Abril — Dia Mundial da Saúde</h2>
-    <p>Celebrado anualmente desde 1948, o Dia Mundial da Saúde assinala a fundação da OMS. Em 2026, o tema é <strong>"Juntos pela Ciência"</strong> — um apelo global à confiança na evidência científica.</p>
-    <h2>Os maiores desafios de saúde em Portugal em 2026</h2>
-    <h3>Doenças crónicas</h3>
-    <p>Doenças cardiovasculares, diabetes, cancro e doenças respiratórias são as principais causas de morte em Portugal — a maioria prevenível com rastreio precoce.</p>
-    <h3>Resistência antimicrobiana</h3>
-    <p>O uso excessivo de antibióticos cria bactérias resistentes. As guidelines da DGS recomendam uso criterioso — por isso o médico avalia sempre se o antibiótico é realmente necessário.</p>
-    <h3>Acesso aos cuidados</h3>
-    <p>Mais de um milhão de portugueses não tem médico de família. A telemedicina é uma resposta validada para melhorar o acesso.</p>
-    <h2>O que pode fazer hoje</h2>
-    <ul><li>Rastreio preventivo — tensão arterial, glicemia, colesterol</li><li>Vacinação actualizada</li><li>Não interromper medicação crónica sem consultar médico</li></ul>
-    <div class="refs"><h3>Referências</h3><ol><li>OMS. World Health Day 2026. who.int.</li><li>DGS. Programa Nacional de Saúde 2030.</li></ol></div>`
+  cta: `<div class="cta-top"><p>🌍 Cuide da sua saúde hoje. Consultas médicas online disponíveis de segunda a domingo. <a href="/">Marcar consulta →</a></p></div>`
 }
 
 };
+
+
+// ─────────────────────────────────────────────────────────────────
+// FONTE ÚNICA DOS ARTIGOS: o texto de cada artigo vive APENAS em
+// public/index.html (<div class="article-view" id="article-ID">).
+// Ao arrancar, o servidor lê esse ficheiro e gera a versão SSR
+// (/artigos/<slug>) a partir dele. Para editar um artigo, edite só
+// o index.html. Aqui ficam apenas title/description/keywords e a
+// faixa "cta" do topo de cada artigo.
+// ─────────────────────────────────────────────────────────────────
+function extractArticleFromIndex(html, id) {
+  const start = html.indexOf('id="article-' + id + '"');
+  if (start < 0) return null;
+  const h1m = /<h1 class="art-title">([\s\S]*?)<\/h1>/.exec(html.slice(start));
+  const open = '<div class="art-body">';
+  const b = html.indexOf(open, start);
+  if (b < 0) return null;
+  const from = b + open.length;
+  const re = /<div\b|<\/div>/g;
+  re.lastIndex = from;
+  let depth = 1, m;
+  while ((m = re.exec(html))) {
+    depth += m[0] === '<div' ? 1 : -1;
+    if (depth === 0) return { h1: h1m ? h1m[1].trim() : null, body: html.slice(from, m.index) };
+  }
+  return null;
+}
+
+function articleBodyToSSR(body, idToSlug) {
+  return body
+    // links internos da SPA -> URL real do artigo
+    .replace(/<a onclick="openArticle\('([^']+)'\)"[^>]*>/g,
+      (_, id) => '<a href="/artigos/' + (idToSlug[id] || id) + '">')
+    // perguntas frequentes (acordeão) -> blocos estáticos
+    .replace(/<div class="faq-item" onclick="toggleFaq\(this\)">\s*<div class="faq-q">([\s\S]*?)\s*<span class="faq-arrow">▼<\/span>\s*<\/div>\s*<div class="faq-a">([\s\S]*?)<\/div>\s*<\/div>/g,
+      '<div class="faq"><h4>$1</h4><p>$2</p></div>')
+    // botões de marcação -> link para a página inicial
+    .replace(/<button([^>]*?)\s*onclick="openServiceSelector\(\)"([^>]*)>([\s\S]*?)<\/button>/g,
+      '<a href="/"$1$2>$3</a>')
+    // qualquer outro onclick não funciona sem a SPA
+    .replace(/\s+onclick="[^"]*"/g, '')
+    .trim();
+}
+
+function loadArticlesFromIndex() {
+  const fsArt = require('fs');
+  let html;
+  try {
+    html = fsArt.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
+  } catch (err) {
+    console.error('Artigos: não foi possível ler public/index.html:', err.message);
+    return;
+  }
+  const idToSlug = {};
+  Object.entries(ARTICLES).forEach(([slug, a]) => { idToSlug[a.id] = slug; });
+  Object.entries(ARTICLES).forEach(([slug, a]) => {
+    const data = ARTICLES_CONTENT[slug];
+    if (!data) return;
+    const art = extractArticleFromIndex(html, a.id);
+    if (!art) { console.error('Artigos: artigo "' + a.id + '" não encontrado em index.html'); return; }
+    const body = articleBodyToSSR(art.body, idToSlug);
+    data.h1 = art.h1 || data.h1;
+    data.content = (data.cta && !body.includes('cta-top') ? data.cta + '\n\n' : '') + body;
+  });
+}
+loadArticlesFromIndex();
 
 // Função que gera a página HTML completa de cada artigo para SSR
 function buildArticleSSR(slug, data) {
@@ -996,6 +427,7 @@ function buildArticleSSR(slug, data) {
 }
 <\/script>
 <style>
+:root{--navy:#0b1d35;--teal:#0d7377;--slate:#4a5568;--muted:#8a9bb0;--border:#dde6f0;--surface:#f4f7fb;--red:#e53e3e;--amber:#d69e2e}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;color:#334155;background:#fff;line-height:1.7}
 nav{background:#0b1d35;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -1019,6 +451,15 @@ a{color:#0d7377}
 .info p{margin:4px 0 0;font-size:14px}
 .warn{background:rgba(214,158,46,.07);border-left:4px solid #d97706;border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0}
 .warn p{margin:4px 0 0;font-size:14px}
+.ibox{border-left:3px solid #0d7377;border-radius:0 10px 10px 0;padding:16px 20px;margin:22px 0;background:rgba(13,115,119,.05)}
+.ibox.warn{border-color:#d69e2e;background:rgba(214,158,46,.05)}
+.ibox.danger{border-color:#e53e3e;background:rgba(229,62,62,.05)}
+.ibox-title{font-weight:700;font-size:13.5px;color:#0b1d35;margin-bottom:7px}
+.ibox p{margin:0;font-size:13.5px;line-height:1.6}
+.art-author{font-size:13px;color:#64748b;margin-bottom:24px}
+.art-cta{background:linear-gradient(135deg,rgba(13,115,119,.08),rgba(23,196,168,.08));border:1px solid rgba(13,115,119,.2);border-radius:12px;padding:22px;margin:28px 0;text-align:center}
+.art-cta h3{margin-top:0}
+.art-cta a{display:inline-block;background:#0d7377;color:#fff;text-decoration:none;padding:10px 22px;border-radius:8px;font-weight:700;font-size:14px}
 .faq{border:1px solid #dde6f0;border-radius:10px;padding:14px 18px;margin-bottom:10px}
 .faq h4{font-size:14px;font-weight:600;color:#0b1d35;margin-bottom:6px}
 .faq p{margin:0;font-size:13.5px;color:#4a5568}
@@ -1030,6 +471,12 @@ a{color:#0d7377}
 .cta-bottom h3{font-size:24px;color:#fff;margin-bottom:8px}
 .cta-bottom p{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:18px}
 .cta-bottom a{display:inline-block;background:linear-gradient(135deg,#0d7377,#17c4a8);color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:700}
+.cta-box{background:linear-gradient(135deg,#0b1d35,#1a3a5c);border-radius:14px;padding:24px;text-align:center;margin:32px 0}
+.cta-box p{color:#fff;font-size:16px;margin-bottom:14px}
+.cta-box a{display:inline-block;background:#0d7377;color:#fff;text-decoration:none;padding:12px 26px;border-radius:10px;font-weight:700}
+.art-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.art-table th,.art-table td{border:1px solid #dde6f0;padding:8px 10px;text-align:left}
+.art-table th{background:#f4f7fb;color:#0b1d35}
 .related{margin-top:48px;padding-top:32px;border-top:1px solid #e2e8f0}
 .related h3{font-size:18px;color:#0b1d35;margin-bottom:14px}
 .related ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
@@ -1047,7 +494,7 @@ footer a{color:rgba(255,255,255,.6);text-decoration:none;margin:0 8px}
 <div class="wrap">
   <div class="breadcrumb"><a href="/">Início</a> › <a href="/artigos">Artigos de Saúde</a> › ${data.title.split('|')[0].trim()}</div>
   <div class="cat">${ARTICLES[slug] ? ARTICLES[slug].category : 'Saúde'}</div>
-  <h1>${data.title.split('|')[0].trim()}</h1>
+  <h1>${data.h1 || data.title.split('|')[0].trim()}</h1>
   ${data.content}
   <div class="cta-bottom">
     <h3>Precisa de consulta médica online?</h3>
@@ -1099,6 +546,7 @@ app.get('/artigos/:slug', (req, res) => {
   const slug = req.params.slug;
   const data = ARTICLES_CONTENT[slug];
   if (!data) return res.redirect(301, '/');
+  if (!data.content) return res.redirect(302, '/');
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(buildArticleSSR(slug, data));
 });

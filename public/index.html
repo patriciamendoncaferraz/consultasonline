@@ -1651,6 +1651,16 @@ document.addEventListener("DOMContentLoaded", function() {
         </div>
       </div>
 
+      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-medicamentos')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#0b3d3a,#0d7377)" role="img" aria-label="Renovação de Medicamentos Online — artigo médico">💊</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Medicação</span><span class="bread">· 3 min</span></div>
+          <h2 class="bcard-title">Renovação de Medicamentos Online em Portugal</h2>
+          <p class="bcard-excerpt">Como renovar a medicação crónica por videoconsulta, que doenças estão abrangidas e como funciona a comparticipação da receita.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </div>
+
       <div class="bcard" data-cat="infecoes" onclick="openArticle('cessacao')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#2d1a00,#6b3a00)" role="img" aria-label="Como parar de fumar — cessação tabágica">🚭</div>
         <div class="bcard-body">
@@ -3573,11 +3583,65 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="ibox"><div class="ibox-title">📱 Renovação por Videoconsulta</div><p>Os CIT podem ser emitidos após videoconsulta. É possível renovar a baixa médica sem sair de casa.</p></div>
   <h2>Posso fazer baixa médica online em Portugal?</h2>
   <p>Sim, o Decreto-Lei n.º 2/2024, de 5 de janeiro permite a emissão do CIT após videoconsulta. O custo é <strong>55€</strong>.</p>
+  <div class="ibox"><div class="ibox-title">✅ Validade legal total</div><p>O CIT emitido por videoconsulta tem o mesmo valor legal que o emitido presencialmente.</p></div>
+  <h2>Quem pode pedir baixa médica online?</h2>
+  <ul>
+    <li>Trabalhadores por conta de outrem com número de utente SNS válido</li>
+    <li>Trabalhadores independentes inscritos na Segurança Social</li>
+    <li>Trabalhadores com ou sem médico de família atribuído</li>
+  </ul>
+  <h2>Subsídio de Doença</h2>
+  <ul>
+    <li>Até 30 dias: <strong>55%</strong> da remuneração de referência</li>
+    <li>31–90 dias: <strong>60%</strong></li>
+    <li>91–365 dias: <strong>70%</strong></li>
+    <li>Mais de 365 dias: <strong>75%</strong></li>
+  </ul>
+  <div class="ibox warn"><div class="ibox-title">⚠️ Prazo legal</div><p>O CIT deve ser submetido à Segurança Social em até <strong>5 dias úteis</strong> após o início da incapacidade.</p></div>
   <div class="ibox warn"><div class="ibox-title">⚠️ Verificações da Segurança Social</div><p>A SS pode verificar a incapacidade presencialmente. O trabalhador deve estar em condições compatíveis com o diagnóstico.</p></div>
   <div class="art-cta"><h3>Precisa de renovar a baixa?</h3><p>CIT emitido eletronicamente no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Renovar Baixa — 55€</button></div>
+  <h2>Perguntas Frequentes</h2>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso fazer baixa médica sem médico de família? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim. Qualquer médico registado na Ordem dos Médicos pode emitir o CIT.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Posso renovar a baixa por videoconsulta? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim. A renovação do CIT pode ser feita por videoconsulta nas mesmas condições.</div>
+  </div>
   <div class="refs"><h3>Referências</h3><ol class="ref-list">
     <li>Decreto-Lei n.º 28/2004. <em>Proteção na eventualidade de doença.</em></li>
     <li>Decreto-Lei n.º 2/2024, de 5 de janeiro. <em>Certificado de Incapacidade Temporária.</em></li>
+  </ol></div>
+</div></div>
+</div>
+
+<!-- RENOVAÇÃO DE MEDICAMENTOS -->
+<div class="article-view" id="article-renovacao-medicamentos">
+<div class="art-hero"><div class="art-hero-inner">
+  <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+  <div class="art-cat">💊 Medicação</div>
+  <h1 class="art-title">Renovação de Medicamentos Online em Portugal</h1>
+  <div class="art-meta"><div class="art-meta-item">📅 <span>2026</span></div><div class="art-meta-item">⏱ <span>3 min</span></div></div>
+</div></div>
+<div class="art-body-wrap"><div class="art-body">
+  <h2>Para que serve esta consulta?</h2>
+  <p>A consulta de acompanhamento crónico online destina-se a doentes com doenças crónicas controladas que precisam de renovar a medicação habitual sem necessidade de consulta presencial.</p>
+  <h2>Doenças crónicas abrangidas</h2>
+  <ul>
+    <li>Hipertensão arterial controlada</li>
+    <li>Diabetes tipo 2 controlada</li>
+    <li>Dislipidemia (colesterol)</li>
+    <li>Hipotiroidismo controlado</li>
+    <li>Outras doenças crónicas estáveis</li>
+  </ul>
+  <div class="ibox"><div class="ibox-title">💡 O que preparar para a consulta</div><p>Tenha consigo a lista de medicação actual, as últimas análises disponíveis e os valores de tensão arterial recentes.</p></div>
+  <h2>A receita tem comparticipação do SNS?</h2>
+  <p>Sim. A Receita Sem Papel emitida por videoconsulta tem o mesmo valor legal que uma receita presencial. A comparticipação é aplicada automaticamente na farmácia.</p>
+  <div class="art-cta"><h3>Precisa de renovar a sua medicação?</h3><p>Consulta de acompanhamento por videoconsulta, receita enviada no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Consulta — 40€ →</button></div>
+  <div class="refs"><h3>Referências</h3><ol class="ref-list">
+    <li>INFARMED. <em>Normas de Prescrição Eletrónica de Medicamentos.</em> 2023.</li>
+    <li>Ordem dos Médicos. <em>Regulamento de Telemedicina.</em> 2020.</li>
   </ol></div>
 </div></div>
 </div>
@@ -3777,83 +3841,103 @@ document.addEventListener("DOMContentLoaded", function() {
 <p>Destina-se aos condutores de veículos ligeiros, motociclos e ciclomotores. É o atestado mais comum, pode ser emitido por qualquer médico inscrito na Ordem dos Médicos com acesso à plataforma eletrónica, e é o que pode ser obtido <a href="/artigos/consulta-online">por videoconsulta</a> quando o candidato apresenta os resultados do exame de visão atualizado.</p>
 
 <h3>Atestado tipo 2 (categorias C1, C1E, C, CE, D1, D1E, D e DE)</h3>
-<p>Destina-se a condutores de veículos pesados de mercadorias e de passageiros. Exige uma avaliação mais exigente e critérios de aptidão mais restritivos, dado o maior risco associado à condução profissional.</p>
+<p>Destina-se a condutores de veículos pesados de mercadorias e de passageiros. Exige uma avaliação mais exigente e critérios de aptidão mais restritivos, dado o maior risco associado à condução profissional. Também pode ser emitido por qualquer médico habilitado, embora em algumas situações seja necessário parecer de especialidade.</p>
 
 <h2>4. Requisitos médicos por categoria de carta de condução</h2>
 
 <h3>4.1 Visão</h3>
-<p>A visão é o requisito mais frequentemente avaliado e o principal motivo de reprovação. Considera-se monovisual todo o indivíduo que tenha uma perda funcional de um dos olhos ou que possua uma acuidade visual num dos olhos inferior a 0,2. Após a perda de visão num dos olhos, deve existir um período de adaptação mínimo de seis meses, durante o qual é proibida a condução.</p>
+<p>A visão é o requisito mais frequentemente avaliado e o principal motivo de reprovação. Convém esclarecer o conceito de visão monocular: considera-se monovisual todo o indivíduo que tenha uma perda funcional de um dos olhos ou que possua uma acuidade visual num dos olhos inferior a 0,2. Após a perda de visão num dos olhos, deve existir um período de adaptação adequado, no mínimo de seis meses, durante o qual é proibida a condução de veículos. Findo este período, só pode ser autorizada a prática da condução após obtenção de parecer favorável de oftalmologista e aprovação em prova prática.</p>
 
 <p>Os <a href="https://ordemdosmedicos.pt/files/pdfs/ZtW7-Tabela_comparativa___cartas_conducao.pdf" target="_blank" rel="noopener">critérios</a> variam consoante a categoria:</p>
 
 <h4>Categorias do grupo 1 (AM, A1, A2, A, B1, B, BE):</h4>
 <ul>
-<li>Acuidade visual binocular mínima de 0,5 (com ou sem correção ótica). A acuidade visual mínima no "pior olho" não pode ser inferior a 0,2.</li>
-<li>Visão monocular: acuidade com ou sem correção não inferior a 0,5, com parecer favorável de oftalmologista.</li>
-<li>Campo visual horizontal mínimo de 120 graus, com pelo menos 50 graus para cada lado.</li>
-<li>Visão das cores: aceite qualquer tipo de daltonismo exceto a acromatopsia.</li>
+<li>Acuidade visual binocular mínima de 0,5 (com ou sem correção ótica). A acuidade visual mínima no "pior olho", com correção ótica se necessário, não pode ser inferior a 0,2.</li>
+<li>Visão monocular: a acuidade visual com ou sem correção não pode ser inferior a 0,5, devendo obter parecer favorável de oftalmologista certificando que esta situação se verifica há pelo menos seis meses, que o condutor está perfeitamente adaptado, que o campo visual e a visão crepuscular são normais e que a perceção de profundidade é compatível com a condução.</li>
+<li>Campo visual horizontal mínimo de 120 graus, com pelo menos 50 graus para cada lado e sem defeitos nos 20 graus centrais.</li>
+<li>Diplopia (visão dupla): apenas são permitidas, a título excecional, as formas congénitas ou infantis que não se manifestem nos 20° centrais do campo visual nem causem qualquer outra sintomatologia.</li>
+<li>Visão das cores: é aceite qualquer tipo de daltonismo exceto a acromatopsia.</li>
+<li>Visão noturna: se houver dificuldades significativas, o condutor pode ser declarado apto apenas para conduzir durante o dia.</li>
+<li>Doenças oftalmológicas progressivas: título de condução só pode ser emitido ou revalidado sob reserva de exame periódico anual por oftalmologista.</li>
 </ul>
 
 <h4>Categorias do grupo 2 (C1, C1E, C, CE, D1, D1E, D, DE):</h4>
 <ul>
-<li>Acuidade visual binocular mínima de 0,8 no "melhor olho" e de 0,5 no "pior olho".</li>
-<li>Visão monocular: causa de inaptidão.</li>
-<li>Campo visual horizontal mínimo de 160 graus, com pelo menos 70 graus para cada lado.</li>
-<li>Visão das cores: acromatopsia e protanopia são causa de inaptidão.</li>
+<li>Acuidade visual binocular mínima de 0,8 no "melhor olho" e de 0,5 no "pior olho". Se estes valores forem atingidos com correção ótica, é necessário que a visão não corrigida atinja pelo menos 0,05 em cada um dos olhos. A potência das lentes não pode exceder mais ou menos quatro dioptrias.</li>
+<li>Visão monocular: o título de condução não é emitido nem revalidado a candidatos ou condutores do grupo 2 monovisuais.</li>
+<li>Campo visual horizontal mínimo de 160 graus, com pelo menos 70 graus para cada lado e sem defeitos nos 30 graus centrais.</li>
+<li>Ausência de diplopia.</li>
+<li>Visão das cores: além da acromatopsia, também a protanopia (incapacidade de ver o vermelho) é causa de inaptidão.</li>
+<li>Visão noturna: qualquer dificuldade significativa em condições de pouca luminosidade é causa de inaptidão.</li>
+<li>Doenças oftalmológicas progressivas: são causa de inaptidão.</li>
 </ul>
 
 <p>O exame de visão tem de ser realizado numa ótica ou por um oftalmologista antes da consulta médica.</p>
 
 <h3>4.2 Audição</h3>
-<p><strong>Grupo 1:</strong> Défice auditivo aceite com possibilidade de compensação por prótese ou implante. Surdez profunda exige parecer de otorrinolaringologista.</p>
-<p><strong>Grupo 2:</strong> Défice auditivo aceite condicionado a parecer favorável de otorrinolaringologista.</p>
+<p><strong>Grupo 1:</strong> É emitido ou revalidado o título de condução a quem sofra de défice auditivo, devendo atender-se à possibilidade de compensação. A surdez profunda deve ser compensada, sempre que possível, por prótese ou implante coclear, sendo a aptidão condicionada a parecer favorável de médico otorrinolaringologista.</p>
+<p><strong>Grupo 2:</strong> Pode ser emitido ou revalidado o título de condução ao candidato que sofra de défice auditivo, condicionado à possibilidade de compensação e a parecer favorável de médico otorrinolaringologista.</p>
 
 <h3>4.3 Sistema cardiovascular</h3>
-<p>Hipertensão arterial controlada com medicação é compatível com a condução. Enfarte recente, arritmias e insuficiência cardíaca são avaliados caso a caso. Implantação de pacemaker ou CDI: inaptidão temporária durante o período de ajuste. Grupo 2 exige parecer de cardiologista.</p>
+<p><strong>Grupo 1:</strong></p>
+<ul>
+<li>Hipertensão arterial controlada com medicação é compatível com a condução.</li>
+<li>Enfarte agudo do miocárdio recente: a aptidão depende da avaliação cardiológica.</li>
+<li>Arritmias cardíacas: avaliadas caso a caso.</li>
+<li>Implantação de pacemaker ou desfibrilhador (CDI): inaptidão temporária durante o período de ajuste; após estabilização, pode ser aceite com condições.</li>
+<li>Insuficiência cardíaca: avaliada em função da classe funcional.</li>
+</ul>
+<p><strong>Grupo 2:</strong> A avaliação deve ser ponderada com base em parecer de cardiologista devidamente fundamentado em exames complementares.</p>
 
-<h3>4.4 Sistema neurológico — Epilepsia</h3>
-<p><strong>Grupo 1:</strong> Após pelo menos 1 ano sem crises em tratamento e com avaliação neurológica favorável, pode ser reconhecida aptidão condicionada com renovação anual até perfazer 5 anos sem crises.</p>
-<p><strong>Grupo 2:</strong> Exige pelo menos 10 anos livre de crises e sem terapêutica específica, com parecer de neurologista confirmando ausência de atividade epilética em EEG.</p>
+<h3>4.4 Sistema neurológico</h3>
+<p>Epilepsia é uma das condições com maior impacto na aptidão para conduzir.</p>
+<ul>
+<li><strong>Grupo 1:</strong> Inaptidão temporária. Após pelo menos 1 ano sem crises em tratamento, e com avaliação neurológica favorável, pode ser reconhecida aptidão condicionada (renovação anual até cumprirem um período de pelo menos cinco anos sem crises).</li>
+<li><strong>Grupo 2:</strong> É emitido ou revalidado título de condução a quem sofra de epilepsia, desde que esteja há pelo menos dez anos livre de crises e sem terapêutica específica, se apoiado em parecer de neurologista que ateste não existir qualquer patologia cerebral relevante e que confirme não existir atividade epilética em exame eletroencefalográfico.</li>
+</ul>
 
 <h3>4.5 Diabetes mellitus</h3>
-<p><strong>Grupo 1:</strong> Tratada com insulina ou antidiabéticos com risco de hipoglicemia: aptidão condicionada a controlo metabólico adequado e ausência de hipoglicemia grave.</p>
-<p><strong>Grupo 2:</strong> Permitida para condutores tratados com insulina desde que sem hipoglicemia grave nos últimos 12 meses e com relatório favorável de endocrinologia.</p>
+<p><strong>Grupo 1:</strong> Diabetes tratada com insulina ou com antidiabéticos orais com risco de hipoglicemia: aptidão condicionada a controlo metabólico adequado, ausência de episódios de hipoglicemia grave e avaliação periódica.</p>
+<p><strong>Grupo 2:</strong> A emissão de atestado é permitida para condutores tratados com insulina, desde que não tenham tido episódios de hipoglicemia grave nos últimos 12 meses e apresentem relatório favorável de endocrinologia.</p>
 
-<h3>4.6 Perturbações do sono — SAOS</h3>
-<p>A síndrome de apneia obstrutiva do sono é causa crescente de inaptidão dado o risco de sonolência ao volante. Pode ser autorizada a condução de ligeiros (grupo 1) com parecer favorável de especialidade e adesão ao CPAP.</p>
+<h3>4.6 Perturbações do sono</h3>
+<p>A síndrome de apneia obstrutiva do sono (SAOS) é uma causa crescentemente reconhecida de inaptidão para conduzir, dado o risco de sonolência diurna e de adormecimento ao volante. É emitido ou revalidado o título de condução a quem sofra de perturbações do sono, mediante a submissão a exame médico da especialidade e com parecer favorável, mas apenas para o grupo 1.</p>
 
 <h3>4.7 Saúde mental</h3>
-<p>São causa de inaptidão as perturbações mentais que traduzam redução apreciável das capacidades mentais, incluindo perturbações graves do comportamento, da capacidade cognitiva ou da personalidade suscetíveis de modificar a capacidade de julgamento.</p>
+<p>É inapto para conduzir o candidato ou condutor que sofra de perturbações mentais congénitas ou adquiridas que traduzam redução apreciável das capacidades mentais, incluindo atrasos mentais e perturbações graves do comportamento, da capacidade cognitiva ou da personalidade, suscetíveis de modificar a capacidade de julgamento ou que impliquem diminuição da eficiência ou segurança na condução.</p>
 
 <h3>4.8 Aparelho locomotor</h3>
-<p>Amputações, paralisias e outras limitações funcionais são avaliadas em função da capacidade de manobrar o veículo. Em muitos casos, a adaptação do veículo permite manter a aptidão.</p>
+<p>Amputações, paralisias e outras limitações funcionais dos membros são avaliadas em função da capacidade de manobrar o veículo em segurança. Em muitos casos, a adaptação do veículo permite manter a aptidão.</p>
 
 <h2>5. Validade do atestado médico para carta de condução</h2>
 
+<p>O atestado médico tem uma validade determinada, após a qual o condutor tem de renovar tanto o atestado como a própria carta de condução. Os prazos são os seguintes, de acordo com o Regulamento da Habilitação Legal para Conduzir:</p>
+
 <table class="art-table">
-<thead><tr><th>Categoria</th><th>Até aos 70 anos</th><th>A partir dos 70 anos</th></tr></thead>
+<thead><tr><th>Categoria</th><th>Até aos 60 ou 70 anos</th><th>A partir dos 70 anos</th></tr></thead>
 <tbody>
-<tr><td>AM, A, B e BE</td><td>15 em 15 anos até 60; 5 em 5 anos dos 60 aos 70</td><td>2 em 2 anos</td></tr>
-<tr><td>C1, C, CE</td><td>5 em 5 anos</td><td>2 em 2 anos</td></tr>
-<tr><td>D1, D, DE</td><td>5 em 5 anos até 67</td><td>Não revalidadas após 67</td></tr>
+<tr><td>AM, A1, A2, A, B1, B, BE</td><td>15 em 15 anos até aos 60 anos. 5 em 5 anos entre 60 e os 70 anos</td><td>2 em 2 anos</td></tr>
+<tr><td>C1, C1E, C, CE</td><td>5 em 5 anos até aos 70 anos</td><td>2 em 2 anos</td></tr>
+<tr><td>D1, D1E, D, DE</td><td>5 em 5 anos até aos 67 anos</td><td>Não podem ser revalidadas após os 67 anos</td></tr>
 </tbody>
 </table>
 
-<p>Em condutores com epilepsia controlada, diabetes insulinotratada ou SAOS em tratamento, o atestado pode ter validade inferior, com renovação anual ou bienal.</p>
+<p>Em condutores com determinadas condições de saúde (epilepsia controlada, diabetes insulinotratada, SAOS em tratamento, entre outras), o atestado pode ter uma validade inferior, com renovação anual ou bienal, independentemente da categoria ou da idade.</p>
 
-<p>O atestado emitido tem um prazo de validade para ser apresentado ao IMT, geralmente de 3 meses a partir da data de emissão.</p>
+<p>O atestado médico emitido tem um prazo de validade próprio para ser apresentado ao IMT, geralmente de 3 meses a partir da data de emissão. Findo este prazo, é necessário obter novo atestado.</p>
 
 <h2>6. O que levar para a consulta (presencial ou por videoconsulta)</h2>
 
+<p>Para que o médico possa emitir o atestado, é necessário apresentar os seguintes elementos:</p>
 <ul>
-<li>Exame de visão atualizado, realizado numa ótica ou por um oftalmologista, com acuidade visual corrigida e não corrigida de cada olho, campo visual e ausência ou presença de diplopia</li>
-<li>Documento de identificação com fotografia</li>
-<li>Lista de medicação atual, incluindo nome, dosagem e indicação terapêutica</li>
-<li>Relatórios médicos de especialistas, quando existam condições de saúde relevantes (cardiologia, neurologia, endocrinologia, pneumologia, oftalmologia)</li>
-<li>Para diabetes: HbA1c e glicemia em jejum recentes</li>
-<li>Para epilepsia: relatório neurológico com data e tipo da última crise</li>
-<li>Para SAOS: relatório de follow-up de pneumologia com dados de adesão ao CPAP</li>
-<li>Para doenças cardiovasculares: último relatório de cardiologia e resultados de ecocardiograma ou prova de esforço recentes</li>
+<li>Exame de visão atualizado, realizado numa ótica ou por um oftalmologista, com indicação da acuidade visual corrigida e não corrigida de cada olho, visão binocular, campo visual e ausência ou presença de diplopia.</li>
+<li>Documento de identificação com fotografia (cartão de cidadão ou passaporte).</li>
+<li>Lista de medicação atual, incluindo nome dos medicamentos, dosagem e indicação terapêutica.</li>
+<li>Relatórios médicos relevantes de especialistas, quando existam condições de saúde que possam afetar a aptidão para conduzir (cardiologia, neurologia, endocrinologia, pneumologia, oftalmologia).</li>
+<li>No caso de diabetes: resultados recentes de hemoglobina glicada (HbA1c) e glicemia em jejum.</li>
+<li>No caso de epilepsia: relatório neurológico com data e tipo da última crise.</li>
+<li>No caso de SAOS: relatório de follow-up de pneumologia com dados de adesão ao CPAP.</li>
+<li>No caso de doenças cardiovasculares: último relatório de cardiologia e resultados de ecocardiograma ou prova de esforço recentes.</li>
 </ul>
 
 <h2>7. Perguntas frequentes</h2>
@@ -3862,27 +3946,30 @@ document.addEventListener("DOMContentLoaded", function() {
 <p>Sim. Desde que o candidato apresente o exame de visão atualizado e os relatórios médicos relevantes durante a videoconsulta, o médico pode emitir o atestado e enviá-lo diretamente ao IMT através da plataforma eletrónica do Ministério da Saúde.</p>
 
 <h3>O que preciso de levar para a consulta?</h3>
-<p>O mais importante é o exame de visão atualizado, realizado numa ótica ou por um oftalmologista antes da consulta. Além disso, documento de identificação, lista de medicação atual e, se tiver alguma condição de saúde relevante, os relatórios médicos de acompanhamento de especialidade.</p>
+<p>O mais importante é o exame de visão atualizado, realizado numa ótica ou por um oftalmologista antes da consulta. Para além disso, deve ter o documento de identificação, a lista de medicação atual e, se tiver alguma condição de saúde relevante, os relatórios médicos de acompanhamento de especialidade.</p>
 
 <h3>Posso fazer o atestado se usar óculos ou lentes de contacto?</h3>
 <p>Sim. Se com correção ótica atingir os valores mínimos exigidos para a sua categoria, o atestado é emitido com a restrição de uso obrigatório de óculos ou lentes durante a condução.</p>
 
 <h3>Tenho epilepsia controlada. Posso obter a carta de condução?</h3>
-<p>Para veículos ligeiros, depois de pelo menos 1 ano sem crises epiléticas em tratamento e com relatório neurológico favorável, é possível obter aptidão condicionada. A renovação do atestado passa a ser anual até perfazer 5 anos sem crises. Para veículos pesados as condições são mais restritivas.</p>
+<p>Para veículos ligeiros, depois de pelo menos 1 ano sem crises epiléticas em tratamento, e com relatório neurológico favorável, é possível obter aptidão condicionada. A renovação do atestado passa a ser anual até perfazer 5 anos sem crises. Para veículos pesados, as condições são mais restritivas. É fundamental apresentar relatório de neurologia atualizado na consulta.</p>
 
 <h3>Tenho diabetes e faço insulina. Posso ter carta de condução de pesados?</h3>
-<p>É permitida a emissão de atestado para condutores de pesados tratados com insulina, desde que não tenham tido episódios de hipoglicemia grave nos últimos 12 meses e apresentem relatório favorável de endocrinologia.</p>
+<p>É permitida a emissão de atestado de aptidão para condutores de veículos pesados tratados com insulina, desde que não tenham tido episódios de hipoglicemia grave nos últimos 12 meses e apresentem relatório favorável de endocrinologia.</p>
 
 <h3>O atestado médico é enviado diretamente ao IMT?</h3>
 <p>Sim. O médico preenche o atestado na plataforma eletrónica do Ministério da Saúde e envia-o diretamente ao IMT no final da consulta. Não é necessário levar nenhum papel ao IMT.</p>
 
 <h3>Quanto tempo tenho para usar o atestado no IMT depois de o fazer?</h3>
-<p>Geralmente 3 meses a partir da data de emissão. Após esse prazo é necessário obter novo atestado.</p>
+<p>O atestado emitido tem um prazo de validade para ser apresentado ao IMT, geralmente de 3 meses. Após esse prazo, é necessário obter um novo atestado.</p>
 
 <div class="refs"><h3>Referências</h3><ol>
 <li>Governo de Portugal. (2012). <a href="https://diariodarepublica.pt/dr/detalhe/decreto-lei/138-2012-178550" target="_blank" rel="noopener">Decreto-Lei n.º 138/2012, de 5 de julho. Regulamento da Habilitação Legal para Conduzir.</a></li>
-<li>Governo de Portugal. (2016). <a href="https://diariodarepublica.pt/dr/detalhe/decreto-lei/40-2016-75060359" target="_blank" rel="noopener">Decreto-Lei n.º 40/2016, de 29 de julho.</a></li>
-<li>Ordem dos Médicos. <a href="https://ordemdosmedicos.pt/files/pdfs/ZtW7-Tabela_comparativa___cartas_conducao.pdf" target="_blank" rel="noopener">Tabela comparativa — cartas de condução.</a></li>
+<li>Governo de Portugal. (2016). <a href="https://diariodarepublica.pt/dr/detalhe/decreto-lei/40-2016-75060359" target="_blank" rel="noopener">Decreto-Lei n.º 40/2016, de 29 de julho. Alterações ao Regulamento da Habilitação Legal para Conduzir.</a></li>
+<li>Direção-Geral da Saúde &amp; Instituto da Mobilidade e dos Transportes. (2017). <a href="https://www.dgs.pt/saude-publica1/cartas-de-conducao.aspx" target="_blank" rel="noopener">Despacho Conjunto de 3 de fevereiro de 2017. Modelos e conteúdos do Atestado Médico para Carta de Condução.</a></li>
+<li>Ordem dos Médicos. (2020). Regulamento de Telemedicina. Lisboa: Ordem dos Médicos.</li>
+<li>Parlamento Europeu e Conselho da União Europeia. (2006). Diretiva 2006/126/CE relativa à carta de condução. Jornal Oficial da União Europeia.</li>
+<li>Comissão Europeia. (2014). Diretiva 2014/85/UE da Comissão, de 1 de julho de 2014. Requisitos médicos de aptidão para condutores profissionais com diabetes. Jornal Oficial da União Europeia.</li>
 </ol>
 <p><em>Artigo revisto por médico inscrito na Ordem dos Médicos. Para uso informativo. Não substitui consulta médica.</em></p></div>
 
@@ -3900,7 +3987,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </div></div>
 <div class="art-body-wrap"><div class="art-body">
   <h2>O que é o atestado de amamentação?</h2>
-  <p>O <strong>atestado de amamentação</strong> certifica que uma mãe está a amamentar o seu filho. É fundamental para exercer os direitos laborais de dispensa de trabalho para aleitamento.</p>
+  <p>O <strong>atestado de amamentação</strong> certifica que uma mãe está a amamentar o seu filho. É fundamental para exercer os direitos laborais de dispensa de trabalho para aleitamento previstos no Código do Trabalho (artigo 47.º).</p>
   <h2>Direitos Laborais (Código do Trabalho, art. 47.º)</h2>
   <ul>
     <li><strong>Até o filho completar 1 ano:</strong> dois períodos de 30 minutos ou 1 hora por dia</li>
@@ -3911,6 +3998,15 @@ document.addEventListener("DOMContentLoaded", function() {
   <h2>Posso obter o atestado online?</h2>
   <p>Sim. A videoconsulta é suficiente. O médico emite o documento em PDF com validade legal, enviado por email no próprio dia.</p>
   <div class="art-cta"><h3>Precisa de atestado de amamentação?</h3><p>Emitido por videoconsulta, enviado por email no próprio dia.</p><button class="art-cta-btn" onclick="openServiceSelector()">Atestado de Amamentação — 35€</button></div>
+  <h2>Perguntas Frequentes</h2>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O atestado online tem validade legal? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim. O documento emitido por videoconsulta tem plena validade legal junto do empregador.</div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Com que frequência preciso de renovar? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">O atestado tem validade de 3 a 6 meses consoante o que o médico indicar.</div>
+  </div>
   <div class="refs"><h3>Referências</h3><ol class="ref-list">
     <li>Lei n.º 7/2009. <em>Código do Trabalho Português.</em> Artigos 47.º e 58.º</li>
     <li>ACT. <em>Guia sobre Parentalidade e Trabalho.</em> 2023.</li>
@@ -6179,7 +6275,7 @@ window.showPage = function(p, pushState) {
 // ══════════════════════════════════════
 // ARTICLE NAVIGATION
 // ══════════════════════════════════════
-var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","clamidia":"clamidia","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-mundial-saude-2026","baixa-medica-freelancer":"baixa-medica-freelancer","sem-medico-familia-freelancer":"sem-medico-familia-freelancer","pilula-online":"renovar-pilula-anticoncecional-online"};
+var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","clamidia":"clamidia","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-saude-2026","baixa-medica-freelancer":"baixa-medica-freelancer","sem-medico-familia-freelancer":"sem-medico-familia-freelancer","pilula-online":"renovar-pilula-anticoncecional-online","piula-online":"renovar-pilula-anticoncecional-online"};
 window.openArticle = function(id) {
   var slug = ARTICLE_SLUGS[id] || id;
   history.pushState({ article: id }, '', '/artigos/' + slug);
