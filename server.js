@@ -373,6 +373,13 @@ function loadArticlesFromIndex() {
     console.error('Artigos: não foi possível ler public/index.html:', err.message);
     return;
   }
+  const lastmods = {};
+  try {
+    const sm = fsArt.readFileSync(path.join(__dirname, 'public', 'sitemap.xml'), 'utf8');
+    const reSm = /<loc>https?:\/\/[^<]*\/artigos\/([^<\/]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g;
+    let mm;
+    while ((mm = reSm.exec(sm))) lastmods[mm[1]] = mm[2].trim();
+  } catch (err) { /* sitemap opcional */ }
   const idToSlug = {};
   Object.entries(ARTICLES).forEach(([slug, a]) => { idToSlug[a.id] = slug; });
   Object.entries(ARTICLES).forEach(([slug, a]) => {
@@ -382,12 +389,51 @@ function loadArticlesFromIndex() {
     if (!art) { console.error('Artigos: artigo "' + a.id + '" não encontrado em index.html'); return; }
     const body = articleBodyToSSR(art.body, idToSlug);
     data.h1 = art.h1 || data.h1;
+    data.lastmod = lastmods[slug] || data.lastmod;
     data.content = (data.cta && !body.includes('cta-top') ? data.cta + '\n\n' : '') + body;
   });
 }
 loadArticlesFromIndex();
 
 // Função que gera a página HTML completa de cada artigo para SSR
+// Dados estruturados (schema.org) de cada artigo: página médica + autora +
+// data de atualização (lastmod do sitemap) + perguntas frequentes.
+function articleJsonLd(slug, data, canonical) {
+  const stripTags = (t) => t.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const headline = (data.h1 || data.title.split('|')[0]).replace(/<[^>]+>/g, '').trim();
+  const page = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalWebPage',
+    name: headline,
+    headline: headline,
+    description: data.description,
+    url: canonical,
+    inLanguage: 'pt-PT',
+    isPartOf: { '@type': 'MedicalBusiness', name: 'ConsultasOnline', url: 'https://www.consultas-online.pt' },
+    publisher: { '@type': 'Organization', name: 'ConsultasOnline', url: 'https://www.consultas-online.pt' }
+  };
+  if (data.content && data.content.includes('art-author')) {
+    page.author = {
+      '@type': 'Person',
+      name: 'Patrícia Ferraz',
+      jobTitle: 'Médica',
+      identifier: 'Cédula profissional n.º 57713',
+      worksFor: { '@type': 'MedicalBusiness', name: 'ConsultasOnline' }
+    };
+  }
+  if (data.lastmod) { page.dateModified = data.lastmod; page.lastReviewed = data.lastmod; }
+  const blocks = [page];
+  const faqs = [];
+  const re = /<div class="faq"><h4>([\s\S]*?)<\/h4><p>([\s\S]*?)<\/p><\/div>/g;
+  let m;
+  while ((m = re.exec(data.content || ''))) {
+    faqs.push({ '@type': 'Question', name: stripTags(m[1]), acceptedAnswer: { '@type': 'Answer', text: stripTags(m[2]) } });
+  }
+  if (faqs.length) blocks.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs });
+  return blocks.map(b => '<script type="application/ld+json">' +
+    JSON.stringify(b).replace(/</g, '\\u003c') + '<\/script>').join('\n');
+}
+
 function buildArticleSSR(slug, data) {
   const canonical = 'https://www.consultas-online.pt/artigos/' + slug;
   const related = Object.entries(ARTICLES)
@@ -414,17 +460,7 @@ function buildArticleSSR(slug, data) {
 <meta property="og:description" content="${data.description}"/>
 <meta property="og:locale" content="pt_PT"/>
 <meta property="og:site_name" content="ConsultasOnline"/>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "MedicalWebPage",
-  "name": "${data.title.split('|')[0].trim()}",
-  "description": "${data.description}",
-  "url": "${canonical}",
-  "inLanguage": "pt-PT",
-  "isPartOf": {"@type":"MedicalBusiness","name":"ConsultasOnline","url":"https://www.consultas-online.pt"}
-}
-<\/script>
+${articleJsonLd(slug, data, canonical)}
 <style>
 :root{--navy:#0b1d35;--teal:#0d7377;--slate:#4a5568;--muted:#8a9bb0;--border:#dde6f0;--surface:#f4f7fb;--red:#e53e3e;--amber:#d69e2e}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -544,8 +580,15 @@ app.get('/artigos', (req, res) => {
 app.get('/artigos/:slug', (req, res) => {
   const slug = req.params.slug;
   const data = ARTICLES_CONTENT[slug];
-  if (!data) return res.redirect(301, '/');
-  if (!data.content) return res.redirect(302, '/');
+  if (!data || !data.content) {
+    const links = Object.entries(ARTICLES_CONTENT).filter(([, a]) => a.content).map(([s, a]) =>
+      '<li><a href="/artigos/' + s + '">' + (a.h1 || a.title.split('|')[0].trim()) + '</a></li>').join('');
+    return res.status(404).send(`<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Artigo não encontrado | ConsultasOnline</title><meta name="robots" content="noindex"/>
+<style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:40px 20px;color:#334155}a{color:#0d7377}h1{color:#0b1d35}ul{line-height:2.2;padding-left:18px}</style>
+</head><body><p><a href="/">← ConsultasOnline</a></p><h1>Artigo não encontrado</h1>
+<p>O artigo que procura não existe ou mudou de endereço. Veja os nossos artigos de saúde:</p><ul>${links}</ul></body></html>`);
+  }
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(buildArticleSSR(slug, data));
 });

@@ -9,8 +9,8 @@
      O título aparece no Google (máx 60 chars)
      A descrição aparece por baixo (máx 160 chars)
 ════════════════════════════════════════ -->
-<title>Consulta e Consultas Médicas Online em Portugal | ConsultasOnline | Renovar Pílula Online em Portugal | Receita no Email</title>
-<meta name="description" content="Consulta ou consultas médicas online em Portugal sem esperas. Baixa médica, atestados, renovação de pílula e videoconsulta. Pagamento por MBWay. Fatura automática. A partir de 35€."/>
+<title>Consulta Médica Online em Portugal | ConsultasOnline</title>
+<meta name="description" content="Consulta médica online em Portugal, sem esperas: baixa médica, atestados e videoconsulta com médico. Pagamento por MBWay e fatura automática. Desde 35€."/>
 <meta name="keywords" content="consulta médica online portugal, baixa médica online, atestado médico online, médico online portugal, telemedicina portugal, consulta online mbway, cistite,médico online sem médico de família, renovar pílula online, cistite online, 
 atestado amamentação online, consulta médica online mulher portugal, renovar pílula online, renovar pílula anticoncecional online, receita pílula online portugal, pílula sem médico de família, renovação pílula videoconsulta"/>
 <meta name="author" content="ConsultasOnline"/>
@@ -23,8 +23,8 @@ atestado amamentação online, consulta médica online mulher portugal, renovar 
 ════════════════════════════════════════ -->
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://www.consultas-online.pt/"/>
-<meta property="og:title" content="Consultas Médicas Online em Portugal | ConsultasOnline" | Renovar Pílula Online em Portugal | Receita no Email no Próprio Dia/>
-<meta property="og:description" content="Baixa médica, atestados, renovação de pílula e consultas online sem sair de casa. Pagamento por MBWay. Fatura AT automática. Resposta no próprio dia."/>
+<meta property="og:title" content="Consulta Médica Online em Portugal | ConsultasOnline"/>
+<meta property="og:description" content="Baixa médica, atestados e consultas médicas online sem sair de casa. Pagamento por MBWay. Fatura AT automática. Resposta no próprio dia."/>
 <meta property="og:image" content="https://www.consultas-online.pt/og-image.png"/>
 <meta property="og:locale" content="pt_PT"/>
 <meta property="og:site_name" content="ConsultasOnline"/>
@@ -34,8 +34,8 @@ atestado amamentação online, consulta médica online mulher portugal, renovar 
      Como aparece no Twitter/X
 ════════════════════════════════════════ -->
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Consultas Médicas Online em Portugal" | Renovar Pílula Online em Portugal/>
-<meta name="twitter:description" content="Baixa médica, atestados, renovação de pílula e consultas online sem sair de casa. Pagamento por MBWay."/>
+<meta name="twitter:title" content="Consulta Médica Online em Portugal | ConsultasOnline"/>
+<meta name="twitter:description" content="Baixa médica, atestados e consultas médicas online sem sair de casa. Pagamento por MBWay. Fatura AT automática. Resposta no próprio dia."/>
 
 <!-- ═══════════════════════════════════════
      SEO: SCHEMA MARKUP (JSON-LD)
@@ -504,6 +504,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);padding:60px 0 28px}
 .bcard-excerpt{font-size:13.5px;color:var(--slate);line-height:1.68;font-weight:300}
 .bcard-link{font-size:12.5px;font-weight:600;color:var(--teal);margin-top:12px;display:inline-block}
 .bcard-link:hover{color:var(--teal2)}
+a.bcard{color:inherit;text-decoration:none}
+.pop-item a{display:flex;align-items:center;gap:10px;flex:1;color:inherit;text-decoration:none}
 
 /* Sidebar */
 .blog-sidebar{display:flex;flex-direction:column;gap:20px;position:sticky;top:120px}
@@ -947,7 +949,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <!-- Foto -->
     <div style="flex-shrink:0;text-align:center">
       <div style="width:200px;height:200px;border-radius:50%;overflow:hidden;border:4px solid #0d7377;margin:0 auto;background:#e8edf5">
-        <img src="foto-patricia.png" alt="Dra. Patrícia Ferraz" style="width:100%;height:100%;object-fit:cover">
+        <img src="/foto-patricia.webp" alt="Dra. Patrícia Ferraz, médica" width="200" height="200" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover">
       </div>
       <div style="margin-top:16px">
         <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:#0b1d35">Dra. Patrícia Ferraz</div>
@@ -1571,7 +1573,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="blog-layout">
     <div class="blog-list" id="blogList">
 
-      <div class="bcard" data-cat="infecoes" onclick="openArticle('itu')">
+      <a class="bcard" data-cat="infecoes" href="/artigos/infecao-urinaria" onclick="return navArticle(event,'itu')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#0d4a60,#0d7377)" role="img" aria-label="Infeção Urinária — artigo médico">💧</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Infeções</span><span class="bread">· 8 min</span></div>
@@ -1579,9 +1581,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">A infeção do trato urinário é uma das patologias mais frequentes em Portugal. Saiba como identificar, tratar e prevenir com base em evidência científica.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
      
-     <div class="bcard" data-cat="infecoes" onclick="openArticle('clamidia')">
+     <a class="bcard" data-cat="infecoes" href="/artigos/clamidia" onclick="return navArticle(event,'clamidia')">
   <div class="bcard-img" style="background:linear-gradient(135deg,#0d4a60,#0d7377)" role="img" aria-label="Clamídia — artigo médico">🧬</div>
   <div class="bcard-body">
     <div class="bcard-meta"><span class="bcat">Saúde Sexual</span><span class="bread">· 12 min</span></div>
@@ -1589,9 +1591,9 @@ document.addEventListener("DOMContentLoaded", function() {
     <p class="bcard-excerpt">A clamídia é a infeção sexualmente transmissível bacteriana mais frequente em Portugal. A maioria das pessoas infetadas não tem sintomas. Saiba como rastrear e tratar.</p>
     <span class="bcard-link">Ler artigo →</span>
   </div>
-</div>
+</a>
 
-      <div class="bcard" data-cat="trabalho" onclick="openArticle('faltas-trabalho')">
+      <a class="bcard" data-cat="trabalho" href="/artigos/faltas-trabalho" onclick="return navArticle(event,'faltas-trabalho')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#1e3a5f,#1e4d7b)" role="img" aria-label="Faltas ao Trabalho por Doença — artigo jurídico">💼</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Trabalho &amp; Legal</span><span class="bread">· 6 min</span></div>
@@ -1599,9 +1601,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Tudo sobre declarações médicas, baixas, o Código do Trabalho português e os seus direitos como trabalhador quando está doente.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="trabalho" onclick="openArticle('faltas-escola')">
+      <a class="bcard" data-cat="trabalho" href="/artigos/faltas-escola" onclick="return navArticle(event,'faltas-escola')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#2d4a22,#3d7a2c)" role="img" aria-label="Faltas à Escola por Doença — artigo para pais">🎓</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Escola &amp; Família</span><span class="bread">· 5 min</span></div>
@@ -1609,9 +1611,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">O que diz a lei portuguesa, documentos necessários e prazos para apresentar ao diretor de turma. Como obter declaração médica online.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="infecoes" onclick="openArticle('garganta')">
+      <a class="bcard" data-cat="infecoes" href="/artigos/dor-de-garganta-amigdalite" onclick="return navArticle(event,'garganta')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#5c1a1a,#8b2b2b)" role="img" aria-label="Dor de Garganta e Amigdalite — artigo médico">🤒</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Infeções</span><span class="bread">· 7 min</span></div>
@@ -1619,9 +1621,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Amigdalite, faringite — quando é viral e quando é bacteriana? Quando deve tomar antibiótico. Critérios de Centor e evidência atual.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="obesidade" onclick="openArticle('ozempic')">
+      <a class="bcard" data-cat="obesidade" href="/artigos/ozempic-glp1" onclick="return navArticle(event,'ozempic')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#3d1a6b,#6b2fb8)" role="img" aria-label="Ozempic Mounjaro Wegovy GLP-1 — artigo médico">⚕️</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Peso &amp; Obesidade</span><span class="bread">· 10 min</span></div>
@@ -1629,9 +1631,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Semaglutido, tirzepatido — os medicamentos que revolucionaram o tratamento da obesidade. Eficácia, segurança e quem pode tomar.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="dst" onclick="openArticle('dst')">
+      <a class="bcard" data-cat="dst" href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#1a4a3f,#0d7377)" role="img" aria-label="Doenças Sexualmente Transmissíveis — artigo médico">🔬</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Saúde Sexual</span><span class="bread">· 9 min</span></div>
@@ -1639,9 +1641,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">VIH, gonorreia, sífilis, herpes, HPV — sintomas, rastreio, tratamento e prevenção segundo as guidelines europeias.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-baixa')">
+      <a class="bcard" data-cat="medicacao" href="/artigos/baixa-medica" onclick="return navArticle(event,'renovacao-baixa')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#4a3000,#8b6000)" role="img" aria-label="Renovação de Baixa Médica — artigo médico">📋</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Baixas</span><span class="bread">· 6 min</span></div>
@@ -1649,9 +1651,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Como funciona o CIT em Portugal, prazos, regras da Segurança Social e como renovar a sua baixa sem sair de casa.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="medicacao" onclick="openArticle('renovacao-medicamentos')">
+      <a class="bcard" data-cat="medicacao" href="/artigos/renovacao-medicamentos" onclick="return navArticle(event,'renovacao-medicamentos')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#0b3d3a,#0d7377)" role="img" aria-label="Renovação de Medicamentos Online — artigo médico">💊</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Medicação</span><span class="bread">· 3 min</span></div>
@@ -1659,9 +1661,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Como renovar a medicação crónica por videoconsulta, que doenças estão abrangidas e como funciona a comparticipação da receita.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="infecoes" onclick="openArticle('cessacao')">
+      <a class="bcard" data-cat="infecoes" href="/artigos/cessacao-tabagica" onclick="return navArticle(event,'cessacao')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#2d1a00,#6b3a00)" role="img" aria-label="Como parar de fumar — cessação tabágica">🚭</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Cessação Tabágica</span><span class="bread">· 11 min</span></div>
@@ -1669,9 +1671,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Vareniclina, bupropiona, adesivos de nicotina — os tratamentos com maior evidência científica para deixar de fumar com apoio médico.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="trabalho" onclick="openArticle('conducao')">
+      <a class="bcard" data-cat="trabalho" href="/artigos/atestado-carta-conducao" onclick="return navArticle(event,'conducao')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#1a1a3f,#2b2b7a)" role="img" aria-label="Atestado médico carta de condução Portugal">🚗</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Carta de Condução</span><span class="bread">· 8 min</span></div>
@@ -1679,9 +1681,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Quando é obrigatório, o que é avaliado e como obter o atestado de aptidão médica para condução em Portugal de forma online.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="trabalho" onclick="openArticle('amamentacao')">
+      <a class="bcard" data-cat="trabalho" href="/artigos/atestado-amamentacao" onclick="return navArticle(event,'amamentacao')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#3f1a2d,#7a2b5a)" role="img" aria-label="Atestado de amamentação direitos laborais Portugal">🤱</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Amamentação</span><span class="bread">· 7 min</span></div>
@@ -1689,9 +1691,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Direitos laborais, o que deve constar no documento e como obter o atestado de amamentação online no próprio dia.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="dst" onclick="openArticle('rastreio')">
+      <a class="bcard" data-cat="dst" href="/artigos/atestado-rastreio-saude" onclick="return navArticle(event,'rastreio')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#0d3a4f,#0d5f7a)" role="img" aria-label="Rastreio de saúde Portugal guidelines DGS">🩺</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Saúde Preventiva</span><span class="bread">· 9 min</span></div>
@@ -1699,8 +1701,8 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Rastreios recomendados pela DGS por idade e sexo, vacinação do adulto e como fazer rastreio de IST de forma discreta.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
-<div class="bcard" data-cat="infecoes" onclick="openArticle('consulta-online')">
+      </a>
+<a class="bcard" data-cat="infecoes" href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#0b1d35,#1a3a5c)">🩺</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Consulta Online</span><span class="bread">· 10 min</span></div>
@@ -1708,9 +1710,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">O que é, como funciona, quanto custa e o que pode tratar numa consulta online em Portugal. Tudo o que precisa saber antes de marcar.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="infecoes" onclick="openArticle('medico-online')">
+      <a class="bcard" data-cat="infecoes" href="/artigos/medico-online" onclick="return navArticle(event,'medico-online')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#0d3a1a,#1a6b2d)">👨‍⚕️</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Médico Online</span><span class="bread">· 8 min</span></div>
@@ -1718,9 +1720,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Vantagens do médico online, o que pode pedir, segurança e sigilo médico. Como escolher uma plataforma de confiança em Portugal.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="bcard" data-cat="infecoes" onclick="openArticle('telemedicina')">
+      <a class="bcard" data-cat="infecoes" href="/artigos/telemedicina" onclick="return navArticle(event,'telemedicina')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#1a0d3a,#3a1a6b)">💻</div>
         <div class="bcard-body">
           <div class="bcard-meta"><span class="bcat">Telemedicina</span><span class="bread">· 9 min</span></div>
@@ -1728,8 +1730,8 @@ document.addEventListener("DOMContentLoaded", function() {
           <p class="bcard-excerpt">Como funciona a telemedicina em Portugal, diferenças entre SNS e privado e os seus direitos como utente.</p>
           <span class="bcard-link">Ler artigo →</span>
         </div>
-      </div>
-    <div class="bcard" data-cat="infecoes" onclick="openArticle('dia-saude-2026')">
+      </a>
+    <a class="bcard" data-cat="infecoes" href="/artigos/dia-saude-2026" onclick="return navArticle(event,'dia-saude-2026')">
   <div class="bcard-img" style="background:linear-gradient(135deg,#0b3d2e,#0d7377)">🌍</div>
   <div class="bcard-body">
     <div class="bcard-meta"><span class="bcat">Saúde Global</span><span class="bread">· 6 min</span></div>
@@ -1737,8 +1739,8 @@ document.addEventListener("DOMContentLoaded", function() {
     <p class="bcard-excerpt">7 de Abril — o que significa este dia, qual o tema da OMS em 2026 e o que pode fazer hoje pela sua saúde em Portugal.</p>
     <span class="bcard-link">Ler artigo →</span>
   </div>
-</div> 
-     <div class="bcard" data-cat="infecoes" onclick="openArticle('baixa-medica-freelancer')">
+</a> 
+     <a class="bcard" data-cat="infecoes" href="/artigos/baixa-medica-freelancer" onclick="return navArticle(event,'baixa-medica-freelancer')">
   <div class="bcard-img" style="background:linear-gradient(135deg,#1a3a5c,#2d6a9f)">💼</div>
   <div class="bcard-body">
     <div class="bcard-meta"><span class="bcat">Freelancers</span><span class="bread">· 8 min</span></div>
@@ -1746,9 +1748,9 @@ document.addEventListener("DOMContentLoaded", function() {
     <p class="bcard-excerpt">Tens direito a baixa médica sendo freelancer? Como funciona o CIT, o subsídio de doença e como resolver tudo por videoconsulta em 20 minutos.</p>
     <span class="bcard-link">Ler artigo →</span>
   </div>
-</div>
+</a>
 
-<div class="bcard" data-cat="infecoes" onclick="openArticle('sem-medico-familia-freelancer')">
+<a class="bcard" data-cat="infecoes" href="/artigos/sem-medico-familia-freelancer" onclick="return navArticle(event,'sem-medico-familia-freelancer')">
   <div class="bcard-img" style="background:linear-gradient(135deg,#2d1a5c,#6b2d9f)">🏠</div>
   <div class="bcard-body">
     <div class="bcard-meta"><span class="bcat">Freelancers</span><span class="bread">· 10 min</span></div>
@@ -1756,8 +1758,8 @@ document.addEventListener("DOMContentLoaded", function() {
     <p class="bcard-excerpt">O que podes e não podes fazer sem médico de família em Portugal. Soluções práticas para freelancers e trabalhadores remotos.</p>
     <span class="bcard-link">Ler artigo →</span>
   </div>
-</div>
-     <div class="bcard" data-cat="medicacao" onclick="openArticle('piula-online')">
+</a>
+     <a class="bcard" data-cat="medicacao" href="/artigos/renovar-pilula-anticoncecional-online" onclick="return navArticle(event,'piula-online')">
   <div class="bcard-img" style="background:linear-gradient(135deg,#6b1a4f,#b83280)" role="img" aria-label="Renovar receita pílula anticoncecional online Portugal">💊</div>
   <div class="bcard-body">
     <div class="bcard-meta"><span class="bcat">Saúde da Mulher</span><span class="bread">· 10 min</span></div>
@@ -1765,7 +1767,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <p class="bcard-excerpt">Sem médico de família, sem esperas. Como renovar a receita da pílula por videoconsulta de forma legal e segura em Portugal.</p>
     <span class="bcard-link">Ler artigo →</span>
   </div>
-</div>
+</a>
     </div><!-- /blog-list -->
 
     <div class="blog-sidebar">
@@ -1780,11 +1782,11 @@ document.addEventListener("DOMContentLoaded", function() {
         <div class="sb-head"><h3>Mais Lidos</h3><p>Esta semana</p></div>
         <div class="sb-body" style="padding:0 18px">
           <ul class="pop-list">
-            <li class="pop-item" onclick="openArticle('ozempic')"><div class="pop-n">01</div><div class="pop-title">Como Atuam os Medicamentos Injetáveis para a Obesidade?</div></li>
-            <li class="pop-item" onclick="openArticle('itu')"><div class="pop-n">02</div><div class="pop-title">Infeção Urinária: Tratamento</div></li>
-            <li class="pop-item" onclick="openArticle('renovacao-baixa')"><div class="pop-n">03</div><div class="pop-title">Renovação de Baixa Médica</div></li>
-            <li class="pop-item" onclick="openArticle('dst')"><div class="pop-n">04</div><div class="pop-title">DST: Guia Completo</div></li>
-            <li class="pop-item" onclick="openArticle('faltas-trabalho')"><div class="pop-n">05</div><div class="pop-title">Faltas ao Trabalho por Doença</div></li>
+            <li class="pop-item"><a href="/artigos/ozempic-glp1" onclick="return navArticle(event,'ozempic')"><div class="pop-n">01</div><div class="pop-title">Como Atuam os Medicamentos Injetáveis para a Obesidade?</div></a></li>
+            <li class="pop-item"><a href="/artigos/infecao-urinaria" onclick="return navArticle(event,'itu')"><div class="pop-n">02</div><div class="pop-title">Infeção Urinária: Tratamento</div></a></li>
+            <li class="pop-item"><a href="/artigos/baixa-medica" onclick="return navArticle(event,'renovacao-baixa')"><div class="pop-n">03</div><div class="pop-title">Renovação de Baixa Médica</div></a></li>
+            <li class="pop-item"><a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')"><div class="pop-n">04</div><div class="pop-title">DST: Guia Completo</div></a></li>
+            <li class="pop-item"><a href="/artigos/faltas-trabalho" onclick="return navArticle(event,'faltas-trabalho')"><div class="pop-n">05</div><div class="pop-title">Faltas ao Trabalho por Doença</div></a></li>
           </ul>
         </div>
       </div>
@@ -1882,7 +1884,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <p>A urocultura deve ser feita com amostra de urina do jato médio, recolhida após higiene cuidadosa dos genitais, preferencialmente a primeira urina da manhã ou após pelo menos 4 horas sem urinar.</p>
 
   <h3>Diagnóstico por videoconsulta</h3>
-  <p>Na cistite não complicada numa mulher jovem e saudável, o diagnóstico pode ser feito por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> com base na história clínica e nos sintomas. O médico avalia os sintomas, exclui situações de maior gravidade e, quando clinicamente adequado, prescreve o antibiótico recomendado pelas guidelines nacionais. Se for necessário fazer urocultura, o médico prescreve a análise para o laboratório à escolha da pessoa.</p>
+  <p>Na cistite não complicada numa mulher jovem e saudável, o diagnóstico pode ser feito por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> com base na história clínica e nos sintomas. O médico avalia os sintomas, exclui situações de maior gravidade e, quando clinicamente adequado, prescreve o antibiótico recomendado pelas guidelines nacionais. Se for necessário fazer urocultura, o médico prescreve a análise para o laboratório à escolha da pessoa.</p>
 
   <h2>Tratamento da infeção urinária: quais os antibióticos recomendados em Portugal</h2>
   <p>O tratamento da cistite aguda não complicada em Portugal segue as orientações da Direção-Geral da Saúde e as guidelines da EAU, adaptadas ao padrão local de resistências bacterianas. A resistência crescente de <em>E. coli</em> a vários antibióticos, incluindo as fluoroquinolonas (como a ciprofloxacina) e a amoxicilina com ácido clavulânico, torna fundamental que a escolha do antibiótico seja feita por um médico com base no quadro clínico e nos dados de resistência locais (Curto et al., 2019).</p>
@@ -2032,7 +2034,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="ibox warn"><div class="ibox-title">⚠️ Atenção</div><p>Se esgotar as duas autodeclarações de doença permitidas no ano civil, ou se a ausência ultrapassar 3 dias consecutivos, tem obrigatoriamente de recorrer a uma consulta médica para obter o CIT. Usar a autodeclaração fora destas condições torna a falta injustificada.</p></div>
 
   <h2>Quando é obrigatória a baixa médica?</h2>
-  <p>O Certificado de Incapacidade Temporária para o Trabalho, o documento popularmente conhecido como baixa médica, torna-se obrigatório a partir do 4.º dia consecutivo de doença. É emitido por um médico, do Serviço Nacional de Saúde ou de entidades privadas e sociais autorizadas, quer em consulta presencial, quer por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>, com o mesmo valor legal.</p>
+  <p>O Certificado de Incapacidade Temporária para o Trabalho, o documento popularmente conhecido como baixa médica, torna-se obrigatório a partir do 4.º dia consecutivo de doença. É emitido por um médico, do Serviço Nacional de Saúde ou de entidades privadas e sociais autorizadas, quer em consulta presencial, quer por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>, com o mesmo valor legal.</p>
   <p>O CIT deve ser submetido à Segurança Social no prazo de 5 dias úteis a contar do início da incapacidade. Na generalidade dos casos, esta submissão é feita eletronicamente pelo próprio médico no momento da consulta, o que dispensa o trabalhador de qualquer formalidade adicional junto da Segurança Social. Quando o certificado é emitido em papel, cabe ao trabalhador remeter o original dentro do prazo indicado.</p>
 
   <h2>Quais os prazos para comunicar e justificar a falta ao empregador?</h2>
@@ -2231,7 +2233,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <p>No ensino secundário, a justificação escrita do encarregado de educação também é aceite, mas cada escola pode estabelecer nos seus regulamentos internos limitações adicionais ao número de justificações aceites por período sem apoio documental médico.</p>
 
   <h3>Declaração médica</h3>
-  <p>A declaração médica é o documento mais sólido para justificar faltas escolares por doença. Pode ser emitida por qualquer médico inscrito na Ordem dos Médicos, seja do Serviço Nacional de Saúde (SNS) ou de entidades privadas, incluindo através de consulta médica online por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>.</p>
+  <p>A declaração médica é o documento mais sólido para justificar faltas escolares por doença. Pode ser emitida por qualquer médico inscrito na Ordem dos Médicos, seja do Serviço Nacional de Saúde (SNS) ou de entidades privadas, incluindo através de consulta médica online por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>.</p>
   <p>A declaração médica deve conter:</p>
   <ul>
     <li>Identificação do aluno (nome e data de nascimento)</li>
@@ -2302,7 +2304,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <p>Uma clínica privada ou médico privado pode emitir a declaração no próprio dia, mas implica deslocação física e um custo que varia consoante a especialidade e a clínica.</p>
 
   <h3>Consulta médica online por videoconsulta</h3>
-  <p>A <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> é atualmente a opção mais rápida e conveniente para obter uma declaração médica para falta escolar. Permite obter a declaração no próprio dia, sem deslocação, o que é especialmente vantajoso quando a criança está com febre ou indisposta e não tem condições para sair de casa.</p>
+  <p>A <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> é atualmente a opção mais rápida e conveniente para obter uma declaração médica para falta escolar. Permite obter a declaração no próprio dia, sem deslocação, o que é especialmente vantajoso quando a criança está com febre ou indisposta e não tem condições para sair de casa.</p>
   <p>A declaração emitida por videoconsulta tem exatamente o mesmo valor legal que a emitida em consulta presencial, desde que o médico esteja devidamente inscrito na Ordem dos Médicos. A ConsultasOnline disponibiliza este serviço de segunda a domingo, das 9h às 21h, com emissão de fatura AT automática e envio da declaração por email no próprio dia.</p>
 
   <h2>O que deve conter a declaração médica para falta escolar</h2>
@@ -2318,7 +2320,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <p>O diagnóstico não deve constar da declaração, em respeito pelo sigilo médico. A escola não tem direito a exigir o conhecimento da doença que motivou a ausência.</p>
 
   <h2>A declaração médica online é aceite pelas escolas?</h2>
-  <p>Sim. A declaração médica emitida na sequência de uma <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> tem plena validade legal junto de escolas públicas e privadas em Portugal, desde que cumpra os requisitos legais aplicados a qualquer declaração médica. A lei portuguesa não distingue entre declaração emitida em consulta presencial e declaração emitida em consulta online.</p>
+  <p>Sim. A declaração médica emitida na sequência de uma <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> tem plena validade legal junto de escolas públicas e privadas em Portugal, desde que cumpra os requisitos legais aplicados a qualquer declaração médica. A lei portuguesa não distingue entre declaração emitida em consulta presencial e declaração emitida em consulta online.</p>
 
   <h2>Conselhos práticos para encarregados de educação</h2>
   <ul>
@@ -2394,7 +2396,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div class="art-author">✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
 
   <p>A dor de garganta é um dos motivos de consulta mais frequentes nos cuidados de saúde primários e nas urgências em Portugal. Na maioria das vezes, a causa é viral e resolve sozinha em poucos dias, sem necessidade de antibiótico. Mas há situações em que a infeção é bacteriana, e aí o antibiótico correto, prescrito a tempo, previne complicações que podem ser sérias. O problema é que distinguir uma da outra não é sempre evidente, especialmente sem avaliação médica.</p>
-  <p>Este artigo explica o que é a amigdalite, como o médico distingue a causa viral da bacteriana, quando é realmente necessário tomar antibiótico, quais os sinais de alarme que exigem ida urgente ao hospital, e como a avaliação pode ser feita por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600" target="_blank" style="color:var(--teal);font-weight:600">videoconsulta</a>.</p>
+  <p>Este artigo explica o que é a amigdalite, como o médico distingue a causa viral da bacteriana, quando é realmente necessário tomar antibiótico, quais os sinais de alarme que exigem ida urgente ao hospital, e como a avaliação pode ser feita por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600" style="color:var(--teal);font-weight:600">videoconsulta</a>.</p>
 
   <h2>O que é a amigdalite e a faringoamigdalite?</h2>
   <p>A amigdalite é a inflamação das amígdalas, duas estruturas de tecido linfático situadas de cada lado da garganta que fazem parte do sistema imunitário. A faringoamigdalite é o termo mais preciso que os médicos usam quando a inflamação envolve simultaneamente as amígdalas e a faringe (a parede posterior da garganta), que é o mais frequente na prática clínica.</p>
@@ -2451,7 +2453,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   <h2>O teste de diagnóstico rápido para estreptococo</h2>
   <p>O teste de diagnóstico rápido (TDR) para deteção do antígeno estreptocócico é feito com uma zaragatoa da garganta e dá resultado em poucos minutos. É muito útil para confirmar ou excluir a causa estreptocócica quando os critérios clínicos são intermédios, evitando quer o tratamento desnecessário com antibióticos quer a falha terapêutica em casos genuinamente bacterianos. Está disponível em centros de saúde, algumas clínicas privadas e farmácias.</p>
-  <p>Num contexto de <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600" target="_blank" style="color:var(--teal);font-weight:600">videoconsulta</a>, o médico avalia os critérios clínicos com base nos sintomas descritos e, quando necessário, pode orientar para a realização do TDR numa farmácia ou laboratório próximo antes de decidir o tratamento.</p>
+  <p>Num contexto de <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600" style="color:var(--teal);font-weight:600">videoconsulta</a>, o médico avalia os critérios clínicos com base nos sintomas descritos e, quando necessário, pode orientar para a realização do TDR numa farmácia ou laboratório próximo antes de decidir o tratamento.</p>
 
   <h2>Quando é necessário tomar antibiótico para a amigdalite?</h2>
   <p>O antibiótico está indicado na faringoamigdalite quando existe forte suspeita ou confirmação de causa estreptocócica. As situações em que o médico considera iniciar antibiótico são:</p>
@@ -2501,7 +2503,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <p>Algumas pessoas têm episódios muito frequentes de amigdalite ao longo do ano. A amigdalectomia (remoção cirúrgica das amígdalas) pode ser considerada em adultos com amigdalite recorrente documentada. Os critérios mais utilizados são os critérios de Paradise, que exigem um número mínimo de episódios por ano durante um período definido, documentados clinicamente. A decisão deve ser tomada em conjunto com um otorrinolaringologista.</p>
 
   <h2>A avaliação por videoconsulta é adequada para a dor de garganta?</h2>
-  <p>Sim, para a grande maioria dos casos de faringoamigdalite em adultos. Por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600" target="_blank" style="color:var(--teal);font-weight:600">videoconsulta</a>, o médico pode:</p>
+  <p>Sim, para a grande maioria dos casos de faringoamigdalite em adultos. Por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600" style="color:var(--teal);font-weight:600">videoconsulta</a>, o médico pode:</p>
   <ul>
     <li>Avaliar os sintomas e calcular a pontuação de Centor-McIsaac</li>
     <li>Pedir ao utente que mostre a garganta em câmara para observação visual</li>
@@ -2722,7 +2724,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <h2>Contexto em Portugal: acesso e comparticipação</h2>
   <p>Em Portugal, os medicamentos injetáveis para a obesidade aprovados pela Agência Europeia do Medicamento (EMA) estão disponíveis, mas com importantes limitações no acesso através do Serviço Nacional de Saúde.</p>
   <p>Para a indicação de diabetes tipo 2, alguns destes medicamentos têm comparticipação do SNS, sujeita a critérios específicos. Para a indicação de obesidade sem diabetes, não existe atualmente comparticipação pelo SNS em Portugal.</p>
-  <p>O custo mensal varia tipicamente entre 150 e 300 euros por mês. A prescrição exige avaliação médica prévia, que pode ser realizada por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>.</p>
+  <p>O custo mensal varia tipicamente entre 150 e 300 euros por mês. A prescrição exige avaliação médica prévia, que pode ser realizada por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>.</p>
 
   <h2>O futuro: próximas gerações de medicamentos</h2>
   <p>A investigação farmacológica no campo da obesidade está a avançar a um ritmo sem precedentes. Várias moléculas em fases avançadas de investigação clínica prometem eficácia ainda superior:</p>
@@ -2894,7 +2896,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <li>Exame microscópico e cultura de corrimento: tricomonas, candidose</li>
     <li>Biópsia ou colheita de lesões: herpes, sífilis primária, <a href="#gl-hpv" style="color:var(--teal)">HPV</a></li>
   </ul>
-  <p>A consulta de rastreio por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> permite ao médico avaliar o risco, prescrever as análises adequadas e interpretar os resultados, tudo sem deslocação física.</p>
+  <p>A consulta de rastreio por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> permite ao médico avaliar o risco, prescrever as análises adequadas e interpretar os resultados, tudo sem deslocação física.</p>
 
   <h2>Clamidíase: transmissão, sintomas, diagnóstico e tratamento</h2>
 
@@ -3286,7 +3288,7 @@ document.addEventListener("DOMContentLoaded", function() {
   </ul>
 
   <h2>Rastreio de IST por videoconsulta: como funciona?</h2>
-  <p>O rastreio de IST por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> permite obter, na mesma consulta, a avaliação do risco individual, a prescrição das análises adequadas ao perfil de risco, a interpretação dos resultados e o tratamento quando indicado, tudo sem necessidade de deslocação física.</p>
+  <p>O rastreio de IST por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a> permite obter, na mesma consulta, a avaliação do risco individual, a prescrição das análises adequadas ao perfil de risco, a interpretação dos resultados e o tratamento quando indicado, tudo sem necessidade de deslocação física.</p>
   <p>Na ConsultasOnline, o rastreio de infeções sexualmente transmissíveis está disponível de segunda a domingo, das 9h às 21h, com fatura AT automática. O médico avalia o perfil de risco, prescreve o painel de análises adequado e acompanha na interpretação dos resultados.</p>
   <p>Em conclusão, as infeções sexualmente transmissíveis nem sempre provocam sintomas. Prevenção, vacinação quando disponível, utilização de preservativo e rastreio adequado ao risco continuam a ser ferramentas essenciais para proteger a saúde sexual.</p>
 
@@ -3414,13 +3416,13 @@ document.addEventListener("DOMContentLoaded", function() {
 <div class="art-body-wrap"><div class="art-body">
 <div class="art-author">✍️ <span>Escrito por <strong>Patrícia Ferraz</strong> · Médica · Cédula n.º 57713</span></div>
 
-  <p>A <a onclick="openArticle('dst')" style="color:var(--teal);cursor:pointer;font-weight:600">clamídia</a> é a <a onclick="openArticle('dst')" style="color:var(--teal);cursor:pointer">infeção sexualmente transmissível</a> (IST) bacteriana mais frequente na Europa e em Portugal. Uma das suas características mais traiçoeiras é exatamente esta: a maioria das pessoas infetadas não sabe que tem a doença porque não sente nada. Sem sintomas, sem diagnóstico, a infeção progride em silêncio e pode causar complicações sérias, como infertilidade, que só se tornam evidentes anos mais tarde.</p>
-  <p>Este artigo explica o que é a <a onclick="openArticle('dst')" style="color:var(--teal);cursor:pointer">clamídia</a>, como se transmite, quais os sintomas quando existem, como é feito o diagnóstico, qual o tratamento e, acima de tudo, porque é que o rastreio regular é tão importante para quem tem vida sexual ativa.</p>
+  <p>A <a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')" style="color:var(--teal);cursor:pointer;font-weight:600">clamídia</a> é a <a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')" style="color:var(--teal);cursor:pointer">infeção sexualmente transmissível</a> (IST) bacteriana mais frequente na Europa e em Portugal. Uma das suas características mais traiçoeiras é exatamente esta: a maioria das pessoas infetadas não sabe que tem a doença porque não sente nada. Sem sintomas, sem diagnóstico, a infeção progride em silêncio e pode causar complicações sérias, como infertilidade, que só se tornam evidentes anos mais tarde.</p>
+  <p>Este artigo explica o que é a <a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')" style="color:var(--teal);cursor:pointer">clamídia</a>, como se transmite, quais os sintomas quando existem, como é feito o diagnóstico, qual o tratamento e, acima de tudo, porque é que o rastreio regular é tão importante para quem tem vida sexual ativa.</p>
 
   <h2>O que é a clamídia?</h2>
   <p>A clamídia é causada pela bactéria <em>Chlamydia trachomatis</em>, um microorganismo intracelular obrigatório, o que significa que só consegue sobreviver e reproduzir-se dentro das células do organismo humano. Infeta preferencialmente as células epiteliais das mucosas, nomeadamente a uretra, o colo do útero, o reto e a faringe.</p>
   <p>Em Portugal, <a href="https://www.deco.proteste.pt/saude/saude-feminina/dicas/clamidia-quais-sintomas-como-prevenir" target="_blank" style="color:var(--teal)">entre 2022 e 2023 os casos notificados de clamídia diminuíram de 1.598 para 1.404</a>, mas estes números refletem apenas uma fração da realidade, dado que a maioria dos casos não é diagnosticada por ausência de sintomas. Na Europa, de acordo com o ECDC, as mulheres entre os 20 e os 24 anos são o grupo etário com maior número de notificações (ECDC, 2024).</p>
-  <p>Em 2024, a Acta Médica Portuguesa publicou as primeiras guidelines portuguesas especificamente dedicadas ao diagnóstico e tratamento da infeção por <em>Chlamydia trachomatis</em>, elaboradas pelo Grupo de Estudo de <a onclick="openArticle('dst')" style="color:var(--teal);cursor:pointer">Infeções Sexualmente Transmissíveis</a> da Sociedade Portuguesa de Dermatologia e Venereologia (Andrade et al., 2024).</p>
+  <p>Em 2024, a Acta Médica Portuguesa publicou as primeiras guidelines portuguesas especificamente dedicadas ao diagnóstico e tratamento da infeção por <em>Chlamydia trachomatis</em>, elaboradas pelo Grupo de Estudo de <a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')" style="color:var(--teal);cursor:pointer">Infeções Sexualmente Transmissíveis</a> da Sociedade Portuguesa de Dermatologia e Venereologia (Andrade et al., 2024).</p>
 
   <h2>Como se transmite a clamídia?</h2>
   <p>A transmissão dá-se principalmente por contacto sexual desprotegido:</p>
@@ -3486,8 +3488,8 @@ document.addEventListener("DOMContentLoaded", function() {
     <li>Infeção anal: zaragatoa anal, especialmente recomendada em homens que têm sexo com homens e em mulheres que praticam sexo anal</li>
     <li>Infeção faríngea: zaragatoa faríngea, habitualmente incluída nos painéis de rastreio alargado</li>
   </ul>
-  <div class="ibox warn"><div class="ibox-title">⚠️ Atenção ao painel de análises</div><p>Um painel básico de rastreio de <a onclick="openArticle('dst')" style="color:var(--teal);cursor:pointer">IST</a> pode não incluir a pesquisa de clamídia anal e faríngea. Se tiver tido relações anais ou orais, informe o médico para que o painel seja alargado a essas localizações.</p></div>
-  <p>A consulta de rastreio pode ser feita por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>: o médico avalia o risco, prescreve as análises adequadas ao perfil de exposição e interpreta os resultados quando estiverem disponíveis.</p>
+  <div class="ibox warn"><div class="ibox-title">⚠️ Atenção ao painel de análises</div><p>Um painel básico de rastreio de <a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')" style="color:var(--teal);cursor:pointer">IST</a> pode não incluir a pesquisa de clamídia anal e faríngea. Se tiver tido relações anais ou orais, informe o médico para que o painel seja alargado a essas localizações.</p></div>
+  <p>A consulta de rastreio pode ser feita por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>: o médico avalia o risco, prescreve as análises adequadas ao perfil de exposição e interpreta os resultados quando estiverem disponíveis.</p>
 
   <h2>Qual o tratamento da clamídia?</h2>
   <p>A clamídia é tratável com antibióticos e, na grande maioria dos casos, cura completamente sem sequelas se for tratada a tempo. De acordo com as guidelines portuguesas de 2024, os regimes recomendados são (Andrade et al., 2024):</p>
@@ -3514,12 +3516,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
   <h2>Como prevenir a clamídia?</h2>
   <ul>
-    <li><strong>Preservativo:</strong> usado de forma correta e consistente, reduz significativamente o risco de transmissão de <a onclick="openArticle('dst')" style="color:var(--teal);cursor:pointer">IST</a>, incluindo a clamídia.</li>
+    <li><strong>Preservativo:</strong> usado de forma correta e consistente, reduz significativamente o risco de transmissão de <a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')" style="color:var(--teal);cursor:pointer">IST</a>, incluindo a clamídia.</li>
     <li><strong>Rastreio regular:</strong> detetar a infeção cedo, antes de causar complicações, é a segunda linha de defesa mais importante.</li>
     <li><strong>Notificação e tratamento de parceiros:</strong> fundamental para interromper a cadeia de transmissão.</li>
     <li><strong>Discussão aberta com o médico:</strong> informar o médico sobre os comportamentos sexuais permite-lhe prescrever o painel de rastreio mais adequado para cada situação.</li>
   </ul>
-  <p>Não existe vacina contra a clamídia. Para outras <a onclick="openArticle('dst')" style="color:var(--teal);cursor:pointer">infeções sexualmente transmissíveis</a> como a hepatite B e o HPV, existem vacinas eficazes disponíveis em Portugal.</p>
+  <p>Não existe vacina contra a clamídia. Para outras <a href="/artigos/doencas-sexualmente-transmissiveis" onclick="return navArticle(event,'dst')" style="color:var(--teal);cursor:pointer">infeções sexualmente transmissíveis</a> como a hepatite B e o HPV, existem vacinas eficazes disponíveis em Portugal.</p>
 
   <div class="art-cta"><h3>Quer fazer rastreio de clamídia?</h3><p>Consulta por videoconsulta. O médico avalia o risco e prescreve as análises adequadas. Disponível de segunda a domingo.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar Rastreio de IST →</button></div>
 
@@ -4330,7 +4332,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <h2>Médico online ou médico no centro de saúde ou clínica?</h2>
   <p>Um médico online é um profissional licenciado e inscrito na Ordem dos Médicos que presta cuidados de saúde através de meios digitais seguros, como videochamada.</p>
   <p>A principal diferença face à consulta presencial é o formato. Em vez de se deslocar a uma clínica ou centro de saúde, fala com o médico através do computador, telemóvel ou tablet.</p>
-  <p>Durante a <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">consulta</a>, o médico avalia os sintomas, recolhe a história clínica, analisa informação enviada pelo doente e decide se existem condições para emitir uma recomendação, prescrição ou documento clínico.</p>
+  <p>Durante a <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">consulta</a>, o médico avalia os sintomas, recolhe a história clínica, analisa informação enviada pelo doente e decide se existem condições para emitir uma recomendação, prescrição ou documento clínico.</p>
   <p>Quando a informação disponível não é suficiente, o médico pode pedir dados adicionais ou recomendar uma consulta presencial. A Ordem dos Médicos sublinha que, em telemedicina, o médico só deve tomar decisões se a informação recebida for suficiente e relevante.</p>
 
   <h2>Os médicos online são realmente médicos?</h2>
@@ -4369,7 +4371,7 @@ document.addEventListener("DOMContentLoaded", function() {
   </ul>
 
   <h2>Quando faz sentido consultar um médico online?</h2>
-  <p>A <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">consulta médica online</a> pode ser útil para situações que não exigem observação presencial imediata. Pode ser uma opção para:</p>
+  <p>A <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">consulta médica online</a> pode ser útil para situações que não exigem observação presencial imediata. Pode ser uma opção para:</p>
   <ul>
     <li>Sintomas ligeiros ou moderados</li>
     <li>Renovação de medicação, quando clinicamente adequada</li>
@@ -4619,7 +4621,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <h3>Teleconsulta (Store-and-Forward vs. Tempo Real)</h3>
   <p>A teleconsulta é a modalidade mais familiar ao cidadão comum e divide-se em duas variantes:</p>
   <ul>
-    <li><strong>Teleconsulta em tempo real</strong> (synchronous): Videochamada ao vivo entre médico e doente. Permite interação direta, avaliação visual e recolha de história clínica em tempo real. É a modalidade predominante nas plataformas de <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">teleconsulta privada em Portugal</a>, como a Consultas-Online.pt.</li>
+    <li><strong>Teleconsulta em tempo real</strong> (synchronous): Videochamada ao vivo entre médico e doente. Permite interação direta, avaliação visual e recolha de história clínica em tempo real. É a modalidade predominante nas plataformas de <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">teleconsulta privada em Portugal</a>, como a Consultas-Online.pt.</li>
     <li><strong>Teleconsulta assíncrona</strong> (store-and-forward): O doente envia informação clínica (fotografias, vídeos, questionários, resultados analíticos) que o médico analisa posteriormente, sem interação simultânea. Muito utilizada em teledermatologia, teleoftalmologia e teledermatoscopia.</li>
   </ul>
 
@@ -4982,7 +4984,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <p>Estas diferenças traduzem, no essencial, uma proteção social mais limitada para quem trabalha por conta própria, o que reforça a importância de planear financeiramente eventuais períodos de baixa e de garantir a regularidade das contribuições para a Segurança Social.</p>
 
   <h2>Como é emitido o CIT: baixa médica online por videoconsulta?</h2>
-  <p>Uma das perguntas mais frequentes de quem necessita de baixa médica sendo trabalhador independente é se é possível obter o CIT sem se deslocar a uma unidade de saúde. A resposta é sim. Desde a regulamentação da teleconsulta para efeitos de emissão de CIT, qualquer médico registado na Ordem dos Médicos pode emitir o certificado através de uma consulta médica online, por <a onclick="openArticle('consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>, com o mesmo valor legal de uma consulta presencial.</p>
+  <p>Uma das perguntas mais frequentes de quem necessita de baixa médica sendo trabalhador independente é se é possível obter o CIT sem se deslocar a uma unidade de saúde. A resposta é sim. Desde a regulamentação da teleconsulta para efeitos de emissão de CIT, qualquer médico registado na Ordem dos Médicos pode emitir o certificado através de uma consulta médica online, por <a href="/artigos/consulta-online" onclick="return navArticle(event,'consulta-online')" style="color:var(--teal);cursor:pointer;font-weight:600">videoconsulta</a>, com o mesmo valor legal de uma consulta presencial.</p>
   <p>Para um freelancer, esta possibilidade é particularmente útil: evita deslocações, permite marcar consulta fora do horário convencional (muitas plataformas disponibilizam atendimento todos os dias da semana, incluindo fins de semana) e reduz o tempo de espera entre o aparecimento dos sintomas e a emissão do documento que formaliza a incapacidade para o trabalho.</p>
 
   <h3>O trabalhador independente tem de se dirigir à Segurança Social para entrega do CIT?</h3>
@@ -6284,6 +6286,13 @@ window.openArticle = function(id) {
   var art = document.getElementById('article-' + id);
   if (art) { art.style.display = 'block'; art.classList.add('active'); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+// Links de artigos: clique normal abre na SPA; Ctrl/Cmd/Shift/botão do meio abre o URL real
+window.navArticle = function(e, id) {
+  if (e && (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1)) return true;
+  if (e) e.preventDefault();
+  window.openArticle(id);
+  return false;
 };
 window.closeArticle = function() {
   document.querySelectorAll('.article-view').forEach(function(a){ a.style.display = 'none'; a.classList.remove('active'); });
