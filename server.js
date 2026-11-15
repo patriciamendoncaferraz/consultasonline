@@ -418,6 +418,7 @@ function articleJsonLd(slug, data, canonical) {
       name: 'Patrícia Ferraz',
       jobTitle: 'Médica',
       identifier: 'Cédula profissional n.º 57713',
+      url: 'https://www.consultas-online.pt/sobre-a-medica',
       worksFor: { '@type': 'MedicalBusiness', name: 'ConsultasOnline' }
     };
   }
@@ -546,6 +547,7 @@ footer a{color:rgba(255,255,255,.6);text-decoration:none;margin:0 8px}
   <a href="/artigos">Artigos de Saúde</a>
   <a href="/artigos/consulta-online">Consulta Online</a>
   <a href="/artigos/baixa-medica">Baixa Médica</a>
+  <a href="/sobre-a-medica">Sobre a Médica</a>
   <br/><br/>© 2026 ConsultasOnline · geral@consultas-online.pt
 </footer>
 <script>
@@ -557,6 +559,107 @@ if (typeof sessionStorage !== 'undefined') {
 </body>
 </html>`;
 }
+
+// ─────────────────────────────────────────────────────────────────
+// SOBRE A MÉDICA — o texto vem da secção de biografia de public/index.html
+// (entre <!-- SECÇÃO BIOGRAFIA --> e <!-- FIM SECÇÃO BIOGRAFIA -->).
+// Para alterar a biografia, edite só o index.html.
+// ─────────────────────────────────────────────────────────────────
+let ABOUT_HTML = null;
+function loadAboutFromIndex() {
+  try {
+    const html = require('fs').readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
+    const a = html.indexOf('<!-- SECÇÃO BIOGRAFIA -->');
+    const b = html.indexOf('<!-- FIM SECÇÃO BIOGRAFIA -->');
+    if (a < 0 || b < 0) { console.error('Sobre a médica: secção de biografia não encontrada em index.html'); return; }
+    let bio = html.slice(a + '<!-- SECÇÃO BIOGRAFIA -->'.length, b)
+      .replace(/<button([^>]*?)\s*onclick="openServiceSelector\(\)"([^>]*)>([\s\S]*?)<\/button>/g,
+        (m, a1, a2, txt) => '<a href="/"' + (a1 + a2).replace(/border:none;/, '') + '>' + txt + '</a>')
+      .replace(/\s+onclick="[^"]*"/g, '')
+      .replace(/ loading="lazy"/, '')
+      .replace('<h2 style="', '<h1 style="').replace(/(<h1 style="[^"]*">[\s\S]*?)<\/h2>/, '$1</h1>');
+    const plain = bio.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    const firstP = (/<p[^>]*>([\s\S]*?)<\/p>/.exec(bio) || [, ''])[1].replace(/<[^>]+>/g, '').trim();
+    const person = {
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      url: 'https://www.consultas-online.pt/sobre-a-medica',
+      inLanguage: 'pt-PT',
+      mainEntity: {
+        '@type': 'Person',
+        name: 'Patrícia Ferraz',
+        honorificPrefix: 'Dra.',
+        jobTitle: 'Médica',
+        description: firstP,
+        image: 'https://www.consultas-online.pt/foto-patricia.webp',
+        url: 'https://www.consultas-online.pt/sobre-a-medica',
+        identifier: 'Cédula profissional n.º 57713',
+        alumniOf: plain.includes('Universidade de Coimbra')
+          ? { '@type': 'CollegeOrUniversity', name: 'Faculdade de Medicina da Universidade de Coimbra' } : undefined,
+        worksFor: { '@type': 'MedicalBusiness', name: 'ConsultasOnline', url: 'https://www.consultas-online.pt' }
+      }
+    };
+    const desc = 'Conheça a Dra. Patrícia Ferraz, médica (cédula n.º 57713) formada pela Universidade de Coimbra, responsável pelas consultas online da ConsultasOnline.';
+    ABOUT_HTML = `<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sobre a Médica: Dra. Patrícia Ferraz | ConsultasOnline</title>
+<meta name="description" content="${desc}"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://www.consultas-online.pt/sobre-a-medica"/>
+<meta property="og:type" content="profile"/>
+<meta property="og:url" content="https://www.consultas-online.pt/sobre-a-medica"/>
+<meta property="og:title" content="Sobre a Médica: Dra. Patrícia Ferraz | ConsultasOnline"/>
+<meta property="og:description" content="${desc}"/>
+<meta property="og:image" content="https://www.consultas-online.pt/foto-patricia.webp"/>
+<meta property="og:locale" content="pt_PT"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script type="application/ld+json">${JSON.stringify(person).replace(/</g, '\\u003c')}<\/script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Arial,Helvetica,sans-serif;color:#334155;background:#fff;line-height:1.7}
+nav{background:#0b1d35;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+nav .logo{color:#fff;text-decoration:none;font-size:18px;font-weight:700}
+nav .logo span{color:#17c4a8}
+nav .nav-btn{background:#0d7377;color:#fff;text-decoration:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600}
+.breadcrumb{max-width:900px;margin:0 auto;padding:24px 20px 0;font-size:13px;color:#8a9bb0}
+.breadcrumb a{color:#0d7377;text-decoration:none}
+section a[href="/"]{display:inline-block;text-decoration:none}
+.more{max-width:900px;margin:0 auto;padding:0 20px 60px;font-size:15px}
+.more a{color:#0d7377}
+footer{background:#0b1d35;padding:28px 24px;text-align:center;font-size:13px;color:rgba(255,255,255,.45)}
+footer a{color:rgba(255,255,255,.6);text-decoration:none;margin:0 8px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">Consultas<span>Online</span></a>
+  <a href="/" class="nav-btn">Marcar Consulta</a>
+</nav>
+<div class="breadcrumb"><a href="/">Início</a> › Sobre a Médica</div>
+${bio}
+<div class="more"><p>Leia os <a href="/artigos">artigos de saúde</a> escritos pela Dra. Patrícia Ferraz.</p></div>
+<footer>
+  <a href="/">ConsultasOnline</a>
+  <a href="/artigos">Artigos de Saúde</a>
+  <a href="/sobre-a-medica">Sobre a Médica</a>
+  <br/><br/>© 2026 ConsultasOnline · geral@consultas-online.pt
+</footer>
+</body>
+</html>`;
+  } catch (err) {
+    console.error('Sobre a médica: erro ao ler index.html:', err.message);
+  }
+}
+loadAboutFromIndex();
+
+app.get('/sobre-a-medica', (req, res) => {
+  if (!ABOUT_HTML) return res.redirect(302, '/');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(ABOUT_HTML);
+});
 
 // Rota de listagem
 app.get('/artigos', (req, res) => {
