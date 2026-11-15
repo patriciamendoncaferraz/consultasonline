@@ -115,7 +115,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({ origin: '*' }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(__dirname));
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   next();
