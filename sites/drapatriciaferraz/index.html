@@ -338,7 +338,7 @@ input,textarea,select,button{max-width:100%}
       </div>
       <div class="hero-points">
         <span>✓ Videoconsulta no computador ou telemóvel</span>
-        <span>✓ Pagamento por MBWay, Multibanco ou cartão</span>
+        <span>✓ Pagamento por MBWay ou cartão</span>
         <span>✓ Fatura automática</span>
       </div>
     </div>
@@ -417,7 +417,7 @@ input,textarea,select,button{max-width:100%}
     <div class="steps">
       <div class="step"><h3>Escolha o serviço</h3><p>Selecione a consulta ou o atestado de que precisa e veja logo o preço.</p></div>
       <div class="step"><h3>Marque o dia e a hora</h3><p>Escolha um horário disponível e preencha os seus dados.</p></div>
-      <div class="step"><h3>Pague em segurança</h3><p>MBWay, Multibanco ou cartão, através da plataforma segura Stripe. Recebe a fatura por email.</p></div>
+      <div class="step"><h3>Pague em segurança</h3><p>MBWay ou cartão, através da plataforma segura Stripe. Recebe a fatura por email.</p></div>
       <div class="step"><h3>Fale com a médica</h3><p>Recebe o link da videoconsulta por email. Basta um computador ou telemóvel com câmara.</p></div>
     </div>
   </div>
@@ -432,7 +432,7 @@ input,textarea,select,button{max-width:100%}
     </div>
     <div class="feat-grid">
       <div class="feat"><div class="ic">📅</div><h3>Marcação imediata</h3><p>Calendário com disponibilidade em tempo real. Sem chamadas nem filas de espera, com confirmação por email.</p></div>
-      <div class="feat"><div class="ic">📱</div><h3>MBWay, Multibanco ou cartão</h3><p>Pagamento rápido pelo telemóvel ou com referência Multibanco ou cartão bancário.</p></div>
+      <div class="feat"><div class="ic">📱</div><h3>MBWay ou cartão</h3><p>Pagamento rápido pelo telemóvel com MBWay ou com cartão bancário.</p></div>
       <div class="feat"><div class="ic">🎥</div><h3>Videoconsulta no browser</h3><p>Sem instalar aplicações. Funciona no computador, tablet ou telemóvel.</p></div>
       <div class="feat"><div class="ic">🔒</div><h3>Consulta privada</h3><p>Cada videoconsulta decorre numa sala virtual privada, com sigilo médico garantido por lei.</p></div>
       <div class="feat"><div class="ic">🇪🇺</div><h3>Dados protegidos (RGPD)</h3><p>Os seus dados pessoais e de saúde são tratados de acordo com o Regulamento Geral de Proteção de Dados.</p></div>
@@ -490,7 +490,7 @@ input,textarea,select,button{max-width:100%}
       <details><summary>Quanto tempo dura a consulta?</summary><p>As consultas online têm a duração de até 30 minutos. A avaliação para atestados dura até 20 minutos.</p></details>
       <details><summary>Quando recebo os documentos?</summary><p>A baixa médica é submetida eletronicamente à Segurança Social. Os atestados e outros documentos são enviados por email em PDF, na maioria dos casos no próprio dia da consulta.</p></details>
       <details><summary>Posso cancelar ou remarcar?</summary><p>Sim, até 48 horas antes da consulta. Envie um email para <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a> com o nome e a data da marcação.</p></details>
-      <details><summary>Que formas de pagamento aceitam?</summary><p>MBWay, referência Multibanco e cartão bancário (Visa/Mastercard), através da plataforma segura Stripe. A fatura é enviada automaticamente por email.</p></details>
+      <details><summary>Que formas de pagamento aceitam?</summary><p>MBWay e cartão bancário (Visa/Mastercard), através da plataforma segura Stripe. A fatura é enviada automaticamente por email.</p></details>
       <details><summary>Posso pedir reembolso ao seguro de saúde?</summary><p>Sim. A fatura tem todos os dados necessários para pedir o reembolso ao seu seguro de saúde. A maioria dos seguros aceita consultas por telemedicina; confirme as condições da sua apólice.</p></details>
       <details><summary>Preciso de instalar alguma aplicação?</summary><p>Não. A videoconsulta funciona diretamente no browser. Recomendamos o Google Chrome ou o Safari atualizados.</p></details>
       <details><summary>E se tiver problemas técnicos durante a consulta?</summary><p>Experimente recarregar a página ou usar outro browser. Se o problema continuar, contacte-nos por <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a> e a consulta é remarcada sem custo.</p></details>
@@ -594,7 +594,7 @@ input,textarea,select,button{max-width:100%}
               <input type="file" id="upInput" class="sr-only" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.heic" onchange="filesChosen(this.files)"/>
               <div class="files" id="upFiles"></div>
             </div>
-            <div class="pay-box">💳 Após confirmar, é redirecionado para a página segura de pagamento Stripe: <strong>MBWay</strong>, <strong>Multibanco</strong> ou <strong>cartão</strong>.</div>
+            <div class="pay-box">💳 Após confirmar, é redirecionado para a página segura de pagamento Stripe: <strong>MBWay</strong> ou <strong>cartão</strong>.</div>
             <label class="inv"><input type="checkbox" id="invCheck" onchange="document.getElementById('invExtra').classList.toggle('show', this.checked)"/> Emitir fatura com NIF</label>
             <div class="inv-extra" id="invExtra"><div class="field"><label for="fNif">NIF</label><input id="fNif" inputmode="numeric" maxlength="11"/></div></div>
           </div>
@@ -765,7 +765,7 @@ input,textarea,select,button{max-width:100%}
     { q:'💰 Quais são os preços?', a:'• Consulta de Clínica Geral — 55€\n• Consulta com Baixa Médica — 55€\n• Atestado de Amamentação — 35€\n• Atestado para Falta Escolar — 35€\n• Atestado para Carta de Condução — 45€\n\nFatura incluída em todos os serviços.' },
     { q:'🩺 Como funciona a videoconsulta?', a:'Depois do pagamento recebe um email com o link da videoconsulta. À hora marcada entra diretamente no browser, sem instalar nada. Os documentos são enviados por email.' },
     { q:'📅 Como marco uma consulta?', a:'1. Clique em "Marcar consulta"\n2. Escolha o serviço, o dia e a hora\n3. Preencha os dados e pague\n4. Recebe a confirmação por email com o link da videoconsulta' },
-    { q:'💳 Como posso pagar?', a:'MBWay, referência Multibanco ou cartão bancário, de forma segura através da Stripe. A fatura certificada é enviada automaticamente.' },
+    { q:'💳 Como posso pagar?', a:'MBWay ou cartão bancário, de forma segura através da Stripe. A fatura certificada é enviada automaticamente.' },
     { q:'📄 Os documentos têm validade legal?', a:'Sim. A baixa médica (CIT) é submetida eletronicamente à Segurança Social e os atestados são aceites por empregadores, escolas e pelo IMT.' },
     { q:'🔁 Posso cancelar ou remarcar?', a:'Sim, até 48 horas antes da consulta, por email para geral@consultas-online.pt.' },
     { q:'📞 Como posso contactar?', a:'Por email (geral@consultas-online.pt) ou pelo formulário de contacto. Respondemos em até 24 horas úteis.' }
