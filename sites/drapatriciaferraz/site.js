@@ -24,6 +24,7 @@ const FILES = {
   '/robots.txt':        path.join(DIR, 'robots.txt'),
   '/sitemap.xml':       path.join(DIR, 'sitemap.xml'),
   '/foto-patricia.webp': path.join(PUBLIC, 'foto-patricia.webp'),
+  '/logo-lre.png':      path.join(PUBLIC, 'logo-lre.png'),
 };
 
 function isDrPF(req) {
@@ -108,6 +109,8 @@ nav .btn{background:var(--teal);color:#fff;text-decoration:none;padding:9px 18px
 .box .cta{display:inline-block;background:var(--teal);color:#fff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:600;margin-top:8px}
 footer{background:var(--navy);color:rgba(255,255,255,.55);padding:28px 20px;text-align:center;font-size:13px}
 footer a{color:rgba(255,255,255,.75);text-decoration:none;margin:0 9px}
+footer .lre{display:inline-block;margin:4px 0 6px}
+footer .lre img{height:48px;width:auto;display:block;opacity:.9}
 </style>
 ${opts.head || ''}
 </head>
@@ -115,8 +118,9 @@ ${opts.head || ''}
 <nav><div><a class="brand" href="/">Dra. Patrícia <span>Ferraz</span></a><a class="btn" href="/#servicos">Marcar consulta</a></div></nav>
 ${body}
 <footer>
-  <div style="margin-bottom:10px"><a href="/">Início</a><a href="/privacidade">Política de Privacidade</a><a href="/termos">Termos de Serviço</a></div>
-  © 2026 Dra. Patrícia Ferraz · Médica · Cédula n.º 57713
+  <div style="margin-bottom:10px"><a href="/">Início</a><a href="/termos">Termos de Serviço</a><a href="/privacidade">Política de Privacidade</a><a href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener">Livro de Reclamações</a></div>
+  <a class="lre" href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener"><img src="/logo-lre.png" alt="Livro de Reclamações Eletrónico" width="120" height="48"/></a>
+  <br/>© 2026 Dra. Patrícia Ferraz · Médica · Cédula n.º 57713
 </footer>
 </body>
 </html>`;
