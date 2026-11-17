@@ -126,6 +126,54 @@ ${body}
 </html>`;
 }
 
+
+// Painel de administração: o mesmo do consultas-online.pt (fonte única em
+// public/index.html: estilos, <div id="page-admin"> e o JavaScript das secções
+// ADMIN PANEL e ATESTADOS). Usa a mesma API e a mesma base de dados, por isso
+// mostra as marcações e os utentes dos dois sites.
+function adminFromIndex() {
+  const html = read(path.join(PUBLIC, 'index.html'));
+  const head = html.slice(0, html.indexOf('</head>'));
+  const styles = (head.match(/<style>[\s\S]*?<\/style>/g) || []).join('\n');
+  const fonts = (head.match(/<link[^>]+fonts\.googleapis\.com\/css2[^>]*>/) || [''])[0];
+  const a = html.lastIndexOf('<div', html.indexOf('id="page-admin"'));
+  let b = html.indexOf('<div class="overlay" id="serviceModal">');
+  b = html.lastIndexOf('<!--', b);
+  const panel = html.slice(a, b).replace('<div class="page" id="page-admin">', '<div class="page active" id="page-admin" style="display:block">');
+  const api = (/var API_URL\s*=\s*'[^']*';/.exec(html) || ["var API_URL = '';"])[0];
+  const cut = (from, to) => html.slice(html.indexOf(from), html.indexOf(to, html.indexOf(from)));
+  const js = cut('// ADMIN PANEL', '// FILE UPLOAD') + '\n' + cut('// ATESTADOS', '// EBOOK LEAD');
+  if (a < 0 || b < 0 || !js.trim()) throw new Error('painel de administração não encontrado em index.html');
+  return `<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Administração | Dra. Patrícia Ferraz</title>
+<meta name="robots" content="noindex, nofollow"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d7377'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EPF%3C/text%3E%3C/svg%3E"/>
+${fonts}
+${styles}
+<style>
+.adm-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:66px;background:#0b1d35;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.adm-nav a{color:#fff;text-decoration:none;font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700}
+.adm-nav a span{color:#17c4a8}
+.adm-nav small{color:rgba(255,255,255,.6);font-size:13px}
+</style>
+</head>
+<body>
+<div class="adm-nav"><a href="/">Dra. Patrícia <span>Ferraz</span></a><small>Administração</small></div>
+${panel}
+<script>
+${api}
+window.showPage = function(){ window.location.href = '/'; };
+${js}
+if (sessionStorage.getItem('adminLoggedIn') === 'true') window.showAdminLogin();
+</script>
+</body>
+</html>`;
+}
+
 const PAGES = {
   '/': () => read(path.join(DIR, 'index.html'))
     .replace(/<!--BIO:[^>]*-->/, bioFromIndex()),
@@ -133,6 +181,7 @@ const PAGES = {
     'Como recolhemos, utilizamos e protegemos os seus dados pessoais.', '/privacidade', legalFromIndex('page-privacidade') || ''),
   '/termos': () => shell('Termos de Serviço | Dra. Patrícia Ferraz',
     'Condições de utilização e de contratação das consultas online da Dra. Patrícia Ferraz.', '/termos', legalFromIndex('page-termos') || ''),
+  '/admin': adminFromIndex,
   '/obrigado': () => shell('Marcação confirmada | Dra. Patrícia Ferraz', 'Marcação confirmada.', null,
     `<div class="box">
   <h1>Obrigada! A sua marcação está confirmada.</h1>
@@ -177,6 +226,7 @@ module.exports = function drPatriciaFerraz(app) {
       return res.sendFile(FILES[req.path]);
     }
     if (PAGES[req.path]) {
+      if (req.path === '/admin') res.setHeader('X-Robots-Tag', 'noindex, nofollow');
       try {
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         return res.send(page(req.path));
