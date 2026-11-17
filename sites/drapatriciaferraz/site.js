@@ -120,7 +120,7 @@ ${body}
 <footer>
   <div style="margin-bottom:10px"><a href="/">Início</a><a href="/termos">Termos de Serviço</a><a href="/privacidade">Política de Privacidade</a><a href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener">Livro de Reclamações</a></div>
   <a class="lre" href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener"><img src="/logo-lre.png" alt="Livro de Reclamações Eletrónico" width="120" height="48"/></a>
-  <br/>© 2026 Dra. Patrícia Ferraz · Médica · Cédula n.º 57713
+  <br/>© 2026 Dra. Patrícia Ferraz · Médica · Cédula n.º 57713 · <a href="/admin" rel="nofollow" style="color:inherit;opacity:.45;font-size:11.5px;margin:0">Admin</a>
 </footer>
 </body>
 </html>`;
