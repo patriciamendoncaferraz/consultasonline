@@ -114,6 +114,9 @@ app.use('/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({ origin: '*' }));
+// drapatriciaferraz.pt: site próprio no mesmo servidor (ver sites/drapatriciaferraz/site.js)
+const drpf = require('./sites/drapatriciaferraz/site');
+drpf(app);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -131,6 +134,7 @@ const SERVICES = {
   'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 4000 },
   'consulta-dst':               { name: 'Consulta DST / IST',                price: 4000 },
   'consulta-obesidade':         { name: 'Consulta de Obesidade', price: 5500 },
+  'consulta-clinica-geral':     { name: 'Consulta de Clínica Geral',         price: 4000 },
 };
 
 function formatPhone(phone) {
@@ -897,7 +901,9 @@ app.post('/create-checkout-session', async (req, res) => {
   const service = SERVICES[serviceId];
   if (!service) return res.status(400).json({ error: 'Servico invalido.' });
 
-  const clientUrl = process.env.CLIENT_URL || 'https://consultas-online.pt';
+  // Depois do pagamento, voltar ao site onde a marcação foi feita
+  const fromDrPF = drpf.isDrPF(req) || /^https:\/\/(www\.)?drapatriciaferraz\.pt$/i.test(req.headers.origin || '');
+  const clientUrl = fromDrPF ? drpf.ORIGIN : (process.env.CLIENT_URL || 'https://consultas-online.pt');
 
   try {
     const session = await stripe.checkout.sessions.create({
