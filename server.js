@@ -1385,11 +1385,11 @@ app.post('/contact', async (req, res) => {
         + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
         + '<div style="padding:22px 24px">'
         + '<h2 style="color:#0b1d35;margin:0 0 12px;font-family:Georgia,serif">Mensagem recebida! ✅</h2>'
-        + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + name + '</strong>,<br/><br/>Recebemos a sua mensagem e responderemos em ate 24 horas uteis para <strong>' + email + '</strong>.</p>'
+        + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Olá <strong>' + name + '</strong>,<br/><br/>Recebemos a sua mensagem e responderemos em até 24 horas úteis.</p>'
         + '<div style="background:#f4f7fb;border-radius:10px;padding:14px;margin:16px 0;font-size:13px;color:#64748b"><strong>Assunto:</strong> ' + (subject || '—') + '</div>'
-        + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Se tiver urgencia, envie email diretamente para <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
+        + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Se tiver urgência, envie email diretamente para <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
         + '</div></div></body></html>',
-      text: 'Ola ' + name + ',\n\nRecebemos a sua mensagem. Responderemos em ate 24 horas uteis.\n\nConsultasOnline\ngeral@consultas-online.pt',
+      text: 'Olá ' + name + ',\n\nRecebemos a sua mensagem e responderemos em até 24 horas úteis.\n\nConsultasOnline\ngeral@consultas-online.pt',
     });
 
     console.log('Formulario de contacto recebido de:', email);
