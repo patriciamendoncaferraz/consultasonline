@@ -96,7 +96,7 @@ def write_name(value):
     cv.line(margin, y - 0.1*cm, w - margin, y - 0.1*cm)
     y -= lh + 0.1*cm
 
-jwrite('Eu, Dra. Patricia Mendonca Ferraz, medica inscrita na Ordem dos Medicos com a cedula profissional n. 57713, atesto que:')
+jwrite('Eu, Dra. Patrícia Mendonça Ferraz, médica inscrita na Ordem dos Médicos com a cédula profissional n.º 57713, atesto que:')
 y -= 0.4*cm
 
 if tipo == 'amamentacao':
@@ -134,7 +134,7 @@ cv.drawImage(sig_reader, margin, line_y, width=sig_w, height=sig_h, preserveAspe
 y = line_y - 0.4*cm
 cv.setFont('Helvetica', 9)
 cv.setFillColor(colors.HexColor('#64748b'))
-cv.drawString(margin, y, 'Dra. Patricia Mendonca Ferraz  |  Cedula n. 57713')
+cv.drawString(margin, y, 'Dra. Patrícia Mendonça Ferraz  |  Cédula n.º 57713')
 
 cv.setStrokeColor(colors.HexColor('#0b1d35'))
 cv.setLineWidth(1.5)

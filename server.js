@@ -1566,7 +1566,7 @@ function gerarPDF(tipo, dados) {
         y += 8;
       };
 
-      writeJ('Eu, Dra. Patricia Mendonca Ferraz, médica inscrita na Ordem dos Médicos com a cédula profissional n. 57713, atesto que:', { after: 10 });
+      writeJ('Eu, Dra. Patrícia Mendonça Ferraz, médica inscrita na Ordem dos Médicos com a cédula profissional n.º 57713, atesto que:', { after: 10 });
 
       if (tipo === 'amamentacao') {
         writeJ('A utente', { after: 4 });
@@ -1602,7 +1602,7 @@ function gerarPDF(tipo, dados) {
 
       y += 12;
       doc.font('Helvetica').fontSize(9).fillColor('#64748b')
-         .text('Dra. Patricia Mendonca Ferraz  |  Cedula n. 57713', margin, y);
+         .text('Dra. Patrícia Mendonça Ferraz  |  Cédula n.º 57713', margin, y);
 
       // Footer
       const pageH = doc.page.height;
