@@ -92,7 +92,7 @@ section.alt{background:var(--surface)}
 .sec-head p{font-size:15.5px}
 
 /* SERVICES */
-.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:20px}
 .svc{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:26px;display:flex;flex-direction:column;gap:10px;transition:.25s}
 .svc:hover{box-shadow:0 8px 28px rgba(11,29,53,.08);transform:translateY(-2px)}
 .svc.featured{border:2px solid var(--teal);grid-column:1/-1}
@@ -108,14 +108,14 @@ section.alt{background:var(--surface)}
 .svc .price small{font-size:12px;font-weight:500;color:var(--muted)}
 
 /* STEPS */
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;counter-reset:st}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:20px;counter-reset:st}
 .step{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:24px}
 .step::before{counter-increment:st;content:counter(st);display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;margin-bottom:12px}
 .step h3{font-size:16.5px;margin-bottom:6px}
 .step p{font-size:14px}
 
 /* FEATURES */
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:18px}
 .feat{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:22px}
 .feat .ic{font-size:26px;margin-bottom:8px}
 .feat h3{font-size:16px;margin-bottom:6px}
@@ -127,11 +127,12 @@ section.alt{background:var(--surface)}
 .inv-card{background:#fff;border-radius:14px;padding:20px;color:var(--slate);font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .inv-card .row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--border)}
 .inv-card .row:last-child{border:none;font-weight:700;color:var(--navy)}
+.inv-card .row span:last-child{white-space:nowrap}
 .inv-card .paid{display:inline-block;background:rgba(56,161,105,.12);color:#2f855a;font-weight:700;font-size:11px;padding:2px 8px;border-radius:10px}
 @media(max-width:760px){.invoice{grid-template-columns:1fr;padding:26px}}
 
 /* TESTIMONIALS */
-.tst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.tst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:20px}
 .tst{display:flex;flex-direction:column}
 .tst .who{margin-top:auto;padding-top:12px}
 .tst{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:24px;font-size:14px}
@@ -194,7 +195,7 @@ footer .lre:hover img{opacity:1}
 .modal-hdr p{font-size:13.5px}
 .x{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:4px 8px}
 .m-step{padding:22px 26px}
-.m-svcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.m-svcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:12px}
 .m-svc{border:1.5px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:.2s;background:#fff;text-align:left;font-family:inherit}
 .m-svc:hover{border-color:var(--teal);background:rgba(13,115,119,.03)}
 .m-svc .n{font-weight:700;color:var(--navy);font-size:14.5px;margin:4px 0}
@@ -203,7 +204,7 @@ footer .lre:hover img{opacity:1}
 .back{background:none;border:none;color:var(--teal);font-weight:600;cursor:pointer;font-size:13.5px;margin-bottom:14px;font-family:inherit;padding:0}
 .banner{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:12px;padding:14px 18px;margin-bottom:18px}
 .banner .n{font-weight:700;color:var(--navy)}
-.banner .t{font-size:12.5px;color:var(--muted)}
+.banner .bt{font-size:12.5px;color:var(--muted)}
 .banner .p{font-size:22px;font-weight:700;color:var(--teal)}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:26px}
 @media(max-width:720px){.cols{grid-template-columns:1fr}}
@@ -238,6 +239,75 @@ footer .lre:hover img{opacity:1}
 .m-foot .tot{font-size:20px;font-weight:700;color:var(--navy)}
 .m-foot .tot span{font-size:12.5px;font-weight:500;color:var(--muted);margin-left:6px}
 .consent{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ficheiros */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.file-btn{display:inline-block;margin-top:10px;background:#fff;border:1.5px solid var(--teal);color:var(--teal);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.files div{word-break:break-all;margin-top:4px}
+.m-foot .btn{white-space:nowrap}
+input,textarea,select,button{max-width:100%}
+.contact-info span{overflow-wrap:anywhere}
+
+/* ── TELEMÓVEL ── */
+@media(max-width:640px){
+  .wrap{padding:0 16px}
+  nav.top .wrap{height:58px}
+  .brand{font-size:19px}
+  nav.top .btn{padding:9px 13px;font-size:13px}
+  .hero{padding:36px 0 44px}
+  .hero h1{font-size:34px}
+  .hero p.lead{font-size:16px}
+  .hero-actions .btn{flex:1 1 100%;text-align:center}
+  .hero-points{flex-direction:column;gap:6px}
+  .hero-card{display:none}
+  section.sec{padding:48px 0}
+  .sec-head{margin-bottom:26px}
+  .svc,.feat,.step,.tst{padding:20px}
+  .svc .foot .btn{padding:10px 18px}
+  .invoice{padding:22px;gap:22px;margin-top:26px}
+  .invoice h3{font-size:24px}
+  .faq details{padding:0 16px}
+  .faq summary{font-size:14.5px}
+  .contact{padding:20px}
+  .contact-info{flex-direction:column;align-items:center;gap:8px;text-align:center}
+  /* biografia (estilos vindos da página do consultas-online.pt) */
+  #sobre{padding:48px 16px!important}
+  #sobre > div{gap:24px!important}
+  #sobre > div > div{min-width:0!important;width:100%}
+  #sobre h1,#sobre h2{font-size:28px!important}
+  /* evita o zoom automático do iPhone ao tocar nos campos */
+  .field input,.field textarea,.field select{font-size:16px}
+  /* rodapé */
+  footer{padding:28px 16px 90px}
+  footer .links,.social{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px}
+  footer .links a,.social a{margin:0}
+  /* janela de marcação em ecrã inteiro, com o botão de pagar sempre visível */
+  .overlay{padding:0}
+  .modal{border-radius:0;min-height:100%;display:flex;flex-direction:column}
+  .modal-hdr{position:sticky;top:0;background:#fff;z-index:2;padding:14px 16px}
+  .modal-hdr h2{font-size:24px}
+  .m-step{padding:16px}
+  #mStep2{display:flex;flex-direction:column;flex:1}
+  .banner{padding:12px 14px}
+  .banner .p{font-size:19px}
+  .cols{gap:20px}
+  .times{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .t{font-size:12.5px;padding:8px 0}
+  .m-foot{position:sticky;bottom:0;background:#fff;z-index:2;padding:12px 16px;box-shadow:0 -6px 16px rgba(11,29,53,.08);margin-top:auto}
+  .m-foot > div{flex:1 1 100%}
+  .m-foot .tot{font-size:18px}
+  .m-foot .btn{flex:1 1 100%;padding:14px;font-size:15px}
+  .m-svc{padding:14px}
+  /* chat */
+  .chat-btn{right:14px;bottom:14px;width:52px;height:52px}
+  .chat-box{right:12px;left:12px;width:auto;max-width:none;bottom:76px}
+}
+@media(max-width:360px){
+  .brand{font-size:17px}
+  nav.top .btn{padding:8px 10px;font-size:12.5px}
+  .hero h1{font-size:30px}
+  .times{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 </style>
 </head>
 <body>
@@ -246,9 +316,9 @@ footer .lre:hover img{opacity:1}
   <div class="wrap">
     <a class="brand" href="/">Dra. Patrícia <span>Ferraz</span></a>
     <div class="nav-links">
+      <a href="#sobre">Sobre mim</a>
       <a href="#servicos">Serviços</a>
       <a href="#como-funciona">Como funciona</a>
-      <a href="#sobre">Sobre mim</a>
       <a href="#perguntas">Perguntas</a>
       <a href="#contacto">Contacto</a>
       <button class="btn" onclick="openBooking()">Marcar consulta</button>
@@ -281,6 +351,8 @@ footer .lre:hover img{opacity:1}
   </div>
 </header>
 
+<!--BIO: a secção "Sobre mim" é inserida pelo servidor a partir de public/index.html-->
+
 <section class="sec" id="servicos">
   <div class="wrap">
     <div class="sec-head">
@@ -302,7 +374,7 @@ footer .lre:hover img{opacity:1}
           <li>Consulta de cessação tabágica</li>
           <li>Outros problemas de saúde do dia a dia</li>
         </ul>
-        <div class="foot"><div class="price">40€ <small>/ consulta</small></div><button class="btn" onclick="openBooking('consulta-clinica-geral')">Marcar</button></div>
+        <div class="foot"><div class="price">55€ <small>/ consulta</small></div><button class="btn" onclick="openBooking('consulta-clinica-geral')">Marcar</button></div>
       </div>
       <div class="svc">
         <span class="ic">🏥</span>
@@ -380,15 +452,14 @@ footer .lre:hover img{opacity:1}
       </div>
       <div class="inv-card" aria-hidden="true">
         <div class="row"><strong style="color:var(--navy)">Fatura-recibo</strong><span class="paid">● PAGO</span></div>
-        <div class="row"><span>Consulta de Clínica Geral<br/><small style="color:var(--muted)">Videoconsulta</small></span><span>40,00 €</span></div>
+        <div class="row"><span>Consulta de Clínica Geral<br/><small style="color:var(--muted)">Videoconsulta</small></span><span>55,00 €</span></div>
         <div class="row"><span>IVA isento (art. 9.º CIVA)</span><span>0,00 €</span></div>
-        <div class="row"><span>Total</span><span>40,00 €</span></div>
+        <div class="row"><span>Total</span><span>55,00 €</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!--BIO: a secção "Sobre mim" é inserida pelo servidor a partir de public/index.html-->
 
 <section class="sec alt">
   <div class="wrap">
@@ -493,7 +564,7 @@ footer .lre:hover img{opacity:1}
       <div class="m-step">
         <button class="back" onclick="showStep1()">← Escolher outro serviço</button>
         <div class="banner">
-          <div><div class="n" id="bName"></div><div class="t" id="bType"></div></div>
+          <div><div class="n" id="bName"></div><div class="bt" id="bType"></div></div>
           <div class="p" id="bPrice"></div>
         </div>
         <div class="cols">
@@ -519,7 +590,8 @@ footer .lre:hover img{opacity:1}
             <div class="upload" id="upload">
               <div id="upText"></div>
               <div class="warn" id="upWarn"></div>
-              <input type="file" id="upInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.heic" onchange="filesChosen(this.files)"/>
+              <label class="file-btn" for="upInput">📎 Escolher ficheiros</label>
+              <input type="file" id="upInput" class="sr-only" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.heic" onchange="filesChosen(this.files)"/>
               <div class="files" id="upFiles"></div>
             </div>
             <div class="pay-box">💳 Após confirmar, é redirecionado para a página segura de pagamento Stripe: <strong>MBWay</strong>, <strong>Multibanco</strong> ou <strong>cartão</strong>.</div>
@@ -539,7 +611,7 @@ footer .lre:hover img{opacity:1}
 <script>
 (function(){
   var SERVICES = [
-    { id:'consulta-clinica-geral', name:'Consulta de Clínica Geral', price:40, type:'Consulta', icon:'🩺',
+    { id:'consulta-clinica-geral', name:'Consulta de Clínica Geral', price:55, type:'Consulta', icon:'🩺',
       desc:'Avaliação e acompanhamento por videoconsulta.' },
     { id:'baixa-medica', name:'Emissão de Baixa Médica', label:'Consulta com Baixa Médica', price:55, type:'Consulta', icon:'🏥',
       desc:'Avaliação clínica e emissão do CIT para a Segurança Social.' },
@@ -635,7 +707,7 @@ footer .lre:hover img{opacity:1}
       if (f.size > 10 * 1024 * 1024) { alert('O ficheiro "' + f.name + '" tem mais de 10 MB.'); return false; }
       return true;
     });
-    $('upFiles').textContent = files.map(function(f){ return '📄 ' + f.name; }).join('  ');
+    $('upFiles').innerHTML = files.length ? files.map(function(f){ return '<div>📄 ' + esc(f.name) + '</div>'; }).join('') : '';
   };
   function toB64(){
     return Promise.all(files.map(function(f){
@@ -690,7 +762,7 @@ footer .lre:hover img{opacity:1}
 
   // Chat de ajuda: perguntas rápidas
   var CHAT = [
-    { q:'💰 Quais são os preços?', a:'• Consulta de Clínica Geral — 40€\n• Consulta com Baixa Médica — 55€\n• Atestado de Amamentação — 35€\n• Atestado para Falta Escolar — 35€\n• Atestado para Carta de Condução — 45€\n\nFatura incluída em todos os serviços.' },
+    { q:'💰 Quais são os preços?', a:'• Consulta de Clínica Geral — 55€\n• Consulta com Baixa Médica — 55€\n• Atestado de Amamentação — 35€\n• Atestado para Falta Escolar — 35€\n• Atestado para Carta de Condução — 45€\n\nFatura incluída em todos os serviços.' },
     { q:'🩺 Como funciona a videoconsulta?', a:'Depois do pagamento recebe um email com o link da videoconsulta. À hora marcada entra diretamente no browser, sem instalar nada. Os documentos são enviados por email.' },
     { q:'📅 Como marco uma consulta?', a:'1. Clique em "Marcar consulta"\n2. Escolha o serviço, o dia e a hora\n3. Preencha os dados e pague\n4. Recebe a confirmação por email com o link da videoconsulta' },
     { q:'💳 Como posso pagar?', a:'MBWay, referência Multibanco ou cartão bancário, de forma segura através da Stripe. A fatura certificada é enviada automaticamente.' },
