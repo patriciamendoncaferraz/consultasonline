@@ -172,8 +172,8 @@ footer .lre:hover img{opacity:1}
 .social svg{width:18px;height:18px;fill:currentColor}
 
 /* CHAT */
-.chat-btn{position:fixed;right:20px;bottom:20px;z-index:90;width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(13,115,119,.4)}
-.chat-box{position:fixed;right:20px;bottom:88px;z-index:90;width:340px;max-width:calc(100vw - 32px);max-height:70vh;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(11,29,53,.25);display:none;flex-direction:column;overflow:hidden}
+.chat-btn{position:fixed;left:20px;bottom:20px;z-index:90;width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(13,115,119,.4)}
+.chat-box{position:fixed;left:20px;bottom:88px;z-index:90;width:340px;max-width:calc(100vw - 32px);max-height:70vh;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(11,29,53,.25);display:none;flex-direction:column;overflow:hidden}
 .chat-box.open{display:flex}
 .chat-hd{background:var(--navy);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
 .chat-hd strong{font-size:14px}
@@ -299,7 +299,7 @@ input,textarea,select,button{max-width:100%}
   .m-foot .btn{flex:1 1 100%;padding:14px;font-size:15px}
   .m-svc{padding:14px}
   /* chat */
-  .chat-btn{right:14px;bottom:14px;width:52px;height:52px}
+  .chat-btn{left:14px;bottom:14px;width:52px;height:52px}
   .chat-box{right:12px;left:12px;width:auto;max-width:none;bottom:76px}
 }
 @media(max-width:360px){
@@ -790,5 +790,18 @@ input,textarea,select,button{max-width:100%}
   if (/[?&]cancelado=1/.test(location.search)) setTimeout(function(){ alert('O pagamento foi cancelado. Pode tentar marcar novamente.'); }, 300);
 })();
 </script>
+<!--Start of Tawk.to Script (o mesmo do consultas-online.pt)-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/69d8b31c4c3e4b1c3296c909/1jlr7nab0';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 </html>
