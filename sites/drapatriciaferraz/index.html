@@ -34,7 +34,9 @@
     {"@type": "MedicalProcedure", "name": "Consulta com emissão de baixa médica"},
     {"@type": "MedicalProcedure", "name": "Atestados médicos"}
   ],
-  "areaServed": {"@type": "Country", "name": "Portugal"}
+  "areaServed": {"@type": "Country", "name": "Portugal"},
+  "email": "geral@consultas-online.pt",
+  "sameAs": ["https://www.instagram.com/consultasonlinept", "https://www.facebook.com/share/1DrNBRw6ZB/"]
 }
 </script>
 <style>
@@ -112,6 +114,22 @@ section.alt{background:var(--surface)}
 .step h3{font-size:16.5px;margin-bottom:6px}
 .step p{font-size:14px}
 
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.feat{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:22px}
+.feat .ic{font-size:26px;margin-bottom:8px}
+.feat h3{font-size:16px;margin-bottom:6px}
+.feat p{font-size:13.5px}
+.invoice{display:grid;grid-template-columns:1.2fr 1fr;gap:36px;align-items:center;background:linear-gradient(135deg,var(--navy),var(--navy3));border-radius:20px;padding:36px;color:rgba(255,255,255,.8);margin-top:36px}
+.invoice h3{color:#fff;font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;line-height:1.2;margin-bottom:12px}
+.invoice ul{list-style:none;font-size:14px}
+.invoice li{margin-bottom:7px}
+.inv-card{background:#fff;border-radius:14px;padding:20px;color:var(--slate);font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.inv-card .row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--border)}
+.inv-card .row:last-child{border:none;font-weight:700;color:var(--navy)}
+.inv-card .paid{display:inline-block;background:rgba(56,161,105,.12);color:#2f855a;font-weight:700;font-size:11px;padding:2px 8px;border-radius:10px}
+@media(max-width:760px){.invoice{grid-template-columns:1fr;padding:26px}}
+
 /* TESTIMONIALS */
 .tst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
 .tst{display:flex;flex-direction:column}
@@ -146,6 +164,26 @@ footer .lre{display:inline-block;margin:6px 0 14px}
 footer .lre img{height:48px;width:auto;display:block;opacity:.9}
 footer .lre:hover img{opacity:1}
 .disclaimer{max-width:760px;margin:12px auto 0;font-size:12px;color:rgba(255,255,255,.45)}
+
+.contact-info{max-width:620px;margin:0 auto 18px;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:14px}
+.social{display:flex;gap:12px;justify-content:center;margin:4px 0 14px}
+.social a{display:inline-flex;align-items:center;gap:6px;margin:0;color:rgba(255,255,255,.8)}
+.social svg{width:18px;height:18px;fill:currentColor}
+
+/* CHAT */
+.chat-btn{position:fixed;right:20px;bottom:20px;z-index:90;width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(13,115,119,.4)}
+.chat-box{position:fixed;right:20px;bottom:88px;z-index:90;width:340px;max-width:calc(100vw - 32px);max-height:70vh;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(11,29,53,.25);display:none;flex-direction:column;overflow:hidden}
+.chat-box.open{display:flex}
+.chat-hd{background:var(--navy);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.chat-hd strong{font-size:14px}
+.chat-hd small{display:block;font-size:11.5px;color:var(--teal3)}
+.chat-hd button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer}
+.chat-body{padding:14px;overflow-y:auto;font-size:13px}
+.chat-body .bot{background:var(--surface);border-radius:12px;padding:10px 12px;margin-bottom:10px;white-space:pre-line}
+.chat-body .me{background:var(--teal);color:#fff;border-radius:12px;padding:8px 12px;margin:0 0 10px auto;max-width:85%;width:fit-content}
+.chat-body button.q{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:7px;cursor:pointer;font-size:12.5px;color:var(--navy);font-family:inherit}
+.chat-body button.q:hover{border-color:var(--teal)}
+.chat-body button.back{display:block;width:100%;background:none;border:1px solid var(--teal);color:var(--teal);border-radius:8px;padding:8px;cursor:pointer;font-family:inherit;font-size:12px}
 
 /* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(11,29,53,.6);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto}
@@ -313,6 +351,43 @@ footer .lre:hover img{opacity:1}
   </div>
 </section>
 
+<section class="sec" id="seguranca">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Simples e seguro</div>
+      <h2>Tudo tratado online, com segurança</h2>
+      <p>Porque cuidar da saúde não deve ser complicado.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><div class="ic">📅</div><h3>Marcação imediata</h3><p>Calendário com disponibilidade em tempo real. Sem chamadas nem filas de espera, com confirmação por email.</p></div>
+      <div class="feat"><div class="ic">📱</div><h3>MBWay, Multibanco ou cartão</h3><p>Pagamento rápido pelo telemóvel ou com referência Multibanco ou cartão bancário.</p></div>
+      <div class="feat"><div class="ic">🎥</div><h3>Videoconsulta no browser</h3><p>Sem instalar aplicações. Funciona no computador, tablet ou telemóvel.</p></div>
+      <div class="feat"><div class="ic">🔒</div><h3>Consulta privada</h3><p>Cada videoconsulta decorre numa sala virtual privada, com sigilo médico garantido por lei.</p></div>
+      <div class="feat"><div class="ic">🇪🇺</div><h3>Dados protegidos (RGPD)</h3><p>Os seus dados pessoais e de saúde são tratados de acordo com o Regulamento Geral de Proteção de Dados.</p></div>
+      <div class="feat"><div class="ic">🏦</div><h3>Pagamentos seguros</h3><p>Pagamentos processados pela Stripe, com certificação PCI DSS nível 1. Os dados do cartão nunca passam pelos nossos servidores.</p></div>
+    </div>
+    <div class="invoice">
+      <div>
+        <div class="eyebrow">Faturação</div>
+        <h3>Fatura certificada, no seu email, em segundos</h3>
+        <ul>
+          <li>✓ Certificada pela Autoridade Tributária (AT)</li>
+          <li>✓ IVA isento (artigo 9.º do CIVA, prestações de saúde)</li>
+          <li>✓ PDF compatível com o portal e-fatura</li>
+          <li>✓ Pode pedir reembolso ao seu seguro de saúde</li>
+          <li>✓ Com o seu NIF, se o indicar na marcação</li>
+        </ul>
+      </div>
+      <div class="inv-card" aria-hidden="true">
+        <div class="row"><strong style="color:var(--navy)">Fatura-recibo</strong><span class="paid">● PAGO</span></div>
+        <div class="row"><span>Consulta de Clínica Geral<br/><small style="color:var(--muted)">Videoconsulta</small></span><span>40,00 €</span></div>
+        <div class="row"><span>IVA isento (art. 9.º CIVA)</span><span>0,00 €</span></div>
+        <div class="row"><span>Total</span><span>40,00 €</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!--BIO: a secção "Sobre mim" é inserida pelo servidor a partir de public/index.html-->
 
 <section class="sec alt">
@@ -341,7 +416,13 @@ footer .lre:hover img{opacity:1}
       <details><summary>Como funciona a videoconsulta?</summary><p>Depois de marcar e pagar, recebe por email o link para a videochamada. À hora marcada, abre o link no computador ou no telemóvel e fala diretamente com a médica. Não precisa de instalar nenhuma aplicação.</p></details>
       <details><summary>A baixa médica e os atestados emitidos online são válidos?</summary><p>Sim. São emitidos por médica inscrita na Ordem dos Médicos e têm a mesma validade legal que os emitidos numa consulta presencial.</p></details>
       <details><summary>Preciso de ter médico de família?</summary><p>Não. Pode marcar consulta tenha ou não médico de família atribuído.</p></details>
-      <details><summary>Que formas de pagamento aceitam?</summary><p>MBWay, referência Multibanco e cartão bancário, através da plataforma segura Stripe. A fatura é enviada automaticamente por email.</p></details>
+      <details><summary>Quanto tempo dura a consulta?</summary><p>As consultas online têm a duração de até 30 minutos. A avaliação para atestados dura até 20 minutos.</p></details>
+      <details><summary>Quando recebo os documentos?</summary><p>A baixa médica é submetida eletronicamente à Segurança Social. Os atestados e outros documentos são enviados por email em PDF, na maioria dos casos no próprio dia da consulta.</p></details>
+      <details><summary>Posso cancelar ou remarcar?</summary><p>Sim, até 48 horas antes da consulta. Envie um email para <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a> com o nome e a data da marcação.</p></details>
+      <details><summary>Que formas de pagamento aceitam?</summary><p>MBWay, referência Multibanco e cartão bancário (Visa/Mastercard), através da plataforma segura Stripe. A fatura é enviada automaticamente por email.</p></details>
+      <details><summary>Posso pedir reembolso ao seguro de saúde?</summary><p>Sim. A fatura tem todos os dados necessários para pedir o reembolso ao seu seguro de saúde. A maioria dos seguros aceita consultas por telemedicina; confirme as condições da sua apólice.</p></details>
+      <details><summary>Preciso de instalar alguma aplicação?</summary><p>Não. A videoconsulta funciona diretamente no browser. Recomendamos o Google Chrome ou o Safari atualizados.</p></details>
+      <details><summary>E se tiver problemas técnicos durante a consulta?</summary><p>Experimente recarregar a página ou usar outro browser. Se o problema continuar, contacte-nos por <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a> e a consulta é remarcada sem custo.</p></details>
       <details><summary>Posso pedir fatura com NIF?</summary><p>Sim. Ao marcar, assinale a opção de fatura com dados de faturação e indique o NIF.</p></details>
       <details><summary>Quando é que a videoconsulta não é adequada?</summary><p>Em situações urgentes ou graves, como dor no peito, dificuldade em respirar, perda de consciência ou hemorragia, ligue 112 ou dirija-se a uma urgência. A videoconsulta não substitui a urgência hospitalar.</p></details>
     </div>
@@ -354,6 +435,11 @@ footer .lre:hover img{opacity:1}
       <div class="eyebrow">Contacto</div>
       <h2>Fale comigo</h2>
       <p>Tem alguma pergunta antes de marcar? Envie uma mensagem e respondo assim que possível.</p>
+    </div>
+    <div class="contact-info">
+      <span>📧 <a href="mailto:geral@consultas-online.pt">geral@consultas-online.pt</a></span>
+      <span>⏱ Resposta em até 24 horas úteis</span>
+      <span>🌐 Serviço 100% online</span>
     </div>
     <form class="contact" id="contactForm" onsubmit="return sendContact(event)">
       <div class="field"><label for="cName">Nome *</label><input id="cName" required/></div>
@@ -375,9 +461,21 @@ footer .lre:hover img{opacity:1}
     <a href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener">Livro de Reclamações</a>
   </div>
   <a class="lre" href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener"><img src="/logo-lre.png" alt="Livro de Reclamações Eletrónico" width="120" height="48"/></a>
+  <div class="social">
+    <a href="https://www.instagram.com/consultasonlinept" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.3a6.5 6.5 0 100 13 6.5 6.5 0 000-13zm0 10.7a4.2 4.2 0 110-8.4 4.2 4.2 0 010 8.4zm6.8-10.9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg> Instagram</a>
+    <a href="https://www.facebook.com/share/1DrNBRw6ZB/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0022 12z"/></svg> Facebook</a>
+    <a href="mailto:geral@consultas-online.pt">📧 geral@consultas-online.pt</a>
+  </div>
   <div>© 2026 Dra. Patrícia Ferraz · Médica · Cédula n.º 57713</div>
   <p class="disclaimer">A informação neste site não substitui uma consulta médica. Em caso de urgência, ligue 112.</p>
 </footer>
+
+<!-- CHAT DE AJUDA -->
+<div class="chat-box" id="chatBox" role="dialog" aria-label="Ajuda">
+  <div class="chat-hd"><div><strong>Ajuda</strong><small>● Respostas rápidas</small></div><button onclick="toggleChat()" aria-label="Fechar">✕</button></div>
+  <div class="chat-body" id="chatBody"></div>
+</div>
+<button class="chat-btn" onclick="toggleChat()" aria-label="Abrir ajuda">💬</button>
 
 <!-- MARCAÇÃO -->
 <div class="overlay" id="bookingModal" onclick="if(event.target===this)closeBooking()">
@@ -590,7 +688,33 @@ footer .lre:hover img{opacity:1}
     return false;
   };
 
+  // Chat de ajuda: perguntas rápidas
+  var CHAT = [
+    { q:'💰 Quais são os preços?', a:'• Consulta de Clínica Geral — 40€\n• Consulta com Baixa Médica — 55€\n• Atestado de Amamentação — 35€\n• Atestado para Falta Escolar — 35€\n• Atestado para Carta de Condução — 45€\n\nFatura incluída em todos os serviços.' },
+    { q:'🩺 Como funciona a videoconsulta?', a:'Depois do pagamento recebe um email com o link da videoconsulta. À hora marcada entra diretamente no browser, sem instalar nada. Os documentos são enviados por email.' },
+    { q:'📅 Como marco uma consulta?', a:'1. Clique em "Marcar consulta"\n2. Escolha o serviço, o dia e a hora\n3. Preencha os dados e pague\n4. Recebe a confirmação por email com o link da videoconsulta' },
+    { q:'💳 Como posso pagar?', a:'MBWay, referência Multibanco ou cartão bancário, de forma segura através da Stripe. A fatura certificada é enviada automaticamente.' },
+    { q:'📄 Os documentos têm validade legal?', a:'Sim. A baixa médica (CIT) é submetida eletronicamente à Segurança Social e os atestados são aceites por empregadores, escolas e pelo IMT.' },
+    { q:'🔁 Posso cancelar ou remarcar?', a:'Sim, até 48 horas antes da consulta, por email para geral@consultas-online.pt.' },
+    { q:'📞 Como posso contactar?', a:'Por email (geral@consultas-online.pt) ou pelo formulário de contacto. Respondemos em até 24 horas úteis.' }
+  ];
+  function chatMenu(){
+    $('chatBody').innerHTML = '<div class="bot">Olá! 👋 Em que posso ajudar?</div>' +
+      CHAT.map(function(c, i){ return '<button class="q" onclick="chatAnswer(' + i + ')">' + esc(c.q) + '</button>'; }).join('');
+  }
+  window.chatAnswer = function(i){
+    $('chatBody').innerHTML = '<div class="me">' + esc(CHAT[i].q) + '</div><div class="bot">' + esc(CHAT[i].a) + '</div>' +
+      '<button class="q" style="text-align:center;font-weight:600;color:var(--teal)" onclick="toggleChat();openBooking()">Marcar consulta →</button>' +
+      '<button class="back" onclick="chatMenu()">← Voltar às perguntas</button>';
+  };
+  window.chatMenu = chatMenu;
+  window.toggleChat = function(){ var b = $('chatBox'); if (!b.dataset.init) { b.dataset.init = 1; chatMenu(); } b.classList.toggle('open'); };
+
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeBooking(); });
+
+  // Link direto para um serviço: /?servico=<id> (útil para anúncios)
+  var m = /[?&]servico=([a-z0-9-]+)/.exec(location.search);
+  if (m && SERVICES.some(function(s){ return s.id === m[1]; })) openBooking(m[1]);
   if (/[?&]cancelado=1/.test(location.search)) setTimeout(function(){ alert('O pagamento foi cancelado. Pode tentar marcar novamente.'); }, 300);
 })();
 </script>
