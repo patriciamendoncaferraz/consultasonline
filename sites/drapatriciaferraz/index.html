@@ -171,21 +171,6 @@ footer .lre:hover img{opacity:1}
 .social a{display:inline-flex;align-items:center;gap:6px;margin:0;color:rgba(255,255,255,.8)}
 .social svg{width:18px;height:18px;fill:currentColor}
 
-/* CHAT */
-.chat-btn{position:fixed;left:20px;bottom:20px;z-index:90;width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(13,115,119,.4)}
-.chat-box{position:fixed;left:20px;bottom:88px;z-index:90;width:340px;max-width:calc(100vw - 32px);max-height:70vh;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(11,29,53,.25);display:none;flex-direction:column;overflow:hidden}
-.chat-box.open{display:flex}
-.chat-hd{background:var(--navy);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
-.chat-hd strong{font-size:14px}
-.chat-hd small{display:block;font-size:11.5px;color:var(--teal3)}
-.chat-hd button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer}
-.chat-body{padding:14px;overflow-y:auto;font-size:13px}
-.chat-body .bot{background:var(--surface);border-radius:12px;padding:10px 12px;margin-bottom:10px;white-space:pre-line}
-.chat-body .me{background:var(--teal);color:#fff;border-radius:12px;padding:8px 12px;margin:0 0 10px auto;max-width:85%;width:fit-content}
-.chat-body button.q{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:7px;cursor:pointer;font-size:12.5px;color:var(--navy);font-family:inherit}
-.chat-body button.q:hover{border-color:var(--teal)}
-.chat-body button.back{display:block;width:100%;background:none;border:1px solid var(--teal);color:var(--teal);border-radius:8px;padding:8px;cursor:pointer;font-family:inherit;font-size:12px}
-
 /* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(11,29,53,.6);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto}
 .overlay.open{display:flex}
@@ -298,9 +283,6 @@ input,textarea,select,button{max-width:100%}
   .m-foot .tot{font-size:18px}
   .m-foot .btn{flex:1 1 100%;padding:14px;font-size:15px}
   .m-svc{padding:14px}
-  /* chat */
-  .chat-btn{left:14px;bottom:14px;width:52px;height:52px}
-  .chat-box{right:12px;left:12px;width:auto;max-width:none;bottom:76px}
 }
 @media(max-width:360px){
   .brand{font-size:17px}
@@ -541,13 +523,6 @@ input,textarea,select,button{max-width:100%}
   <p class="disclaimer">A informação neste site não substitui uma consulta médica. Em caso de urgência, ligue 112.</p>
 </footer>
 
-<!-- CHAT DE AJUDA -->
-<div class="chat-box" id="chatBox" role="dialog" aria-label="Ajuda">
-  <div class="chat-hd"><div><strong>Ajuda</strong><small>● Respostas rápidas</small></div><button onclick="toggleChat()" aria-label="Fechar">✕</button></div>
-  <div class="chat-body" id="chatBody"></div>
-</div>
-<button class="chat-btn" onclick="toggleChat()" aria-label="Abrir ajuda">💬</button>
-
 <!-- MARCAÇÃO -->
 <div class="overlay" id="bookingModal" onclick="if(event.target===this)closeBooking()">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -759,28 +734,6 @@ input,textarea,select,button{max-width:100%}
       .catch(function(){ st.style.color = 'var(--red)'; st.textContent = 'Não foi possível enviar. Tente novamente mais tarde.'; });
     return false;
   };
-
-  // Chat de ajuda: perguntas rápidas
-  var CHAT = [
-    { q:'💰 Quais são os preços?', a:'• Consulta de Clínica Geral — 55€\n• Consulta com Baixa Médica — 55€\n• Atestado de Amamentação — 35€\n• Atestado para Falta Escolar — 35€\n• Atestado para Carta de Condução — 45€\n\nFatura incluída em todos os serviços.' },
-    { q:'🩺 Como funciona a videoconsulta?', a:'Depois do pagamento recebe um email com o link da videoconsulta. À hora marcada entra diretamente no browser, sem instalar nada. Os documentos são enviados por email.' },
-    { q:'📅 Como marco uma consulta?', a:'1. Clique em "Marcar consulta"\n2. Escolha o serviço, o dia e a hora\n3. Preencha os dados e pague\n4. Recebe a confirmação por email com o link da videoconsulta' },
-    { q:'💳 Como posso pagar?', a:'MBWay ou cartão bancário, de forma segura através da Stripe. A fatura certificada é enviada automaticamente.' },
-    { q:'📄 Os documentos têm validade legal?', a:'Sim. A baixa médica (CIT) é submetida eletronicamente à Segurança Social e os atestados são aceites por empregadores, escolas e pelo IMT.' },
-    { q:'🔁 Posso cancelar ou remarcar?', a:'Sim, até 48 horas antes da consulta, por email para geral@consultas-online.pt.' },
-    { q:'📞 Como posso contactar?', a:'Por email (geral@consultas-online.pt) ou pelo formulário de contacto. Respondemos em até 24 horas úteis.' }
-  ];
-  function chatMenu(){
-    $('chatBody').innerHTML = '<div class="bot">Olá! 👋 Em que posso ajudar?</div>' +
-      CHAT.map(function(c, i){ return '<button class="q" onclick="chatAnswer(' + i + ')">' + esc(c.q) + '</button>'; }).join('');
-  }
-  window.chatAnswer = function(i){
-    $('chatBody').innerHTML = '<div class="me">' + esc(CHAT[i].q) + '</div><div class="bot">' + esc(CHAT[i].a) + '</div>' +
-      '<button class="q" style="text-align:center;font-weight:600;color:var(--teal)" onclick="toggleChat();openBooking()">Marcar consulta →</button>' +
-      '<button class="back" onclick="chatMenu()">← Voltar às perguntas</button>';
-  };
-  window.chatMenu = chatMenu;
-  window.toggleChat = function(){ var b = $('chatBox'); if (!b.dataset.init) { b.dataset.init = 1; chatMenu(); } b.classList.toggle('open'); };
 
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeBooking(); });
 
