@@ -134,7 +134,7 @@ const SERVICES = {
   'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 4000 },
   'consulta-dst':               { name: 'Consulta DST / IST',                price: 4000 },
   'consulta-obesidade':         { name: 'Consulta de Obesidade', price: 5500 },
-  'consulta-clinica-geral':     { name: 'Consulta de Clínica Geral',         price: 4000 },
+  'consulta-clinica-geral':     { name: 'Consulta de Clínica Geral',         price: 5500 },
 };
 
 function formatPhone(phone) {
