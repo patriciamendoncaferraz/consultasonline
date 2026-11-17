@@ -941,7 +941,7 @@ app.post('/create-checkout-session', async (req, res) => {
       locale: 'pt',
       billing_address_collection: 'auto',
       payment_intent_data: {
-        description: service.name + ' - ' + date + ' as ' + time,
+        description: service.name + ' - ' + date + ' às ' + time,
         receipt_email: customerEmail,
       },
       custom_text: {
@@ -1079,24 +1079,24 @@ app.post('/webhook', async (req, res) => {
           await sgMail.send({
             to: notifyEmail,
             from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-            subject: 'Nova consulta marcada - ' + serviceName + ' | ' + date + ' as ' + time,
+            subject: 'Nova consulta marcada - ' + serviceName + ' | ' + date + ' às ' + time,
             html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
               + '<div style="max-width:500px;margin:0 auto;background:#fff;border-radius:14px;overflow:hidden">'
               + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">ConsultasOnline</span>'
-              + '&nbsp;&nbsp;<span style="background:rgba(23,196,168,.15);color:#17c4a8;font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700">NOVA MARCACAO</span></div>'
+              + '&nbsp;&nbsp;<span style="background:rgba(23,196,168,.15);color:#17c4a8;font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700">NOVA MARCAÇÃO</span></div>'
               + '<div style="padding:22px 24px">'
               + '<h2 style="color:#0b1d35;font-size:20px;margin:0 0 16px">Nova consulta confirmada</h2>'
               + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:16px">'
-              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Servico: <strong>' + serviceName + '</strong></p>'
+              + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Serviço: <strong>' + serviceName + '</strong></p>'
               + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Data: <strong>' + date + '</strong></p>'
               + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Hora: <strong>' + time + '</strong> (PT Continente)</p>'
               + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Utente: <strong>' + (customerName || '-') + '</strong></p>'
               + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Email: <strong>' + (customerEmail || '-') + '</strong></p>'
               + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Valor: <strong>' + amountEur + '</strong></p>'
               + '</div>'
-              + '<p style="font-size:12px;color:#8a9bb0">Notificacao automatica ConsultasOnline</p>'
+              + '<p style="font-size:12px;color:#8a9bb0">Notificação automática ConsultasOnline</p>'
               + '</div></div></body></html>',
-            text: 'Nova consulta!\nServico: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nUtente: ' + (customerName||'-') + '\nEmail: ' + (customerEmail||'-') + '\nValor: ' + amountEur,
+            text: 'Nova consulta!\nServiço: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nUtente: ' + (customerName||'-') + '\nEmail: ' + (customerEmail||'-') + '\nValor: ' + amountEur,
           });
           console.log('Notificacao enviada com sucesso para:', notifyEmail);
         } catch(ne) {
@@ -1315,9 +1315,9 @@ async function sendConfirmationEmail({ to, name, serviceName, date, time, amount
     + '<div style="background:#0b1d35;padding:20px 28px"><span style="font-size:20px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
     + '<div style="padding:24px 28px">'
     + '<h2 style="color:#0b1d35;margin:0 0 12px">Consulta Confirmada! ✅</h2>'
-    + '<p style="color:#4a5568;margin:0 0 16px">Ola <strong>' + name + '</strong>, o seu agendamento foi confirmado.</p>'
+    + '<p style="color:#4a5568;margin:0 0 16px">Olá <strong>' + name + '</strong>, o seu agendamento foi confirmado.</p>'
     + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:16px">'
-    + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Servico: <strong>' + serviceName + '</strong></p>'
+    + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Serviço: <strong>' + serviceName + '</strong></p>'
     + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Data: <strong>' + date + '</strong></p>'
     + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Hora: <strong>' + time + '</strong> <span style="font-size:12px;color:#d97706;font-weight:600">⚠️ fuso horário PT Continente</span></p>'
     + '<p style="margin:6px 0;font-size:14px;color:#0b1d35">Valor pago: <strong>' + amountEur + '</strong></p>'
@@ -1326,15 +1326,15 @@ async function sendConfirmationEmail({ to, name, serviceName, date, time, amount
     + meetLine
     + '<div style="background:#f4f7fb;border-radius:10px;padding:16px;margin-bottom:16px">'
     + '</div>'
-    + '<p style="font-size:12px;color:#8a9bb0">Duvidas? geral@consultas-online.pt</p>'
+    + '<p style="font-size:12px;color:#8a9bb0">Dúvidas? geral@consultas-online.pt</p>'
     + '</div></div></body></html>';
 
   await sgMail.send({
     to,
     from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline' },
-    subject: 'Consulta confirmada - ' + serviceName + ' | ' + date + ' as ' + time,
+    subject: 'Consulta confirmada - ' + serviceName + ' | ' + date + ' às ' + time,
     html,
-    text: 'Ola ' + name + ',\n\nConsulta confirmada!\nServico: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nValor: ' + amountEur,
+    text: 'Olá ' + name + ',\n\nConsulta confirmada!\nServiço: ' + serviceName + '\nData: ' + date + '\nHora: ' + time + '\nValor: ' + amountEur,
   });
 }
 
@@ -1353,7 +1353,7 @@ app.post('/contact', async (req, res) => {
     // Email para a equipa ConsultasOnline
     await sgMail.send({
       to: process.env.CONTACT_EMAIL || 'geral@consultas-online.pt',
-      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline — Formulario' },
+      from: { email: process.env.FROM_EMAIL || 'geral@consultas-online.pt', name: 'ConsultasOnline — Formulário' },
       replyTo: { email, name },
       subject: '[Contacto] ' + (subject || 'Nova mensagem') + ' — ' + name,
       html: '<html><body style="font-family:Arial,sans-serif;background:#f4f7fb;padding:20px">'
@@ -1634,12 +1634,12 @@ app.post('/admin/gerar-atestado', adminAuth, async (req, res) => {
           + '<div style="background:#0b1d35;padding:18px 24px"><span style="font-size:18px;font-weight:700;color:#fff">Consultas<span style="color:#17c4a8">Online</span></span></div>'
           + '<div style="padding:22px 24px">'
           + '<h2 style="color:#0b1d35;margin:0 0 12px">Documento em anexo</h2>'
-          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Ola <strong>' + (dados.nome_utente||'') + '</strong>,</p>'
-          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Segue em anexo o seu ' + nomeDoc.toLowerCase() + ' emitido pela Dra. Patricia Mendonca Ferraz.</p>'
+          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Olá <strong>' + (dados.nome_utente||'') + '</strong>,</p>'
+          + '<p style="color:#4a5568;font-size:14px;line-height:1.7">Segue em anexo o seu ' + nomeDoc.toLowerCase() + ' emitido pela Dra. Patrícia Mendonça Ferraz.</p>'
           + '<p style="color:#4a5568;font-size:14px;line-height:1.7">O documento tem validade legal e pode ser utilizado para os devidos efeitos.</p>'
-          + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Duvidas? <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
+          + '<p style="font-size:12px;color:#8a9bb0;margin-top:16px">Dúvidas? <a href="mailto:geral@consultas-online.pt" style="color:#0d7377">geral@consultas-online.pt</a></p>'
           + '</div></div></body></html>',
-        text: 'Ola ' + (dados.nome_utente||'') + ',\n\nSegue em anexo o seu ' + nomeDoc + '.\n\nConsultasOnline',
+        text: 'Olá ' + (dados.nome_utente||'') + ',\n\nSegue em anexo o seu ' + nomeDoc + '.\n\nConsultasOnline',
         attachments: [{
           content: pdfB64,
           filename: nomeDoc.replace(/ /g,'_') + '.pdf',
