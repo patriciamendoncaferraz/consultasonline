@@ -59,8 +59,6 @@ function legalFromIndex(pageId) {
     .replace(/https?:\/\/(www\.)?consultas-online\.pt/g, ORIGIN)
     .replace(/(^|[^@\w.-])(www\.)?consultas-online\.pt/g, '$1' + HOST)
     .replace(/\s+onclick="[^"]*"/g, '');
-  // Formas de pagamento deste site: MBWay e cartão
-  seg = seg.replace(/MB WAY, Referência Multibanco e cartão bancário/g, 'MB WAY e cartão bancário');
   if (pageId === 'page-termos') {
     // Serviços prestados neste site
     seg = seg.replace(/(<h2 id="term3">[\s\S]*?<\/p>\s*)<ul>[\s\S]*?<\/ul>/,
