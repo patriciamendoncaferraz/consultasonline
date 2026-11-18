@@ -1572,6 +1572,16 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="blog-layout">
     <div class="blog-list" id="blogList">
 
+      <a class="bcard" data-cat="obesidade" href="/artigos/obesidade" onclick="return navArticle(event,'obesidade')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#0b4f6c,#17c4a8)" role="img" aria-label="Obesidade: causas, consequências e tratamento, artigo médico">⚖️</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Peso &amp; Obesidade</span><span class="bread">· 19 min</span></div>
+          <h2 class="bcard-title">Obesidade: Causas, Consequências e Tratamento com Base na Evidência</h2>
+          <p class="bcard-excerpt">O que é a obesidade, porque surge, que doenças provoca e como se trata com base na evidência científica. Inclui calculadora de IMC.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </a>
+
       <a class="bcard" data-cat="infecoes" href="/artigos/infecao-urinaria" onclick="return navArticle(event,'itu')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#0d4a60,#0d7377)" role="img" aria-label="Infeção Urinária — artigo médico">💧</div>
         <div class="bcard-body">
@@ -2766,7 +2776,7 @@ window.showPage = function(p, pushState) {
 // ══════════════════════════════════════
 // ARTICLE NAVIGATION
 // ══════════════════════════════════════
-var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","clamidia":"clamidia","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-saude-2026","baixa-medica-freelancer":"baixa-medica-freelancer","sem-medico-familia-freelancer":"sem-medico-familia-freelancer","pilula-online":"renovar-pilula-anticoncecional-online","piula-online":"renovar-pilula-anticoncecional-online"};
+var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","clamidia":"clamidia","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","obesidade":"obesidade","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-saude-2026","baixa-medica-freelancer":"baixa-medica-freelancer","sem-medico-familia-freelancer":"sem-medico-familia-freelancer","pilula-online":"renovar-pilula-anticoncecional-online","piula-online":"renovar-pilula-anticoncecional-online"};
 // Os artigos estão em content/artigos/<id>.html e são carregados quando se abrem
 var _articleLoads = {};
 window.loadArticle = function(id, cb) {
@@ -4226,5 +4236,6 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+<script src="/imc.js" defer></script>
 </body>
 </html>
