@@ -1565,12 +1565,23 @@ document.addEventListener("DOMContentLoaded", function() {
       <div class="f-chip" onclick="filterBlog('infecoes',this)">Infeções</div>
       <div class="f-chip" onclick="filterBlog('trabalho',this)">Trabalho &amp; Escola</div>
       <div class="f-chip" onclick="filterBlog('obesidade',this)">Peso &amp; Obesidade</div>
+      <div class="f-chip" onclick="filterBlog('analises',this)">Análises</div>
       <div class="f-chip" onclick="filterBlog('dst',this)">DST</div>
       <div class="f-chip" onclick="filterBlog('medicacao',this)">Medicação &amp; Baixas</div>
     </div>
   </div>
   <div class="blog-layout">
     <div class="blog-list" id="blogList">
+
+      <a class="bcard" data-cat="analises" href="/artigos/analises-clinicas-inteligencia-artificial" onclick="return navArticle(event,'analises-ia')">
+        <div class="bcard-img" style="background:linear-gradient(135deg,#1a3a5c,#3182ce)" role="img" aria-label="Análises clínicas e inteligência artificial, artigo médico">🔬</div>
+        <div class="bcard-body">
+          <div class="bcard-meta"><span class="bcat">Análises Clínicas</span><span class="bread">· 9 min</span></div>
+          <h2 class="bcard-title">Consulta Médica Depois das Análises: Por Que Não Deve Interpretar os Resultados com Inteligência Artificial</h2>
+          <p class="bcard-excerpt">Cada vez mais pessoas pedem à IA para explicar as suas análises. Saiba quais os riscos, que valores exigem consulta urgente e o que fazer ao receber os resultados.</p>
+          <span class="bcard-link">Ler artigo →</span>
+        </div>
+      </a>
 
       <a class="bcard" data-cat="obesidade" href="/artigos/obesidade" onclick="return navArticle(event,'obesidade')">
         <div class="bcard-img" style="background:linear-gradient(135deg,#0b4f6c,#17c4a8)" role="img" aria-label="Obesidade: causas, consequências e tratamento, artigo médico">⚖️</div>
@@ -2776,7 +2787,7 @@ window.showPage = function(p, pushState) {
 // ══════════════════════════════════════
 // ARTICLE NAVIGATION
 // ══════════════════════════════════════
-var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","clamidia":"clamidia","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","obesidade":"obesidade","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-saude-2026","baixa-medica-freelancer":"baixa-medica-freelancer","sem-medico-familia-freelancer":"sem-medico-familia-freelancer","pilula-online":"renovar-pilula-anticoncecional-online","piula-online":"renovar-pilula-anticoncecional-online"};
+var ARTICLE_SLUGS = {"itu":"infecao-urinaria","faltas-trabalho":"faltas-trabalho","clamidia":"clamidia","faltas-escola":"faltas-escola","garganta":"dor-de-garganta-amigdalite","analises-ia":"analises-clinicas-inteligencia-artificial","obesidade":"obesidade","ozempic":"ozempic-glp1","dst":"doencas-sexualmente-transmissiveis","renovacao-baixa":"baixa-medica","renovacao-medicamentos":"renovacao-medicamentos","cessacao":"cessacao-tabagica","conducao":"atestado-carta-conducao","amamentacao":"atestado-amamentacao","rastreio":"atestado-rastreio-saude","consulta-online":"consulta-online","medico-online":"medico-online","telemedicina":"telemedicina","dia-saude-2026":"dia-saude-2026","baixa-medica-freelancer":"baixa-medica-freelancer","sem-medico-familia-freelancer":"sem-medico-familia-freelancer","pilula-online":"renovar-pilula-anticoncecional-online","piula-online":"renovar-pilula-anticoncecional-online"};
 // Os artigos estão em content/artigos/<id>.html e são carregados quando se abrem
 var _articleLoads = {};
 window.loadArticle = function(id, cb) {

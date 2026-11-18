@@ -165,6 +165,7 @@ const ARTICLES = {
   'faltas-trabalho':                     { id: 'faltas-trabalho',           category: 'Trabalho' },
   'faltas-escola':                       { id: 'faltas-escola',             category: 'Escola' },
   'dor-de-garganta-amigdalite':          { id: 'garganta',                  category: 'Infeções' },
+  'analises-clinicas-inteligencia-artificial': { id: 'analises-ia', category: 'Análises Clínicas' },
   'obesidade':                           { id: 'obesidade',                 category: 'Obesidade' },
   'ozempic-glp1':                        { id: 'ozempic',                   category: 'Obesidade' },
   'doencas-sexualmente-transmissiveis':  { id: 'dst',                       category: 'Saúde Sexual' },
@@ -245,6 +246,13 @@ const ARTICLES_CONTENT = {
   description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
   keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal, amigdalite bacteriana viral',
   cta: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
+},
+
+'analises-clinicas-inteligencia-artificial': {
+  title: 'Análises Clínicas e Inteligência Artificial: os Riscos | ConsultasOnline',
+  description: 'Porque não deve interpretar os resultados das análises com inteligência artificial: riscos, valores que exigem consulta urgente e o que fazer.',
+  keywords: 'resultados análises clínicas, interpretar análises, análises clínicas inteligência artificial, ChatGPT análises, consulta após análises, consulta médica online análises',
+  cta: `<div class="cta-top"><p>🔬 Recebeu os resultados das suas análises? Fale com uma médica por videoconsulta. <a href="/">Marcar consulta →</a></p></div>`
 },
 
 'obesidade': {
@@ -469,6 +477,7 @@ const RELATED_ARTICLES = {
   'faltas-trabalho':                       ['baixa-medica', 'baixa-medica-freelancer', 'faltas-escola', 'atestado-amamentacao'],
   'faltas-escola':                         ['faltas-trabalho', 'atestado-amamentacao', 'baixa-medica', 'consulta-online'],
   'dor-de-garganta-amigdalite':            ['infecao-urinaria', 'consulta-online', 'medico-online', 'telemedicina'],
+  'analises-clinicas-inteligencia-artificial': ['consulta-online', 'medico-online', 'atestado-rastreio-saude', 'telemedicina'],
   'obesidade':                             ['ozempic-glp1', 'cessacao-tabagica', 'atestado-rastreio-saude', 'medico-online'],
   'ozempic-glp1':                          ['obesidade', 'cessacao-tabagica', 'atestado-rastreio-saude', 'renovacao-medicamentos'],
   'doencas-sexualmente-transmissiveis':    ['clamidia', 'atestado-rastreio-saude', 'renovar-pilula-anticoncecional-online', 'infecao-urinaria'],
@@ -477,7 +486,7 @@ const RELATED_ARTICLES = {
   'consulta-online':                       ['medico-online', 'telemedicina', 'sem-medico-familia-freelancer', 'baixa-medica'],
   'medico-online':                         ['consulta-online', 'telemedicina', 'sem-medico-familia-freelancer', 'renovacao-medicamentos'],
   'telemedicina':                          ['consulta-online', 'medico-online', 'dia-saude-2026', 'sem-medico-familia-freelancer'],
-  'atestado-rastreio-saude':               ['doencas-sexualmente-transmissiveis', 'cessacao-tabagica', 'ozempic-glp1', 'clamidia'],
+  'atestado-rastreio-saude':               ['analises-clinicas-inteligencia-artificial', 'doencas-sexualmente-transmissiveis', 'cessacao-tabagica', 'obesidade'],
   'renovar-pilula-anticoncecional-online': ['doencas-sexualmente-transmissiveis', 'clamidia', 'renovacao-medicamentos', 'medico-online'],
   'baixa-medica-freelancer':               ['sem-medico-familia-freelancer', 'baixa-medica', 'faltas-trabalho', 'consulta-online'],
   'sem-medico-familia-freelancer':         ['baixa-medica-freelancer', 'medico-online', 'consulta-online', 'renovacao-medicamentos'],
@@ -1985,7 +1994,7 @@ const SERVICE_ARTICLES = {
   'renovacao-piula':            ['renovar-pilula-anticoncecional-online'],
   'atestado-conducao':          ['atestado-carta-conducao'],
   'consulta-infecao-urinaria':  ['infecao-urinaria'],
-  'renovacao-medicamentos':     ['renovacao-medicamentos'],
+  'renovacao-medicamentos':     ['renovacao-medicamentos', 'analises-clinicas-inteligencia-artificial'],
   'atestado-escola':            ['faltas-escola'],
   'consulta-amigdalite':        ['dor-de-garganta-amigdalite'],
   'consulta-cessacao-tabagica': ['cessacao-tabagica'],
