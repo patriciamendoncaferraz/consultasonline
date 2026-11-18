@@ -165,6 +165,7 @@ const ARTICLES = {
   'faltas-trabalho':                     { id: 'faltas-trabalho',           category: 'Trabalho' },
   'faltas-escola':                       { id: 'faltas-escola',             category: 'Escola' },
   'dor-de-garganta-amigdalite':          { id: 'garganta',                  category: 'Infeções' },
+  'obesidade':                           { id: 'obesidade',                 category: 'Obesidade' },
   'ozempic-glp1':                        { id: 'ozempic',                   category: 'Obesidade' },
   'doencas-sexualmente-transmissiveis':  { id: 'dst',                       category: 'Saúde Sexual' },
   'cessacao-tabagica':                   { id: 'cessacao',                  category: 'Cessação Tabágica' },
@@ -244,6 +245,13 @@ const ARTICLES_CONTENT = {
   description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
   keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal, amigdalite bacteriana viral',
   cta: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
+},
+
+'obesidade': {
+  title: 'Obesidade: Causas, Consequências e Tratamento | ConsultasOnline',
+  description: 'O que é a obesidade, causas, riscos para a saúde e tratamento com base na evidência. Calcule o seu IMC e saiba quando procurar uma consulta de obesidade.',
+  keywords: 'obesidade, obesidade causas, obesidade tratamento, calculadora IMC, índice de massa corporal, consulta de obesidade online, excesso de peso, obesidade Portugal',
+  cta: `<div class="cta-top"><p>⚖️ Quer perder peso com acompanhamento médico? Consulta de obesidade por videoconsulta. <a href="/consulta-obesidade-emagrecimento-online">Saber mais e marcar →</a></p></div>`
 },
 
 'ozempic-glp1': {
@@ -461,7 +469,8 @@ const RELATED_ARTICLES = {
   'faltas-trabalho':                       ['baixa-medica', 'baixa-medica-freelancer', 'faltas-escola', 'atestado-amamentacao'],
   'faltas-escola':                         ['faltas-trabalho', 'atestado-amamentacao', 'baixa-medica', 'consulta-online'],
   'dor-de-garganta-amigdalite':            ['infecao-urinaria', 'consulta-online', 'medico-online', 'telemedicina'],
-  'ozempic-glp1':                          ['cessacao-tabagica', 'atestado-rastreio-saude', 'renovacao-medicamentos', 'medico-online'],
+  'obesidade':                             ['ozempic-glp1', 'cessacao-tabagica', 'atestado-rastreio-saude', 'medico-online'],
+  'ozempic-glp1':                          ['obesidade', 'cessacao-tabagica', 'atestado-rastreio-saude', 'renovacao-medicamentos'],
   'doencas-sexualmente-transmissiveis':    ['clamidia', 'atestado-rastreio-saude', 'renovar-pilula-anticoncecional-online', 'infecao-urinaria'],
   'clamidia':                              ['doencas-sexualmente-transmissiveis', 'atestado-rastreio-saude', 'infecao-urinaria', 'renovar-pilula-anticoncecional-online'],
   'cessacao-tabagica':                     ['ozempic-glp1', 'atestado-rastreio-saude', 'renovacao-medicamentos', 'medico-online'],
@@ -604,6 +613,7 @@ if (typeof sessionStorage !== 'undefined') {
   sessionStorage.setItem('openArticle', '${ARTICLES[slug] ? ARTICLES[slug].id : slug}');
 }
 </script>
+${data.content && data.content.includes('imc-calc') ? '<script src="/imc.js" defer></script>' : ''}
 </body>
 </html>`;
 }
@@ -1980,7 +1990,7 @@ const SERVICE_ARTICLES = {
   'consulta-amigdalite':        ['dor-de-garganta-amigdalite'],
   'consulta-cessacao-tabagica': ['cessacao-tabagica'],
   'consulta-dst':               ['doencas-sexualmente-transmissiveis', 'clamidia'],
-  'consulta-obesidade':         ['ozempic-glp1']
+  'consulta-obesidade':         ['obesidade', 'ozempic-glp1']
 };
 function serviceArticlesHTML(serviceId) {
   const items = (SERVICE_ARTICLES[serviceId] || [])

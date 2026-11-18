@@ -1,0 +1,327 @@
+<!-- OBESIDADE -->
+<div class="article-view" id="article-obesidade">
+<div class="art-hero"><div class="art-hero-inner">
+  <button class="art-back" onclick="closeArticle()">← Voltar aos artigos</button>
+  <div class="art-cat">⚖️ Peso &amp; Obesidade</div>
+  <h1 class="art-title">Obesidade: Causas, Consequências e Tratamento com Base na Evidência</h1>
+  <div class="art-meta"><div class="art-meta-item">⏱ <span>19 min</span></div><div class="art-meta-item">🔬 <span>Atualizado 2026</span></div></div>
+</div></div>
+<div class="art-body-wrap"><div class="art-body"><div class="art-obes">
+<div class="art-author">✍️ <span>Escrito por <a href="/sobre-a-medica" style="color:inherit"><strong>Patrícia Ferraz</strong></a> · Médica · Cédula n.º 57713</span></div>
+<style>
+.art-obes h4{font-size:17px;font-weight:700;color:var(--navy,#0b1d35);margin:20px 0 8px}
+.art-obes h5{font-size:15.5px;font-weight:700;color:var(--teal,#0d7377);margin:18px 0 6px}
+.imc-box{background:var(--surface,#f4f7fb);border:1px solid var(--border,#dde6f0);border-radius:14px;padding:22px;margin:18px 0 26px}
+.imc-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.imc-fields label{display:flex;flex-direction:column;gap:6px;font-size:13.5px;font-weight:600;color:var(--navy,#0b1d35)}
+.imc-fields input{border:1.5px solid var(--border,#dde6f0);border-radius:9px;padding:11px 12px;font-size:16px;font-family:inherit;background:#fff;color:var(--navy,#0b1d35);width:100%;box-sizing:border-box}
+.imc-fields input:focus{outline:none;border-color:var(--teal,#0d7377)}
+.imc-btn{margin-top:14px;background:var(--teal,#0d7377);color:#fff;border:none;border-radius:10px;padding:12px 22px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.imc-btn:hover{opacity:.92}
+.imc-result{margin-top:16px}
+.imc-result:empty{display:none}
+.imc-val{font-size:30px;font-weight:700;color:var(--navy,#0b1d35);line-height:1.1}
+.imc-cat{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;color:#fff}
+.imc-scale{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin:14px 0 6px}
+.imc-scale span{height:8px;border-radius:4px;opacity:.35}
+.imc-scale span.on{opacity:1;outline:2px solid var(--navy,#0b1d35);outline-offset:1px}
+.imc-msg{font-size:14px;margin-top:10px}
+.imc-err{color:#c53030;font-size:13.5px}
+.imc-note{font-size:12.5px;color:var(--muted,#8a9bb0);margin:14px 0 0}
+@media(max-width:520px){.imc-fields{grid-template-columns:1fr}}
+</style>
+
+  <p>A obesidade é uma das mais graves epidemias de saúde pública do século XXI. Longe de ser uma questão estética ou de força de vontade, trata-se de uma doença crónica, multifatorial e recidivante, reconhecida como tal pela Organização Mundial de Saúde (OMS) desde 1948 e, mais recentemente, classificada como doença crónica pela <a href="https://www.speo-obesidade.pt/" target="_blank" rel="noopener" style="color:var(--teal)">Sociedade Portuguesa para o Estudo da Obesidade (SPEO).</a></p>
+
+  <p><a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)">Os números são inequívocos:</a> <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight" target="_blank" rel="noopener" style="color:var(--teal)">em 2024, a OMS estimou que cerca de um mil milhão de pessoas em todo o mundo viviam com obesidade, incluindo crianças e adolescentes</a><a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)">. Em Portugal, os dados do Manual de Boas Práticas da Direção-Geral da Saúde (DGS) publicado em 2026 revelam que a prevalência de obesidade nos adultos portugueses atingiu os 28,7%, e que 67,6% da população adulta apresenta excesso de peso ou obesidade. Entre as crianças dos 6 aos 8 anos, 13,5% têm obesidade. São números que devem mover todos nós, profissionais de saúde, decisores políticos e cidadãos, a agir.</a></p>
+
+  <p>Neste artigo vou partilhar consigo o que é a obesidade, quais os seus fatores de risco, as suas consequências para a saúde, e as abordagens terapêuticas disponíveis, com base na evidência científica mais recente e nas recomendações das principais entidades de referência nacionais e internacionais.</p>
+
+  <h2>O que é a Obesidade</h2>
+
+  <p>A obesidade define-se pelo excesso de gordura corporal em quantidade suficiente para prejudicar a saúde. O indicador mais utilizado na prática clínica é o Índice de Massa Corporal (IMC), calculado pela fórmula: peso (kg) dividido pelo quadrado da altura (m²). Segundo a classificação da OMS:</p>
+
+  <ul>
+    <li>IMC entre 25,0 e 29,9 kg/m²: Excesso de peso (pré-obesidade)</li>
+    <li>IMC entre 30,0 e 34,9 kg/m²: Obesidade grau I</li>
+    <li>IMC entre 35,0 e 39,9 kg/m²: Obesidade grau II</li>
+    <li>IMC ≥ 40,0 kg/m²: Obesidade grau III (também chamada obesidade mórbida)</li>
+  </ul>
+
+  <p>No entanto, o IMC tem limitações importantes: não distingue massa gorda de massa muscular, nem avalia a distribuição da gordura corporal. A gordura abdominal (visceral) é particularmente perigosa, e por isso o perímetro da cintura e o índice cintura-anca são complementos essenciais na avaliação clínica. Em termos práticos, considera-se risco cardiovascular aumentado quando o perímetro da cintura é superior a 94 cm nos homens e a 80 cm nas mulheres.</p>
+
+
+  <h2>Calcule o seu IMC</h2>
+  <p>Introduza o seu peso e a sua altura para saber o seu Índice de Massa Corporal e a classificação da OMS correspondente.</p>
+  <div class="imc-box">
+    <form class="imc-calc" novalidate>
+      <div class="imc-fields">
+        <label>Peso (kg)<input name="peso" inputmode="decimal" autocomplete="off" placeholder="Ex.: 72" required/></label>
+        <label>Altura (cm)<input name="altura" inputmode="decimal" autocomplete="off" placeholder="Ex.: 168" required/></label>
+      </div>
+      <button type="submit" class="imc-btn">Calcular IMC</button>
+      <div class="imc-result" aria-live="polite"></div>
+    </form>
+    <p class="imc-note">O IMC é um indicador de rastreio e não substitui uma avaliação médica. Não se aplica a grávidas, crianças e adolescentes, nem a pessoas com muita massa muscular.</p>
+  </div>
+
+  <h2>Epidemiologia: Os Números em Portugal e no Mundo</h2>
+
+  <h3>Situação Mundial</h3>
+
+  <p>Em 2024, a <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight" target="_blank" rel="noopener" style="color:var(--teal)">OMS</a> estimou que mais de <strong>um mil milhão de pessoas</strong> <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight" target="_blank" rel="noopener" style="color:var(--teal)">viviam com obesidade a nível global, incluindo 650 milhões de adultos, 340 milhões de adolescentes e 39 milhões de crianças. Desde 1990, a prevalência de obesidade nos adultos duplicou, e a prevalência nas crianças e adolescentes quadruplicou. Mundialmente, 43% dos adultos apresentam excesso de peso</a>.</p>
+
+  <h3>Situação em Portugal</h3>
+
+  <p>Os dados disponibilizados pela <strong>Direção-Geral da Saúde (DGS) em 2026</strong> revelam que <a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)"><strong>28,7% dos adultos portugueses têm obesidade</strong></a> e que <a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)"><strong>67,6% têm excesso de peso ou obesidade</strong></a>. Entre as crianças dos 6 aos 8 anos, <strong>13,5% têm obesidade</strong><a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)">. Os fatores alimentares são responsáveis por mais de 50% do excesso de peso na população portuguesa.</a></p>
+
+  <p><a href="https://doi.org/10.1016/S0140-6736(23)02750-2" target="_blank" rel="noopener" style="color:var(--teal)">As projeções para Portugal são alarmantes: segundo dados publicados em conjunto pela DGS e pelo The Lancet, espera-se que até 2050 a prevalência da obesidade aumente 52,3% nas mulheres e 77,8% nos homens. Estes valores reforçam a urgência de intervenção precoce e de uma abordagem sistemática, integrada e de longo prazo.</a></p>
+
+  <h2>Obesidade: Causas e Fatores de Risco</h2>
+
+  <p>A obesidade é uma doença de etiologia multifatorial. Embora o desequilíbrio energético (ingestão calórica superior ao gasto energético) seja o mecanismo fisiopatológico central, há uma complexa interação entre fatores genéticos, ambientais, comportamentais, psicológicos, hormonais e socioeconómicos.</p>
+
+  <h3>Fatores Genéticos e Biológicos</h3>
+
+  <p><a href="https://doi.org/10.1111/obr.12551" target="_blank" rel="noopener" style="color:var(--teal)">Estudos em gémeos demonstram que a hereditariedade pode explicar entre 40% e 70% da variabilidade do IMC. Existem genes que influenciam o apetite, o metabolismo basal, a distribuição da gordura e a resposta aos estímulos de saciedade. Contudo, a genética por si só não é determinante: o ambiente e o estilo de vida modulam a expressão génica (epigenética).</a></p>
+
+  <p>Algumas condições clínicas podem contribuir para o ganho de peso, nomeadamente o hipotiroidismo, a síndrome de Cushing, a síndrome dos ovários poliquísticos (SOP) e certas perturbações do sono. Determinados fármacos, como antidepressivos, antipsicóticos, corticosteroides e insulina, também podem induzir ganho de peso.</p>
+
+  <h3>Fatores Ambientais e Comportamentais</h3>
+
+  <p>O ambiente obesogénico atual caracteriza-se por disponibilidade abundante de alimentos ultra-processados, ricos em açúcar, gordura e sal, a baixo custo; redução da atividade física no trabalho e nos transportes; sedentarismo associado ao uso de ecrãs; perturbações do sono; e níveis elevados de stress crónico.</p>
+
+  <p>A dieta é o fator comportamental com maior impacto. <a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)">Segundo o Manual da DGS (2026), os fatores alimentares são responsáveis por mais de 50% do excesso de peso.</a> A alimentação mediterrânea, rica em vegetais, leguminosas, azeite e peixe, associa-se a menor prevalência de obesidade e a melhores resultados na sua gestão.</p>
+
+  <h3>Fatores Psicológicos e Socioeconómicos</h3>
+
+  <p>O stress crónico, a depressão, a ansiedade e as perturbações alimentares (como o <em>binge eating disorder</em>) estão fortemente associados ao aumento do peso. A nível socioeconómico, populações de menor rendimento têm maior acesso a alimentos de baixa qualidade nutricional e menor acesso a cuidados de saúde e a espaços de atividade física.</p>
+
+  <p>O estigma associado à obesidade, que ainda é frequentemente vivido nos contextos de saúde, familiar e profissional, é ele próprio um fator agravante: contribui para o isolamento, a depressão e o evitamento de cuidados médicos.</p>
+
+  <h2>Consequências da Obesidade para a Saúde</h2>
+
+  <h3>Doenças Cardiovasculares</h3>
+
+  <p>A obesidade aumenta o risco de doença coronária, acidente vascular cerebral (AVC), insuficiência cardíaca e fibrilhação auricular. A gordura visceral promove inflamação sistémica, dislipidemia, hipertensão arterial e disfunção endotelial, criando um ambiente propício ao desenvolvimento de aterosclerose.</p>
+
+  <h3>Diabetes Mellitus tipo 2</h3>
+
+  <p>A resistência à insulina e a consequente hiperglicemia são das complicações mais diretamente associadas ao excesso de gordura visceral. A diabetes tipo 2 é, simultaneamente, causa e consequência da obesidade, e a sua gestão exige necessariamente o controlo do peso.</p>
+
+  <h3>Oncológica</h3>
+
+  <p><a href="https://doi.org/10.1056/NEJMsr1606602" target="_blank" rel="noopener" style="color:var(--teal)">A OMS associa a obesidade a um risco aumentado de pelo menos 13 tipos de cancro, incluindo cancro da mama (pós-menopausa), cancro colorretal, cancro do endométrio, cancro do esófago, cancro do rim e cancro do pâncreas. Estima-se que cerca de 4% a 8% dos novos casos de cancro na Europa sejam atribuíveis ao excesso de peso.</a></p>
+
+  <h3>Outras Complicações</h3>
+
+  <p>A lista de complicações é extensa e inclui apneia obstrutiva do sono, esteatohepatite não alcoólica, síndrome metabólica, osteoartrite, infertilidade, depressão e perturbações de ansiedade, refluxo gastroesofágico e comprometimento da qualidade de vida geral.</p>
+
+  <h2>Avaliação Clínica da Obesidade</h2>
+
+  <p>A avaliação clínica adequada é o alicerce de qualquer tratamento eficaz. Uma consulta de obesidade bem estruturada não se limita a registar o peso: é uma investigação aprofundada da história de vida, dos hábitos e dos fatores biopsicossociais de cada pessoa.</p>
+
+  <h3>O que Inclui uma Consulta de Obesidade</h3>
+
+  <p>Na minha prática clínica, a consulta de obesidade é uma consulta completa e individualizada que inclui os seguintes elementos:</p>
+
+  <h4>História clínica pessoal e familiar</h4>
+
+  <p>Avaliação de antecedentes clínicos relevantes (diabetes, hipertensão, dislipidemia, doença cardiovascular, hipotiroidismo, SOP, apneia do sono), medicação atual (incluindo fármacos que favorecem o ganho de peso), histórico de peso ao longo da vida, tentativas prévias de perda de peso e resultados obtidos, e história familiar de obesidade e doenças associadas.</p>
+
+  <h4>Análises clínicas</h4>
+
+  <p>Avaliação laboratorial recente ou de novo, incluindo perfil lipídico, glicemia em jejum e HbA1c, função tiroideia (TSH), função hepática e renal, ácido úrico, insulinemia, proteína C reativa de alta sensibilidade e, quando indicado, estudo hormonal adicional (cortisol, perfil androgénico em mulheres com SOP).</p>
+
+  <h4>Hábitos alimentares</h4>
+
+  <p>Registo alimentar ou anamnese nutricional detalhada, avaliação da qualidade e quantidade da alimentação, padrões de refeições (horários, contexto, compulsão alimentar, ingestão noturna), consumo de álcool e bebidas açucaradas, e relação emocional com a comida.</p>
+
+  <h4>Atividade física</h4>
+
+  <p>Avaliação do nível atual de atividade física (tipo, frequência, duração, intensidade), comportamentos sedentários, barreiras percebidas à prática de exercício e condições físicas que possam limitar o movimento.</p>
+
+  <h4>Avaliação antropométrica e composição corporal</h4>
+
+  <p>Peso, altura, cálculo do IMC, perímetro da cintura, perímetro da anca e índice cintura-anca. Quando disponível, avaliação por bioimpedância para determinação da massa gorda, massa magra e água corporal.</p>
+
+  <h4>Avaliação psicológica e social</h4>
+
+  <p>Rastreio de depressão e ansiedade, avaliação do stress crónico, padrão de sono, suporte social e motivação para a mudança.</p>
+
+  <p>Com base nesta avaliação abrangente, é elaborado um plano terapêutico personalizado, realista e sustentável, com objetivos claros, mensuráveis e progressivos.</p>
+
+  <h2>A Minha Experiência Clínica no Tratamento da Obesidade</h2>
+
+  <p>Enquanto médica com dedicação específica ao acompanhamento de doentes em consulta de obesidade, tenho testemunhado na primeira pessoa o impacto transformador de um tratamento bem estruturado, individualizado e contínuo.</p>
+
+  <p>Na minha prática clínica, tenho uma taxa de sucesso de 100% em todos os doentes que mantiveram o acompanhamento regular. Este resultado não é obra do acaso: resulta de uma abordagem terapêutica que combina rigor científico, escuta ativa e um plano adaptado à realidade de cada pessoa. A adesão e o seguimento são as chaves que abrem a porta ao sucesso.</p>
+
+  <p>A maioria dos doentes que me procuram já tentou, sozinhos ou com outras abordagens, perder peso sem sucesso duradouro. Chegam frustrados, muitas vezes com expectativas irrealistas criadas por dietas da moda ou por promessas das redes sociais. Uma das primeiras coisas que fazemos juntos é redefinir o que significa sucesso: não se trata de atingir um peso ideal arbitrário em tempo recorde, mas de construir, passo a passo, hábitos alimentares e de vida que possam ser mantidos a longo prazo.</p>
+
+  <p>A ciência é clara: mesmo perdas de peso modestas, entre <a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)"><strong>5% e 10% do peso corporal</strong></a> <strong>inicial,</strong> traduzem-se em benefícios clínicos significativos, nomeadamente melhoria do controlo glicémico, redução da pressão arterial, melhoria do perfil lipídico e redução do risco cardiovascular. Os meus doentes experienciam estas melhorias de forma concreta, e esse é frequentemente o maior motivador para continuar.</p>
+
+  <p>O acompanhamento regular permite ajustar o plano à evolução clínica, celebrar os progressos e dar suporte nos momentos de maior dificuldade. A relação médico-doente baseada na confiança e no respeito, sem julgamentos, é a base de tudo.</p>
+
+  <h2>Abordagem Terapêutica: Uma Visão Integrada</h2>
+
+  <p>O tratamento da obesidade requer uma abordagem multimodal que integra modificação dos estilos de vida, suporte psicológico, e quando indicado, tratamento farmacológico ou cirúrgico. O objetivo não é apenas a perda de peso a curto prazo, mas a construção de hábitos saudáveis sustentáveis que previnam o reganho de peso a longo prazo.</p>
+
+  <h3>Modificação dos Estilos de Vida: A Pedra Angular</h3>
+
+  <p>As mudanças no estilo de vida são a base de qualquer tratamento da obesidade e devem ser implementadas em todos os doentes, independentemente de outras intervenções. Incluem:</p>
+
+  <h3>Intervenção alimentar</h3>
+
+  <p>A dieta mediterrânea é a abordagem nutricional mais bem suportada pela evidência para a gestão do peso a longo prazo. Privilegia vegetais, frutas, leguminosas, cereais integrais, peixe, azeite e frutos secos, e limita alimentos ultra-processados, açúcares adicionados e gorduras saturadas. O objetivo não é uma dieta restritiva temporária, mas uma mudança cultural e relacional com a comida.</p>
+
+  <h3>Atividade física</h3>
+
+  <p>As recomendações internacionais preconizam pelo menos 150 a 300 minutos de atividade física aeróbica de intensidade moderada por semana, ou 75 a 150 minutos de intensidade vigorosa, complementada com exercícios de resistência muscular pelo menos 2 vezes por semana. A atividade física é essencial não só para a perda de peso, mas sobretudo para a sua manutenção e para a saúde cardiometabólica.</p>
+
+  <h3>Gestão do sono e do stress</h3>
+
+  <p>A privação do sono aumenta os níveis de grelina (hormona da fome) e reduz a leptina (hormona da saciedade), favorecendo o ganho de peso. Estratégias de gestão do stress (<em>mindfulness</em>, exercício, suporte psicológico) são componentes integrantes do tratamento.</p>
+
+  <h2>Tratamento Farmacológico: Um Booster para o Início da Mudança</h2>
+
+  <p>Quando indicado clinicamente, o tratamento farmacológico pode ser um aliado poderoso na fase inicial do processo de perda de peso. Na minha abordagem terapêutica, vejo-o como um <em>booster</em>: uma ferramenta que facilita o início do processo, que torna mais viável a adoção dos novos hábitos, e que cria um contexto fisiológico mais favorável à mudança.</p>
+
+  <p>É fundamental sublinhar que o tratamento farmacológico não substitui as mudanças de estilo de vida: ele amplifica os seus efeitos. O objetivo principal continua a ser sempre a construção e manutenção de hábitos saudáveis de vida, pois são estes que garantem que o peso perdido não seja recuperado quando se termina o tratamento com fármacos.</p>
+
+  <h3>O que deve saber um doente a quem é recomendado tratamento da obesidade?</h3>
+
+  <p>Quando é prescrito tratamento farmacológico, o doente recebe educação detalhada sobre:</p>
+
+  <ul>
+    <li>Como e quando tomar o que é prescrito (via de administração, horários, titulação da dose)</li>
+    <li>Efeitos secundários esperados e como geri-los (náuseas, vómitos, alterações gastrointestinais)</li>
+    <li>Sinais de alerta que justificam contacto antes da consulta de avaliação seguinte</li>
+    <li>Objetivos realistas e cronograma de avaliação da resposta terapêutica</li>
+  </ul>
+
+  <h4>Agonistas dos Receptores GLP-1: Semaglutido e Liraglutido</h4>
+
+  <p>Os agonistas dos receptores GLP-1 (glucagon-like peptide-1) representam a revolução mais significativa no tratamento farmacológico da obesidade da última década. Estes fármacos atuam através de múltiplos mecanismos: reduzem o apetite e a ingestão calórica, retardam o esvaziamento gástrico, melhoram a sensibilidade à insulina e exercem efeitos protetores cardiovasculares e renais.</p>
+
+  <p>O <strong>semaglutido 2,4 mg semanal</strong> foi avaliado no ensaio <a href="https://doi.org/10.1056/NEJMoa2032183" target="_blank" rel="noopener" style="color:var(--teal)"><strong>STEP 1 (Wilding et al., 2021)</strong></a><strong>,</strong> um estudo randomizado controlado com 1 961 adultos com obesidade ou excesso de peso com comorbilidades, publicado no New England Journal of Medicine. Os participantes que receberam semaglutido perderam em média 14,9% do peso corporal ao longo de 68 semanas, comparativamente com 2,4% no grupo placebo. Mais ainda, 86,4% dos participantes tratados com semaglutido conseguiram uma redução de peso superior a 5%.</p>
+
+  <h5>O que acontece quando se cessa o tratamento?</h5>
+
+  <p>O ensaio <a href="https://doi.org/10.1001/jama.2023.24945" target="_blank" rel="noopener" style="color:var(--teal)"><strong>STEP 4 (Wilding et al., 2022)</strong></a> fornece uma resposta importante: os participantes que interromperam o semaglutido e foram transferidos para placebo recuperaram, em média, 7% do peso que tinham perdido durante as primeiras 20 semanas do estudo. Os que continuaram semaglutido perderam um adicional de 8% nas 48 semanas seguintes. Esta diferença de 15% entre os dois grupos demonstra de forma inequívoca que o tratamento farmacológico precisa de ser acompanhado de mudanças de comportamento duradouras para garantir a manutenção dos resultados.</p>
+
+  <h4>Agonistas Duplos GLP-1/GIP: Tirzepatido</h4>
+
+  <p>O <strong>tirzepatido</strong> é um agonista duplo dos receptores GLP-1 e GIP (glucose-dependent insulinotropic polypeptide), que demonstrou resultados ainda mais expressivos no <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa2206038" target="_blank" rel="noopener" style="color:var(--teal)"><strong>ensaio SURMOUNT-1</strong></a><strong>.</strong> No <a href="https://doi.org/10.1001/jama.2023.24945" target="_blank" rel="noopener" style="color:var(--teal)">ensaio SURMOUNT-4</a> (Aronne et al., JAMA, 2023), os participantes que interromperam o tirzepatido após uma fase de tratamento ativa recuperaram cerca de 14% do peso perdido (aproximadamente metade dos ganhos alcançados), com reversão parcial das melhorias cardiometabólicas. Estes dados confirmam que a farmacoterapia, sem a consolidação de hábitos de vida saudáveis, resulta em benefícios temporários.</p>
+
+  <h3>Cirurgia Bariátrica</h3>
+
+  <p>Para doentes com obesidade grau III (IMC superior ou igual a 40 kg/m²) ou grau II (IMC entre 35 e 40 kg/m²) com comorbilidades graves, a cirurgia bariátrica pode ser equacionada como opção terapêutica. Os procedimentos mais comuns incluem o bypass gástrico em Y de Roux e a gastrectomia <em>sleeve</em>. A cirurgia bariátrica associa-se a perdas de peso sustentadas e a remissão ou melhoria significativa de doenças como a diabetes tipo 2, a hipertensão arterial e a apneia do sono.</p>
+
+  <h2>Manutenção a Longo Prazo: O Verdadeiro Desafio</h2>
+
+  <p>Perder peso é frequentemente mais fácil do que manter o peso perdido. Os mecanismos biológicos de adaptação ao défice energético, incluindo a redução do metabolismo basal, as alterações hormonais que aumentam o apetite e a tendência para o reganho de peso, são bem documentados na literatura científica.</p>
+
+  <p>Os programas mais eficazes integram componentes de intervenção comportamental, suporte nutricional continuado e monitorização regular.</p>
+
+  <p>Uma das grandes lições que aprendi na minha prática clínica é que a manutenção do peso não é um estado estático: é um processo ativo e continuado que exige vigilância, ajustes periódicos e, acima de tudo, uma relação positiva com o próprio corpo e com a alimentação. Não se trata de perfeição, mas de consistência.</p>
+
+  <p>Os hábitos saudáveis de vida, quando adequadamente consolidados durante o período de tratamento (seja farmacológico, cirúrgico ou exclusivamente comportamental), são a única garantia sustentável de que os benefícios obtidos serão mantidos a longo prazo. É esta a razão pela qual, na minha prática, cada consulta de obesidade é uma oportunidade de investir nessa consolidação.</p>
+
+  <h2>Estigma e Saúde Mental: Uma Dimensão Inevitável</h2>
+
+  <p>O estigma associado à obesidade é uma realidade que não pode ser ignorada. Especialistas portugueses e internacionais têm apelado ao fim do estigma na comunicação e no tratamento da obesidade, reconhecendo que a linguagem e as atitudes dos profissionais de saúde influenciam diretamente o bem-estar dos doentes e a sua disposição para procurar ajuda.</p>
+
+  <p>A abordagem centrada no doente, sem julgamentos morais ou estéticos, é a postura que todos os profissionais de saúde devem adotar. A obesidade não é uma falha de caráter: é uma doença complexa que merece o mesmo rigor, compaixão e comprometimento que dedicamos a qualquer outra doença crónica.</p>
+
+  <h2>Prevenção da Obesidade</h2>
+
+  <p>A prevenção é, sem dúvida, a abordagem mais custo-efetiva. As estratégias de prevenção devem ser implementadas a vários níveis:</p>
+
+  <ul>
+    <li><strong>Individual</strong>: educação alimentar desde a infância, promoção de estilos de vida ativos, gestão do stress e do sono, e literacia em saúde.</li>
+    <li><strong>Familiar</strong>: modelagem de comportamentos alimentares e de atividade física saudáveis no contexto familiar, em particular nos primeiros anos de vida.</li>
+    <li><strong>Escolar</strong>: programas de educação nutricional e de promoção da atividade física nas escolas, e melhoria da qualidade das refeições escolares.</li>
+    <li><strong>Político e ambiental</strong>: políticas de saúde pública que reduzam a disponibilidade e o marketing de alimentos ultra-processados, incentivem a prática de atividade física, e melhorem o acesso a alimentos saudáveis para todas as classes socioeconómicas.</li>
+  </ul>
+
+  <h2>Porque a consulta de obesidade é hoje uma necessidade?</h2>
+
+  <p>A obesidade é uma doença crónica, complexa e multifatorial que afeta milhões de pessoas em Portugal e no mundo. O seu tratamento eficaz requer uma abordagem integrada, individualizada e de longo prazo, que combine modificação dos estilos de vida, suporte psicológico e, quando indicado, farmacoterapia ou cirurgia.</p>
+
+  <p>O tratamento farmacológico, incluindo os agonistas dos receptores GLP-1 como o semaglutido, representa um avanço extraordinário que pode facilitar o início do processo de perda de peso. No entanto, a evidência é clara: sem a consolidação de hábitos saudáveis de vida, o peso tende a ser recuperado quando o tratamento é terminado. O fármaco é um <em>booster</em>; os hábitos saudáveis são o alicerce.</p>
+
+  <p>Se reconhece em si mesmo ou numa pessoa próxima os sinais de alerta da obesidade, não espere. Uma avaliação médica adequada, num ambiente de respeito e sem julgamentos, pode ser o primeiro passo para uma mudança genuína e duradoura. Estou disponível para o acompanhar nesse caminho nas <a href="/consulta-obesidade-emagrecimento-online" style="color:var(--teal);font-weight:600">consultas de obesidade</a> em <a href="/" style="color:var(--teal)">www.consultas-online.pt</a>.</p>
+
+  <p><em>Nota: Consulte sempre um profissional de saúde antes de iniciar qualquer programa de perda de peso ou tratamento farmacológico.</em></p>
+
+  <div class="ibox"><div class="ibox-title">🩺 Serviço relacionado</div><p><a href="/consulta-obesidade-emagrecimento-online" style="color:var(--teal);font-weight:600">Consulta de Obesidade Online</a>: saiba como funciona a consulta, quanto custa e como marcar.</p></div>
+
+  <div class="art-cta"><h3>Quer começar a tratar a obesidade com acompanhamento médico?</h3><p>Consulta de obesidade por videoconsulta, com avaliação completa e um plano personalizado e realista.</p><button class="art-cta-btn" onclick="openServiceSelector()">Marcar consulta: 55€ →</button></div>
+
+  <h2>Perguntas frequentes sobre obesidade</h2>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">A obesidade é uma doença? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sim. A obesidade é uma doença crónica, multifatorial e recidivante, reconhecida pela Organização Mundial de Saúde e pela Sociedade Portuguesa para o Estudo da Obesidade. Não se resume a falta de força de vontade. Resulta da interação de fatores genéticos, hormonais, ambientais, comportamentais, psicológicos e socioeconómicos.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Como sei se tenho obesidade? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">O primeiro indicador é o Índice de Massa Corporal (IMC), que se calcula a dividir o peso (kg) pelo quadrado da altura (m). Um IMC entre 25 e 29,9 kg/m² corresponde a excesso de peso e um IMC igual ou superior a 30 kg/m² corresponde a obesidade. A confirmação e a avaliação do risco exigem uma consulta médica.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O IMC é suficiente para avaliar a obesidade? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Não. O IMC não distingue massa gorda de massa muscular nem mostra onde se acumula a gordura. Por isso, mede-se também o perímetro da cintura. O risco cardiovascular aumenta acima de 94 cm nos homens e de 80 cm nas mulheres, porque a gordura abdominal (visceral) é a mais prejudicial.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quais são as principais causas da obesidade? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">O mecanismo central é a ingestão de mais energia do que a que se gasta, mas há muitos fatores por trás disso: genética, alimentação rica em ultraprocessados, sedentarismo, falta de sono, stress crónico, algumas doenças (como o hipotiroidismo ou a síndrome dos ovários poliquísticos) e certos fármacos, como antidepressivos, antipsicóticos e corticosteroides.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Que doenças estão associadas à obesidade? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">A obesidade aumenta o risco de diabetes tipo 2, hipertensão, doença coronária, AVC, insuficiência cardíaca, apneia do sono, fígado gordo, osteoartrite, infertilidade, depressão e pelo menos 13 tipos de cancro, incluindo o da mama após a menopausa, o colorretal e o do endométrio.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quanto peso é preciso perder para haver benefícios para a saúde? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Uma perda de 5% a 10% do peso inicial já traz benefícios clínicos relevantes: melhor controlo da glicemia, pressão arterial mais baixa, melhor perfil lipídico e menor risco cardiovascular. Não é preciso atingir um “peso ideal” para que a saúde melhore.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O que inclui uma consulta de obesidade? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">A consulta inclui a história clínica e familiar, a revisão da medicação, análises clínicas, a avaliação dos hábitos alimentares e da atividade física, as medições corporais (peso, IMC, cintura e anca) e o rastreio de fatores psicológicos, como a ansiedade, a depressão, o stress e a qualidade do sono. Com base nisso, define-se um plano personalizado com objetivos realistas.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Os fármacos para a obesidade, como o semaglutido, resultam? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Nos ensaios clínicos, sim. No estudo STEP 1, os participantes tratados com semaglutido 2,4 mg perderam em média 14,9% do peso em 68 semanas, contra 2,4% no grupo placebo. Estas substâncias só devem ser usadas com acompanhamento médico, e não substituem as mudanças no estilo de vida.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">O que acontece quando se para o tratamento farmacológico? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">Sem hábitos de vida consolidados, o peso tende a voltar. Nos ensaios STEP 4 (semaglutido) e SURMOUNT-4 (tirzepatido), quem interrompeu o medicamento recuperou uma parte importante do peso perdido. O fármaco ajuda a arrancar o processo, mas são os hábitos que mantêm os resultados.</div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Quem pode fazer cirurgia bariátrica? <span class="faq-arrow">▼</span></div>
+    <div class="faq-a">A cirurgia bariátrica pode ser considerada em pessoas com IMC igual ou superior a 40 kg/m², ou com IMC entre 35 e 40 kg/m² e doenças associadas graves, como a diabetes tipo 2 ou a apneia do sono. A indicação é sempre decidida após avaliação médica especializada.</div>
+  </div>
+
+  <div class="refs"><h3>Referências Bibliográficas</h3><ol class="ref-list">
+    <li>Aronne, L. J., Sattar, N., Horn, D. B., Bays, H. E., Sherling, D. H., McConell, D., Rubino, D. M., Lin, J., Dagnino, C., &amp; Halpern, B. (2024). Continued treatment with tirzepatide for maintenance of weight reduction in adults with obesity: The SURMOUNT-4 randomized clinical trial. JAMA, 331(1), 38-48. <a href="https://doi.org/10.1001/jama.2023.24945" target="_blank" rel="noopener" style="color:var(--teal)">https://doi.org/10.1001/jama.2023.24945</a></li>
+    <li>Associação Portuguesa de Dietistas (APD) &amp; Sociedade Portuguesa para o Estudo da Obesidade (SPEO). (2017). Recomendações para o tratamento não cirúrgico da obesidade no adulto. SPEO.</li>
+    <li>Bray, G. A., Kim, K. K., &amp; Wilding, J. P. H. (2017). Obesity: a chronic relapsing progressive disease process. A position statement of the World Obesity Federation. Obesity Reviews, 18(7), 715-723. <a href="https://doi.org/10.1111/obr.12551" target="_blank" rel="noopener" style="color:var(--teal)">https://doi.org/10.1111/obr.12551</a></li>
+    <li>Direção-Geral da Saúde. (2026). Manual de boas práticas: Obesidade. DGS/PNPAS. <a href="https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx" target="_blank" rel="noopener" style="color:var(--teal)">https://www.dgs.pt/ficheiros-de-upload-2013/dgs_pnpas_manualobesidade2026_nv-pdf.aspx</a></li>
+    <li>Lauby-Secretan, B., Scoccianti, C., Loomis, D., Grosse, Y., Bianchini, F., &amp; Straif, K. (2016). Body fatness and cancer: Viewpoint of the IARC Working Group. New England Journal of Medicine, 375(8), 794-798. <a href="https://doi.org/10.1056/NEJMsr1606602" target="_blank" rel="noopener" style="color:var(--teal)">https://doi.org/10.1056/NEJMsr1606602</a></li>
+    <li>NCD Risk Factor Collaboration (NCD-RisC). (2024). Worldwide trends in underweight and obesity from 1990 to 2022: A pooled analysis of 3663 population-representative studies with 222 million children, adolescents, and adults. The Lancet, 403(10431), 1027-1050. <a href="https://doi.org/10.1016/S0140-6736(23)02750-2" target="_blank" rel="noopener" style="color:var(--teal)">https://doi.org/10.1016/S0140-6736(23)02750-2</a></li>
+    <li>Wilding, J. P. H., Batterham, R. L., Calanna, S., Davies, M., Van Gaal, L. F., Lingvay, I., McGowan, B. M., Rosenstock, J., Tran, M. T. D., Wadden, T. A., Wharton, S., Yokote, K., Zeuthen, N., &amp; Kushner, R. F. (2021). Once-weekly semaglutide in adults with overweight or obesity. New England Journal of Medicine, 384(11), 989-1002. <a href="https://doi.org/10.1056/NEJMoa2032183" target="_blank" rel="noopener" style="color:var(--teal)">https://doi.org/10.1056/NEJMoa2032183</a></li>
+    <li>Wilding, J. P. H., Batterham, R. L., Davies, M., Van Gaal, L. F., Kandler, K., Konakli, K., Lingvay, I., McGowan, B. M., Oral, T. K., Rosenstock, J., Wadden, T. A., Wharton, S., Yokote, K., &amp; Kushner, R. F. (2022). Weight regain and cardiometabolic effects after withdrawal of semaglutide: The STEP 1 trial extension. Diabetes, Obesity and Metabolism, 24(8), 1553-1564. <a href="https://doi.org/10.1111/dom.14725" target="_blank" rel="noopener" style="color:var(--teal)">https://doi.org/10.1111/dom.14725</a></li>
+    <li>World Health Organization. (2024). Obesity and overweight: Key facts. WHO. <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight" target="_blank" rel="noopener" style="color:var(--teal)">https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight</a></li>
+  </ol></div>
+
+</div></div></div>
+</div>
