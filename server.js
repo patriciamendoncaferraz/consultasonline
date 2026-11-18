@@ -1994,7 +1994,7 @@ const SERVICE_ARTICLES = {
   'renovacao-piula':            ['renovar-pilula-anticoncecional-online'],
   'atestado-conducao':          ['atestado-carta-conducao'],
   'consulta-infecao-urinaria':  ['infecao-urinaria'],
-  'renovacao-medicamentos':     ['renovacao-medicamentos'],
+  'renovacao-medicamentos':     ['renovacao-medicamentos', 'analises-clinicas-inteligencia-artificial'],
   'atestado-escola':            ['faltas-escola'],
   'consulta-amigdalite':        ['dor-de-garganta-amigdalite'],
   'consulta-cessacao-tabagica': ['cessacao-tabagica'],
