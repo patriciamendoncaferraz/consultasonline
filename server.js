@@ -728,6 +728,9 @@ app.get('/sobre-a-medica', (req, res) => {
   res.send(ABOUT_HTML);
 });
 
+// Guia gratuito da febre (página e PDF em public/); endereço curto para o Instagram e o ManyChat
+app.get('/guia-febre', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guia-febre.html')));
+
 // Rota de listagem
 app.get('/artigos', (req, res) => {
   const links = Object.entries(ARTICLES_CONTENT).map(([slug, art]) =>

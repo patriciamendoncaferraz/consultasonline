@@ -4160,6 +4160,25 @@ window.addEventListener('popstate', function(e) {
   if (e.state && e.state.page) { window.showPage(e.state.page, false); }
   else { window.showPage('home', false); }
 });
+// Abrir a marcação a partir de um link:
+//   /#marcar             -> escolha de serviço
+//   /?servico=<id>       -> marcação já no serviço indicado (páginas de serviço, guias, anúncios)
+(function(){
+  var m = /[?&]servico=([a-z0-9-]+)/.exec(window.location.search);
+  var want = m ? m[1] : (window.location.hash === '#marcar' ? '' : null);
+  if (want === null) return;
+  function go(){
+    if (typeof window.openServiceSelector !== 'function') return;
+    window.openServiceSelector();
+    if (!want) return;
+    var cards = document.querySelectorAll('.svc-card');
+    for (var i = 0; i < cards.length; i++) {
+      if ((cards[i].getAttribute('onclick') || '').indexOf("'" + want + "')") !== -1) { cards[i].click(); break; }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(go, 50); });
+  else setTimeout(go, 50);
+})();
 if (window.location.hash === '#admin-rosie') {
   var btn = document.getElementById('tab-admin');
   if (btn) btn.style.display = 'inline-flex';
