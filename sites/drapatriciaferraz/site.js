@@ -22,6 +22,7 @@ const API_GET_PREFIX = ['/booked-slots/'];
 // Ficheiros estáticos permitidos (nome publicado -> ficheiro)
 const FILES = {
   '/robots.txt':        path.join(DIR, 'robots.txt'),
+  '/cookies.js':        path.join(DIR, 'cookies.js'),
   '/sitemap.xml':       path.join(DIR, 'sitemap.xml'),
   '/foto-patricia.webp': path.join(PUBLIC, 'foto-patricia.webp'),
   '/logo-lre.png':      path.join(PUBLIC, 'logo-lre.png'),
@@ -59,6 +60,15 @@ function legalFromIndex(pageId) {
     .replace(/https?:\/\/(www\.)?consultas-online\.pt/g, ORIGIN)
     .replace(/(^|[^@\w.-])(www\.)?consultas-online\.pt/g, '$1' + HOST)
     .replace(/\s+onclick="[^"]*"/g, '');
+  if (pageId === 'page-privacidade') {
+    // Cookies deste site: essenciais, análise e publicidade (Google), só com consentimento
+    seg = seg.replace(/(<h2 id="priv11b">[^<]*<\/h2>)[\s\S]*?(?=<h2 id="priv12">)/,
+      '$1\n<p>O website ' + HOST + ' utiliza cookies estritamente necessários ao seu funcionamento, incluindo os do chat de apoio (Tawk.to). Com o consentimento do utilizador, utiliza também:</p>\n' +
+      '<ul>\n<li><strong>Cookies de análise</strong>: Google Analytics, para compreender como os utilizadores interagem com o website e melhorar a experiência de utilização.</li>\n' +
+      '<li><strong>Cookies de publicidade</strong>: Google Ads, para medir a eficácia dos anúncios (por exemplo, quantas marcações resultam de um anúncio).</li>\n</ul>\n' +
+      '<p>Estas ferramentas são geridas através do Google Tag Manager e só são ativadas depois de o utilizador as aceitar no aviso de cookies. Sem consentimento, não são guardados cookies de análise nem de publicidade.</p>\n' +
+      '<p>Pode alterar ou retirar o seu consentimento a qualquer momento em «Definições de cookies», no rodapé de qualquer página, ou apagando os cookies nas definições do seu browser. Os dados clínicos nunca são partilhados com estas ferramentas.</p>\n');
+  }
   if (pageId === 'page-termos') {
     // Serviços prestados neste site
     seg = seg.replace(/(<h2 id="term3">[\s\S]*?<\/p>\s*)<ul>[\s\S]*?<\/ul>/,
@@ -73,6 +83,14 @@ function shell(title, desc, canonicalPath, body, opts) {
   return `<!DOCTYPE html>
 <html lang="pt">
 <head>
+<!-- Consentimento de cookies (Google Consent Mode v2): tudo recusado até o visitante escolher; ver /cookies.js -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied', analytics_storage:'denied', functionality_storage:'granted', security_storage:'granted', wait_for_update:500});
+  try { var _ck = JSON.parse(localStorage.getItem('drpf_cookies') || 'null'); if (_ck) gtag('consent', 'update', {analytics_storage:_ck.analytics?'granted':'denied', ad_storage:_ck.ads?'granted':'denied', ad_user_data:_ck.ads?'granted':'denied', ad_personalization:_ck.ads?'granted':'denied'}); } catch (e) {}
+</script>
+<script src="/cookies.js" defer></script>
 <!-- Google Tag Manager (etiqueta Google) -->
 <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MTV33JK5"></script>
 <script>
@@ -125,7 +143,7 @@ ${opts.head || ''}
 <nav><div><a class="brand" href="/">Dra. Patrícia <span>Ferraz</span></a><a class="btn" href="/#servicos">Marcar consulta</a></div></nav>
 ${body}
 <footer>
-  <div style="margin-bottom:10px"><a href="/">Início</a><a href="/termos">Termos de Serviço</a><a href="/privacidade">Política de Privacidade</a><a href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener">Livro de Reclamações</a></div>
+  <div style="margin-bottom:10px"><a href="/">Início</a><a href="/termos">Termos de Serviço</a><a href="/privacidade">Política de Privacidade</a><a href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener">Livro de Reclamações</a><a href="#" onclick="openCookieSettings();return false;">Definições de cookies</a></div>
   <a class="lre" href="https://www.livroreclamacoes.pt/INICIO/" target="_blank" rel="noopener"><img src="/logo-lre.png" alt="Livro de Reclamações Eletrónico" width="120" height="48"/></a>
   <br/>© 2026 Dra. Patrícia Ferraz · Médica · Cédula n.º 57713 · <a href="/admin" rel="nofollow" style="color:inherit;opacity:.45;font-size:11.5px;margin:0">Admin</a>
 </footer>
