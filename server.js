@@ -127,12 +127,12 @@ const SERVICES = {
   'atestado-escola':            { name: 'Atestado para Falta Escolar',       price: 3500 },
   'atestado-conducao':          { name: 'Atestado para Carta de Condução',   price: 4500 },
   'baixa-medica':               { name: 'Emissão de Baixa Médica',           price: 5500 },
-  'renovacao-medicamentos':     { name: 'Consulta',         price: 4000 },
+  'renovacao-medicamentos':     { name: 'Consulta',         price: 5500 },
   'renovacao-piula':            { name: 'Renovação de Pílula Anticoncecional', price: 4000 },
-  'consulta-infecao-urinaria':  { name: 'Consulta de Infeção Urinária',      price: 4000 },
-  'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 4000 },
-  'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 4000 },
-  'consulta-dst':               { name: 'Consulta DST / IST',                price: 4000 },
+  'consulta-infecao-urinaria':  { name: 'Consulta de Infeção Urinária',      price: 5500 },
+  'consulta-cessacao-tabagica': { name: 'Consulta de Cessação Tabágica',     price: 5500 },
+  'consulta-amigdalite':        { name: 'Consulta de Amigdalite',            price: 5500 },
+  'consulta-dst':               { name: 'Consulta DST / IST',                price: 5500 },
   'consulta-obesidade':         { name: 'Consulta de Obesidade', price: 5500 },
   'consulta-clinica-geral':     { name: 'Consulta de Clínica Geral',         price: 5500 },
 };
@@ -189,7 +189,7 @@ const ARTICLES_CONTENT = {
   title: 'Infeção Urinária: Causas, Sintomas, Diagnóstico e Tratamento | ConsultasOnline',
   description: 'Guia médico completo sobre infeção urinária: sintomas, antibióticos recomendados em Portugal, prevenção e quando ir às urgências.',
   keywords: 'infeção urinária sintomas tratamento, antibiótico infeção urinária Portugal, cistite tratamento, infeção urinária recorrente',
-  cta: `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
+  cta: `<div class='cta-top'><p>💧 Tem sintomas de infeção urinária? Consulta online com diagnóstico e tratamento no próprio dia. <a href='/'>Marcar consulta — 55€ →</a></p></div>`
 },
   
 'baixa-medica': {
@@ -201,9 +201,9 @@ const ARTICLES_CONTENT = {
 
 'renovacao-medicamentos': {
   title: 'Renovação de Medicamentos Online em Portugal | ConsultasOnline',
-  description: 'Renove a sua receita médica por videoconsulta. Receita electrónica enviada por SMS e email no próprio dia. A partir de 40€.',
+  description: 'Renove a sua receita médica por videoconsulta. Receita electrónica enviada por SMS e email no próprio dia. A partir de 55€.',
   keywords: 'renovar receita médica online, renovação medicamentos online portugal, receita médica online, consulta acompanhamento crónico',
-  cta: `<div class="cta-top"><p>💊 Precisa de renovar medicação crónica? Consulta de acompanhamento por videoconsulta. <a href="/">Marcar consulta — 40€ →</a></p></div>`
+  cta: `<div class="cta-top"><p>💊 Precisa de renovar medicação crónica? Consulta de acompanhamento por videoconsulta. <a href="/">Marcar consulta — 55€ →</a></p></div>`
 },
 
   'clamidia': {
@@ -231,7 +231,7 @@ const ARTICLES_CONTENT = {
   title: 'Faltas ao Trabalho por Doença: Como Justificar | ConsultasOnline',
   description: 'Tudo sobre declarações médicas, baixas e os seus direitos como trabalhador. Declaração médica emitida online no próprio dia.',
   keywords: 'faltas trabalho doença justificar, declaração médica trabalho online, baixa médica trabalho portugal, direitos trabalhador doença',
-  cta: `<div class="cta-top"><p>💼 Precisa de declaração médica para o trabalho? Emitida por videoconsulta no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>`
+  cta: `<div class="cta-top"><p>💼 Precisa de declaração médica para o trabalho? Emitida por videoconsulta no próprio dia. <a href="/">Marcar consulta — 55€ →</a></p></div>`
 },
 
 'faltas-escola': {
@@ -243,9 +243,9 @@ const ARTICLES_CONTENT = {
 
 'dor-de-garganta-amigdalite': {
   title: 'Dor de Garganta e Amigdalite: Quando é Preciso Antibiótico? | ConsultasOnline',
-  description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 40€.',
+  description: 'Amigdalite viral ou bacteriana? Quando precisa de antibiótico. Consulta online de amigdalite com avaliação e receita. 55€.',
   keywords: 'consulta amigdalite online, antibiótico amigdalite online, dor garganta consulta online portugal, amigdalite bacteriana viral',
-  cta: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
+  cta: `<div class='cta-top'><p>🤒 Com dor de garganta intensa? Avaliação e tratamento por <a href='/artigos/consulta-online'>videoconsulta</a> em 30 minutos. <a href='/'>Marcar consulta — 55€ →</a></p></div>`
 },
 
 'analises-clinicas-inteligencia-artificial': {
@@ -278,9 +278,9 @@ const ARTICLES_CONTENT = {
 
 'cessacao-tabagica': {
   title: 'Como Parar de Fumar: Guia Médico Completo | ConsultasOnline',
-  description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 40€.',
+  description: 'Vareniclina, bupropiona, TSN — os tratamentos com maior evidência para parar de fumar. Consulta com prescrição médica. 55€.',
   keywords: 'cessação tabágica online portugal, consulta parar fumar online, vareniclina prescrição online, champix online portugal',
-  cta: `<div class='cta-top'><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por <a href='/artigos/consulta-online'>videoconsulta</a>. <a href='/'>Marcar consulta — 40€ →</a></p></div>`
+  cta: `<div class='cta-top'><p>🚭 Pronto para deixar de fumar? Consulta com prescrição médica por <a href='/artigos/consulta-online'>videoconsulta</a>. <a href='/'>Marcar consulta — 55€ →</a></p></div>`
 },
 
 'consulta-online': {
@@ -308,7 +308,7 @@ const ARTICLES_CONTENT = {
   title: 'Rastreio de Saúde em Portugal: O Guia Completo | ConsultasOnline',
   description: 'Rastreios recomendados pela DGS por idade e sexo, vacinação do adulto e como fazer rastreio de IST de forma discreta.',
   keywords: 'rastreio saúde portugal, exames preventivos portugal, rastreio oncológico portugal, check-up médico online portugal',
-  cta: `<div class="cta-top"><p>🩺 Quer fazer um rastreio de saúde? Consulta online com pedido de análises personalizado. <a href="/">Marcar consulta — 40€ →</a></p></div>`
+  cta: `<div class="cta-top"><p>🩺 Quer fazer um rastreio de saúde? Consulta online com pedido de análises personalizado. <a href="/">Marcar consulta — 55€ →</a></p></div>`
 },
 
 'renovar-pilula-anticoncecional-online': {
@@ -2369,14 +2369,14 @@ app.get('/consulta-infecao-urinaria-online', (req, res) => {
     path: '/consulta-infecao-urinaria-online',
     serviceId: 'consulta-infecao-urinaria',
     title: 'Consulta de Infeção Urinária Online em Portugal — Diagnóstico e Tratamento | ConsultasOnline',
-    desc: 'Consulta de infeção urinária online por videoconsulta. Diagnóstico e antibiótico prescritos no próprio dia. Sem filas, sem deslocação. 40€. Exclusivo para mulheres adultas.',
+    desc: 'Consulta de infeção urinária online por videoconsulta. Diagnóstico e antibiótico prescritos no próprio dia. Sem filas, sem deslocação. 55€. Exclusivo para mulheres adultas.',
     h1: 'Consulta de Infeção Urinária Online',
-    price: '40',
+    price: '55',
     body: `
 <div class="hero">
   <h1>Consulta de Infeção<br/>Urinária Online</h1>
   <p>Diagnóstico e tratamento por videoconsulta no próprio dia. Sem filas, sem urgências. Exclusivo para mulheres adultas.</p>
-  <div class="price">40€</div>
+  <div class="price">55€</div>
   <a class="btn" href="/#marcar">Marcar Consulta Agora →</a>
 </div>
 <div class="body">
@@ -2412,7 +2412,7 @@ app.get('/consulta-infecao-urinaria-online', (req, res) => {
   <div class="cta-box">
     <h3>Com sintomas de infeção urinária?</h3>
     <p>Diagnóstico e tratamento em 30 minutos, sem sair de casa.</p>
-    <a class="btn" href="/#marcar">Marcar Consulta — 40€ →</a>
+    <a class="btn" href="/#marcar">Marcar Consulta — 55€ →</a>
   </div>
 </div>`
   }));
@@ -2424,14 +2424,14 @@ app.get('/consulta-acompanhamento-cronico-online', (req, res) => {
     path: '/consulta-acompanhamento-cronico-online',
     serviceId: 'renovacao-medicamentos',
     title: 'Consulta de Acompanhamento Crónico Online — Renovação de Medicação | ConsultasOnline',
-    desc: 'Consulta de acompanhamento crónico por videoconsulta. Renovação de medicação para hipertensão, diabetes, colesterol e outras doenças crónicas. 40€. Sem deslocação.',
+    desc: 'Consulta de acompanhamento crónico por videoconsulta. Renovação de medicação para hipertensão, diabetes, colesterol e outras doenças crónicas. 55€. Sem deslocação.',
     h1: 'Consulta de Acompanhamento Crónico Online',
-    price: '40',
+    price: '55',
     body: `
 <div class="hero">
   <h1>Consulta de Acompanhamento<br/>Crónico Online</h1>
   <p>Renovação de medicação para doenças crónicas por videoconsulta. Sem deslocação, sem filas, sem esperas.</p>
-  <div class="price">40€</div>
+  <div class="price">55€</div>
   <a class="btn" href="/#marcar">Marcar Consulta Agora →</a>
 </div>
 <div class="body">
@@ -2460,7 +2460,7 @@ app.get('/consulta-acompanhamento-cronico-online', (req, res) => {
   <div class="cta-box">
     <h3>Precisa de renovar a medicação crónica?</h3>
     <p>Videoconsulta disponível de segunda a domingo, das 9h às 21h.</p>
-    <a class="btn" href="/#marcar">Marcar Consulta — 40€ →</a>
+    <a class="btn" href="/#marcar">Marcar Consulta — 55€ →</a>
   </div>
 </div>`
   }));
@@ -2516,14 +2516,14 @@ app.get('/consulta-amigdalite-online', (req, res) => {
     path: '/consulta-amigdalite-online',
     serviceId: 'consulta-amigdalite',
     title: 'Consulta de Amigdalite Online em Portugal — Diagnóstico e Tratamento | ConsultasOnline',
-    desc: 'Consulta de amigdalite e dor de garganta online por videoconsulta. Diagnóstico e tratamento no próprio dia. Apenas para adultos. 40€. Sem filas, sem deslocação.',
+    desc: 'Consulta de amigdalite e dor de garganta online por videoconsulta. Diagnóstico e tratamento no próprio dia. Apenas para adultos. 55€. Sem filas, sem deslocação.',
     h1: 'Consulta de Amigdalite Online',
-    price: '40',
+    price: '55',
     body: `
 <div class="hero">
   <h1>Consulta de Amigdalite<br/>Online</h1>
   <p>Diagnóstico e tratamento de dor de garganta por videoconsulta. Apenas para adultos. Sem filas, sem urgências.</p>
-  <div class="price">40€</div>
+  <div class="price">55€</div>
   <a class="btn" href="/#marcar">Marcar Consulta Agora →</a>
 </div>
 <div class="body">
@@ -2564,7 +2564,7 @@ app.get('/consulta-amigdalite-online', (req, res) => {
   <div class="cta-box">
     <h3>Com dor de garganta intensa?</h3>
     <p>Diagnóstico e tratamento em 30 minutos, sem sair de casa.</p>
-    <a class="btn" href="/#marcar">Marcar Consulta — 40€ →</a>
+    <a class="btn" href="/#marcar">Marcar Consulta — 55€ →</a>
   </div>
 </div>`
   }));
@@ -2576,14 +2576,14 @@ app.get('/consulta-cessacao-tabagica-online', (req, res) => {
     path: '/consulta-cessacao-tabagica-online',
     serviceId: 'consulta-cessacao-tabagica',
     title: 'Consulta de Cessação Tabágica Online — Deixar de Fumar com Apoio Médico | ConsultasOnline',
-    desc: 'Consulta de cessação tabágica por videoconsulta. Avaliação, aconselhamento e prescrição de vareniclina, bupropiona ou adesivos de nicotina. 40€. Sem deslocação.',
+    desc: 'Consulta de cessação tabágica por videoconsulta. Avaliação, aconselhamento e prescrição de vareniclina, bupropiona ou adesivos de nicotina. 55€. Sem deslocação.',
     h1: 'Consulta de Cessação Tabágica Online',
-    price: '40',
+    price: '55',
     body: `
 <div class="hero">
   <h1>Consulta de Cessação<br/>Tabágica Online</h1>
   <p>Deixe de fumar com apoio médico. Avaliação, aconselhamento e prescrição do tratamento mais eficaz para si.</p>
-  <div class="price">40€</div>
+  <div class="price">55€</div>
   <a class="btn" href="/#marcar">Marcar Consulta Agora →</a>
 </div>
 <div class="body">
@@ -2632,7 +2632,7 @@ app.get('/consulta-cessacao-tabagica-online', (req, res) => {
   <div class="cta-box">
     <h3>Pronto para deixar de fumar?</h3>
     <p>Consulta com prescrição médica no próprio dia. Disponível de segunda a domingo, das 9h às 21h.</p>
-    <a class="btn" href="/#marcar">Marcar Consulta — 40€ →</a>
+    <a class="btn" href="/#marcar">Marcar Consulta — 55€ →</a>
   </div>
 </div>`
   }));
@@ -2644,14 +2644,14 @@ app.get('/consulta-rastreio-dst-online', (req, res) => {
     path: '/consulta-rastreio-dst-online',
     serviceId: 'consulta-dst',
     title: 'Rastreio de DST/IST Online em Portugal — Consulta Confidencial | ConsultasOnline',
-    desc: 'Rastreio de doenças sexualmente transmissíveis por videoconsulta. Pedido de análises confidencial enviado por email. VIH, sífilis, gonorreia, clamídia. 40€.',
+    desc: 'Rastreio de doenças sexualmente transmissíveis por videoconsulta. Pedido de análises confidencial enviado por email. VIH, sífilis, gonorreia, clamídia. 55€.',
     h1: 'Rastreio de DST Online em Portugal',
-    price: '40',
+    price: '55',
     body: `
 <div class="hero">
   <h1>Rastreio de DST/IST<br/>Online em Portugal</h1>
   <p>Consulta confidencial com avaliação de risco e pedido de análises de rastreio enviado por email. Total privacidade.</p>
-  <div class="price">40€</div>
+  <div class="price">55€</div>
   <a class="btn" href="/#marcar">Marcar Consulta Agora →</a>
 </div>
 <div class="body">
@@ -2709,7 +2709,7 @@ app.get('/consulta-rastreio-dst-online', (req, res) => {
   <div class="cta-box">
     <h3>Rastreio de IST confidencial, hoje</h3>
     <p>Consulta disponível de segunda a domingo, das 9h às 21h. Total privacidade garantida.</p>
-    <a class="btn" href="/#marcar">Marcar Consulta — 40€ →</a>
+    <a class="btn" href="/#marcar">Marcar Consulta — 55€ →</a>
   </div>
 </div>`
   }));

@@ -107,7 +107,7 @@ section.alt{background:var(--surface)}
 .sec-head p{font-size:15.5px}
 
 /* SERVICES */
-.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:20px}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:20px}
 .svc{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:26px;display:flex;flex-direction:column;gap:10px;transition:.25s}
 .svc:hover{box-shadow:0 8px 28px rgba(11,29,53,.08);transform:translateY(-2px)}
 .svc.featured{border:2px solid var(--teal);grid-column:1/-1}
@@ -115,11 +115,14 @@ section.alt{background:var(--surface)}
 .svc .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--teal);background:rgba(13,115,119,.08);padding:3px 9px;border-radius:20px;align-self:flex-start}
 .svc h3{font-size:19px}
 .svc p{font-size:14px}
-.svc ul{margin:2px 0 4px 18px;font-size:14px;columns:2;column-gap:28px}
+.svc p.lead{font-size:16px;font-weight:700;color:var(--navy);line-height:1.4}
+.svc p.fine{font-size:12.5px;color:var(--muted);line-height:1.5}
+.svc ul li strong{color:var(--navy)}
+.svc ul{margin:2px 0 4px 18px;font-size:14px;columns:2;column-gap:32px}
 .svc ul li{margin-bottom:4px;break-inside:avoid}
 @media(max-width:620px){.svc ul{columns:1}}
 .svc .foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px;border-top:1px solid var(--border)}
-.svc .price{font-size:22px;font-weight:700;color:var(--navy)}
+.svc .price{font-size:22px;font-weight:700;color:var(--navy);white-space:nowrap}
 .svc .price small{font-size:12px;font-weight:500;color:var(--muted)}
 
 /* STEPS */
@@ -360,45 +363,52 @@ input,textarea,select,button{max-width:100%}
     <div class="svc-grid">
       <div class="svc featured">
         <span class="ic">🩺</span>
-        <span class="tag">Consulta</span>
+        <span class="tag">Sem pressa</span>
         <h3>Consulta de Clínica Geral</h3>
-        <p>Videoconsulta para avaliação, esclarecimento e acompanhamento dos seus problemas de saúde. Na consulta de clínica geral faço, entre outros:</p>
+        <p class="lead">Uma médica que explica e acompanha.</p>
+        <p>Uma consulta para perceber o que se passa, porquê e o que fazer a seguir. Sai com um plano claro, com o tratamento indicado e, se for preciso, o pedido de análises e exames na mesma consulta. Se precisar de voltar, fala com a mesma médica.</p>
         <ul>
-          <li>Tratamento da obesidade</li>
-          <li>Infeção urinária</li>
-          <li>Dor de garganta e amigdalite</li>
-          <li>Rastreio de infeções sexualmente transmissíveis</li>
-          <li>Consulta de cessação tabágica</li>
-          <li>Outros problemas de saúde do dia a dia</li>
+          <li><strong>Obesidade:</strong> a minha área de especial interesse. Um plano realista, à medida da sua rotina, sem soluções rápidas.</li>
+          <li><strong>Infeção urinária:</strong> avaliação e tratamento segundo as orientações nacionais.</li>
+          <li><strong>Dor de garganta e amigdalite:</strong> critérios clínicos para decidir o tratamento certo.</li>
+          <li><strong>Infeções sexualmente transmissíveis:</strong> consulta confidencial, sem julgamentos.</li>
+          <li><strong>Cessação tabágica:</strong> avaliação da dependência e apoio para deixar de fumar.</li>
+          <li>Outros problemas de saúde do dia a dia.</li>
         </ul>
         <div class="foot"><div class="price">55€ <small>/ consulta</small></div><button class="btn" onclick="openBooking('consulta-clinica-geral')">Marcar</button></div>
       </div>
       <div class="svc">
         <span class="ic">🏥</span>
-        <span class="tag">Consulta</span>
+        <span class="tag">Medicina do Trabalho</span>
         <h3>Consulta com Baixa Médica</h3>
-        <p>Avaliação clínica e, quando indicado, emissão do Certificado de Incapacidade Temporária (CIT), enviado eletronicamente para a Segurança Social.</p>
+        <p class="lead">Não só se precisa de parar, mas também como voltar bem.</p>
+        <p>Avaliação por uma médica com formação em Medicina do Trabalho e Saúde Ocupacional. Quando a baixa é clinicamente indicada, o Certificado de Incapacidade Temporária segue eletronicamente para a Segurança Social, e falamos do tratamento e do regresso ao trabalho. Se precisar de prolongar, é a mesma médica que o reavalia.</p>
+        <p class="fine">Para faltas até 3 dias pode usar a autodeclaração de doença do SNS 24, até duas vezes por ano.</p>
         <div class="foot"><div class="price">55€ <small>/ consulta</small></div><button class="btn" onclick="openBooking('baixa-medica')">Marcar</button></div>
       </div>
       <div class="svc">
         <span class="ic">🤱</span>
-        <span class="tag">Atestado</span>
+        <span class="tag">Sem sair de casa</span>
         <h3>Atestado de Amamentação</h3>
-        <p>Atestado que certifica a amamentação, para apresentar à entidade empregadora.</p>
+        <p class="lead">Sem deslocações com o bebé.</p>
+        <p>O atestado para a entidade empregadora, numa videoconsulta curta a partir de casa.</p>
         <div class="foot"><div class="price">35€ <small>/ atestado</small></div><button class="btn" onclick="openBooking('atestado-amamentacao')">Marcar</button></div>
       </div>
       <div class="svc">
         <span class="ic">🎓</span>
-        <span class="tag">Atestado</span>
+        <span class="tag">Sigilo garantido</span>
         <h3>Atestado para Falta Escolar</h3>
-        <p>Declaração médica para justificar faltas à escola por doença, com sigilo do diagnóstico.</p>
+        <p class="lead">A escola fica a saber que esteve doente, não o quê.</p>
+        <p>Declaração médica para justificar faltas por doença, com o diagnóstico protegido pelo sigilo médico.</p>
         <div class="foot"><div class="price">35€ <small>/ atestado</small></div><button class="btn" onclick="openBooking('atestado-escola')">Marcar</button></div>
       </div>
       <div class="svc">
         <span class="ic">🚗</span>
-        <span class="tag">Atestado</span>
+        <span class="tag">Saúde Ocupacional</span>
         <h3>Atestado para Carta de Condução</h3>
-        <p>Atestado de aptidão física e mental para obter ou renovar a carta de condução.</p>
+        <p class="lead">Avaliação feita por quem conhece a aptidão para conduzir.</p>
+        <p>Avaliação da aptidão física e mental para obter ou renovar a carta, por uma médica com formação em Saúde Ocupacional.</p>
+        <p class="fine">Não inclui exame psicotécnico. Para algumas categorias de carta e idades, a lei exige também este exame, feito à parte.</p>
         <div class="foot"><div class="price">45€ <small>/ atestado</small></div><button class="btn" onclick="openBooking('atestado-conducao')">Marcar</button></div>
       </div>
     </div>
