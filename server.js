@@ -231,7 +231,7 @@ const ARTICLES_CONTENT = {
   title: 'Faltas ao Trabalho por Doença: Como Justificar | ConsultasOnline',
   description: 'Tudo sobre declarações médicas, baixas e os seus direitos como trabalhador. Declaração médica emitida online no próprio dia.',
   keywords: 'faltas trabalho doença justificar, declaração médica trabalho online, baixa médica trabalho portugal, direitos trabalhador doença',
-  cta: `<div class="cta-top"><p>💼 Precisa de declaração médica para o trabalho? Emitida por videoconsulta no próprio dia. <a href="/">Marcar consulta — 40€ →</a></p></div>`
+  cta: `<div class="cta-top"><p>💼 Precisa de declaração médica para o trabalho? Emitida por videoconsulta no próprio dia. <a href="/">Marcar consulta — 55€ →</a></p></div>`
 },
 
 'faltas-escola': {
